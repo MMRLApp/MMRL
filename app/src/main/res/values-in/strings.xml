@@ -304,4 +304,14 @@
     <string name="have_been_total_sponsored">Total %1$s telah di sponsorkan</string>
     <string name="install_screen_confirm_text">Kamu yakin ingin memasang modul ini?</string>
     <string name="install_screen_confirm_title">Pasang Modul?</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_shizuku_desc">Solusi berbasis izin yang memungkinkan aplikasi untuk menjalankan perintah tingkat sistem tanpa akses root penuh. Memerlukan otorisasi dari Sui atau Shizuku, yang memungkinkan hak istimewa yang lebih tinggi untuk operasi tertentu.</string>
+    <string name="allow_advanced_kernelsu_api">Izinkan API KernelSU Lanjutan?</string>
+    <string name="allow_filesystem_api">Ijinkan API FileSystem?</string>
+    <string name="allow_advanced_kernelsu_api_desc">Izinkan modul ini mengakses API KernelSU Lanjutan? Jika Anda tidak merasa aman dengan modul ini, jangan izinkan!</string>
+    <string name="settings_log_viewer">Penampil Log</string>
+    <string name="settings_terms_of_service">Ketentuan Layanan</string>
+    <string name="explore_more_repositories">Jelajahi lebih banyak Repositori</string>
+    <string name="get_the_most_out_of_mmrl">Dapatkan manfaat maksimal dari MMRL!</string>
+    <string name="allow_filesystem_api_desc">Izinkan modul ini mengakses API FileSystem? Jika Anda tidak merasa aman dengan modul ini, jangan izinkan!</string>
 </resources>
