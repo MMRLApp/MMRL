@@ -314,4 +314,6 @@
     <string name="allow_filesystem_api">Zezwolić na API systemu plików?</string>
     <string name="allow_filesystem_api_desc">Zezwolić temu modułowi na dostęp do API systemu plików? Jeśli nie czujesz się bezpiecznie z tym modułem, nie pozwalaj na to!</string>
     <string name="allow_advanced_kernelsu_api_desc">Zezwolić temu modułowi na dostęp do zaawansowanego API KernelSU? Jeśli nie czujesz się bezpiecznie z tym modułem, nie pozwalaj na to!</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_shizuku_desc">Rozwiązanie oparte na uprawnieniach, które pozwala aplikacjom wykonywać polecenia na poziomie systemu bez pełnego dostępu root. Wymaga autoryzacji od Sui lub Shizuku, umożliwiając podwyższone uprawnienia dla określonych operacji przy jednoczesnym zachowaniu integralności systemu.</string>
 </resources>
