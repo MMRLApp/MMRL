@@ -338,4 +338,6 @@
     <string name="allow_filesystem_api_desc">允许这个模块使用文件系统 API 吗？如果你对这个模块不放心，请不要启用它！</string>
     <string name="allow_advanced_kernelsu_api_desc">允许这个模块使用高级 KernelSU API 吗？如果你对这个模块不放心，请不要启用它！</string>
     <string name="explore_more_repositories">探索更多仓库</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_shizuku_desc">提权方案，允许应用程序在没有完全的 root 访问权限的情况下执行系统级的命令。它需要 Sui 或 Shizuku 的授权，从而在保证系统完整性的同时，为特定操作提供更高的权限。</string>
 </resources>
