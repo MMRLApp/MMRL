@@ -316,4 +316,15 @@
     <string name="allow_advanced_kernelsu_api_desc">Zezwolić temu modułowi na dostęp do zaawansowanego API KernelSU? Jeśli nie czujesz się bezpiecznie z tym modułem, nie pozwalaj na to!</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
     <string name="working_mode_shizuku_desc">Rozwiązanie oparte na uprawnieniach, które pozwala aplikacjom wykonywać polecenia na poziomie systemu bez pełnego dostępu root. Wymaga autoryzacji od Sui lub Shizuku, umożliwiając podwyższone uprawnienia dla określonych operacji przy jednoczesnym zachowaniu integralności systemu.</string>
+    <string name="failed_to_update_sepolicy">Nie udało się zaktualizować reguł SELinux dla: %s</string>
+    <string name="menu_show_system_apps">Pokaż systemowe aplikacje</string>
+    <string name="page_superuser">SuperUser</string>
+    <string name="menu_always_show_shell">Zawsze pokazuj powłokę</string>
+    <string name="packages_empty">Paczki są puste</string>
+    <string name="app_profile">Profil aplikacji</string>
+    <string name="profile_default">Domyślny</string>
+    <string name="profile_template">Szablon</string>
+    <string name="profile_custom">Niestandardowy</string>
+    <string name="failed_to_update_app_profile">Nie udało się zaktualizować profilu aplikacji dla: %s</string>
+    <string name="su_not_allowed">Udzielenie uprawnień root nie jest dozwolone dla: %s</string>
 </resources>
