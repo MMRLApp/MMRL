@@ -338,4 +338,13 @@
     <string name="allow_filesystem_api_desc">このモジュールでファイルシステム API にアクセスすることを許可しますか？このモジュールが安全でないと思われる場合は、許可しないでください！</string>
     <string name="explore_more_repositories">さらにリポジトリを探す</string>
     <string name="allow_advanced_kernelsu_api_desc">このモジュールで高度な KernelSU API にアクセスすることを許可しますか？このモジュールが安全でないと思われる場合は、許可しないでください！</string>
+    <string name="menu_always_show_shell">シェルを常に表示</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="menu_show_system_apps">システムアプリを表示</string>
+    <string name="page_superuser">スーパーユーザー</string>
+    <string name="packages_empty">パッケージは空です</string>
+    <string name="app_profile">アプリプロファイル</string>
+    <string name="profile_default">デフォルト</string>
+    <string name="profile_template">テンプレート</string>
+    <string name="profile_custom">カスタム</string>
 </resources>
