@@ -347,4 +347,8 @@
     <string name="profile_default">デフォルト</string>
     <string name="profile_template">テンプレート</string>
     <string name="profile_custom">カスタム</string>
+    <string name="working_mode_shizuku_desc">完全な root アクセスなしで、アプリがシステムレベルのコマンドを実行できるようにする権限ベースのソリューションです。Sui または Shizuku から権限の許可を行うことで、システムの整合性を維持しながら特定の操作に対して昇格された権限を有効化します。</string>
+    <string name="failed_to_update_app_profile">「%s」のアプリプロファイルを更新できませんでした</string>
+    <string name="failed_to_update_sepolicy">SELinux のルール更新に失敗しました: %s</string>
+    <string name="su_not_allowed">スーパーユーザーが許可されていません: %s</string>
 </resources>
