@@ -285,7 +285,7 @@
     <string name="settings_blacklist_alerts">Peringatan Daftar Hitam</string>
     <string name="blacklisted">Didaftarhitamkan</string>
     <string name="settings_blacklist_alerts_desc">Menampilkan peringatan untuk modul lokal dan modul dari jelajah, dan juga memblokir pemasangan modul yang masuk daftar hitam</string>
-    <string name="page_repositorys">Repositori</string>
+    <string name="page_repositorys">Repo</string>
     <string name="blacklisted_desc">Modul ini telah didaftarhitam oleh MMRL. Instalasi dinonaktifkan untuk memastikan keamanan. Jika masih ingin menginstal modul ini, dapat menonaktifkan peringatan daftar hitam di setelan dengan menavigasi ke **Setelan → Keamanan → Peringatan Daftar Hitam**.\n@more(Pelajari lebih lanjut)</string>
     <string name="settings_modules_permissions">Module &amp; Perizinan</string>
     <string name="settings_modules_permissions_desc">Izinkan API JavaScript dan lainnya tentang modul lokal</string>
@@ -314,4 +314,13 @@
     <string name="explore_more_repositories">Jelajahi lebih banyak Repositori</string>
     <string name="get_the_most_out_of_mmrl">Dapatkan manfaat maksimal dari MMRL!</string>
     <string name="allow_filesystem_api_desc">Izinkan modul ini mengakses API FileSystem? Jika Anda tidak merasa aman dengan modul ini, jangan izinkan!</string>
+    <string name="help">Bantuan</string>
+    <string name="settings_provider_service">Penyedia Layanan</string>
+    <string name="notification_name_provider">Penyedia Layanan</string>
+    <string name="provider_service_stopped">Penyedia layanan terhenti</string>
+    <string name="module_service_stopped">Layanan modul terhenti</string>
+    <string name="repository_service_stopped">Layanan repositori terhenti</string>
+    <string name="settings_provider_service_desc">Biarkan penyedia berjalan di latar belakang untuk mengurangi waktu startup secara signifikan dan meningkatkan responsivitas secara keseluruhan</string>
+    <string name="notification_name_repository">Layanan Repositori</string>
+    <string name="notification_name_module">Layanan Modul</string>
 </resources>
