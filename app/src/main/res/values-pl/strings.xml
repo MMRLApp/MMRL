@@ -327,4 +327,5 @@
     <string name="profile_custom">Niestandardowy</string>
     <string name="failed_to_update_app_profile">Nie udało się zaktualizować profilu aplikacji dla: %s</string>
     <string name="su_not_allowed">Udzielenie uprawnień root nie jest dozwolone dla: %s</string>
+    <string name="failed_to_grant_root">Nie udało się przyznać uprawnień roota</string>
 </resources>
