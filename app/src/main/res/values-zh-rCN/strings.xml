@@ -340,4 +340,16 @@
     <string name="explore_more_repositories">探索更多仓库</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
     <string name="working_mode_shizuku_desc">提权方案，允许应用程序在没有完全的 root 访问权限的情况下执行系统级的命令。它需要 Sui 或 Shizuku 的授权，从而在保证系统完整性的同时，为特定操作提供更高的权限。</string>
+    <string name="packages_empty">软件包为空</string>
+    <string name="app_profile">App Profile</string>
+    <string name="profile_default">默认</string>
+    <string name="failed_to_update_sepolicy">无法为 %s 更新 SELinux 规则</string>
+    <string name="su_not_allowed">不允许为以下对象授予超级用户权限： %s</string>
+    <string name="menu_always_show_shell">始终显示 Shell</string>
+    <string name="profile_custom">自定义</string>
+    <string name="page_superuser">超级用户</string>
+    <string name="failed_to_grant_root">无法授予 Root</string>
+    <string name="menu_show_system_apps">显示系统应用</string>
+    <string name="failed_to_update_app_profile">无法为 %s 更新 App Profile</string>
+    <string name="profile_template">模板</string>
 </resources>
