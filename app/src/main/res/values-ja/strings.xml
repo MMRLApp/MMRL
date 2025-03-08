@@ -351,4 +351,5 @@
     <string name="failed_to_update_app_profile">「%s」のアプリプロファイルを更新できませんでした</string>
     <string name="failed_to_update_sepolicy">SELinux のルール更新に失敗しました: %s</string>
     <string name="su_not_allowed">スーパーユーザーが許可されていません: %s</string>
+    <string name="failed_to_grant_root">root 権限の付与に失敗しました</string>
 </resources>
