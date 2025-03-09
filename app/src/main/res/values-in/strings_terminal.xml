@@ -14,4 +14,5 @@
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Eksekusi gagal. Coba gunakan Shell untuk eksekusi Action, Pengaturan → Modul → Gunakan Shell untuk Aksi Modul.</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! Modul dinonaktifkan atau dihapus. Tidak dapat menjalankan tindakan.</string>
     <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! Tidak dapat memasang modul yang masuk dalam daftar hitam. Pengaturan → Keamanan → Peringatan Daftar Hitam</string>
+    <string name="unable_to_find_path_for_uri">! Tidak dapat menemukan path untuk uri: %1$s</string>
 </resources>
