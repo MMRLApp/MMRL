@@ -72,12 +72,13 @@ class ModuleService : MMRLLifecycleService() {
     private suspend fun checkForUpdatesAndNotify() = withContext(Dispatchers.IO) {
         val onlineModules = fetchOnlineModules()
         val localModules = database.localDao().getAll()
-        val onlineModuleMap = onlineModules.associateBy { it.id }
+        val onlineModulesOrderedByNewestMap = onlineModules.groupBy { it.id }
+                .mapValues { module -> module.value.sortedByDescending { it.versionCode } }
 
         localModules.forEach { localModule ->
-            onlineModuleMap[localModule.id]?.let { onlineModule ->
-                if (isNewerVersion(onlineModule, localModule)) {
-                    sendUpdateNotification(localModule, onlineModule)
+            onlineModulesOrderedByNewestMap[localModule.id]?.getOrNull(0)?.let { newestOnlineModule ->
+                if (isNewerVersion(newestOnlineModule, localModule)) {
+                    println("New version found! " + newestOnlineModule)
                 }
             }
         }
