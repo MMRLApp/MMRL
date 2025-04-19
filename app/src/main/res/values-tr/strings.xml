@@ -378,4 +378,7 @@
     <string name="icon_not_found">Simge bulunamadı</string>
     <string name="shortcut_already_exists">Kısayol zaten var</string>
     <string name="missing_mod_id">Bir Modül Kimliği tanımlanmadı</string>
+    <string name="are_you_sure_you_want_to_exit">Çıkmak istediğinizden emin misiniz?</string>
+    <string name="exit">Çıkış</string>
+    <string name="says">%1$s diyor</string>
 </resources>
