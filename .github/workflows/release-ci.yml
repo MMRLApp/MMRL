@@ -290,7 +290,7 @@ jobs:
       - name: Create GitHub Release
         if: steps.check_release.outputs.exists == 'false' && github.event.inputs.send_github == 'true'
         id: create_release
-        uses: actions/create-release@v1
+        uses: comnoco/create-release-action@v2.0.5
         with:
           tag_name: v${{ env.VERSION }}
           release_name: v${{ env.VERSION }}
