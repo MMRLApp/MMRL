@@ -354,4 +354,20 @@
     <string name="missing_mod_id">ID Modul tidak ditentukan</string>
     <string name="file_already_exists">File sudah ada</string>
     <string name="settings_strict_mode">Mode Ketat</string>
+    <string name="shortcut_not_supported">Pintasan tidak didukung di perangkat atau peluncur Anda</string>
+    <string name="settings_enable_toolbar_events">Aktifkan Event Toolbar</string>
+    <string name="unable_to_perform_reboot_task">Tidak dapat melakukan reboot</string>
+    <string name="drawer_legal">Legal</string>
+    <string name="drawer_tools">Peralatan</string>
+    <string name="drawer_support">Dukungan</string>
+    <string name="drawer_general">Umum</string>
+    <string name="welcome">Selamat datang!</string>
+    <string name="select_your_platform">Pilih platform Anda</string>
+    <string name="continue_with">Lanjutkan dengan %1$s</string>
+    <string name="select">Pilih</string>
+    <string name="setup_root_note">Untuk mengakses semua fitur MMRL, diperlukan perangkat Android yang telah di-root. MMRL tidak menyediakan petunjuk untuk melakukan rooting dan tidak bertanggung jawab atas segala kerusakan yang mungkin terjadi selama proses rooting atau akibat penggunaan MMRL itu sendiri.</string>
+    <string name="platform">Platform</string>
+    <string name="change_platform">Ubah Platform</string>
+    <string name="page_search">Cari</string>
+    <string name="from_other_repositories">Dari Repositori Lain</string>
 </resources>

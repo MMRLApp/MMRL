@@ -88,7 +88,7 @@
     <string name="view_module_update_ignore">Ignoruj</string>
     <string name="settings_download_path">Ścieżka pobierania</string>
     <string name="setup_non_root_desc">Nie wymaga uprawnień roota, dostępna jest tylko funkcja pobierania modułów</string>
-    <string name="install_screen_reboot_confirm">OK</string>
+    <string name="install_screen_reboot_confirm">Potwierdź</string>
     <string name="install_screen_reboot_dismiss">Odrzuć</string>
     <string name="menu_show_cover">Pokaż okładkę</string>
     <string name="menu_show_verified">Pokaż zweryfikowane</string>
@@ -137,7 +137,7 @@
     <string name="settings_reboot_protection">Ochrona przed ponownym uruchomieniem</string>
     <string name="view_module_features_resetprop_sub">Ustawia właściwości systemu załadowane przez resetprop Magiska.</string>
     <string name="view_module_features_sepolicy_sub">Dodaje niestandardowe zasady bezpieczeństwa (reguły SEPolicy).</string>
-    <string name="view_module_features_webui_sub">Interfejs webowy do zarządzania modułami. Wymagane potwierdzenie różnych API JavaScript.</string>
+    <string name="view_module_features_webui_sub">Interfejs webowy do zarządzania modułem.</string>
     <string name="settings_appearance_desc">Dostosuj aplikację do swoich potrzeb</string>
     <string name="settings_blacklist">Czarna lista</string>
     <string name="settings_blacklist_desc">Wymienione moduły mogą być zamknięte lub niebezpieczne</string>
@@ -302,7 +302,7 @@
     <string name="explore_repositories">Przeglądaj repozytoria</string>
     <string name="thank_you">Dziękuję</string>
     <string name="total_community_contributions">%1$s łącznego wkładu społeczności</string>
-    <string name="have_been_total_sponsored">%1$s zostały w całości zasponsorowane</string>
+    <string name="have_been_total_sponsored">%1$s zostało w całości zasponsorowane</string>
     <string name="contributors">Współtwórcy</string>
     <string name="install_screen_confirm_title">Potwierdzasz instalację?</string>
     <string name="install_screen_confirm_text">Czy na pewno chcesz zainstalować ten moduł?</string>
@@ -363,4 +363,12 @@
     <string name="setup_root_note">Aby uzyskać dostęp do wszystkich funkcji MMRL, wymagane jest zrootowane urządzenie z Androidem. MMRL nie udostępnia instrukcji rootowania i nie ponosi odpowiedzialności za jakiekolwiek szkody, które mogą wystąpić podczas procesu rootowania lub z powodu korzystania z samego MMRL.</string>
     <string name="platform">Platforma</string>
     <string name="change_platform">Zmień platformę</string>
+    <string name="page_search">Szukaj</string>
+    <string name="from_other_repositories">Z innych repozytoriów</string>
+    <string name="drawer_legal">Prawa</string>
+    <string name="drawer_support">Wsparcie</string>
+    <string name="drawer_general">Ogólne</string>
+    <string name="drawer_tools">Narzędzia</string>
+    <string name="settings_enable_toolbar_events">Włącz zdarzenia paska narzędzi</string>
+    <string name="unable_to_perform_reboot_task">Nie można wykonać restartu</string>
 </resources>

@@ -178,7 +178,7 @@
     <string name="repo_options_update">更新</string>
     <string name="repo_options_delete">リポジトリを削除</string>
     <string name="repo_options_support">サポート</string>
-    <string name="repo_options_submission">モジュールを提出</string>
+    <string name="repo_options_submission">モジュールを送信</string>
     <string name="repo_options_website">Web サイト</string>
     <string name="repo_options_donate">寄付</string>
     <string name="repo_delete_dialog_desc">%s のリポジトリを削除しますか？</string>
@@ -344,7 +344,7 @@
     <string name="notification_name_module">モジュールサービス</string>
     <string name="notification_name_repository">リポジトリサービス</string>
     <string name="module_service_stopped">モジュールサービスを停止しました</string>
-    <string name="settings_provider_service_desc">プロバイダーをバックグラウンドで実行し続けることで、起動時間の短縮と全体的なレスポンスを向上させます</string>
+    <string name="settings_provider_service_desc">プロバイダーをバックグラウンドで実行し続けることで、起動時間の短縮と全体的なレスポンスを向上させます。</string>
     <string name="notification_name_provider">プロバイダーサービス</string>
     <string name="provider_service_stopped">プロバイダーサービスを停止しました</string>
     <string name="repository_service_stopped">リポジトリサービスを停止しました</string>
@@ -380,4 +380,19 @@
     <string name="says">%1$s の発言</string>
     <string name="are_you_sure_you_want_to_exit">本当に終了してもよろしいですか？</string>
     <string name="shortcut_not_supported">使用しているデバイスまたはランチャーはショートカットに対応していません</string>
+    <string name="welcome">ようこそ！</string>
+    <string name="select_your_platform">プラットフォームを選択</string>
+    <string name="continue_with">%1$s を続行</string>
+    <string name="select">選択</string>
+    <string name="platform">プラットフォーム</string>
+    <string name="change_platform">プラットフォームを変更</string>
+    <string name="page_search">検索</string>
+    <string name="from_other_repositories">その他のリポジトリから</string>
+    <string name="drawer_legal">法的</string>
+    <string name="drawer_tools">ツール</string>
+    <string name="drawer_support">サポート</string>
+    <string name="setup_root_note">MMRL のすべての機能にアクセスするには、root 化された Android デバイスが必要です。MMRL は root 化の手順を提供しておらず、root 化プロセス中または MMRL 自体の使用によって発生する可能性のある損害については一切責任を負いません。</string>
+    <string name="drawer_general">一般</string>
+    <string name="unable_to_perform_reboot_task">再起動のタスクを実行できません</string>
+    <string name="settings_enable_toolbar_events">ツールバーイベントを有効化する</string>
 </resources>

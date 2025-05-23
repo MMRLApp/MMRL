@@ -281,4 +281,10 @@
     <string name="menu_pin_webui">Fixar WebUI</string>
     <string name="menu_pin_action">Ação de Pin</string>
     <string name="install_screen_cancel_text">Tem certeza de que deseja cancelar a instalação?</string>
+    <string name="blacklisted_desc">Este módulo foi colocado na lista negra da MMRL. A instalação está desabilitada para garantir sua segurança. Se você ainda quiser instalar este módulo, pode desabilitar os alertas de lista negra nas configurações, acessando **Configurações → Segurança → Alertas de Lista Negra**. @more(Saiba mais)</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_shizuku_desc">Uma solução baseada em permissões que permite que aplicativos executem comandos no nível do sistema sem acesso root completo. Ela requer autorização de Sui ou Shizuku, permitindo privilégios elevados para operações específicas, mantendo a integridade do sistema.</string>
+    <string name="blacklisted">Na lista negra</string>
+    <string name="settings_blacklist_alerts">Alertas de lista negra</string>
+    <string name="sponsors">Patrocinadores</string>
 </resources>

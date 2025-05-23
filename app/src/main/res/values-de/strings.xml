@@ -121,4 +121,5 @@
     <string name="view_module_features_post_fs_data">Post FS Daten</string>
     <string name="view_module_features_webui">WebUI</string>
     <string name="view_module_features_service_sub">Führt Code später während dem Starten aus (System weiter initialisiert).</string>
+    <string name="working_mode_kernelsu_title">KernelSU</string>
 </resources>

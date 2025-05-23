@@ -326,7 +326,7 @@
     <string name="kernel">Noyau</string>
     <string name="page_repositorys">Dépôts</string>
     <string name="settings_modules_permissions">Modules &amp; Permissions</string>
-    <string name="settings_security_inject_eruda_desc">Les marges intérieures nécessitent l\'importation de la fonctionnalité d\'inserts MMRLs.</string>
+    <string name="settings_security_inject_eruda_desc">Les encarts nécessitent l\'importation de la fonction d\'encarts de MMRLs.</string>
     <string name="contributions">%1$d contributions</string>
     <string name="notification_name_repository">Service de dépôt</string>
     <string name="working_mode_magisk_title">Magisk</string>
@@ -351,4 +351,23 @@
     <string name="view_module_features_zygisk">Zygisk</string>
     <string name="view_module_features_apks">APKs</string>
     <string name="view_module_features_webui">WebUI</string>
+    <string name="are_you_sure_you_want_to_exit">Êtes-vous sûr de vouloir quitter ?</string>
+    <string name="exit">Quitter</string>
+    <string name="says">%1$s dit</string>
+    <string name="settings_enable_toolbar_events">Activer les événements de la barre d\'outils</string>
+    <string name="unable_to_perform_reboot_task">Impossible d\'effectuer la tâche de redémarrage</string>
+    <string name="drawer_legal">Juridique</string>
+    <string name="drawer_tools">Outils</string>
+    <string name="drawer_support">Support</string>
+    <string name="drawer_general">Général</string>
+    <string name="continue_with">Continuer avec %1$s</string>
+    <string name="select">Sélectionner</string>
+    <string name="platform">Plateforme</string>
+    <string name="change_platform">Changer de plateforme</string>
+    <string name="welcome">Bienvenue !</string>
+    <string name="select_your_platform">Sélectionnez votre plateforme</string>
+    <string name="setup_root_note">Pour accéder à toutes les fonctionnalités de MMRL, un appareil Android rooté est nécessaire. MMRL ne fournit pas d\'instructions pour le rooting et n\'est pas responsable des dommages qui pourraient survenir au cours du processus de rooting ou de l\'utilisation de MMRL lui-même.</string>
+    <string name="shortcut_not_supported">Les raccourcis ne sont pas pris en charge par votre appareil ou votre lanceur</string>
+    <string name="page_search">Recherche</string>
+    <string name="from_other_repositories">À partir d\'autres dépôts</string>
 </resources>

@@ -293,4 +293,7 @@
     <string name="settings_shell_module_state_change">Использовать Shell для состояний</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
     <string name="settings_webui_remote_url">WebUI Remote URL</string>
+    <string name="settings_modules_desc">Изменение поведения обработчиков для модулей или многое другое о модулях</string>
+    <string name="working_mode_shizuku_desc">Решение на основе прав доступа, позволяющее приложениям выполнять команды системного уровня без полного root-доступа. Для этого требуется авторизация от Sui или Shizuku, что позволяет использовать повышенные привилегии для выполнения определенных операций, сохраняя целостность системы.</string>
+    <string name="settings_webui_remote_url_desc">Чтобы упростить отладку, укажите локальный домен, например http://localhost. Подробнее см. в предупреждении выше.</string>
 </resources>

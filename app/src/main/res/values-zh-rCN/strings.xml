@@ -387,4 +387,12 @@
     <string name="change_platform">切换平台</string>
     <string name="select_your_platform">选择你的平台</string>
     <string name="setup_root_note">你需要一台已获取 root 权限的安卓手机来使用 MMRL 的全部功能。MMRL 不提供获取 root 的方式与教程，且对获取 root 或对于 MMRL 的不当使用的风险概不负责。</string>
+    <string name="drawer_general">通用</string>
+    <string name="drawer_legal">法律信息</string>
+    <string name="drawer_tools">工具</string>
+    <string name="drawer_support">支持</string>
+    <string name="page_search">搜索</string>
+    <string name="from_other_repositories">从其他仓库</string>
+    <string name="settings_enable_toolbar_events">启用工具栏事件</string>
+    <string name="unable_to_perform_reboot_task">无法执行重启任务</string>
 </resources>
