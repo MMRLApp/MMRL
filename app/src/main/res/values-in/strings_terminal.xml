@@ -18,4 +18,7 @@
     <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s bukanlah file modul. Modul Magisk harus berupa file .zip.</string>
     <string name="failed_to_remove_updated_folder">! Gagal menghapus folder yang diperbarui</string>
     <string name="removed_updated_folder">- Menghapus folder yang diperbarui</string>
+    <string name="non_root_platform_is_not_supported">! Perangkat yang tidak di-root tidak didukung</string>
+    <string name="module_manager_is_null">! Manajer modul adalah null</string>
+    <string name="file_manager_is_null">! File manager adalah null</string>
 </resources>

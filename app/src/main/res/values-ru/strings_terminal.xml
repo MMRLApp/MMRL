@@ -13,4 +13,12 @@
     <string name="this_module_don_t_have_an_action">! Этот модуль не имеет действия.</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Выполнение не удалось. Попробуйте использовать Shell для выполнения действия, Настройки → Модуль → Использовать Shell для действий модуля.</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! Модуль отключен или удален. Невозможно выполнить действие.</string>
+    <string name="unable_to_gather_module_info_of_file">! Невозможно собрать информацию о модуле файла: %1$s</string>
+    <string name="file_manager_is_null">! Файловый менеджер равен null</string>
+    <string name="non_root_platform_is_not_supported">! Платформы без рута не поддерживаются</string>
+    <string name="module_manager_is_null">! Менеджер модуля равен null</string>
+    <string name="removed_updated_folder">- Удалена обновленная папка</string>
+    <string name="failed_to_remove_updated_folder">! Не удалось удалить обновленную папку</string>
+    <string name="unable_to_find_path_for_uri">! Невозможно найти путь для uri: %1$s</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s не является файлом модуля. Модули Magisk должны быть файлами .zip. Пропускаем...</string>
 </resources>

@@ -1,2 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="service_is_not_available">! خدمت در دسترس نیست</string>
+    <string name="unable_to_gather_module_info_of_file">! نمی‌توان داده‌های ماژول را از پرونده گردآوری کرد: %1$s</string>
+    <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! نصب ماژول‌های فهرست سیاه ممکن نیست. تنظیمات → امنیت → هشدارهای فهرست سیاه</string>
+    <string name="install_view_module_info">- درباره ماژول: %1$s</string>
+    <string name="copying_failed">! رونویسی ناموفق بود</string>
+    <string name="install_view_installing">- در حال نصب %1$s</string>
+    <string name="this_module_don_t_have_an_action">! این ماژول هیچ کنشی ندارد.</string>
+    <string name="failed_to_remove_updated_folder">! پ پوشه به‌روزرسانی‌شده ناموفق بود</string>
+    <string name="installation_aborted_due_to_an_error">! نصب به دلیل خطا متوقف شد</string>
+    <string name="install_view_path">- مسیر: %1$s</string>
+    <string name="module_not_found">! ماژول پیدا نشد.</string>
+    <string name="module_is_disabled_or_removed_unable_to_execute_action">! ماژول خاموش یا پاک شده است. نمی‌تواند کنش را اجرا کند.</string>
+    <string name="copying_zip_to_temp_directory">- رونویسی پرونده زیپ به پوشه موقت</string>
+    <string name="unable_to_gather_module_info">!نمی‌توان داده‌های ماژول را گردآوری کرد</string>
+    <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- اجرای کنش ناموفق بود. به‌کارگیری شِل برای اجرای کنش را امتحان کنید، تنظیمات → ماژول → به‌کارگیری شِل برای کنش ماژول.</string>
+    <string name="unable_to_find_path_for_uri">! نمیتوان مسیر را برای URI پیدا کرد: %1$s</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s پرونده ماژول نیست. ماژول‌های مجیسک باید پرونده‌های .zip باشند. رد کردن...</string>
+    <string name="removed_updated_folder">- پوشه به‌روزرسانی‌شده پاک شد</string>
+    <string name="non_root_platform_is_not_supported">! سکو های روت نشده پشتیبانی نمی‌شوند</string>
+    <string name="module_manager_is_null">! مدیریت ماژول ها تهی است</string>
+    <string name="file_manager_is_null">! مدیریت پرونده‌ها تهی است</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="install_view_path">- Ceļš: %1$s</string>
+    <string name="install_view_installing">- Uzstāda %1$s</string>
+    <string name="module_not_found">! Modulis nav atrasts.</string>
+</resources>
