@@ -18,4 +18,10 @@
     <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s bir modül dosyası değil. Magisk modülleri .zip dosyaları olmalıdır. Atlanıyor...</string>
     <string name="removed_updated_folder">- Güncellenmiş klasör kaldırıldı</string>
     <string name="failed_to_remove_updated_folder">! Güncellenmiş klasörün kaldırılması başarısız</string>
+    <string name="non_root_platform_is_not_supported">! Root erişimi olmayan platformlar desteklenmiyor</string>
+    <string name="module_manager_is_null">! Modül yöneticisi boş</string>
+    <string name="file_manager_is_null">! Dosya yöneticisi boş</string>
+    <string name="waiting_for_platformmanager_to_initialize">- PlatformManager\'ın başlatılması bekleniyor...</string>
+    <string name="failed_to_initialize_platform">! Platform başlatılamadı</string>
+    <string name="platform_initialized">- Platform başlatıldı</string>
 </resources>

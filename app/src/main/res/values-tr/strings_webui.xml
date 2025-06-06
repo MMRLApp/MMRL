@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- requireNewVersion.html -->
+    <string name="requireNewVersion_cannot_load_webui">WebUI yüklenemiyor</string>
+    <string name="requireNewVersion_require_text">en az MMRL &gt;= sürümünü gerektirir</string>
+    <string name="requireNewVersion_try_the_following">Şunları deneyin:</string>
+    <string name="requireNewVersion_try_the_following_one">MMRL\'yi Google Play veya GitHub Releases üzerinden en son sürüme güncelleyin.</string>
+    <string name="requireNewVersion_try_the_following_two">Olası bir çözüm için modül geliştiricisine ulaşın.</string>
+    <string name="requireNewVersion_refresh">Yenile</string>
+</resources>
