@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,14 +42,20 @@ import com.dergoogler.mmrl.ext.currentScreenWidth
 import com.dergoogler.mmrl.ext.isScrollingUp
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.systemBarsPaddingEnd
+import com.dergoogler.mmrl.ext.isPackageInstalled
 import com.dergoogler.mmrl.model.local.LocalModule
+import com.dergoogler.mmrl.model.local.versionDisplay
 import com.dergoogler.mmrl.model.online.VersionItem
+import com.dergoogler.mmrl.platform.content.LocalModule.Companion.config
 import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.ui.component.Loading
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.SearchTopBar
 import com.dergoogler.mmrl.ui.component.TopAppBarEventIcon
 import com.dergoogler.mmrl.viewmodel.ModulesViewModel
+import com.dergoogler.mmrl.utils.WebUIXPackageName
+import com.dergoogler.mmrl.utils.toFormattedDateSafely
+import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
 
 @Composable
 fun ModulesScreen(
@@ -69,6 +76,24 @@ fun ModulesScreen(
         derivedStateOf {
             isScrollingUp && !viewModel.isSearch && viewModel.isProviderAlive
         }
+    }
+
+    val cachedModuleData = list.associate { module ->
+        module.id.toString() to ModuleCacheData(
+            displayName = module.config.name ?: module.name,
+            versionAuthor = stringResource(
+                R.string.module_version_author,
+                module.versionDisplay, module.author
+            ),
+            updateTime = if (module.lastUpdated != 0L) {
+                stringResource(
+                    R.string.module_update_at,
+                    module.lastUpdated.toFormattedDateSafely
+                )
+            } else null,
+            formattedSize = module.size.toFormattedFileSize(),
+            isWebUIPackageInstalled = context.isPackageInstalled(WebUIXPackageName)
+        )
     }
 
     val download: (LocalModule, VersionItem, Boolean) -> Unit = { module, item, install ->
@@ -139,6 +164,7 @@ fun ModulesScreen(
                     state = listState,
                     viewModel = viewModel,
                     onDownload = download,
+                    cachedModuleData = cachedModuleData
                 )
             }
         }

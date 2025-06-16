@@ -89,6 +89,12 @@ fun ModuleItem(
     trailingButton: @Composable() (RowScope.() -> Unit),
     isBlacklisted: Boolean = false,
     isProviderAlive: Boolean,
+    cachedDisplayName: String? = null,
+    cachedVersionAuthor: String? = null,
+    cachedUpdateTime: String? = null,
+    cachedDescription: AnnotatedString? = null,
+    cachedFormattedSize: String? = null,
+    isWebUIPackageInstalled: Boolean = false,
 ) {
     val userPreferences = LocalUserPreferences.current
     val menu = userPreferences.modulesMenu
@@ -100,7 +106,7 @@ fun ModuleItem(
         isProviderAlive && module.hasWebUI && module.state != State.REMOVE
 
     val clicker: (() -> Unit)? = canWenUIAccessed nullable jump@{
-        if (!context.isPackageInstalled(WebUIXPackageName)) {
+        if (!isWebUIPackageInstalled) {
             requiredAppBottomSheet = true
             return@jump
         }
@@ -163,13 +169,13 @@ fun ModuleItem(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     TextWithIcon(
-                        text = module.config.name ?: module.name,
+                        text = cachedDisplayName ?: (module.config.name ?: module.name),
                         icon = canWenUIAccessed nullable R.drawable.sandbox,
                         style = TextWithIconDefaults.style.copy(textStyle = MaterialTheme.typography.titleSmall)
                     )
 
                     Text(
-                        text = stringResource(
+                        text = cachedVersionAuthor ?: stringResource(
                             id = R.string.module_version_author,
                             module.versionDisplay, module.author
                         ),
@@ -180,7 +186,7 @@ fun ModuleItem(
 
                     if (module.lastUpdated != 0L && menu.showUpdatedTime) {
                         Text(
-                            text = stringResource(
+                            text = cachedUpdateTime ?: stringResource(
                                 id = R.string.module_update_at,
                                 module.lastUpdated.toFormattedDateSafely
                             ),
@@ -194,7 +200,7 @@ fun ModuleItem(
                 switch?.invoke()
             }
 
-            val description = if (module.config.description != null) {
+            val description = cachedDescription ?: if (module.config.description != null) {
                 module.config.description!!.toStyleMarkup()
             } else {
                 AnnotatedString(module.description)
@@ -227,7 +233,7 @@ fun ModuleItem(
                 }
 
                 LabelItem(
-                    text = module.size.toFormattedFileSize(),
+                    text = cachedFormattedSize ?: module.size.toFormattedFileSize(),
                     style = LabelItemDefaults.style.copy(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer

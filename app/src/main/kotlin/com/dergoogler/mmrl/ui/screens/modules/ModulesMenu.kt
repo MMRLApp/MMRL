@@ -39,10 +39,12 @@ import com.dergoogler.mmrl.ext.shareText
 import com.dergoogler.mmrl.ext.toFormattedDateSafely
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
+import com.dergoogler.mmrl.model.local.LocalModule
 
 @Composable
 fun ModulesMenu(
     setMenu: (ModulesMenu) -> Unit,
+    cachedModules: List<LocalModule> = emptyList(),
 ) {
     val userPreferences = LocalUserPreferences.current
     var open by rememberSaveable { mutableStateOf(false) }
@@ -59,7 +61,8 @@ fun ModulesMenu(
             MenuBottomSheet(
                 onClose = { open = false },
                 menu = userPreferences.modulesMenu,
-                setMenu = setMenu
+                setMenu = setMenu,
+                cachedModules = cachedModules
             )
         }
     }
@@ -70,6 +73,7 @@ private fun MenuBottomSheet(
     onClose: () -> Unit,
     menu: ModulesMenu,
     setMenu: (ModulesMenu) -> Unit,
+    cachedModules: List<LocalModule>,
 ) = BottomSheet(onDismissRequest = onClose) {
     val options = listOf(
         Option.Name to R.string.menu_sort_option_name,
@@ -161,18 +165,18 @@ private fun MenuBottomSheet(
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedButton(
-            enabled = PlatformManager.isAlive,
+            enabled = cachedModules.isNotEmpty(),
             onClick = {
                 val builder = StringBuilder()
 
                 with(builder) {
-                    PlatformManager.moduleManager.modules.map {
-                        append("Name: ${it.name}\n")
-                        append("ID: ${it.id}\n")
-                        append("Version: ${it.version}\n")
-                        append("VersionCode: ${it.versionCode}\n")
-                        append("Stat: ${it.lastUpdated.toFormattedDateSafely()}\n")
-                        append("Size: ${it.size.toFormattedFileSize()}\n\n")
+                    cachedModules.map { module ->
+                        append("Name: ${module.name}\n")
+                        append("ID: ${module.id}\n")
+                        append("Version: ${module.version}\n")
+                        append("VersionCode: ${module.versionCode}\n")
+                        append("Stat: ${module.lastUpdated.toFormattedDateSafely()}\n")
+                        append("Size: ${module.size.toFormattedFileSize()}\n\n")
                     }
                 }
 
