@@ -52,12 +52,21 @@ import com.dergoogler.mmrl.webui.model.WebUIConfig
 import com.dergoogler.mmrl.webui.model.WebUIConfig.Companion.webUiConfig
 import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 
+data class ModuleCacheData(
+    val displayName: String,
+    val versionAuthor: String,
+    val updateTime: String?,
+    val formattedSize: String,
+    val isWebUIPackageInstalled: Boolean
+)
+
 @Composable
 fun ScaffoldScope.ModulesList(
     list: List<LocalModule>,
     state: LazyListState,
     onDownload: (LocalModule, VersionItem, Boolean) -> Unit,
     viewModel: ModulesViewModel,
+    cachedModuleData: Map<String, ModuleCacheData> = emptyMap(),
 ) = Box(
     modifier = Modifier.fillMaxSize()
 ) {
@@ -76,6 +85,7 @@ fun ScaffoldScope.ModulesList(
                     module = module,
                     viewModel = viewModel,
                     onDownload = onDownload,
+                    cachedData = cachedModuleData[module.id.toString()]
                 )
             }
         }
@@ -92,6 +102,7 @@ fun ModuleItem(
     module: LocalModule,
     onDownload: (LocalModule, VersionItem, Boolean) -> Unit,
     viewModel: ModulesViewModel,
+    cachedData: ModuleCacheData? = null,
 ) {
     val userPreferences = LocalUserPreferences.current
 
@@ -189,8 +200,12 @@ fun ModuleItem(
                 enabled = isProviderAlive && (!(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) || module.state != State.REMOVE),
                 onClick = ops.change
             )
-
-        }
+        },
+        cachedDisplayName = cachedData?.displayName,
+        cachedVersionAuthor = cachedData?.versionAuthor,
+        cachedUpdateTime = cachedData?.updateTime,
+        cachedFormattedSize = cachedData?.formattedSize,
+        isWebUIPackageInstalled = cachedData?.isWebUIPackageInstalled ?: false
     )
 }
 
