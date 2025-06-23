@@ -6,7 +6,7 @@
     <string name="installation_aborted_due_to_an_error">! Bir hata nedeniyle yükleme iptal edildi</string>
     <string name="install_view_path">- Yol: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Zip dosyası geçici dizine kopyalanıyor</string>
-    <string name="install_view_module_info">- Modül bilgisi: [underline]%1$s</string>
+    <string name="install_view_module_info">::group::Modül bilgisi</string>
     <string name="copying_failed">! Kopyalama başarısız</string>
     <string name="unable_to_gather_module_info">! Modül bilgisi toplanamıyor</string>
     <string name="install_view_installing">- Yükleniyor: [color=primary]%1$s</string>

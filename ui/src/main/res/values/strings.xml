@@ -3,8 +3,8 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="learn_more">Learn more</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="unknown_error">Unknown Error</string>
-    <string name="search_placeholder">Search...</string>
+    <string name="search_placeholder">Search…</string>
     <string name="select_a_option">Select a option</string>
 </resources>

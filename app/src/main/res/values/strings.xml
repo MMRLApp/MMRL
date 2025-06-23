@@ -15,7 +15,6 @@
     <string name="working_mode_kernelsu_desc">A kernel-based root solution offering enhanced control over userspace apps, customizable root privileges, and systemless module support using OverlayFS.</string>
     <string name="working_mode_magisk_desc">A suite of tools for Android customization, offering root access, module support, boot image modification, and process-level code execution with Zygisk.</string>
     <string name="working_mode_shizuku_desc">A permission-based solution that allows apps to execute system-level commands without full root access. It requires authorization from Sui or Shizuku, enabling elevated privileges for specific operations while maintaining system integrity.</string>
-
     <!-- Install -->
     <string name="install_screen_title">Installation</string>
     <string name="install_flashing">Flashing</string>
@@ -414,7 +413,7 @@
     <string name="settings_terminal_line_numbers">Line Numbers</string>
     <string name="settings_terminal_line_numbers_desc">Shows line numbers on the left side of the terminal</string>
     <string name="super_user_apps">SuperUser Apps</string>
-    <string name="settings_date_pattern_dialog_desc">The date will be parsed as [color=primary]%1$s[/color]</string>
+    <string name="settings_date_pattern_dialog_desc">The date pattern will be parsed as:\n[color=primary]%1$s[/color]</string>
     <string name="view_module_permissions">Permissions</string>
     <string name="settings_always_show_update_alert">Always Show Update Alert</string>
     <string name="update_available">Update available!</string>

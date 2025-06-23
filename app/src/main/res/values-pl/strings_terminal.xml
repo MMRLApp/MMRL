@@ -15,7 +15,7 @@
     <string name="unable_to_gather_module_info_of_file">! Nie można zebrać informacji o module pliku: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Kopiowanie pliku zip do katalogu tymczasowego</string>
     <string name="unable_to_find_path_for_uri">[color=red]! Nie można znaleźć ścieżki dla uri: %1$s[/color]</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s nie jest plikiem modułu. Moduły Magisk muszą być plikami .zip. Pomijanie...</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s nie jest plikiem modułu. Moduły Magisk muszą być plikami .zip. Pomijanie…</string>
     <string name="removed_updated_folder">- Usunięto zaktualizowany folder</string>
     <string name="failed_to_remove_updated_folder">[color=red]! Nie udało się usunąć zaktualizowanego folderu[/color]</string>
     <string name="file_manager_is_null">! Menedżer plików jest nieznany</string>

@@ -17,7 +17,7 @@
     <string name="page_repository">Repozytorium</string>
     <string name="page_modules">Moduły</string>
     <string name="page_settings">Ustawienia</string>
-    <string name="module_installed">Zainstalowany</string>
+    <string name="module_installed">Zainstalowano</string>
     <string name="view_module_provided">Źródło: %s</string>
     <string name="modules_empty">Nie znaleziono modułów</string>
     <string name="module_version_author">%1$s autorstwa %2$s</string>
@@ -386,7 +386,7 @@
     <string name="external_app_required_title">Wymagana aplikacja zewnętrzna</string>
     <string name="settings_terminal_line_numbers">Numery linii</string>
     <string name="super_user_apps">Aplikacje Superuser</string>
-    <string name="settings_date_pattern_dialog_desc">Data będzie przetworzona jako\n[color=primary]%1$s[/color]</string>
+    <string name="settings_date_pattern_dialog_desc">Wzór daty będzie przetworzony jako:\n[color=primary]%1$s[/color]</string>
     <string name="view_module_permissions">Uprawnienia</string>
     <string name="working_mode_sukisu_title">SukiSU Ultra</string>
     <string name="view_module_install_confirm_desc_deps">Czy na pewno chcesz zainstalować [color=surface_tint]%1$s[/color]? Ten moduł wymaga także:</string>

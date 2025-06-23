@@ -5,7 +5,7 @@
     <string name="installation_aborted_due_to_an_error">! Instalasi dibatalkan karena kesalahan</string>
     <string name="install_view_path">- Jalur: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Menyalin zip ke direktori temp</string>
-    <string name="install_view_module_info">- Info modul: %1$s</string>
+    <string name="install_view_module_info">::group::Info modul</string>
     <string name="copying_failed">! Penyalinan gagal</string>
     <string name="unable_to_gather_module_info">! Tidak dapat mengumpulkan info modul</string>
     <string name="install_view_installing">- Menginstal %1$s</string>

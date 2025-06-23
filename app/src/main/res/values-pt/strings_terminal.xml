@@ -11,7 +11,7 @@
     <string name="installation_aborted_due_to_an_error">! Instalação abortada devido a um erro</string>
     <string name="install_view_path">- Caminho: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Copiando o zip para o diretório temporário</string>
-    <string name="install_view_module_info">- Informação do módulo: %1$s</string>
+    <string name="install_view_module_info">::group::Informação do módulo</string>
     <string name="copying_failed">! Falha na cópia</string>
     <string name="unable_to_gather_module_info">! Não é possível reunir as informações do módulo</string>
     <string name="install_view_installing">- Instalando %1$s</string>

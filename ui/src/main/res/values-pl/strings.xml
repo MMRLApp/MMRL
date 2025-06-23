@@ -5,6 +5,6 @@
     <string name="cancel">Anuluj</string>
     <string name="learn_more">Dowiedz się więcej</string>
     <string name="unknown_error">Nieznany błąd</string>
-    <string name="search_placeholder">Wyszukaj...</string>
-    <string name="loading">Wczytywanie...</string>
+    <string name="search_placeholder">Wyszukaj…</string>
+    <string name="loading">Wczytywanie…</string>
 </resources>
