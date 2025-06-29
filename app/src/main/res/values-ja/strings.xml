@@ -271,7 +271,7 @@
     <string name="settings_modules_desc">モジュールのハンドラの動作を変更、モジュールに関するその他の情報を変更します</string>
     <string name="view_module_unsupported_device_desc">使用しているデバイスは、このモジュールに対応していないか除外されているようです。</string>
     <string name="view_module_unsupported_arch_desc">使用しているデバイスは、開発者が宣言した必要なアーキテクチャに対応していないようです。</string>
-    <string name="settings_modules">モジュールとインストーラー</string>
+    <string name="settings_modules">モジュール</string>
     <string name="action_activity">アクション</string>
     <string name="settings_security_allow_filesystem_api">ファイルシステム API を許可</string>
     <string name="settings_security_allow_advanced_kernelsu_api">高度な KernelSU API を許可</string>
@@ -416,4 +416,11 @@
     <string name="view_module_install_confirm_desc_deps">[color=surface_tint]%1$s[/color] をインストールしてもよろしいですか？このモジュールはこちらも必要です:</string>
     <string name="settings_always_show_update_alert">更新アラートを常に表示する</string>
     <string name="update_available">更新があります！</string>
+    <string name="settings_terminal">ターミナル</string>
+    <string name="settings_behavior">動作</string>
+    <string name="settings_terminal_desc">好みに合わせてターミナルをカスタマイズします</string>
+    <string name="hook_mode">フックモード</string>
+    <string name="kpm_support">KPM をサポート</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
 </resources>
