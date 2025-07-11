@@ -3,7 +3,7 @@
     <!-- Setup -->
     <string name="setup_mode">工作模式</string>
     <string name="setup_non_root_title">无 Root</string>
-    <string name="setup_non_root_desc">不需要 Root 权限，只有模块下载功能可用</string>
+    <string name="setup_non_root_desc">不需要 Root 权限，只有模块下载功能可用。</string>
     <!-- Install -->
     <string name="install_screen_title">安装</string>
     <string name="install_flashing">正在刷入</string>
@@ -79,7 +79,7 @@
     <string name="view_module_provided_by">提供者</string>
     <string name="view_module_added_on">附加信息</string>
     <string name="view_module_about_this_module">关于此模块</string>
-    <string name="view_module_section_count">%1$s+</string>
+    <string name="view_module_section_count">+%1$s</string>
     <string name="view_module_donate">捐赠</string>
     <string name="view_module_donate_desc">通过捐赠一杯咖啡表达对开发者的支持 ☕</string>
     <string name="view_module_module_id">模块 ID</string>
@@ -137,8 +137,8 @@
     <string name="settings_reboot_protection_desc">启用后在每次重启前需要手动确认</string>
     <string name="settings_blacklist">黑名单模块</string>
     <string name="settings_blacklist_desc">显示闭源的或者不安全的模块</string>
-    <string name="settings_date_pattern">日期设置</string>
-    <string name="settings_date_pattern_desc">自定义日期格式</string>
+    <string name="settings_date_pattern">日期模式</string>
+    <string name="settings_date_pattern_desc">使用自定义日期格式</string>
     <string name="settings_updates">更新</string>
     <string name="settings_updates_desc">管理你的更新配置</string>
     <string name="settings_homepage">应用主页</string>
@@ -157,7 +157,7 @@
     <string name="settings_check_modules_update_interval_desc">设置检查已安装模块的更新间隔</string>
     <string name="settings_include_preleases">包括预发行版</string>
     <string name="settings_developer_mode">开发者模式</string>
-    <string name="settings_developer_mode_desc">显示模块 ID 及其他信息</string>
+    <string name="settings_developer_mode_desc">显示模块 [color=primary]ID[/color] 及其他信息</string>
     <string name="settings_privacy_policy">隐私条款</string>
     <string name="settings_clear_install_terminal">清除安装终端日志</string>
     <string name="settings_clear_install_terminal_desc">在安装不止一个模块时清除安装终端</string>
@@ -250,7 +250,7 @@
     <string name="kernel">内核版本</string>
     <string name="manager_version">管理器版本</string>
     <string name="fingerprint">系统指纹</string>
-    <string name="new_version_available">新版本 %s 可用, 点击更新。</string>
+    <string name="new_version_available">新版本 [italic]%s[/italic] 可用, 点击更新。</string>
     <string name="hidden">隐藏</string>
     <string name="pre_release">预发布版本</string>
     <string name="unsafe_url_redirecting">危险的 URL：%1$s。正在进行重定向…</string>
@@ -260,7 +260,7 @@
     <string name="view_module_unsupported_device">不支持的设备</string>
     <string name="view_module_features_action">Action</string>
     <string name="view_module_unsupported_arch_desc">您的设备似乎不支持开发者声明的所需架构。</string>
-    <string name="settings_modules">模块操作 &amp; 安装</string>
+    <string name="settings_modules">模块操作</string>
     <string name="settings_modules_desc">修改模块处理流程或更多关于模块的内容</string>
     <string name="settings_modules_installer">安装</string>
     <string name="settings_modules_handlers">处理程序</string>
@@ -310,7 +310,7 @@
     <string name="blacklisted">已拉黑</string>
     <string name="settings_blacklist_alerts">黑名单警告</string>
     <string name="settings_blacklist_alerts_desc">为出现在黑名单列表内的模块在本地和线上标记警告，阻止安装</string>
-    <string name="blacklisted_desc">此模块已被 MMRL 拉黑，为确保设备安全，安装无法进行。若仍要安装，请在设置中停用黑名单警告。\n@more(了解更多)</string>
+    <string name="blacklisted_desc">此模块已被 MMRL 拉黑，为确保设备安全，安装无法进行。若仍要安装，请在 [bold]设置 → 安全 → 黑名单警告[/bold]中停用黑名单警告功能。</string>
     <string name="menu_show_modules_count">显示模块数量</string>
     <string name="settings_modules_permissions">模块 &amp; 权限</string>
     <string name="settings_modules_permissions_desc">允许 JavaScript API 和更多本地模块相关内容</string>
@@ -385,7 +385,7 @@
     <string name="platform">平台</string>
     <string name="change_platform">切换平台</string>
     <string name="select_your_platform">选择你的平台</string>
-    <string name="setup_root_note">你需要一台已获取 root 权限的安卓手机来使用 MMRL 的全部功能。MMRL 不提供获取 root 的方式与教程，且对获取 root 或对于 MMRL 的不当使用的风险概不负责。</string>
+    <string name="setup_root_note">你需要一台已获取 root 权限的安卓手机来使用 MMRL 的全部功能。MMRL 不提供获取 root 的方式与教程，且对获取 root 或对于 MMRL 的不当使用的风险概不负责。\n\n[link=https://mmrl.dev/legal/privacy]隐私政策[/link] • [link=https://mmrl.dev/legal/terms]服务条款[/link]</string>
     <string name="drawer_general">通用</string>
     <string name="drawer_legal">法律信息</string>
     <string name="drawer_tools">工具</string>
@@ -395,4 +395,32 @@
     <string name="settings_enable_toolbar_events">启用工具栏事件</string>
     <string name="unable_to_perform_reboot_task">无法执行重启任务</string>
     <string name="working_mode_sukisu_title">SukiSU Ultra</string>
+    <string name="settings_date_pattern_dialog_desc">日期模式将被解析为:\n[color=primary]%1$s[/color]</string>
+    <string name="view_module_install_confirm_desc_deps">您确定要安装 [color=surface_tint]%1$s[/color] 吗？此模块还需要：</string>
+    <string name="no">否</string>
+    <string name="yes">是</string>
+    <string name="architecture">架构</string>
+    <string name="view_module_no_description">未提供说明。</string>
+    <string name="create_webui_shortcut">创建 WebUI 快捷方式</string>
+    <string name="remove_webui_shortcut">移除 WebUI 快捷方式</string>
+    <string name="settings_webui_engine">WebUI 引擎</string>
+    <string name="settings_webui_engine_desc">选择首选引擎</string>
+    <string name="settings_webui_engine_wx">WebUI X</string>
+    <string name="settings_webui_engine_ksu">KSU WebUI</string>
+    <string name="settings_webui_engine_prefer_module">由模块配置决定</string>
+    <string name="menu_sort_option_size">按大小</string>
+    <string name="settings_try_wxp">试试 WebUI X: Portable！</string>
+    <string name="external_app_required_title">需要外部应用程序</string>
+    <string name="external_app_required_desc">为了增强您的使用体验并提供更强大的 WebUI 功能，MMRL 现在使用了一个专用的外部应用程序： WebUI X: Portable。这样不仅可以提高性能，增强安全性，而且会更频繁地扩展 WebUI 功能。您需要安装 WebUI X: Portable 才能继续访问模块的 WebUI。通过 Google Play 商店安装 MMRL 的用户将被重定向到 WebUI X: Portable 的 Google Play 商店页面。</string>
+    <string name="settings_terminal_line_numbers">行号</string>
+    <string name="settings_terminal_line_numbers_desc">在终端左侧显示行号</string>
+    <string name="super_user_apps">超级用户应用</string>
+    <string name="view_module_permissions">权限</string>
+    <string name="settings_always_show_update_alert">始终显示更新提醒</string>
+    <string name="update_available">有可用更新！</string>
+    <string name="settings_terminal">终端</string>
+    <string name="settings_behavior">行为</string>
+    <string name="settings_terminal_desc">根据您的喜好定制终端</string>
+    <string name="hook_mode">Hook 模式</string>
+    <string name="kpm_support">KPN 支持</string>
 </resources>
