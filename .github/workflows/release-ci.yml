@@ -1,4 +1,4 @@
-name: Release CI
+.name: Release CI
 
 on:
   workflow_dispatch:
