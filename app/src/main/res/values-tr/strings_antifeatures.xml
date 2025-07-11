@@ -27,5 +27,5 @@
     <string name="llm_name">Büyük Dil Modeli</string>
     <string name="llm_desc">Modülün bir kısmı veya tamamı bir LLM tarafından yazılmış olabilir.</string>
     <string name="closedsource_name">Kapalı Kaynak</string>
-    <string name="closedsource_desc">Modül açık kaynak değildir ve kod tabanı kamuoyunca inceleme, değiştirme veya yeniden dağıtım için erişilemez.</string>
+    <string name="closedsource_desc">Modül açık kaynaklı değildir ve kod tabanı inceleme, değişiklik veya yeniden dağıtım için kamuya açık değildir</string>
 </resources>

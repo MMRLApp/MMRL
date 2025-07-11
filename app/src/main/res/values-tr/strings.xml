@@ -3,7 +3,7 @@
     <!-- Kurulum -->
     <string name="setup_mode">Çalışma Modu</string>
     <string name="setup_non_root_title">Root Olmayan</string>
-    <string name="setup_non_root_desc">Root izinleri gerekmez, sadece indirme modülü işlevi kullanılabilir</string>
+    <string name="setup_non_root_desc">Root iznine gerek yok, sadece indirme modülü fonksiyonu mevcut.</string>
     <string name="working_mode_magisk_title">Magisk</string>
     <string name="working_mode_kernelsu_title">KernelSU</string>
     <string name="working_mode_kernelsu_next_title">KernelSU Next</string>
@@ -147,7 +147,7 @@
     <string name="settings_non_root_desc">İşlevsellik sınırlı</string>
     <!-- Uygulama -->
     <string name="settings_app_theme">Uygulama Teması</string>
-    <string name="settings_app_theme_desc">Renk düzenini ve gece modunu değiştirin</string>
+    <string name="settings_app_theme_desc">Renk düzenini ve gece modunu değiştirin.</string>
     <string name="settings_download_path">İndirme Yolu</string>
     <string name="settings_delete_zip">Zip Dosyasını Sil</string>
     <string name="settings_delete_zip_desc">Modülün yüklenmesi başarılı olduktan sonra zip dosyasını siler, bu Süper Kullanıcı tarafından yürütülecektir</string>
@@ -177,13 +177,13 @@
     <string name="settings_check_modules_update_interval_desc">Yüklü modüllerinizin kontrol aralığını seçin</string>
     <string name="settings_include_preleases">Ön Sürümleri Dahil Et</string>
     <string name="settings_developer_mode">Geliştirici Modu</string>
-    <string name="settings_developer_mode_desc">Modüllerin kimliklerini ve daha fazlasını gösterir</string>
+    <string name="settings_developer_mode_desc">Modüllerin [color=primary]kimliklerini[/color] ve daha fazlasını gösterir</string>
     <string name="settings_privacy_policy">Gizlilik Politikası</string>
     <string name="settings_clear_install_terminal">Yükleme Terminalini Temizle</string>
     <string name="settings_clear_install_terminal_desc">Birden fazla Modül yüklerken Yükleme Terminalini Temizle</string>
     <string name="settings_shell_module_state_change">Durumlar için Kabuk Kullan</string>
     <string name="settings_shell_module_state_change_desc">Modül dizininde dosya oluşturmak yerine kabuğu kullanır. Etkinleştirildikten sonra sınırlamalar nedeniyle geri yükleme düğmesini kullanamazsınız.</string>
-    <string name="settings_modules">Modüller ve Yükleyici</string>
+    <string name="settings_modules">Modüller</string>
     <string name="settings_modules_desc">Modüller için işleyicilerin davranışını ve daha fazlasını değiştirin</string>
     <string name="settings_modules_handlers">İşleyiciler</string>
     <string name="settings_modules_installer">Yükleyici</string>
@@ -192,14 +192,14 @@
     <string name="settings_developer">Geliştirici</string>
     <string name="settings_developer_desc">Geliştiriciler için hata ayıklama araçları</string>
     <string name="settings_webui_remote_url">WebUI Uzak URL</string>
-    <string name="settings_webui_remote_url_desc">Hata ayıklamayı kolaylaştırmak için http://localhost gibi yerel bir alan adı sağlayın. Daha fazla bilgi için yukarıdaki uyarıya bakınız.</string>
+    <string name="settings_webui_remote_url_desc">Hata ayıklamayı kolaylaştırmak için http://localhost gibi yerel bir alan adı sağlayın. Daha fazla bilgi için yukarıdaki uyarıya bakın.</string>
     <string name="settings_webui_remote_url_alert_desc">WebUI, tüm modüller için artık belirttiğiniz adresi kullanacak, SSL hatalarını atlayacak ve /data/adb/modules/{ID}/webroot\'a erişimi devre dışı bırakacaktır. Bu özelliği kullanmak için yerel bir öz-imzalı web sunucusu gerekir, bu özellik sadece hata ayıklama amacıyla tasarlanmıştır, günlük kullanım için değildir ve kendi sorumluluğunuzda kullanılır.</string>
     <!-- Uygulama Teması -->
     <string name="app_theme_palette">Tema Paleti</string>
     <string name="app_theme_dark_theme">Koyu Tema</string>
     <string name="app_theme_dark_theme_auto">Otomatik</string>
-    <string name="app_theme_dark_theme_light">Açık</string>
-    <string name="app_theme_dark_theme_dark">Koyu</string>
+    <string name="app_theme_dark_theme_light">Işık</string>
+    <string name="app_theme_dark_theme_dark">Karanlık</string>
     <!-- Depo -->
     <string name="repo_modules">%d modül</string>
     <string name="repo_update_at">Güncellendi: %s</string>
@@ -229,7 +229,7 @@
     <string name="menu_sort_option_updated">Güncelleme Zamanı</string>
     <string name="menu_descending">Azalan</string>
     <string name="menu_pin_enabled">Sabitleme Etkin</string>
-    <string name="menu_pin_action">Eylemi Sabitle</string>
+    <string name="menu_pin_action">Eylemleri Sabitle</string>
     <string name="menu_pin_webui">WebUI\'yi Sabitle</string>
     <string name="menu_show_updated">Güncelleme Zamanını Göster</string>
     <string name="menu_show_antifeatures">Anti-Özellikleri Göster</string>
@@ -294,23 +294,23 @@
     <string name="kernel">Çekirdek</string>
     <string name="manager_version">Yönetici Sürümü</string>
     <string name="fingerprint">Parmak İzi</string>
-    <string name="new_version_available">%s sürümü yeni bir sürüm mevcut, yükseltmek için tıklayın.</string>
+    <string name="new_version_available">Yeni sürüm [italic]%s[/italic] mevcuttur, yükseltmek için tıklayın.</string>
     <string name="hidden">Gizli</string>
     <string name="pre_release">Ön Sürüm</string>
     <string name="unsafe_url_redirecting">Güvensiz URL: %1$s. Yönlendiriliyor…</string>
     <string name="copy_logs">Günlükleri Kopyala</string>
     <string name="selected">Seçili</string>
-    <string name="invalid_ip">Bu bir geçerli yerel alan adı değil!</string>
+    <string name="invalid_ip">Bu geçerli bir yerel alan adı değil!</string>
     <string name="install_screen_cancel_title">Yüklemeyi iptal etmek istiyor musunuz?</string>
     <string name="install_screen_cancel_text">Yüklemeyi iptal etmek istediğinizden emin misiniz?</string>
     <string name="action_screen_cancel_title">Eylemi iptal etmek istiyor musunuz?</string>
     <string name="action_screen_cancel_text">Bu eylemi iptal etmek istediğinizden emin misiniz?</string>
     <string name="settings_use_generic_action">Genel Eylemi Kullan</string>
     <string name="settings_use_generic_action_desc">Çoğu root sağlayıcısı, bir eylem CLI komutu desteklemez. Bunun yerine genel bir betik kullanabilirsiniz</string>
-    <string name="learn_more">Daha fazla bilgi edin</string>
+    <string name="learn_more">Daha fazla bilgi</string>
     <string name="sponsors">Sponsorlar</string>
     <string name="blacklisted">Kara Listeye Alındı</string>
-    <string name="blacklisted_desc">Bu modül MMRL tarafından kara listeye alındı. Güvenliğinizi sağlamak için yükleme devre dışı bırakıldı. Yine de bu modülü yüklemek istiyorsanız, ayarlardan kara liste uyarılarını devre dışı bırakabilirsiniz. Bunu yapmak için **Ayarlar → Güvenlik → Kara Liste Uyarıları**\'na gidin.\n@more(Daha fazla bilgi)</string>
+    <string name="blacklisted_desc">Bu modül MMRL tarafından kara listeye alındı. Güvenliğiniz için kurulum devre dışı bırakıldı. Bu modülü yine de kurmak istiyorsanız, ayarlardan [bold]Ayarlar → Güvenlik → Kara Liste Uyarıları[/bold]\'na giderek kara liste uyarılarını devre dışı bırakabilirsiniz.</string>
     <string name="settings_blacklist_alerts">Kara Liste Uyarıları</string>
     <string name="settings_blacklist_alerts_desc">Yerel ve keşif modülleri için bir uyarı gösterir ve ayrıca kara listeye alınan herhangi bir modülün yüklenmesini engeller</string>
     <string name="page_repositorys">Depolar</string>
@@ -318,7 +318,7 @@
     <string name="settings_modules_permissions">Modüller ve İzinler</string>
     <string name="settings_modules_permissions_desc">Yerel modüllerle ilgili JavaScript API\'larını ve daha fazlasını izin verir</string>
     <string name="debugging">Hata Ayıklama</string>
-    <string name="settings_security_inject_eruda">Eruda Enjekte Et</string>
+    <string name="settings_security_inject_eruda">Eruda\'yı enjekte et</string>
     <string name="settings_security_inject_eruda_desc">MMRL\'nin insets özelliğinin içe aktarılmasını gerektirir.</string>
     <string name="explore_repositories">Depoları Keşfet</string>
     <string name="about_this_repository">Bu Depo Hakkında</string>
@@ -330,7 +330,7 @@
     <string name="total_community_contributions">%1$s toplam topluluk katkısı</string>
     <string name="have_been_total_sponsored">%1$s toplam sponsorlandı</string>
     <string name="contributors">Katkıda Bulunanlar</string>
-    <string name="install_screen_confirm_title">Yüklemeyi Onayla</string>
+    <string name="install_screen_confirm_title">Yükleme Onaylansın mı?</string>
     <string name="install_screen_confirm_text">Bu modülü yüklemek istediğinizden emin misiniz?</string>
     <string name="settings_log_viewer">Günlük Görüntüleyici</string>
     <string name="settings_terms_of_service">Hizmet Şartları</string>
@@ -378,9 +378,10 @@
     <string name="missing_mod_id">Bir Modül Kimliği tanımlanmadı</string>
     <string name="are_you_sure_you_want_to_exit">Çıkmak istediğinizden emin misiniz?</string>
     <string name="exit">Çıkış</string>
-    <string name="says">%1$s şöyle diyor</string>
+    <string name="says">%1$s diyor ki</string>
     <string name="working_mode_sukisu_title">SukiSU Ultra</string>
     <string name="settings_webui_engine_desc">Tercih ettiğiniz motoru seçin</string>
     <string name="settings_webui_engine">WebUI Motoru</string>
     <string name="settings_webui_engine_wx">WebUI X</string>
+    <string name="view_module_install_confirm_desc_deps">[color=surface_tint]%1$s[/color] yüklemek istediğinizden emin misiniz? Bu modül ayrıca şunları gerektirir:</string>
 </resources>
