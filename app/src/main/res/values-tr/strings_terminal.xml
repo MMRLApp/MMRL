@@ -23,4 +23,8 @@
     <string name="file_manager_is_null">! Dosya yöneticisi bilinmiyor</string>
     <string name="waiting_for_platformmanager_to_initialize">[bold]- PlatformManager\'ın başlatılması bekleniyor…[/bold]</string>
     <string name="failed_to_initialize_platform">[color=red]! Platform başlatılamadı[/color]</string>
+    <string name="platform_initialized">[bold]- Platform başlatıldı[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! Platform başlatılamadı. Kuruluma devam edilemiyor.[/color]</string>
+    <string name="deleted_zip_file">- Silinen ZIP dosyası: %s</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! Platform aktif değil. Kuruluma devam edilemiyor.[/color]</string>
 </resources>
