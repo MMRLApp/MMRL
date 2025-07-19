@@ -1,6 +1,7 @@
 MMRL, kendi modül deponuzu yönetmenize yardımcı olan bir Android uygulamasıdır.
 
 Özellikler:
+
 - Modül deponuzu yönetin
 - Birden fazla deponun desteklenmesi
 - Magisk ve KernelSU desteği

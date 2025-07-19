@@ -1,9 +1,10 @@
 MMRL هو تطبيق Android يساعد في إدارة مستودع الإضافت النمطية الخاص بك.
 
  المميزات:
- - إدارة مستودع الإضافات الخاصة بك
- - دعم مستودعات متعددة
- - دعم Magisk وKernelSU
- - إنشاء Jetpack وتصميم Material 3
 
- https://github.com/DerGoogler/MMRL
+- إدارة مستودع الإضافات الخاصة بك
+- دعم مستودعات متعددة
+- دعم Magisk وKernelSU
+- إنشاء Jetpack وتصميم Material 3
+
+https://github.com/DerGoogler/MMRL
