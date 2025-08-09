@@ -1,6 +1,7 @@
 MMRL é um aplicativo Android que ajuda a gerenciar seus repositórios de módulos.
 
 Funções
+
 - Gerenciar seus repositórios de módulos
 - Sporte a múltiplos repositórios
 - Suporte ao Magisk e ao KernelSU
