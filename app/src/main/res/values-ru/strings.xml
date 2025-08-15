@@ -249,7 +249,7 @@
     <string name="view_module_low_root_version">Версия Root ниже требуемой!</string>
     <string name="settings_modules_handlers">Обработчики</string>
     <string name="settings_modules_installer">Установщик</string>
-    <string name="menu_export_modules_as_text">Экспорт модулей в текстовый файл</string>
+    <string name="menu_export_modules_as_text">Экспорт модулей в виде текста</string>
     <string name="reboot_bootloader">Перезагрузка в загрузчик</string>
     <string name="settings_root_version">Версия: %s</string>
     <string name="settings_check_app_updates_desc">Автоматически проверяет наличие обновлений каждый раз, когда вы открываете приложение</string>
@@ -276,7 +276,7 @@
     <string name="home_updated_modules">Обновленные модули</string>
     <string name="bulk_install_module_already_added">Модуль уже добавлен</string>
     <string name="bulk_install_module_added">Модуль добавлен</string>
-    <string name="page_repositorys">Репозитории</string>
+    <string name="page_repositorys">Репоз</string>
     <string name="blacklisted_desc">Этот модуль был внесен в черный список MMRL. Установка отключена для обеспечения вашей безопасности. Если вы все еще хотите установить этот модуль, вы можете отключить оповещения черного списка в настройках, перейдя в [bold]Настройки → Безопасность → Оповещения черного списка[/bold].</string>
     <string name="blacklisted">В черном списке</string>
     <string name="settings_blacklist_alerts">Предупреждения о черном списке</string>
@@ -285,7 +285,7 @@
     <string name="settings_modules_permissions">Модули &amp; Разрешения</string>
     <string name="settings_modules_permissions_desc">Разрешить JavaScript API и многое другое для локальных модулей</string>
     <string name="working_mode_kernelsu_desc">Рут-решение на основе ядра, предлагающее расширенный контроль над пользовательскими приложениями, настраиваемые права суперпользователя и поддержку системных модулей с использованием OverlayFS.</string>
-    <string name="working_mode_apatch_desc">Патчинг ядра и системы Android. Новое рут-решение на основе ядра с поддержкой модулей (как в Magisk) и внедрением функций в ядро (требуется inline-hook и syscall-table-hook). Основано и модифицировано из KernelSU.</string>
+    <string name="working_mode_apatch_desc">Обновление ядра и системы Android. Новое решение для рута на основе ядра с поддержкой модулей, аналогичных Magisk, и инъекции функций ядра (требует inline-hook и syscall-table-hook). Получен и модифицирован из KernelSU.</string>
     <string name="working_mode_kernelsu_next_desc">Продвинутое рут-решение на основе ядра с поддержкой Magic Mount, расширенным контролем над пользовательскими приложениями и настраиваемыми правами суперпользователя.</string>
     <string name="working_mode_magisk_desc">Набор инструментов для настройки Android, предоставляющий root-доступ, поддержку модулей, модификацию загрузочного образа и выполнение кода на уровне процессов с помощью Zygisk.</string>
     <string name="settings_shell_module_state_change_desc">Использует shell вместо создания файлов в директории модуля. После включения вы не сможете использовать кнопку восстановления из-за ограничений.</string>
@@ -422,4 +422,12 @@
     <string name="provider_service_started">Запущена служба провайдера</string>
     <string name="file_already_exists">Файл уже существует</string>
     <string name="settings_strict_mode">Строгий режим</string>
+    <string name="page_repos">Репозитории</string>
+    <string name="count_with_plus">%1$d+</string>
+    <string name="available_modules">Доступные модули</string>
+    <string name="explore_repos_discover_text">Найдите и установите модули из [bold]%1$d[/bold] надежных репозиториев, в которых представлено более [bold]%2$d[/bold] модулей для вашего устройства.</string>
+    <string name="module_repositories">Репозитории модулей</string>
+    <string name="latest_commit_id">ID последнего коммита</string>
+    <string name="build_tools_version">Версия инструментов сборки</string>
+    <string name="compile_sdk">Компиляция SDK</string>
 </resources>
