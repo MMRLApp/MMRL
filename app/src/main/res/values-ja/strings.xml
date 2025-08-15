@@ -423,4 +423,12 @@
     <string name="kpm_support">KPM をサポート</string>
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
+    <string name="page_repos">リポジトリ</string>
+    <string name="count_with_plus">%1$d+</string>
+    <string name="available_modules">利用可能なモジュール</string>
+    <string name="explore_repos_discover_text">[bold]%2$d[/bold] 個を超えるモジュールを備えた [bold]%1$d[/bold] の信頼できるリポジトリからモジュールを検出してインストールします。</string>
+    <string name="module_repositories">モジュールのリポジトリ</string>
+    <string name="latest_commit_id">最新のコミット ID</string>
+    <string name="build_tools_version">ビルドツールのバージョン</string>
+    <string name="compile_sdk">コンパイル SDK</string>
 </resources>
