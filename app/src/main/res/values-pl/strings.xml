@@ -404,4 +404,7 @@
     <string name="available_modules">Dostępne moduły</string>
     <string name="explore_repos_discover_text">Odkryj i zainstaluj moduły z [bold]%1$d[/bold] zaufanych repozytoriów, zawierających ponad [bold]%2$d[/bold] modułów dla Twojego urządzenia.</string>
     <string name="module_repositories">Repozytoria modułów</string>
+    <string name="latest_commit_id">Najnowsze ID zatwierdzenia</string>
+    <string name="build_tools_version">Wersja narzędzi budowania</string>
+    <string name="compile_sdk">Kompilacja SDK</string>
 </resources>
