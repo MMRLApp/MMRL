@@ -431,4 +431,6 @@
     <string name="available_modules">可用模块</string>
     <string name="explore_repos_discover_text">从 [bold]%1$d[/bold] 个受信任的仓库中发现并安装模块，为您的设备提供超过 [bold]%2$d[/bold] 个模块选择。</string>
     <string name="module_repositories">模块仓库</string>
+    <string name="settings_set_spoofed_wxp">WebUI X Portable 包名</string>
+    <string name="settings_set_spoofed_wxp_desc">自定义一个 WebUI X Portable 的伪装包名。</string>
 </resources>
