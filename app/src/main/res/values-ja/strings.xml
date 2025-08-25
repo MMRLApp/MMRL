@@ -321,11 +321,11 @@
     <string name="about_this_repository">このリポジトリについて</string>
     <string name="submit_module">モジュールを送信</string>
     <string name="team">チーム</string>
-    <string name="in_total">合計 %1$s</string>
-    <string name="thank_you">感謝します</string>
-    <string name="contributions">%1$d 名の貢献</string>
-    <string name="have_been_total_sponsored">合計 %1$s 名にスポンサーされました</string>
-    <string name="total_community_contributions">合計 %1$s 名のコミュニティの貢献</string>
+    <string name="in_total">%1$s の寄付</string>
+    <string name="thank_you">ありがとう</string>
+    <string name="contributions">%1$d 件の貢献</string>
+    <string name="have_been_total_sponsored">合計 %1$s がスポンサーから提供されました</string>
+    <string name="total_community_contributions">合計 %1$s 件のコミュニティへの貢献</string>
     <string name="contributors">貢献者</string>
     <string name="install_screen_confirm_title">インストールしますか？</string>
     <string name="install_screen_confirm_text">このモジュールをインストールしますか？</string>
@@ -431,4 +431,6 @@
     <string name="latest_commit_id">最新のコミット ID</string>
     <string name="build_tools_version">ビルドツールのバージョン</string>
     <string name="compile_sdk">コンパイル SDK</string>
+    <string name="settings_set_spoofed_wxp">WebUI X Portable パッケージ</string>
+    <string name="settings_set_spoofed_wxp_desc">WebUI X Portable を偽装するパッケージ名をカスタマイズします。</string>
 </resources>
