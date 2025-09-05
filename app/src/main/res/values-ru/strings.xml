@@ -430,4 +430,5 @@
     <string name="latest_commit_id">ID последнего коммита</string>
     <string name="build_tools_version">Версия инструментов сборки</string>
     <string name="compile_sdk">Компиляция SDK</string>
+    <string name="settings_set_spoofed_wxp">WebUI X Портативный пакет</string>
 </resources>
