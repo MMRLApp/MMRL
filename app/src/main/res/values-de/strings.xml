@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="setup_non_root_title">Ohne Root</string>
-    <string name="install_flashing">Installiert</string>
+    <string name="install_flashing">Installieren</string>
     <string name="install_failure">Fehlgeschlagen</string>
     <string name="license_title">Lizenz anschauen</string>
     <string name="license_osi_approved">OSI Zugelassen</string>
@@ -35,8 +35,8 @@
     <string name="settings_root_not_available">Nicht verfügbar</string>
     <string name="settings_root_none">Keiner</string>
     <string name="settings_non_root_desc">Funktionalität eingeschränkt</string>
-    <string name="settings_app_theme">App Design</string>
-    <string name="settings_app_theme_desc">Farben und Nacht-Modus ändern</string>
+    <string name="settings_app_theme">App-Design</string>
+    <string name="settings_app_theme_desc">Farbschema und Nachtmodus ändern.</string>
     <string name="settings_download_path">Download Pfad</string>
     <string name="settings_delete_zip">Zip Datei löschen</string>
     <string name="module_download">Herunterladen</string>
@@ -81,7 +81,7 @@
     <string name="about_app_version">Version %1$s (%2$s)</string>
     <string name="install_screen_title">Installation</string>
     <string name="install_logs_saved">Logs gespeichert</string>
-    <string name="install_logs_save_failed">Fehler beim Speichern: %s</string>
+    <string name="install_logs_save_failed">Fehler beim Speichern von: %s</string>
     <string name="settings_doh">DNS über HTTPS</string>
     <string name="settings_doh_desc">Problemumgehung für DNS-Poisoning in einigen Ländern</string>
     <string name="view_module_update_notify">Benachrichtigen</string>
@@ -97,9 +97,9 @@
     <string name="view_module_file_size">Dateigröße</string>
     <string name="view_module_antifeatures">Anti-Features</string>
     <string name="view_module_unsupported">Nicht unterstützt</string>
-    <string name="install_screen_reboot_title">Getät neu starten?</string>
+    <string name="install_screen_reboot_title">Neu starten?</string>
     <string name="install_screen_reboot_dismiss">Verwerfen</string>
-    <string name="setup_non_root_desc">Es sind keine Root-Berechtigungen erforderlich, es ist nur die Funktion zum Herunterladen des Moduls verfügbar</string>
+    <string name="setup_non_root_desc">Es sind keine Root-Berechtigungen erforderlich, es ist nur die Funktion zum Herunterladen des Moduls verfügbar.</string>
     <string name="view_module_unsupported_desc">Sieht aus, als wenn dein Gerät diese Modul Version nicht unterstützt. Installation auf eigene Gefahr!</string>
     <string name="view_module_license">Lizenz</string>
     <string name="view_module_features">Besonderheiten</string>
@@ -109,9 +109,9 @@
     <string name="view_module_features_zygisk">Zygisk</string>
     <string name="view_module_features_apks">APKs</string>
     <string name="view_module_features_boot_completed">Startvorgang abgeschlossen</string>
-    <string name="view_module_features_zygisk_sub">Erlaube Modulen die Interaktion mit dem Zygisk Framework, erlaubt System Modifikationen und Interaktion auf System-Level</string>
-    <string name="view_module_features_apks_sub">Enthält zusätzlichs APKs in dem Modul</string>
-    <string name="view_module_features_webui_sub">Wein-Oberfläche zum verwalten von Modulen</string>
+    <string name="view_module_features_zygisk_sub">Erlaube Modulen die Interaktion mit dem Zygisk Framework, erlaubt System Modifikationen und Interaktion auf System-Level.</string>
+    <string name="view_module_features_apks_sub">Enthält zusätzliche APKs im Modul.</string>
+    <string name="view_module_features_webui_sub">Weboberfläche zur Verwaltung von Modulen. Der Benutzer muss die Verwendung verschiedener JavaScript-APIs bestätigen.</string>
     <string name="view_module_module_support">Modul Unterstützung</string>
     <string name="view_module_provided_by">Bereitgestellt von</string>
     <string name="view_module_added_on">Hinzugefügt am</string>
@@ -120,8 +120,70 @@
     <string name="view_module_features_action">Aktion</string>
     <string name="view_module_features_post_fs_data">Post FS Daten</string>
     <string name="view_module_features_webui">WebUI</string>
-    <string name="view_module_features_service_sub">Führt Code später während dem Starten aus (System weiter initialisiert).</string>
+    <string name="view_module_features_service_sub">Führt den Code später im Bootvorgang aus (wenn das System mehr initialisiert ist).</string>
     <string name="working_mode_kernelsu_title">KernelSU</string>
     <string name="working_mode_magisk_title">Magisk</string>
     <string name="working_mode_kernelsu_next_title">Kernels Next</string>
+    <string name="learn_more">Mehr erfahren</string>
+    <string name="platform">Plattform</string>
+    <string name="menu_pin_action">Aktion anheften</string>
+    <string name="menu_pin_webui">WebUI anheften</string>
+    <string name="settings_webui_engine">WebUI-Engine</string>
+    <string name="settings_webui_engine_desc">Wählen Sie Ihre bevorzugte Engine</string>
+    <string name="settings_webui_engine_wx">WebUI X</string>
+    <string name="settings_webui_engine_ksu">KSU WebUI</string>
+    <string name="settings_webui_engine_prefer_module">Definiert durch die Modulkonfiguration</string>
+    <string name="menu_sort_option_size">Größe</string>
+    <string name="settings_date_pattern">Datumsmuster</string>
+    <string name="settings_date_pattern_desc">Verwenden Sie Ihr eigenes Datumsformat</string>
+    <string name="settings_date_pattern_dialog_desc">Das Datumsmuster wird wie folgt analysiert:\n[color=primary]%1$s[/color]</string>
+    <string name="says">%1$s sagt</string>
+    <string name="title_or_icon_not_found">Titel oder Symbol nicht gefunden</string>
+    <string name="icon_not_found">Symbol nicht gefunden</string>
+    <string name="working_mode_apatch_title">APatch</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_sukisu_title">SukiSU Ultra</string>
+    <string name="working_mode_apatch_desc">Patchen des Android-Kernels und -Systems. Eine neue kernelbasierte Root-Lösung mit Unterstützung für Magisk-ähnliche Module und Kernel-Funktionsinjektion (erfordert Inline-Hook und Syscall-Table-Hook). Abgeleitet und modifiziert von KernelSU.</string>
+    <string name="working_mode_kernelsu_next_desc">Eine erweiterte kernelbasierte Root-Lösung mit Magic Mount-Unterstützung, verbesserter Kontrolle über Userspace-Apps und anpassbaren Root-Berechtigungen.</string>
+    <string name="working_mode_kernelsu_desc">Eine kernelbasierte Root-Lösung, die verbesserte Kontrolle über Userspace-Apps, anpassbare Root-Berechtigungen und systemlose Modulunterstützung mit OverlayFS bietet.</string>
+    <string name="working_mode_magisk_desc">Eine Sammlung von Tools zur Android-Anpassung, die Root-Zugriff, Modulunterstützung, Boot-Image-Modifikation und Codeausführung auf Prozessebene mit Zygisk bietet.</string>
+    <string name="working_mode_shizuku_desc">Eine berechtigungsbasierte Lösung, die es Apps ermöglicht, Befehle auf Systemebene ohne vollständigen Root-Zugriff auszuführen. Sie erfordert die Autorisierung von Sui oder Shizuku und ermöglicht so erhöhte Berechtigungen für bestimmte Vorgänge bei gleichzeitiger Wahrung der Systemintegrität.</string>
+    <string name="view_module_features_post_mount">Post Mount</string>
+    <string name="view_module_features_post_fs_data_sub">Führt Code früh im Bootvorgang aus (teilweise gestartetes System).</string>
+    <string name="view_module_features_resetprop_sub">Legt die von Magisks Resetprop geladenen Systemeigenschaften fest.</string>
+    <string name="view_module_features_sepolicy_sub">Fügt benutzerdefinierte Sicherheitsrichtlinien (SEPolicy-Regeln) hinzu.</string>
+    <string name="view_module_features_action_sub">Ermöglicht dem Benutzer, ein Skript per Knopfdruck auszuführen</string>
+    <string name="view_module_features_postmount_sub">Skriptausführung nach OverlayFS-Mounts</string>
+    <string name="view_module_features_bootcompleted_sub">Skriptausführung nach Abschluss des Bootvorgangs</string>
+    <string name="view_module_section_count">+%1$s</string>
+    <string name="view_module_donate_desc">Zeigen Sie diesem Modulentwickler Ihre Wertschätzung, indem Sie ihm einen Kaffee spendieren! ☕</string>
+    <string name="view_module_module_id">Modul-ID</string>
+    <string name="view_module_required_os">Erforderliches Betriebssystem</string>
+    <string name="view_module_required_os_value">Android %1$s und höher</string>
+    <string name="view_module_dependencies">Abhängigkeiten</string>
+    <string name="view_module_share">Teilen</string>
+    <string name="view_module_install_confirm_title">Dieses Modul installieren?</string>
+    <string name="view_module_install_confirm_confirm_deps">Installiere (Abhängigkeiten)</string>
+    <string name="view_module_install_confirm_confirm">Installiere</string>
+    <string name="view_module_install_confirm_desc">Sind Sie sicher, dass Sie [color=surface_tint]%1$s[/color] installieren möchten?</string>
+    <string name="view_module_install_confirm_desc_deps">Möchten Sie [color=surface_tint]%1$s[/color] wirklich installieren? Dieses Modul erfordert außerdem:</string>
+    <string name="view_module_low_root_version">Root-Version zu niedrig!</string>
+    <string name="view_module_low_root_version_desc">Es scheint, dass Sie eine zu alte Version Ihres Root-Anbieters haben. Bitte prüfen Sie, ob es eine Aktualisierung für Ihren Root-Anbieter gibt.</string>
+    <string name="view_module_required_root_version">Erforderliche Root-Version</string>
+    <string name="view_module_unsupported_device">Nicht unterstütztes Gerät</string>
+    <string name="view_module_unsupported_arch">Nicht unterstützte Architektur</string>
+    <string name="view_module_unsupported_arch_desc">Es scheint, dass Ihr Gerät nicht über die vom Entwickler angegebene Unterstützung für die erforderliche Architektur verfügt.</string>
+    <string name="view_module_unsupported_device_desc">Es scheint, dass Ihr Gerät von diesen Modulen nicht unterstützt wird oder ausgeschlossen wurde.</string>
+    <string name="module_reinstall">Neuinstallation</string>
+    <string name="settings_resources">Ressourcen</string>
+    <string name="settings_resources_desc">Dokumentationen, unterstützte Repos und alles andere</string>
+    <string name="settings_security">Sicherheit</string>
+    <string name="settings_security_desc">App-Sicherheitsbezogene Dinge</string>
+    <string name="repo_update_service_desc">Keine Sorge, MMRL hat Ihre installierten Repos für Sie aktualisiert. 😋</string>
+    <string name="selinux_status">SELinux Status</string>
+    <string name="selinux_status_disabled">Deaktiviert</string>
+    <string name="selinux_status_enforcing">Enforcing</string>
+    <string name="selinux_status_permissive">Permissive</string>
+    <string name="selinux_status_unknown">Unbekannt</string>
+    <string name="home_support_content">MMRL ist und bleibt kostenlos und Open Source. Sie können mir jedoch Ihr Interesse mit einer Spende zeigen.</string>
 </resources>

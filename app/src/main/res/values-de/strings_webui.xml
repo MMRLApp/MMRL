@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="requireNewVersion_cannot_load_webui">WebUI kann nicht geladen werden</string>
+    <string name="requireNewVersion_require_text">erfordert mindestens MMRL &gt;=</string>
+    <string name="requireNewVersion_try_the_following">Versuchen Sie Folgendes:</string>
+    <string name="requireNewVersion_try_the_following_one">Aktualisieren Sie MMRL auf die neueste Version von Google Play oder GitHub Releases.</string>
+    <string name="requireNewVersion_try_the_following_two">Wenden Sie sich an den Modulentwickler, um eine mögliche Problemumgehung zu finden.</string>
+    <string name="requireNewVersion_refresh">Aktualisieren</string>
 </resources>
