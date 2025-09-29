@@ -1,10 +1,32 @@
 MMRL, kendi modül deponuzu yönetmenize yardımcı olan bir Android uygulamasıdır.
 
 Özellikler:
-
 - Modül deponuzu yönetin
-- Birden fazla deponun desteklenmesi
-- Magisk ve KernelSU desteği
-- Jetpack Compose ve Malzeme Tasarımı 3
+- Birden fazla depoyu destekleyin
+- Magisk ve KernelSU'yu destekleyin
+- Jetpack Compose & Material Design 3
 
 https://github.com/DerGoogler/MMRL
+
+<i>Magisk Module Repo Loader</i> (MMRL), basit bir kullanıcı arayüzü ile özel Magisk depolarını yüklemenizi sağlar. <a href="https://github.com/Magisk-Modules-Alt-Repo">Magisk Modules Alternative Repository</a> önceden yapılandırılmış olarak gelir, özel depolar eklenebilir.
+
+<b>Hangi kök yöneticileri MMRL'yi destekler?</b></p>
+
+* Magisk
+* KernelSU
+* APatch
+
+<b>MMRL hangi özellikleri sunar?</b>
+
+* Kullanıcı dostu kullanıcı arayüzü
+* Yapılandırılabilir modül sayfaları (ModConf)
+* Tüm yolların özelleştirilmesi (kökünüz başka bir yol kullanıyorsa, “/data/adb/modules” gibi)
+* ModConf Playground
+* Yüklü ve güncellenebilir modülleri görüntüleme
+* Kapaklar, ekran görüntüleri, doğrulama, bağımlılıklar ve daha fazlasını ekleme (depo tabanlı)
+* Arama işlevi
+* 5 adede kadar depo ekleme
+
+Bu uygulama kök erişimi gerektirir, kök erişimi olmadan çalışmaz!
+
+Not: Diğer modülleri yüklemek için MMRL-CLI'ye ihtiyacınız olacaktır
