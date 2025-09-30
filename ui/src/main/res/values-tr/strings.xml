@@ -2,7 +2,7 @@
 <resources>
     <string name="confirm">Onayla</string>
     <string name="cancel">İptal</string>
-    <string name="learn_more">Daha fazla bilgi</string>
+    <string name="learn_more">Daha fazla öğren</string>
     <string name="loading">Yükleniyor…</string>
     <string name="unknown_error">Bilinmeyen Hata</string>
     <string name="search_placeholder">Ara…</string>

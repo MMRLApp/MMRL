@@ -111,7 +111,7 @@
     <string name="view_module_unsupported_arch_desc">Cihazınızın geliştirici tarafından belirtilen gerekli mimariyi desteklemediği görünüyor.</string>
     <string name="view_module_unsupported_device_desc">Cihazınızın bu modüller tarafından desteklenmediği veya dışlandırıldığı görünüyor.</string>
     <!-- Modüller -->
-    <string name="modules_empty">Modül bulunamadı</string>
+    <string name="modules_empty">Hiçbir modül bulunamadı</string>
     <!-- Modül Öğesi -->
     <string name="module_version_author">%1$s tarafından %2$s</string>
     <string name="module_remove">Kaldır</string>
@@ -157,7 +157,7 @@
     <string name="settings_reboot_protection_desc">Etkinleştirilirse her yeniden başlatma için onay vermeniz gerekir</string>
     <string name="settings_blacklist">Kara Liste</string>
     <string name="settings_blacklist_desc">Kapalı kaynaklı veya tehlikeli olabilecek modüllerin listesi</string>
-    <string name="settings_date_pattern">Tarih Deseni</string>
+    <string name="settings_date_pattern">Tarih düzeni</string>
     <string name="settings_date_pattern_desc">Kendi tarih formatınızı kullanın</string>
     <string name="settings_updates">Güncellemeler</string>
     <string name="settings_updates_desc">Güncelleme sürecindeki tercihlerinizi yönetin</string>
@@ -226,12 +226,12 @@
     <string name="menu_advanced_menu">Gelişmiş Menü</string>
     <string name="menu_sort_mode">Sıralama Modu</string>
     <string name="menu_sort_option_name">İsim</string>
-    <string name="menu_sort_option_updated">Güncelleme Zamanı</string>
+    <string name="menu_sort_option_updated">Güncellenme Zamanı</string>
     <string name="menu_descending">Azalan</string>
-    <string name="menu_pin_enabled">Sabitleme Etkin</string>
+    <string name="menu_pin_enabled">Pin Etkinleştirildi</string>
     <string name="menu_pin_action">Eylemleri Sabitle</string>
-    <string name="menu_pin_webui">WebUI\'yi Sabitle</string>
-    <string name="menu_show_updated">Güncelleme Zamanını Göster</string>
+    <string name="menu_pin_webui">WebUI\'yi tuttur</string>
+    <string name="menu_show_updated">Güncellenme Zamanını Göster</string>
     <string name="menu_show_antifeatures">Anti-Özellikleri Göster</string>
     <string name="menu_export_modules_as_text">Modülleri Metin Olarak Dışa Aktar</string>
     <!-- Mesaj -->
@@ -240,7 +240,7 @@
     <!-- Bildirim -->
     <string name="notification_name_download">İndirme Servisi</string>
     <!-- Arama -->
-    <string name="search_empty">Liste boş</string>
+    <string name="search_empty">Boş liste</string>
     <string name="search_placeholder">Ara…</string>
     <!-- Diğer -->
     <string name="unknown_error">Bilinmeyen hata</string>
@@ -307,7 +307,7 @@
     <string name="action_screen_cancel_text">Bu eylemi iptal etmek istediğinizden emin misiniz?</string>
     <string name="settings_use_generic_action">Genel Eylemi Kullan</string>
     <string name="settings_use_generic_action_desc">Çoğu root sağlayıcısı, bir eylem CLI komutu desteklemez. Bunun yerine genel bir betik kullanabilirsiniz</string>
-    <string name="learn_more">Daha fazla bilgi</string>
+    <string name="learn_more">Daha fazla öğren</string>
     <string name="sponsors">Sponsorlar</string>
     <string name="blacklisted">Kara Listeye Alındı</string>
     <string name="blacklisted_desc">Bu modül MMRL tarafından kara listeye alındı. Güvenliğiniz için kurulum devre dışı bırakıldı. Bu modülü yine de kurmak istiyorsanız, ayarlardan [bold]Ayarlar → Güvenlik → Kara Liste Uyarıları[/bold]\'na giderek kara liste uyarılarını devre dışı bırakabilirsiniz.</string>
@@ -434,4 +434,40 @@
     <string name="settings_date_pattern_dialog_desc">Tarih modeli olarak ayrıştırılıcaktır:\n[color=primary]%1$s[/color]</string>
     <string name="explore_repos_discover_text">Cihazınız için [bold]%2$d[/bold] üzerinde modül içeren[bold]%1$d[/bold] güvenilir depolardan modülleri keşfedin ve yükleyin.</string>
     <string name="external_app_required_desc">Deneyiminizi geliştirmek ve daha sağlam WebUI işlevselliği sağlamak için MMRL artık özel bir harici uygulama kullanmaktadır: WebUI X: Taşınabilir. Bu, daha iyi performans, gelişmiş güvenlik ve WebUI özellikleri için daha sık güncellemeler sağlar. WebUI X\'i yüklemeniz gerekecek: Portable\'ı yükleyerek modüllerinizin WebUI\'lerine erişmeye devam edebilirsiniz. MMRL\'yi Google Play Store üzerinden yükleyen kullanıcılar WebUI X için Google Play Store sayfasına yönlendirilecektir: Portable için Google Play Store sayfasına yönlendirilecektir.</string>
+    <string name="page_superuser">Süper Kullanıcı</string>
+    <string name="menu_pin_has_root">Pin Root\'a Sahip</string>
+    <string name="menu_show_system_apps">Sistem Uygulamalarını Göster</string>
+    <string name="menu_show_category">Kategoriyi Göster</string>
+    <string name="settings_enable_blur">Bulanıklaştırmayı Etkinleştir</string>
+    <string name="settings_enable_blur_desc">Bileşenlerde bulanıklık efekti etkinleştirildi</string>
+    <string name="settings_hide_bottom_bar_labels">Alt Çubuk Etiketlerini Gizle</string>
+    <string name="failed_to_update_app_profile">%s için Uygulama Profili güncellenemedi</string>
+    <string name="failed_to_update_sepolicy">%s için SELinux kuralları güncellenemedi</string>
+    <string name="su_not_allowed">%s\'e Süper Kullanıcı erişimi verilemedi</string>
+    <string name="profile_default">Varsayılan</string>
+    <string name="profile_custom">Özel</string>
+    <string name="profile_custom_desc">Kurallar, izinler, güvenlik bağlamı ve daha fazlası dahil olmak üzere esnek seçeneklerle kendi profilinizi oluşturun.</string>
+    <string name="profile_edit_custom">Özel Profili Düzenle</string>
+    <string name="profile_edit_custom_desc">Özel profilinizin ayarlarını değiştirin.</string>
+    <string name="profile">Uygulama Profili</string>
+    <string name="allow_root_access">Root Erişimini Etkinleştir</string>
+    <string name="allow_root_access_desc">Root erişimi vermek, bu uygulamaya sistem dosyaları ve ayarları da dahil olmak üzere cihazınız üzerinde gelişmiş kontrol sağlar.</string>
+    <string name="profile_name">Profil Adı</string>
+    <string name="profile_groups">Gruplar</string>
+    <string name="profile_selinux_rules">SELinux Kuralları</string>
+    <string name="profile_selinux_rules_invalid">Geçersiz Kurallar!</string>
+    <string name="profile_capabilities">Yetenekler</string>
+    <string name="profile_selinux">SELinux</string>
+    <string name="profile_selinux_context">SELinux İçeriği</string>
+    <string name="profile_selinux_context_invalid">Geçersiz İçerik!</string>
+    <string name="settings_umount_modules_default">Modülleri bağlayın</string>
+    <string name="settings_umount_modules_default_desc">Uygulama Profili\'ndeki \"Modülleri kaldır\" için genel varsayılan değer. Etkinleştirildiğinde, profili ayarlanmamış uygulamalar için sistemdeki tüm modül değişiklikleri kaldırılır.</string>
+    <string name="profile_selinux_domain">Alan adı</string>
+    <string name="profile_namespace">Ad alanını bağlayın</string>
+    <string name="profile_namespace_inherited">Miras alınan</string>
+    <string name="profile_namespace_global">Küresel</string>
+    <string name="profile_namespace_individual">Bireysel</string>
+    <string name="empty">Boş</string>
+    <string name="settings_disable_su">Su uyumluluğunu devre dışı bırak</string>
+    <string name="settings_disable_su_desc">Herhangi bir uygulamanın ⁠su komutuyla kök ayrıcalıkları elde etme yeteneğini geçici olarak devre dışı bırakın (Mevcut kök işlemleri etkilenmeyecektir).</string>
 </resources>
