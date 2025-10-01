@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.ext"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
@@ -59,4 +59,6 @@ dependencies {
     implementation(libs.square.retrofit.kotlinxSerialization)
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
+
+    implementation(kotlin("reflect"))
 }

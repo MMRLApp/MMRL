@@ -3,7 +3,7 @@
     <string name="service_is_not_available">! خدمت در دسترس نیست</string>
     <string name="unable_to_gather_module_info_of_file">! نمی‌توان داده‌های ماژول را از پرونده گردآوری کرد: %1$s</string>
     <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! نصب ماژول‌های فهرست سیاه ممکن نیست. تنظیمات → امنیت → هشدارهای فهرست سیاه</string>
-    <string name="install_view_module_info">- درباره ماژول: %1$s</string>
+    <string name="install_view_module_info">::group::درباره ماژول</string>
     <string name="copying_failed">! رونویسی ناموفق بود</string>
     <string name="install_view_installing">- در حال نصب %1$s</string>
     <string name="this_module_don_t_have_an_action">! این ماژول هیچ کنشی ندارد.</string>

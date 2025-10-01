@@ -17,7 +17,7 @@
     <string name="unable_to_find_path_for_uri">! Impossible de trouver le chemin pour l\'uri : %1$s</string>
     <string name="this_module_don_t_have_an_action">! Ce module n\'a pas d\'action.</string>
     <string name="copying_failed">! Échec de la copie</string>
-    <string name="install_view_module_info">- Informations sur le module : %1$s</string>
+    <string name="install_view_module_info">::group::Informations sur le module</string>
     <string name="installation_aborted_due_to_an_error">! Installation interrompue en raison d\'une erreur</string>
     <string name="file_manager_is_null">! Le gestionnaire de fichiers est nul</string>
     <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s n\'est pas un fichier de module. Les modules Magisk doivent être des fichiers .zip. Ignoré...</string>

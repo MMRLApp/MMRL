@@ -14,6 +14,7 @@
 #define CMD_DENY_SU 4
 #define CMD_GET_SU_LIST 5
 #define CMD_GET_DENY_LIST 6
+#define CMD_SET_SEPOLICY 8
 #define CMD_CHECK_SAFEMODE 9
 
 #define CMD_GET_APP_PROFILE 10
@@ -23,17 +24,16 @@
 #define CMD_IS_UID_SHOULD_UMOUNT 13
 #define CMD_IS_SU_ENABLED 14
 #define CMD_ENABLE_SU 15
-#define CMD_HOOK_MODE 16
+
+bool ksuctl(int cmd, void* arg1, void* arg2);
 
 bool grant_root();
 
 bool become_manager(const char *);
 
-static bool is_lkm;
+static bool is_lkm = false;
 
 int get_version();
-
-bool get_hook_mode(char *mode, int mode_len);
 
 bool get_allow_list(int *uids, int *size);
 
@@ -106,5 +106,19 @@ bool get_app_profile(p_key_t key, app_profile *profile);
 bool set_su_enabled(bool enabled);
 
 bool is_su_enabled();
+
+struct FfiPolicy {
+		uint32_t cmd;
+		uint32_t subcmd;
+		const char* sepol1;
+		const char* sepol2;
+		const char* sepol3;
+		const char* sepol4;
+		const char* sepol5;
+		const char* sepol6;
+		const char* sepol7;
+};
+
+bool ksu_set_policy(const FfiPolicy* policy);
 
 #endif //KERNELSU_KSU_HPP

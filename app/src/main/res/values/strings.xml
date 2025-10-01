@@ -3,18 +3,18 @@
     <!-- Setup -->
     <string name="setup_mode">Working Mode</string>
     <string name="setup_non_root_title">Non-Root</string>
-    <string name="setup_non_root_desc">Not require Root permissions, only the download module function is available</string>
+    <string name="setup_non_root_desc">Not require Root permissions, only the download module function is available.</string>
     <string name="working_mode_magisk_title">Magisk</string>
     <string name="working_mode_kernelsu_title">KernelSU</string>
     <string name="working_mode_kernelsu_next_title">KernelSU Next</string>
     <string name="working_mode_apatch_title">APatch</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_sukisu_title">SukiSU Ultra</string>
     <string name="working_mode_apatch_desc">Patching Android kernel and system. A new kernel-based root solution with support for modules similar to Magisk and kernel function injection (requires inline-hook and syscall-table-hook). Derived and modified from KernelSU.</string>
     <string name="working_mode_kernelsu_next_desc">An advanced kernel-based root solution with Magic Mount support, enhanced control over userspace apps, and customizable root privileges.</string>
     <string name="working_mode_kernelsu_desc">A kernel-based root solution offering enhanced control over userspace apps, customizable root privileges, and systemless module support using OverlayFS.</string>
     <string name="working_mode_magisk_desc">A suite of tools for Android customization, offering root access, module support, boot image modification, and process-level code execution with Zygisk.</string>
     <string name="working_mode_shizuku_desc">A permission-based solution that allows apps to execute system-level commands without full root access. It requires authorization from Sui or Shizuku, enabling elevated privileges for specific operations while maintaining system integrity.</string>
-
     <!-- Install -->
     <string name="install_screen_title">Installation</string>
     <string name="install_flashing">Flashing</string>
@@ -32,6 +32,7 @@
     <string name="license_fsf_libre">FSF Libre</string>
     <!-- Page -->
     <string name="page_home">Home</string>
+    <string name="page_superuser">SuperUser</string>
     <string name="page_repository">Repository</string>
     <string name="page_modules">Modules</string>
     <string name="page_settings">Settings</string>
@@ -41,8 +42,10 @@
     <string name="module_new">New</string>
     <!-- Advanced Menu -->
     <string name="menu_pin_installed">Pin Installed</string>
+    <string name="menu_pin_has_root">Pin Has Root</string>
     <string name="menu_pin_updatable">Pin Updatable</string>
     <string name="menu_show_icon">Show Icon</string>
+    <string name="menu_show_system_apps">Show System Apps</string>
     <string name="menu_show_license">Show License</string>
     <string name="menu_show_cover">Show Cover</string>
     <string name="menu_show_verified">Show Verified</string>
@@ -92,7 +95,7 @@
     <string name="view_module_provided_by">Provided By</string>
     <string name="view_module_added_on">Added On</string>
     <string name="view_module_about_this_module">About This Module</string>
-    <string name="view_module_section_count">%1$s+</string>
+    <string name="view_module_section_count">+%1$s</string>
     <string name="view_module_donate">Donate</string>
     <string name="view_module_donate_desc">Show some love to this module developer by donating the developer a coffee! ☕</string>
     <string name="view_module_module_id">Module ID</string>
@@ -103,8 +106,8 @@
     <string name="view_module_install_confirm_title">Install this Module?</string>
     <string name="view_module_install_confirm_confirm_deps">Install (deps)</string>
     <string name="view_module_install_confirm_confirm">Install</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[Are you sure that you want to install <font color=\"%1$s\">%2$s</font>?]]></string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[Are you sure that you want to install <font color=\"%1$s\">%2$s</font>? This module requires also:]]></string>
+    <string name="view_module_install_confirm_desc">Are you sure that you want to install [color=surface_tint]%1$s[/color]?</string>
+    <string name="view_module_install_confirm_desc_deps">Are you sure that you want to install [color=surface_tint]%1$s[/color]? This module requires also:</string>
     <string name="view_module_low_root_version">Root Version to low!</string>
     <string name="view_module_low_root_version_desc">Seems like that you have a too old root provider version. Check if there are any updates for your root provider.</string>
     <string name="view_module_required_root_version">Required Root Version</string>
@@ -149,7 +152,7 @@
     <string name="settings_non_root_desc">Functionality is limited</string>
     <!-- App -->
     <string name="settings_app_theme">App Theme</string>
-    <string name="settings_app_theme_desc">Change color scheme and night mode</string>
+    <string name="settings_app_theme_desc">Change color scheme and night mode.</string>
     <string name="settings_download_path">Download Path</string>
     <string name="settings_delete_zip">Delete Zip File</string>
     <string name="settings_delete_zip_desc">Delete zip of module after the installation is successful, this will be executed by Superuser</string>
@@ -179,13 +182,13 @@
     <string name="settings_check_modules_update_interval_desc">Select the time interval for checking your installed modules</string>
     <string name="settings_include_preleases">Include Pre-Releases</string>
     <string name="settings_developer_mode">Developer Mode</string>
-    <string name="settings_developer_mode_desc">Shows IDs of modules and more</string>
+    <string name="settings_developer_mode_desc">Shows [color=primary]IDs[/color] of modules and more</string>
     <string name="settings_privacy_policy">Privacy Policy</string>
     <string name="settings_clear_install_terminal">Clear Install Terminal</string>
     <string name="settings_clear_install_terminal_desc">Clear Install Terminal when installing more than one Module</string>
     <string name="settings_shell_module_state_change">Use Shell for States</string>
     <string name="settings_shell_module_state_change_desc">Uses shell instead of creating files in the module directory. Once enabled you won\'t able to use the restore button due limitations.</string>
-    <string name="settings_modules">Modules &amp; Installer</string>
+    <string name="settings_modules">Modules</string>
     <string name="settings_modules_desc">Change the behavior of handlers for modules or many more about modules</string>
     <string name="settings_modules_handlers">Handlers</string>
     <string name="settings_modules_installer">Installer</string>
@@ -235,6 +238,7 @@
     <string name="menu_pin_webui">Pin WebUI</string>
     <string name="menu_show_updated">Show Updated Time</string>
     <string name="menu_show_antifeatures">Show Anti-Features</string>
+    <string name="menu_show_category">Show Category</string>
     <string name="menu_export_modules_as_text">Export Modules as Text</string>
     <!-- Message -->
     <string name="message_download_success">Download successful</string>
@@ -296,7 +300,7 @@
     <string name="kernel">Kernel</string>
     <string name="manager_version">Manager Version</string>
     <string name="fingerprint">Fingerprint</string>
-    <string name="new_version_available">New version %s is available, click to upgrade.</string>
+    <string name="new_version_available">New version [italic]%s[/italic] is available, click to upgrade.</string>
     <string name="hidden">Hidden</string>
     <string name="pre_release">Pre-release</string>
     <string name="unsafe_url_redirecting">Unsafe URL: %1$s. Redirecting…</string>
@@ -312,10 +316,11 @@
     <string name="learn_more">Learn more</string>
     <string name="sponsors">Sponsors</string>
     <string name="blacklisted">Blacklisted</string>
-    <string name="blacklisted_desc">This module has been blacklisted by MMRL. Installation is disabled to ensure your security. If you still want to install this module, you can disable blacklist alerts in the settings by navigating to **Settings → Security → Blacklist Alerts**.\n@more(Learn more)</string>
+    <string name="blacklisted_desc">This module has been blacklisted by MMRL. Installation is disabled to ensure your security. If you still want to install this module, you can disable blacklist alerts in the settings by navigating to [bold]Settings → Security → Blacklist Alerts[/bold].</string>
     <string name="settings_blacklist_alerts">Blacklist Alerts</string>
     <string name="settings_blacklist_alerts_desc">Display an alert for local and explore modules, and additionally block the installation of any blacklisted modules</string>
     <string name="page_repositorys">Repos</string>
+    <string name="page_repos">Repositories</string>
     <string name="menu_show_modules_count">Show Modules Count</string>
     <string name="settings_modules_permissions">Modules &amp; Permissions</string>
     <string name="settings_modules_permissions_desc">Allow JavaScript APIs and much more about local modules</string>
@@ -386,7 +391,7 @@
     <string name="select_your_platform">Select your platform</string>
     <string name="continue_with">Continue with %1$s</string>
     <string name="select">Select</string>
-    <string name="setup_root_note">To access all features of MMRL, a rooted Android device is required. MMRL does not provide instructions for rooting and is not responsible for any damage that may occur during the rooting process or from the use of MMRL itself.</string>
+    <string name="setup_root_note">To access all features of MMRL, a rooted Android device is required. MMRL does not provide instructions for rooting and is not responsible for any damage that may occur during the rooting process or from the use of MMRL itself.\n\n[link=https://mmrl.dev/legal/privacy]Privacy Policy[/link] • [link=https://mmrl.dev/legal/terms]Terms of Service[/link]</string>
     <string name="platform">Platform</string>
     <string name="change_platform">Change Platform</string>
     <string name="page_search">Search</string>
@@ -412,4 +417,57 @@
     <string name="external_app_required_desc">To enhance your experience and provide more robust WebUI functionality, MMRL now utilizes a dedicated external application: WebUI X: Portable. This allows for better performance, improved security, and more frequent updates for WebUI features. You\'ll need to install WebUI X: Portable to continue accessing WebUI\'s for your modules. Users who installed MMRL via the Google Play Store will be redirected to the Google Play Store page for WebUI X: Portable.</string>
     <string name="settings_terminal_line_numbers">Line Numbers</string>
     <string name="settings_terminal_line_numbers_desc">Shows line numbers on the left side of the terminal</string>
+    <string name="super_user_apps">SuperUser Apps</string>
+    <string name="settings_date_pattern_dialog_desc">The date pattern will be parsed as:\n[color=primary]%1$s[/color]</string>
+    <string name="view_module_permissions">Permissions</string>
+    <string name="settings_always_show_update_alert">Always Show Update Alert</string>
+    <string name="update_available">Update available!</string>
+    <string name="settings_terminal">Terminal</string>
+    <string name="settings_behavior">Behavior</string>
+    <string name="settings_terminal_desc">Tailor the terminal to suit your preferences</string>
+    <string name="hook_mode">Hook Mode</string>
+    <string name="kpm_support">KPM Support</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="count_with_plus">%1$d+</string>
+    <string name="available_modules">Available Modules</string>
+    <string name="explore_repos_discover_text">Discover and install modules from [bold]%1$d[/bold] trusted repositories, featuring over [bold]%2$d[/bold] modules for your device.</string>
+    <string name="module_repositories">Module Repositories</string>
+    <string name="latest_commit_id">Latest Commit ID</string>
+    <string name="build_tools_version">Build Tools Version</string>
+    <string name="compile_sdk">Compile SDK</string>
+    <string name="settings_set_spoofed_wxp">WebUI X Portable Package</string>
+    <string name="settings_set_spoofed_wxp_desc">Set a custom spoofed WebUI X Portable Package name.</string>
+    <string name="settings_enable_blur">Enable Blur</string>
+    <string name="settings_enable_blur_desc">Enabled blur effect in components</string>
+    <string name="settings_hide_bottom_bar_labels">Hide Bottom Bar Lables</string>
+    <string name="failed_to_update_app_profile">Failed to update App Profile for %s</string>
+    <string name="failed_to_update_sepolicy">Failed to update SELinux rules for %s</string>
+    <string name="su_not_allowed">Couldn\'t grant Superuser access to %s</string>
+    <string name="profile_default">Default</string>
+    <string name="profile_custom">Custom</string>
+    <string name="profile_custom_desc">Create your own profile with flexible options, including rules, permissions, security context, and more.</string>
+    <string name="profile_edit_custom">Edit Custom Profile</string>
+    <string name="profile_edit_custom_desc">Modify the settings of your custom profile.</string>
+    <string name="profile">App Profile</string>
+    <string name="allow_root_access">Enable Root Access</string>
+    <string name="allow_root_access_desc">Granting root access gives this app advanced control over your device, including system files and settings.</string>
+    <string name="profile_name">Profile Name</string>
+    <string name="profile_groups">Groups</string>
+    <string name="profile_selinux_rules">SELinux Rules</string>
+    <string name="profile_selinux_rules_invalid">Invalid Rules!</string>
+    <string name="profile_capabilities">Capabilities</string>
+    <string name="profile_selinux">SELinux</string>
+    <string name="profile_selinux_context">SELinux Context</string>
+    <string name="profile_selinux_context_invalid">Invalid Context!</string>
+    <string name="settings_umount_modules_default">Umount modules</string>
+    <string name="settings_umount_modules_default_desc">The global default value for \"Umount modules\" in App Profile. If enabled, it will remove all module modifications to the system for apps that don\'t have a profile set.</string>
+    <string name="profile_selinux_domain">Domain</string>
+    <string name="profile_namespace">Mount namespace</string>
+    <string name="profile_namespace_inherited">Inherited</string>
+    <string name="profile_namespace_global">Global</string>
+    <string name="profile_namespace_individual">Individual</string>
+    <string name="empty">Empty</string>
+    <string name="settings_disable_su">Disable su compatibility</string>
+    <string name="settings_disable_su_desc">Temporarily disable the ability of any app to gain root privileges via the ⁠su command (Existing root processes won\'t be affected).</string>
 </resources>

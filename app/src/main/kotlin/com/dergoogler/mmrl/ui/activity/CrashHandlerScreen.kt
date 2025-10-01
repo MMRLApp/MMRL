@@ -222,7 +222,7 @@ private fun TopBar(
     scrollBehavior: TopAppBarScrollBehavior,
 ) = TopAppBar(
     title = {
-        ToolbarTitle(title = R.string.we_hit_a_brick_crash)
+        ToolbarTitle(titleResId = R.string.we_hit_a_brick_crash)
     },
     scrollBehavior = scrollBehavior,
 )

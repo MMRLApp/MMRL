@@ -7,3 +7,26 @@ Features:
 - Jetpack Compose & Material Design 3
 
 https://github.com/DerGoogler/MMRL
+
+<i>Magisk Module Repo Loader</i> (MMRL) allows you to load custom Magisk repos with a simple UI. The <a href="https://github.com/Magisk-Modules-Alt-Repo">Magisk Modules Alternative Repository</a> comes pre-configured, custom repositories can be added.</p>
+
+<b>What root managers support MMRL?</b></p>
+
+* Magisk
+* KernelSU
+* APatch
+
+<b>Which features does MMRL offer?</b>
+
+* User friendly UI
+* Configurable module pages (ModConf)
+* Customizing all paths (such as "/data/adb/modules", if your root uses an other path)
+* ModConf Playground
+* Viewing installed and updatable modules
+* Adding covers, screenshots, verification, dependencies and more (repo based)
+* Search functionality
+* Adding up to 5 repositories
+
+This app requires root access, it won't work without it!
+
+Note: You'll require MMRL-CLI to install other modules

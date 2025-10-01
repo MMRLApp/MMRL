@@ -1,0 +1,99 @@
+name: "Build APK"
+description: "Builds an APK for a specified flavor and build type."
+
+inputs:
+  flavor:
+    description: "Flavor"
+    required: true
+  buildType:
+    description: "Build Type"
+    required: true
+  keyStore:
+    description: "Key Store"
+    required: true
+  keyStorePassword:
+    description: "Key Store Password"
+    required: true
+  keyAlias:
+    description: "Key Alias"
+    required: true
+  keyPassword:
+    description: "Key Password"
+    required: true
+
+outputs:
+  name:
+    value: ${{ steps.apk.outputs.name }}
+    description: "The name of the APK file."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set environment variables
+      shell: bash
+      run: |
+        FLAVOR="${{ inputs.flavor }}"
+        BUILD_TYPE="${{ inputs.buildType }}"
+
+        echo "FLAVOR_CAPITALIZED=${FLAVOR^}" >> $GITHUB_ENV
+        echo "FLAVOR_CAPITALIZED_ALL=${FLAVOR^^}" >> $GITHUB_ENV
+        echo "FLAVOR_LOWERCASE=${FLAVOR,,}" >> $GITHUB_ENV
+        echo "BUILD_TYPE_CAPITALIZED=${BUILD_TYPE^}" >> $GITHUB_ENV
+        echo "BUILD_TYPE_LOWERCASE=${BUILD_TYPE,,}" >> $GITHUB_ENV
+        echo "BUILD_COMMAND=${FLAVOR^}${BUILD_TYPE^}" >> $GITHUB_ENV
+
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up signing key
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.keyStore }}" ]; then
+            echo keyStorePassword='${{ inputs.keyStorePassword }}' >> signing.properties
+            echo keyAlias='${{ inputs.keyAlias }}' >> signing.properties
+            echo keyPassword='${{ inputs.keyPassword }}' >> signing.properties
+            echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
+            echo ${{ inputs.keyStore }} | base64 --decode > ${{ github.workspace }}/key.jks
+        fi
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: "zulu"
+        java-version: 21
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        validate-wrappers: true
+
+    - name: Build APK
+      shell: bash
+      run: chmod +x ./gradlew && ./gradlew assemble${{ env.BUILD_COMMAND }}
+
+    - name: Get APK output
+      id: apk
+      shell: bash
+      run: |
+        apk_path=$(find app/build/outputs/apk/${{ env.FLAVOR_LOWERCASE }}/${{ env.BUILD_TYPE_LOWERCASE }} -name "*.apk" -print -quit)
+        mapping_path=$(find app/build/outputs/mapping/${{ env.FLAVOR_LOWERCASE }}${{ env.BUILD_TYPE_CAPITALIZED }} -name "mapping.txt" -print -quit)
+        name=$(basename "$apk_path" .apk)
+
+        echo "name=$name" >> $GITHUB_OUTPUT
+        echo "path=$apk_path" >> $GITHUB_OUTPUT
+        echo "mapping=$mapping_path" >> $GITHUB_OUTPUT
+
+    - name: Upload mapping as artifact
+      if: ${{ steps.apk.outputs.mapping != '' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.flavor }}-${{ inputs.buildType }}-mapping
+        path: ${{ steps.apk.outputs.mapping }}
+
+    - name: Upload APK as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.flavor }}-${{ inputs.buildType }}-apk
+        path: ${{ steps.apk.outputs.path }}

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.intl.Locale
@@ -73,11 +74,17 @@ fun LabelItem(
     icon: @Composable (() -> Unit)? = null,
     style: LabelItemStyle = LabelItemDefaults.style,
 ) {
+    val density = LocalDensity.current
+
     val decoratedIconContent: @Composable (() -> Unit)? =
         icon.nullable {
             {
                 Box(
-                    modifier = Modifier.iconSize(style.textStyle, TextWIthIconIconScaling),
+                    modifier = Modifier.iconSize(
+                        density = density,
+                        textStyle = style.textStyle,
+                        scaling = TextWIthIconIconScaling
+                    ),
                 ) {
                     it()
                 }
@@ -188,6 +195,14 @@ fun MMRLLabel() {
     LabelItem(
         icon = R.drawable.mmrl_logo,
         text = "MMRL"
+    )
+}
+
+@Composable
+fun SukiSU() {
+    LabelItem(
+        icon = R.drawable.sukisu_logo,
+        text = "SukiSU Ultra"
     )
 }
 

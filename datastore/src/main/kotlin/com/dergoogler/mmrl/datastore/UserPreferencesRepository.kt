@@ -5,6 +5,7 @@ import com.dergoogler.mmrl.datastore.model.Homepage
 import com.dergoogler.mmrl.datastore.model.ModulesMenu
 import com.dergoogler.mmrl.datastore.model.RepositoriesMenu
 import com.dergoogler.mmrl.datastore.model.RepositoryMenu
+import com.dergoogler.mmrl.datastore.model.SuperUserMenu
 import com.dergoogler.mmrl.datastore.model.WebUIEngine
 import com.dergoogler.mmrl.datastore.model.WorkingMode
 import javax.inject.Inject
@@ -44,6 +45,9 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun setCheckModuleUpdates(value: Boolean) =
         userPreferencesDataSource.setCheckModuleUpdates(value)
 
+    suspend fun setEnableBlur(value: Boolean) =
+        userPreferencesDataSource.setEnableBlur(value)
+
     suspend fun setCheckModuleUpdatesInterval(value: Long) =
         userPreferencesDataSource.setCheckModuleUpdatesInterval(value)
 
@@ -64,6 +68,9 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun setWebUiDevUrl(value: String) =
         userPreferencesDataSource.setWebUiDevUrl(value)
+
+    suspend fun setWebuixPackageName(value: String) =
+        userPreferencesDataSource.setWebuixPackageName(value)
 
     suspend fun setDeveloperMode(value: Boolean) =
         userPreferencesDataSource.setDeveloperMode(value)
@@ -101,6 +108,9 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun setRepositoryMenu(value: RepositoryMenu) =
         userPreferencesDataSource.setRepositoryMenu(value)
 
+    suspend fun setSuperUserMenu(value: SuperUserMenu) =
+        userPreferencesDataSource.setSuperUserMenu(value)
+
     suspend fun setRepositoriesMenu(value: RepositoriesMenu) =
         userPreferencesDataSource.setRepositoriesMenu(value)
 
@@ -113,8 +123,14 @@ class UserPreferencesRepository @Inject constructor(
     suspend fun setShowTerminalLineNumbers(value: Boolean) =
         userPreferencesDataSource.setShowTerminalLineNumbers(value)
 
+    suspend fun setDevAlwaysShowUpdateAlert(value: Boolean) =
+        userPreferencesDataSource.setDevAlwaysShowUpdateAlert(value)
+
     suspend fun setEnableToolbarEvents(value: Boolean) =
         userPreferencesDataSource.setEnableToolbarEvents(value)
+
+    suspend fun setHideBottomBarLabels(value: Boolean) =
+        userPreferencesDataSource.setHideBottomBarLabels(value)
 
     suspend fun setWebUIEngine(value: WebUIEngine) =
         userPreferencesDataSource.setWebUIEngine(value)

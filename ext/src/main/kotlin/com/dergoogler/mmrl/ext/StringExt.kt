@@ -1,5 +1,6 @@
 package com.dergoogler.mmrl.ext
 
+import android.R.attr.text
 import java.net.URI
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -91,9 +92,11 @@ val String.repoId
         return firstThree + middleThree + lastThree
     }
 
-fun String.isLocalWifiUrl(regex: Regex = Regex(
-    "^(https?://)?(localhost|127\\.0\\.0\\.1|::1|10(?:\\.\\d{1,3}){3}|172\\.(?:1[6-9]|2\\d|3[01])(?:\\.\\d{1,3}){2}|192\\.168(?:\\.\\d{1,3}){2})(?::([0-9]{1,5}))?$"
-)): Boolean {
+fun String.isLocalWifiUrl(
+    regex: Regex = Regex(
+        "^(https?://)?(localhost|127\\.0\\.0\\.1|::1|10(?:\\.\\d{1,3}){3}|172\\.(?:1[6-9]|2\\d|3[01])(?:\\.\\d{1,3}){2}|192\\.168(?:\\.\\d{1,3}){2})(?::([0-9]{1,5}))?$"
+    ),
+): Boolean {
     return try {
         val uri = URI(this)
         val host = uri.host ?: return false
@@ -103,4 +106,19 @@ fun String.isLocalWifiUrl(regex: Regex = Regex(
     } catch (e: Exception) {
         false
     }
+}
+
+/**
+ * Strips all URLs from a string and replaces them with a given replacement string.
+ *
+ * @param replacement The string to replace URLs with. Defaults to `[LINK]`.
+ * @return The string with all URLs replaced.
+ */
+fun String.stripLinks(replacement: String = "[LINK]"): String {
+    val regex = Regex(
+        """\b((?:https?://)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?:/[^\s]*)?)\b"""
+    )
+
+    return this.replace(regex, replacement)
+        .replace(Regex("${Regex.escape(replacement)}/+"), replacement)
 }

@@ -1,1 +1,1 @@
-A modules manager for Magisk & KernelSU
+A modules manager for Magisk & KernelSU.

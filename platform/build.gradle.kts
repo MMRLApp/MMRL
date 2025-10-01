@@ -23,7 +23,7 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments += "-DANDROID_STL=c++_static"
+                arguments += listOf("-DANDROID_STL=c++_static", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
             }
         }
         val aidlDir = file("src/main/aidl")
@@ -75,11 +75,15 @@ android {
 dependencies {
     compileOnly(projects.hiddenApi)
     implementation(projects.ext)
+    implementation(projects.compat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.hiddenApiBypass)
+    implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.runtime)
     implementation(libs.apache.commons.compress)
     implementation(libs.square.retrofit.moshi)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
 }

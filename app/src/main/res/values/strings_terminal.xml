@@ -6,25 +6,25 @@
     <string name="installation_aborted_due_to_an_error">! Installation aborted due to an error</string>
     <string name="install_view_path">- Path: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Copying zip to temp directory</string>
-    <string name="install_view_module_info">- Module info: [underline]%1$s</string>
+    <string name="install_view_module_info">::group::Module info</string>
     <string name="copying_failed">! Copying failed</string>
     <string name="unable_to_gather_module_info">! Unable to gather module info</string>
-    <string name="install_view_installing">- Installing [color=primary]%1$s</string>
-    <string name="module_not_found">[color=error]! Module not found.</string>
+    <string name="install_view_installing">- Installing [color=primary]%1$s[/color]</string>
+    <string name="module_not_found">[color=red]! Module not found.[/color]</string>
     <string name="this_module_don_t_have_an_action">! This module don\'t have an action.</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! Module is disabled or removed. Unable to execute action.</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Execution failed. Try to use Shell for the Action execution, Settings → Module → Use Shell for Module Action.</string>
-    <string name="unable_to_find_path_for_uri">[color=error]! Unable to find path for uri: %1$s</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s is not a module file. Magisk modules must be .zip files. Skipping...</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! Unable to find path for uri: %1$s[/color]</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s is not a module file. Magisk modules must be .zip files. Skipping…</string>
     <string name="removed_updated_folder">- Removed updated folder</string>
-    <string name="failed_to_remove_updated_folder">[color=error]! Failed to remove updated folder</string>
-    <string name="non_root_platform_is_not_supported">[color=error]! Unrooted platforms are not supported</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! Failed to remove updated folder[/color]</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! Unrooted platforms are not supported[/color]</string>
     <string name="module_manager_is_null">! Module manager is null</string>
     <string name="file_manager_is_null">! File manager is null</string>
-    <string name="waiting_for_platformmanager_to_initialize">[bold]- Waiting for PlatformManager to initialize…</string>
-    <string name="failed_to_initialize_platform">[color=error]! Failed to initialize Platform</string>
-    <string name="platform_initialized">[bold]- Platform initialized</string>
-    <string name="platform_initialization_failed_cannot_install">[color=error]! Platform initialization failed. Cannot proceed with installation.</string>
-    <string name="platform_not_alive_cannot_install">[color=error]! Platform is not active. Cannot proceed with installation.</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- Waiting for PlatformManager to initialize…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! Failed to initialize Platform[/color]</string>
+    <string name="platform_initialized">[bold]- Platform initialized[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! Platform initialization failed. Cannot proceed with installation.[/color]</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! Platform is not active. Cannot proceed with installation.[/color]</string>
     <string name="deleted_zip_file">- Deleted ZIP file: %s</string>
 </resources>

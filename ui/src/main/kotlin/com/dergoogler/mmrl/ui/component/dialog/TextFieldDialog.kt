@@ -1,37 +1,28 @@
 package com.dergoogler.mmrl.ui.component.dialog
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ProvideTextStyle
-import androidx.compose.material3.Surface
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.dergoogler.mmrl.ext.nullable
+import com.dergoogler.mmrl.ui.component.dialog.dsl.DialogContainer
+import com.dergoogler.mmrl.ui.component.dialog.dsl.DialogContainerDefaults
+import com.dergoogler.mmrl.ui.component.dialog.dsl.DialogContainerStyle
+import com.dergoogler.mmrl.ui.component.dialog.dsl.item.Buttons
+import com.dergoogler.mmrl.ui.component.dialog.dsl.item.Content
+import com.dergoogler.mmrl.ui.component.dialog.dsl.item.Title
+import com.dergoogler.mmrl.ui.component.lite.row.LiteRowScopeInstance.weight
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextFieldDialog(
     onDismissRequest: () -> Unit,
@@ -40,18 +31,15 @@ fun TextFieldDialog(
     dismissButton: @Composable (() -> Unit)? = null,
     icon: @Composable (() -> Unit)? = null,
     title: @Composable (() -> Unit)? = null,
-    shape: Shape = AlertDialogDefaults.shape,
-    containerColor: Color = AlertDialogDefaults.containerColor,
-    iconContentColor: Color = AlertDialogDefaults.iconContentColor,
-    titleContentColor: Color = AlertDialogDefaults.titleContentColor,
-    textContentColor: Color = AlertDialogDefaults.textContentColor,
-    tonalElevation: Dp = AlertDialogDefaults.TonalElevation,
+    style: DialogContainerStyle = DialogContainerDefaults.style,
     properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
     launchKeyboard: Boolean = true,
     content: @Composable (FocusRequester) -> Unit
-) = BasicAlertDialog(
+) = DialogContainer(
     onDismissRequest = onDismissRequest,
-    modifier = modifier.wrapContentHeight(),
+    modifier = modifier
+        .wrapContentHeight()
+        .requiredWidth(TextFieldDefaults.MinWidth + 40.dp),
     properties = properties
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -64,86 +52,28 @@ fun TextFieldDialog(
         }
     }
 
-    Surface(
-        modifier = modifier.requiredWidth(TextFieldDefaults.MinWidth + 40.dp),
-        shape = shape,
-        color = containerColor,
-        tonalElevation = tonalElevation,
-    ) {
-        Column(
-            modifier = Modifier.padding(DialogPadding)
+    title.nullable {
+        Title(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            icon?.let {
-                CompositionLocalProvider(LocalContentColor provides iconContentColor) {
-                    Box(
-                        Modifier
-                            .padding(IconPadding)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        icon()
-                    }
-                }
-            }
-            title?.let {
-                CompositionLocalProvider(LocalContentColor provides titleContentColor) {
-                    val textStyle = MaterialTheme.typography.headlineSmall
-                    ProvideTextStyle(textStyle) {
-                        Box(
-                            // Align the title to the center when an icon is present.
-                            Modifier
-                                .padding(TitlePadding)
-                                .align(
-                                    if (icon == null) {
-                                        Alignment.Start
-                                    } else {
-                                        Alignment.CenterHorizontally
-                                    }
-                                )
-                        ) {
-                            title()
-                        }
-                    }
-                }
-            }
-            CompositionLocalProvider(LocalContentColor provides textContentColor) {
-                val textStyle = MaterialTheme.typography.bodyMedium
-                ProvideTextStyle(textStyle) {
-                    Box(
-                        Modifier
-                            .weight(weight = 1f, fill = false)
-                            .padding(TextPadding)
-                            .align(Alignment.Start)
-                    ) {
-                        content(focusRequester)
-                    }
+            icon.nullable {
+                CompositionLocalProvider(LocalContentColor provides style.iconContentColor) {
+                    it()
                 }
             }
 
-            Box(modifier = Modifier.align(Alignment.End)) {
-                CompositionLocalProvider(
-                    LocalContentColor provides MaterialTheme.colorScheme.primary
-                ) {
-                    val textStyle = MaterialTheme.typography.labelLarge
-                    ProvideTextStyle(value = textStyle) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(ButtonsMainAxisSpacing)
-                        ) {
-                            Spacer(modifier = Modifier.weight(1f))
-
-                            dismissButton?.invoke()
-                            confirmButton()
-                        }
-                    }
-                }
-            }
+            it()
         }
     }
+
+    Content(
+        modifier = Modifier.weight(1f, fill = false)
+    ) {
+        content(focusRequester)
+    }
+
+    Buttons {
+        dismissButton?.invoke()
+        confirmButton()
+    }
 }
-
-private val DialogPadding = PaddingValues(all = 24.dp)
-private val IconPadding = PaddingValues(bottom = 16.dp)
-private val TitlePadding = PaddingValues(bottom = 16.dp)
-private val TextPadding = PaddingValues(bottom = 24.dp)
-
-private val ButtonsMainAxisSpacing = 8.dp

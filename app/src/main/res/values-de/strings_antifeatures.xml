@@ -7,7 +7,7 @@
     <string name="nsfw_desc">Dieses Modul enthält Inhalte, die nicht überall veröffentlicht oder sichtbar sein sollten.</string>
     <string name="nosourcesince_desc">Der Quellcode ist nicht mehr verfügbar, keine Updates möglich.</string>
     <string name="knownvuln_name">Bekannte Schwachstelle</string>
-    <string name="nosourcesince_name">Keine Quelle mehr</string>
+    <string name="nosourcesince_name">Keine Quelle seit</string>
     <string name="nonfreeadd_name">Nicht-quelloffene Erweiterungen</string>
     <string name="nonfreeassets_name">Nicht-quelloffene Bestandteile</string>
     <string name="nonfreedep_name">Nicht-quelloffene Abhängigkeiten</string>
@@ -24,6 +24,8 @@
     <string name="unaskedremoval_desc">Das Modul entfernt Apps, Dateien oder andere Module ohne Zustimmung des Benutzers.</string>
     <string name="nonfreeadd_desc">Dieses Modul fördert nicht kostenlose Add-ons.</string>
     <string name="nonfreeassets_desc">Dieses Modul enthält unfreie Assets.</string>
-    <string name="llm_name">Large Language Model</string>
+    <string name="llm_name">Großes Sprachmodell</string>
     <string name="llm_desc">Modul vielleicht teilweise oder komplett von LLM geschrieben</string>
+    <string name="closedsource_desc">Das Modul ist nicht Open Source und seine Codebasis ist für die Öffentlichkeit nicht zur Überprüfung, Änderung oder Weiterverteilung zugänglich</string>
+    <string name="closedsource_name">Closed Source</string>
 </resources>

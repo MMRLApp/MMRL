@@ -50,6 +50,8 @@ class ModuleService : MMRLLifecycleService() {
             return START_NOT_STICKY
         }
 
+        setForeground()
+
         val interval = intent.getLongExtra(INTERVAL_KEY, 60000)
 
         lifecycleScope.launch {
@@ -147,7 +149,8 @@ class ModuleService : MMRLLifecycleService() {
                 )
                 putExtra(INTERVAL_KEY, interval)
             }
-            context.startService(intent)
+
+            context.startForegroundService(intent)
         }
 
 

@@ -52,8 +52,6 @@ fun Context.confirm(confirmData: ConfirmData, colorScheme: ColorScheme) {
                                     confirmData.onClose()
                                     return@ConfirmDialog
                                 }
-
-                                confirmData.onConfirm()
                             },
                             closeText = confirmData.closeText
                                 ?: stringResource(id = R.string.cancel),

@@ -32,4 +32,5 @@ interface IFileManager {
     ParcelResult openReadStream(String path, in ParcelFileDescriptor fd);
     ParcelResult openWriteStream(String path, in ParcelFileDescriptor fd, boolean append);
     int getMode(String path);
+    boolean loadSharedObjects(in String[] path);
 }

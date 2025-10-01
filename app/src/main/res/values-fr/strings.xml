@@ -25,15 +25,15 @@
     <string name="search_empty">Liste vide</string>
     <string name="search_placeholder">Recherche…</string>
     <string name="view_module_provided">Fournis par %s</string>
-    <string name="settings_app_theme">Thème de l\’application</string>
-    <string name="settings_app_theme_desc">Changer la palette de couleurs et le mode nuit</string>
+    <string name="settings_app_theme">Thème de l\'application</string>
+    <string name="settings_app_theme_desc">Modifier la palette de couleurs et le mode nuit</string>
     <string name="settings_app">Application</string>
     <string name="settings_download_path">Emplacement des téléchargements</string>
-    <string name="app_theme_palette">Palette du thème</string>
+    <string name="app_theme_palette">Palette de thèmes</string>
     <string name="app_theme_dark_theme">Thème sombre</string>
-    <string name="app_theme_dark_theme_auto">Automatique</string>
+    <string name="app_theme_dark_theme_auto">Auto</string>
     <string name="app_theme_dark_theme_light">Clair</string>
-    <string name="app_theme_dark_theme_dark">Noir</string>
+    <string name="app_theme_dark_theme_dark">Sombre</string>
     <string name="repo_modules">%d modules</string>
     <string name="repo_options_update">Mise à jour</string>
     <string name="repo_options_delete">Supprimer</string>
@@ -76,7 +76,7 @@
     <string name="settings_security_allow_advanced_kernelsu_api">Autoriser l\'API avancée KernelSU</string>
     <string name="repo_update_service_desc">Ne vous inquiétez pas, MMRL a mis à jour vos dépôts installés pour vous. 😋</string>
     <string name="settings_reboot_protection">Protection contre le redémarrage</string>
-    <string name="settings_developer_mode_desc">Affiche les identifiants des modules et plus</string>
+    <string name="settings_developer_mode_desc">Affiche les [color=primary]ID[/color] des modules et plus encore</string>
     <string name="repo_options_donate">Don</string>
     <string name="home_support_content">MMRL est, et sera toujours, gratuit et open source. Vous pouvez cependant me montrer votre intérêt en faisant un don.</string>
     <string name="menu_descending">Descendant</string>
@@ -117,7 +117,7 @@
     <string name="settings_modules_handlers">Gestionnaires</string>
     <string name="repo_update_at">Mis à jour à : %s</string>
     <string name="about_desc1">Fournir des référentiels de modules et gère les modules pour Magisk et KernelSU.</string>
-    <string name="menu_show_updated">Afficher la date de mise à jour</string>
+    <string name="menu_show_updated">Afficher l\'heure de mise à jour</string>
     <string name="report_to_issues">Rapport sur les problèmes</string>
     <string name="help">Aide</string>
     <string name="we_hit_a_brick_crash">Nous avons heurté une brique !</string>
@@ -142,7 +142,7 @@
     <string name="menu_advanced_menu">Menu avancé</string>
     <string name="menu_sort_mode">Mode de tri</string>
     <string name="menu_sort_option_name">Nom</string>
-    <string name="menu_sort_option_updated">Date de mise à jour</string>
+    <string name="menu_sort_option_updated">Heure de mise à jour</string>
     <string name="additional_notes">Notes supplémentaires</string>
     <string name="repo_update_service">Les dépôts ont été mis à jour avec succès</string>
     <string name="repo_update_service_failed">Aucune mise à jour trouvée pour les dépôts</string>
@@ -177,7 +177,7 @@
     <string name="settings_auto_update_repos">Mise à jour automatique du dépôt</string>
     <string name="settings_developer">Développeur</string>
     <string name="settings_developer_desc">Outils de débogage pour les développeurs</string>
-    <string name="settings_webui_remote_url_desc">Pour simplifier le débogage, indiquez un domaine local tel que http://localhost. Consultez l\'alerte ci-dessus pour en savoir plus.</string>
+    <string name="settings_webui_remote_url_desc">Pour simplifier le débogage, indiquez un domaine local tel que http://localhost. Voir l\'alerte ci-dessus pour plus d\'informations.</string>
     <string name="settings_webui_remote_url_alert_desc">WebUI utilisera désormais systématiquement l\'adresse que vous avez fournie pour tous les modules, contournera les erreurs SSL et désactivera l\'accès à /data/adb/modules/{ID}/webroot. Notez qu\'un serveur web local auto-signé est requis pour utiliser cette fonctionnalité, destinée uniquement au débogage, non destinée à un usage quotidien et à vos propres risques.</string>
     <string name="setup_non_root_desc">Ne nécessite pas d\'autorisations root, seule la fonction de téléchargement du module est disponible</string>
     <string name="view_module_license">Licence</string>
@@ -197,7 +197,7 @@
     <string name="home_updated_modules">Modules mis à jour</string>
     <string name="settings_use_generic_action">Utiliser l\'action générique</string>
     <string name="unsafe_url_redirecting">URL non sécurisée : %1$s. Redirection…</string>
-    <string name="new_version_available">Une nouvelle version %s est disponible, cliquez pour mettre à niveau.</string>
+    <string name="new_version_available">Une nouvelle version [italic]%s[/italic] est disponible, cliquez pour mettre à niveau.</string>
     <string name="settings_modules_permissions_desc">Autoriser les API JavaScript et bien plus encore sur les modules locaux</string>
     <string name="events_new_years_eve">Réveillon du Nouvel An !</string>
     <string name="menu_show_modules_count">Afficher le nombre de modules</string>
@@ -205,11 +205,11 @@
     <string name="has_a_new_update">%1$s a une nouvelle mise à jour !</string>
     <string name="hidden">Caché</string>
     <string name="pre_release">Pré-version</string>
-    <string name="blacklisted_desc">Ce module a été mis sur liste noire par MMRL. Son installation est désactivée pour garantir votre sécurité. Si vous souhaitez tout de même installer ce module, vous pouvez désactiver les alertes de liste noire dans les paramètres en accédant à **Paramètres → Sécurité → Alertes de liste noire**.\n@more(En savoir plus)</string>
+    <string name="blacklisted_desc">Ce module a été mis sur liste noire par MMRL. Son installation est désactivée pour garantir votre sécurité. Si vous souhaitez tout de même installer ce module, vous pouvez désactiver les alertes de liste noire dans les paramètres en accédant à [bold]Paramètres → Sécurité → Alertes de liste noire[/bold].</string>
     <string name="home_enabled_modules">Modules activés</string>
     <string name="bulk_install_module_added">Module ajouté</string>
     <string name="bulk_module_install">Installation de modules en masse</string>
-    <string name="menu_pin_enabled">PIN activé</string>
+    <string name="menu_pin_enabled">Épingle activée</string>
     <string name="home_support_title">Soutenez-moi</string>
     <string name="bulk_install_module_already_added">Module déjà ajouté</string>
     <string name="bulk_add_as_bulk">Ajouter en masse</string>
@@ -224,7 +224,7 @@
     <string name="home_root_provider_version_name">Nom de la version du fournisseur root</string>
     <string name="update_available_from_to">Mise à jour disponible de %s (%d) à %s (%d).</string>
     <string name="home_storage_usage">Utilisation du stockage</string>
-    <string name="invalid_ip">Ce n\'est pas un domaine local valide !</string>
+    <string name="invalid_ip">Il ne s\'agit pas d\'un domaine local valide !</string>
     <string name="install_screen_cancel_title">Annuler l\'installation ?</string>
     <string name="action_screen_cancel_text">Êtes-vous sûr de vouloir annuler cette action ?</string>
     <string name="install_screen_cancel_text">Êtes-vous sûr de vouloir annuler l\'installation ?</string>
@@ -232,7 +232,7 @@
     <string name="settings_use_generic_action_desc">La plupart des fournisseurs root ne prennent pas en charge les commandes d\'action en ligne de commande. Vous pouvez utiliser un script générique à la place</string>
     <string name="module_service_started">Service du module démarré</string>
     <string name="have_been_total_sponsored">%1$s ont été sponsorisés au total</string>
-    <string name="allow_advanced_kernelsu_api_desc">Voulez-vous autoriser ce module à utiliser l\'API KernelSU avancée ? Si vous ne lui faites pas confiance, vous pouvez lui refuser l\'accès</string>
+    <string name="allow_advanced_kernelsu_api_desc">Voulez-vous autoriser ce module à utiliser l\'API KernelSU avancée ? Si vous ne lui faites pas confiance, vous pouvez lui refuser l\'accès</string>
     <string name="allow_cancel_action">Autoriser l\'action d\'annulation</string>
     <string name="allow_cancel_installation">Autoriser Annuler l\'installation</string>
     <string name="failed_to_close_the_installer">Échec de la fermeture du programme d\'installation</string>
@@ -265,7 +265,7 @@
     <string name="get_the_most_out_of_mmrl">Tirez le meilleur parti de MMRL !</string>
     <string name="allow_advanced_kernelsu_api">Autoriser l\'accès à l\'API avancée KernelSU ?</string>
     <string name="explore_more_repositories">Explorez plus de Référentiels</string>
-    <string name="allow_filesystem_api_desc">Voulez-vous autoriser ce module à utiliser l\'API FileSystem ? Si vous ne lui faites pas confiance, vous pouvez lui refuser l\'accès</string>
+    <string name="allow_filesystem_api_desc">Voulez-vous autoriser ce module à utiliser l\'API FileSystem ? Si vous ne lui faites pas confiance, vous pouvez lui refuser l\'accès</string>
     <string name="allow_filesystem_api">Autoriser l\'accès à l\'API FileSystem ?</string>
     <string name="learn_more">En savoir plus</string>
     <string name="settings_clear_install_terminal">Effacer le terminal d\'installation</string>
@@ -292,7 +292,7 @@
     <string name="settings_modules">Modules &amp; installateur</string>
     <string name="provider_service_not_active">Le service fournisseur est inactif</string>
     <string name="settings_modules_desc">Modifier le comportement des gestionnaires de modules ou en savoir plus sur les modules</string>
-    <string name="menu_pin_action">Action d\'épinglage</string>
+    <string name="menu_pin_action">Épingler l\'action</string>
     <string name="menu_pin_webui">Épingler la WebUI</string>
     <string name="repo_options_support">Support</string>
     <string name="selinux_status">État de SELinux</string>
@@ -304,7 +304,7 @@
     <string name="view_module_features_filesystem">API FileSystem</string>
     <string name="view_module_features_eruda">Console Eruda</string>
     <string name="view_module_features_action">Action</string>
-    <string name="view_module_section_count">%1$s+</string>
+    <string name="view_module_section_count">+%1$s</string>
     <string name="settings_text_wrap">Renvoi à la ligne</string>
     <string name="repo_incompatible">Incompatible</string>
     <string name="menu_show_antifeatures">Afficher les anti-fonctionnalités</string>
@@ -335,13 +335,12 @@
     <string name="working_mode_apatch_title">APatch</string>
     <string name="view_module_type">Type : %s</string>
     <string name="view_module_added_on">Ajouté le</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[Êtes-vous sûr(e) de vouloir installer <font color=\"%1$s\">%2$s</font> ?]]></string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[Êtes-vous sûr(e) de vouloir installer <font color=\"%1$s\">%2$s</font> ? Ce module requiert également :]]></string>
+    <string name="view_module_install_confirm_desc">Êtes-vous sûr(e) de vouloir installer [color=surface_tint]%1$s[/color]?</string>
     <string name="selected">Sélectionné</string>
     <string name="repository_service_stopped">Service de dépôt arrêté</string>
     <string name="keep">Garder</string>
     <string name="settings_log_viewer">Visualiseur de log</string>
-    <string name="settings_webui_remote_url">URL de la WebUI à distance</string>
+    <string name="settings_webui_remote_url">URL distante de l\'interface WebUI</string>
     <string name="home_root_provider_se_linux_context">Contexte SELinux</string>
     <string name="sponsors">Sponsors</string>
     <string name="install_screen_title">Installation</string>
@@ -366,8 +365,36 @@
     <string name="change_platform">Changer de plateforme</string>
     <string name="welcome">Bienvenue !</string>
     <string name="select_your_platform">Sélectionnez votre plateforme</string>
-    <string name="setup_root_note">Pour accéder à toutes les fonctionnalités de MMRL, un appareil Android rooté est nécessaire. MMRL ne fournit pas d\'instructions pour le rooting et n\'est pas responsable des dommages qui pourraient survenir au cours du processus de rooting ou de l\'utilisation de MMRL lui-même.</string>
+    <string name="setup_root_note">Pour accéder à toutes les fonctionnalités de MMRL, un appareil Android rooté est nécessaire. MMRL ne fournit pas d\'instructions pour le rooting et n\'est pas responsable des dommages qui pourraient survenir au cours du processus de rooting ou de l\'utilisation de MMRL lui-même.\n\n[link=https://mmrl.dev/legal/privacy]Politique de confidentialité[/link] • [link=https://mmrl.dev/legal/terms]Conditions d\'utilisation[/link]</string>
     <string name="shortcut_not_supported">Les raccourcis ne sont pas pris en charge par votre appareil ou votre lanceur</string>
     <string name="page_search">Recherche</string>
     <string name="from_other_repositories">À partir d\'autres dépôts</string>
+    <string name="create_webui_shortcut">Créer un raccourci pour l\'interface WebUI</string>
+    <string name="remove_webui_shortcut">Supprimer le raccourci WebUI</string>
+    <string name="working_mode_sukisu_title">SukiSU Ultra</string>
+    <string name="settings_webui_engine">Moteur WebUI</string>
+    <string name="settings_webui_engine_prefer_module">Défini par la configuration du module</string>
+    <string name="settings_terminal_line_numbers">Numéros de ligne</string>
+    <string name="settings_terminal_line_numbers_desc">Affiche les numéros de ligne sur le côté gauche du terminal</string>
+    <string name="super_user_apps">Applications superutilisateur</string>
+    <string name="settings_date_pattern_dialog_desc">Le modèle de date sera analysé comme suit :\n[color=primary]%1$s[/color]</string>
+    <string name="view_module_install_confirm_desc_deps">Êtes-vous sûr de vouloir installer [color=surface_tint]%1$s[/color] ? Ce module nécessite également :</string>
+    <string name="menu_sort_option_size">Taille</string>
+    <string name="settings_try_wxp">Essayez WebUI X : Portable !</string>
+    <string name="external_app_required_title">Application externe requise</string>
+    <string name="external_app_required_desc">Afin d\'améliorer votre expérience et de fournir des fonctionnalités WebUI plus robustes, MMRL utilise désormais une application externe dédiée : WebUI X : Portable. Cette application permet d\'améliorer les performances, la sécurité et la fréquence des mises à jour des fonctionnalités de l\'interface WebUI. Vous devrez installer WebUI X : Portable pour continuer à accéder aux WebUI de vos modules. Les utilisateurs qui ont installé MMRL via le Google Play Store seront redirigés vers la page Google Play Store pour WebUI X : Portable.</string>
+    <string name="settings_always_show_update_alert">Toujours afficher l\'alerte de mise à jour</string>
+    <string name="update_available">Mise à jour disponible !</string>
+    <string name="settings_webui_engine_desc">Sélectionnez votre moteur préféré</string>
+    <string name="view_module_no_description">Aucune description fournie.</string>
+    <string name="view_module_permissions">Permissions</string>
+    <string name="settings_webui_engine_wx">WebUI X</string>
+    <string name="architecture">Architecture</string>
+    <string name="settings_webui_engine_ksu">WebUI KSU</string>
+    <string name="settings_terminal">Terminal</string>
+    <string name="settings_behavior">Comportement</string>
+    <string name="settings_terminal_desc">Adaptez le terminal à vos préférences</string>
+    <string name="kpm_support">Support KPM</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
 </resources>

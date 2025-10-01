@@ -53,7 +53,6 @@ fun EditTextDialog(
     }
 
     TextFieldDialog(
-        shape = RoundedCornerShape(20.dp),
         onDismissRequest = onClose,
         title = { Text(text = title) },
         confirmButton = {

@@ -1,9 +1,32 @@
-MMRL，為整合模組中介平臺而生的 Android 應用程式。
+MMRL 是一款可以協助你管理自己所擁有模組的軟體  
 
-特色功能：
-- 以個別中介平臺管理模組
-- 以多家中介平臺整合資料
-- 支援 Magisk 與 KernelSU
-- 專為 Jetpack Compose 與 Material Design 3 打造
+功能：  
+- 管理你的模組倉庫  
+- 支援多個倉庫  
+- 支援 Magisk 和 KernelSU  
+- Jetpack Compose & Material Design 3  
 
-https://github.com/DerGoogler/MMRL
+https://github.com/DerGoogler/MMRL  
+
+<i>Magisk 模組倉庫載入器</i>（MMRL）允許你透過簡潔的介面載入自訂的 Magisk 倉庫。<a href="https://github.com/Magisk-Modules-Alt-Repo">Magisk 模組替代倉庫</a> 提供了多種自訂模組，你也可以自行新增其他自訂倉庫。</p>  
+
+<b>MMRL 支援哪些 root 管理工具？</b></p>  
+
+* Magisk  
+* KernelSU  
+* APatch  
+
+<b>MMRL 支援哪些功能？</b>  
+
+* 使用者友善的介面  
+* 可自訂的模組設定介面（ModConf）  
+* 自訂所有路徑（例如 "/data/adb/modules"，如果你的 root 使用了其他路徑）  
+* ModConf 遊樂園  
+* 可查看已安裝及可升級的模組  
+* 支援封面、截圖、驗證、相依項及更多功能（依倉庫而定）  
+* 良好的搜尋功能  
+* 最多可新增 5 個倉庫  
+
+此軟體需要 root 權限，否則無法運行！  
+
+注意：你需要 MMRL-CLI 才能下載其他模組。

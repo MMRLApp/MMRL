@@ -6,16 +6,25 @@
     <string name="installation_aborted_due_to_an_error">! Bir hata nedeniyle yükleme iptal edildi</string>
     <string name="install_view_path">- Yol: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Zip dosyası geçici dizine kopyalanıyor</string>
-    <string name="install_view_module_info">- Modül bilgisi: %1$s</string>
+    <string name="install_view_module_info">::group::Modül bilgisi</string>
     <string name="copying_failed">! Kopyalama başarısız</string>
     <string name="unable_to_gather_module_info">! Modül bilgisi toplanamıyor</string>
-    <string name="install_view_installing">- Yükleniyor %1$s</string>
-    <string name="module_not_found">! Modül bulunamadı.</string>
+    <string name="install_view_installing">- Yükleniyor: [color=primary]%1$s[/color]</string>
+    <string name="module_not_found">[color=red]! Modül bulunamadı.[/color]</string>
     <string name="this_module_don_t_have_an_action">! Bu modülün bir eylemi yok.</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! Modül devre dışı veya kaldırıldı. Eylem yürütülemedi.</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Yürütme başarısız. Eylem yürütme için Kabuk kullanmayı deneyin, Ayarlar → Modül → Modül Eylemi için Kabuk Kullan.</string>
-    <string name="unable_to_find_path_for_uri">! URI için yol bulunamıyor: %1$s</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s bir modül dosyası değil. Magisk modülleri .zip dosyaları olmalıdır. Atlanıyor...</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! URI için yol bulunamadı: %1$s[/color]</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s bir modül dosyası değil. Magisk modülleri .zip dosyası olmalıdır. Atlanıyor…</string>
     <string name="removed_updated_folder">- Güncellenmiş klasör kaldırıldı</string>
-    <string name="failed_to_remove_updated_folder">! Güncellenmiş klasörün kaldırılması başarısız</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! Güncellenmiş klasör kaldırılamadı[/color]</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! Rootlanmamış platformlar desteklenmiyor[/color]</string>
+    <string name="module_manager_is_null">! Modül yöneticisi boş (null)</string>
+    <string name="file_manager_is_null">! Dosya yöneticisi bilinmiyor</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- PlatformManager\'ın başlatılması bekleniyor…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! Platform başlatılamadı[/color]</string>
+    <string name="platform_initialized">[bold]- Platform başlatıldı[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! Platform başlatılamadı. Kuruluma devam edilemiyor.[/color]</string>
+    <string name="deleted_zip_file">- Silinen ZIP dosyası: %s</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! Platform aktif değil. Kuruluma devam edilemiyor.[/color]</string>
 </resources>

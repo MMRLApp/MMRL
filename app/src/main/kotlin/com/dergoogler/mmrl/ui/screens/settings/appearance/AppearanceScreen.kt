@@ -1,84 +1,67 @@
 package com.dergoogler.mmrl.ui.screens.settings.appearance
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.datastore.model.Homepage
-import com.dergoogler.mmrl.ext.navigateSingleTopTo
 import com.dergoogler.mmrl.ext.toFormattedDateSafely
+import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.dialog.RadioOptionItem
-import com.dergoogler.mmrl.ui.component.listItem.ListButtonItem
-import com.dergoogler.mmrl.ui.component.listItem.ListEditTextItem
-import com.dergoogler.mmrl.ui.component.listItem.ListRadioCheckItem
-import com.dergoogler.mmrl.ui.component.listItem.ListSwitchItem
-import com.dergoogler.mmrl.ui.navigation.graphs.SettingsScreen
-import com.dergoogler.mmrl.ui.providable.LocalNavController
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.TextEditDialogItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.DialogDescription
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.dergoogler.mmrl.ui.screens.settings.NavButton
+import com.dergoogler.mmrl.utils.BlurUtil
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.AppThemeScreenDestination
 
+@Destination<RootGraph>
 @Composable
 fun AppearanceScreen() {
     val viewModel = LocalSettings.current
     val userPreferences = LocalUserPreferences.current
 
-    val navController = LocalNavController.current
-
     SettingsScaffold(
         title = R.string.settings_appearance
     ) {
-
-        ListButtonItem(
-            title = stringResource(id = R.string.settings_app_theme),
-            desc = stringResource(id = R.string.settings_app_theme_desc),
-            onClick = {
-                navController.navigateSingleTopTo(SettingsScreen.AppTheme.route)
-            }
+        NavButton(
+            title = R.string.settings_app_theme,
+            desc = R.string.settings_app_theme_desc,
+            route = AppThemeScreenDestination
         )
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_text_wrap),
-            desc = stringResource(id = R.string.settings_text_wrap_desc),
-            checked = userPreferences.terminalTextWrap,
-            onChange = viewModel::setTerminalTextWrap
-        )
-
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_terminal_line_numbers),
-            desc = stringResource(id = R.string.settings_terminal_line_numbers_desc),
-            checked = userPreferences.showTerminalLineNumbers,
-            onChange = viewModel::setShowTerminalLineNumbers
-        )
-
-        ListEditTextItem(
-            title = stringResource(id = R.string.settings_date_pattern),
-            desc = stringResource(id = R.string.settings_date_pattern_desc),
-            dialog = {
-                desc = {
-                    Text(text = System.currentTimeMillis().toFormattedDateSafely(it))
-                }
-            },
+        TextEditDialogItem(
             value = userPreferences.datePattern,
             onConfirm = {
                 viewModel.setDatePattern(it)
             }
-        )
+        ) {
+            Title(R.string.settings_date_pattern)
+            Description(R.string.settings_date_pattern_desc)
 
-        ListRadioCheckItem(
-            title = stringResource(R.string.settings_homepage),
-            desc = stringResource(R.string.settings_homepage_desc),
-            value = userPreferences.homepage,
+            val date = System.currentTimeMillis().toFormattedDateSafely(it.value)
+            DialogDescription(R.string.settings_date_pattern_dialog_desc, date)
+        }
+
+        /* // TODO: Add new support for start homepage. This maybe not possible due to the libraries behavior.
+        RadioDialogItem(
+            selection = userPreferences.homepage,
             options = listOf(
-                RadioOptionItem(
+                RadioDialogItem(
                     value = Homepage.Home,
                     title = stringResource(R.string.page_home)
                 ),
-                RadioOptionItem(
+                RadioDialogItem(
                     value = Homepage.Repositories,
                     title = stringResource(R.string.page_repositorys)
                 ),
-                RadioOptionItem(
+                RadioDialogItem(
                     value = Homepage.Modules,
                     enabled = viewModel.isProviderAlive,
                     title = stringResource(R.string.page_modules)
@@ -87,12 +70,42 @@ fun AppearanceScreen() {
             onConfirm = {
                 viewModel.setHomepage(it.value)
             }
-        )
+        ) {
+            Title(R.string.settings_homepage)
+            Description(R.string.settings_homepage_desc)
+        }*/
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_enable_toolbar_events),
+        SwitchItem(
             checked = userPreferences.enableToolbarEvents,
             onChange = viewModel::setEnableToolbarEvents
-        )
+        ) {
+            Title(R.string.settings_enable_toolbar_events)
+        }
+
+        val isBlurSupported = remember(Unit) {
+            BlurUtil.isBlurSupported()
+        }
+
+        SwitchItem(
+            enabled = isBlurSupported,
+            checked = userPreferences.enableBlur,
+            onChange = viewModel::setEnableBlur
+        ) {
+            Title(R.string.settings_enable_blur)
+            Description(R.string.settings_enable_blur_desc)
+
+            if (!isBlurSupported) {
+                Labels {
+                    LabelItem(text = stringResource(R.string.view_module_unsupported))
+                }
+            }
+        }
+
+        SwitchItem(
+            checked = userPreferences.hideBottomBarLabels,
+            onChange = viewModel::setHideBottomBarLabels
+        ) {
+            Title(R.string.settings_hide_bottom_bar_labels)
+        }
     }
 }

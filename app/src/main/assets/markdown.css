@@ -8,6 +8,14 @@ body {
   background-color: var(--background);
 }
 
+.toolbar {
+  height: var(--window-inset-top, 0px);
+}
+
+.bottom-bar {
+  height: var(--window-inset-bottom, 0px);
+}
+
 .markdown-body {
   user-select: none;
   -ms-text-size-adjust: 100%;

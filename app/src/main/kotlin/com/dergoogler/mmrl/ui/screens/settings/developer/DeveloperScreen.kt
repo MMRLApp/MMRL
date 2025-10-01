@@ -1,99 +1,80 @@
 package com.dergoogler.mmrl.ui.screens.settings.developer
 
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.listItem.ListEditTextSwitchItem
-import com.dergoogler.mmrl.ui.component.listItem.ListHeader
-import com.dergoogler.mmrl.ui.component.listItem.ListSwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Section
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
-import com.dergoogler.mmrl.ext.takeTrue
-import com.dergoogler.mmrl.ext.isLocalWifiUrl
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 
+@Composable
+fun ListScope.DeveloperSwitch(
+    enabled: Boolean = true,
+    onChange: (Boolean) -> Unit,
+    checked: Boolean,
+    content: @Composable ListItemScope.() -> Unit,
+) {
+    val userPrefs = LocalUserPreferences.current
+
+    SwitchItem(
+        checked = userPrefs.developerMode && checked,
+        onChange = onChange,
+        enabled = userPrefs.developerMode && enabled,
+        content = content
+    )
+}
+
+@Destination<RootGraph>
 @Composable
 fun DeveloperScreen() {
     val viewModel = LocalSettings.current
     val userPreferences = LocalUserPreferences.current
 
-    var webuiRemoteUrlInfo by remember { mutableStateOf(false) }
-    if (webuiRemoteUrlInfo) AlertDialog(
-        title = {
-            Text(text = stringResource(id = R.string.settings_webui_remote_url))
-        },
-        text = {
-            Text(text = stringResource(id = R.string.settings_webui_remote_url_alert_desc))
-        },
-        onDismissRequest = {
-            webuiRemoteUrlInfo = false
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    webuiRemoteUrlInfo = false
-                }
-            ) {
-                Text(text = stringResource(id = R.string.dialog_ok))
-            }
-        },
-    )
-
     SettingsScaffold(
         title = R.string.settings_developer
     ) {
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_developer_mode),
-            desc = stringResource(id = R.string.settings_developer_mode_desc),
-            checked = userPreferences.developerMode,
-            onChange = viewModel::setDeveloperMode,
-        )
+        Section {
+            SwitchItem(
+                checked = userPreferences.developerMode,
+                onChange = viewModel::setDeveloperMode,
+            ) {
+                Title(R.string.settings_developer_mode)
+                Description(R.string.settings_developer_mode_desc)
+            }
 
-        ListHeader(title = stringResource(id = R.string.view_module_features_webui))
+            DeveloperSwitch(
+                checked = userPreferences.devAlwaysShowUpdateAlert,
+                onChange = viewModel::setDevAlwaysShowUpdateAlert,
+            ) {
+                Title(R.string.settings_always_show_update_alert)
+            }
+        }
 
-        ListEditTextSwitchItem(
-            enabled = userPreferences.developerMode,
-            title = stringResource(id = R.string.settings_webui_remote_url),
-            desc = stringResource(id = R.string.settings_webui_remote_url_desc),
-            value = userPreferences.webUiDevUrl,
-            checked = userPreferences.useWebUiDevUrl,
-            onChange = viewModel::setUseWebUiDevUrl,
-            onConfirm = {
-                viewModel.setWebUiDevUrl(it)
-            },
-            onValid = { !it.isLocalWifiUrl() },
-            base = {
-                learnMore = {
-                    webuiRemoteUrlInfo = true
-                }
-            },
-            dialog = {
-                supportingText = { isError ->
-                    isError.takeTrue {
-                        Text(
-                            text = stringResource(R.string.invalid_ip),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }
-            },
-        )
-
-        ListSwitchItem(
-            enabled = userPreferences.developerMode,
-            title = stringResource(R.string.settings_security_inject_eruda),
-            desc = stringResource(id = R.string.settings_security_inject_eruda_desc),
-            checked = userPreferences.enableErudaConsole,
-            onChange = viewModel::setEnableEruda
-        )
+        Section(
+            divider = false
+        ) {
+            Item {
+                Title(stringResource(R.string.latest_commit_id))
+                Description(BuildConfig.LATEST_COMMIT_ID)
+            }
+            Item {
+                Title(stringResource(R.string.build_tools_version))
+                Description(BuildConfig.BUILD_TOOLS_VERSION)
+            }
+            Item {
+                Title(stringResource(R.string.compile_sdk))
+                Description(BuildConfig.COMPILE_SDK)
+            }
+        }
     }
 }

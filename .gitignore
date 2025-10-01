@@ -9,6 +9,8 @@ build/
 local.properties
 signing.properties
 
+!.github/workflows/release
+
 # Android Studio
 captures/
 release/

@@ -3,7 +3,7 @@
     <!-- 初次設定畫面 -->
     <string name="setup_mode">運作模式</string>
     <string name="setup_non_root_title">無授權</string>
-    <string name="setup_non_root_desc">不以 Root 存取權執行本應用程式。僅可使用模組下載功能</string>
+    <string name="setup_non_root_desc">不以 Root 存取權執行本應用程式，僅可使用模組下載功能。</string>
     <!-- 安裝介面 -->
     <string name="install_screen_title">安裝</string>
     <string name="install_flashing">正在閃刷</string>
@@ -232,7 +232,7 @@
     <string name="home_installed_modules">已安裝模組</string>
     <string name="home_enabled_modules">已啟用模組</string>
     <string name="home_disabled_modules">已停用模組</string>
-    <string name="home_updated_modules">已更新模組</string>
+    <string name="home_updated_modules">尚未更新的模組</string>
     <string name="has_a_new_update">%1$s 已可更新！</string>
     <string name="update_available_from_to">將版本 %s（%d）更新至 %s（%d）。</string>
     <string name="events_birthday">祝《MMRL》%1$s 歲生日快樂！</string>
@@ -247,7 +247,7 @@
     <string name="hidden">已隱藏</string>
     <string name="pre_release">預先發布版本</string>
     <string name="view_module_install_confirm_confirm">安裝</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[你是否要安裝<font color=\"%1$s\">「%2$s」</font>？]]></string>
+    <string name="view_module_install_confirm_desc">你是否要安裝[color=surface_tint]「%1$s」[/color]？</string>
     <string name="view_module_install_confirm_confirm_deps">安裝（相依模組）</string>
     <string name="settings_shell_module_state_change">以系統外殼管理模組</string>
     <string name="settings_shell_module_state_change_desc">選擇以系統外殼進行模組管理，而非逕自在模組目錄建立檔案。選項啟用後，你將無法使用復原按鈕。</string>
@@ -256,7 +256,6 @@
     <string name="bulk_module_install">成批型模組安裝</string>
     <string name="unsafe_url_redirecting">截獲不安全網址：%1$s。正在進行重新導向⋯⋯</string>
     <string name="view_module_install_confirm_title">是否安裝模組？</string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[你是否要安裝<font color=\"%1$s\">「%2$s」</font>？本模組另需使用的相依部分：]]></string>
     <string name="view_module_low_root_version">­授權版本過舊！</string>
     <string name="view_module_unsupported_device">裝置未受支援</string>
     <string name="view_module_unsupported_arch_desc">你的裝置不支援開發人員所維護的處理器架構版本。</string>
@@ -304,7 +303,7 @@
     <string name="menu_pin_action">釘選具有腳本的模組</string>
     <string name="menu_pin_webui">釘選具有 WebUI 介面的模組</string>
     <string name="settings_use_generic_action">採用通用型腳本</string>
-    <string name="learn_more">深入瞭解</string>
+    <string name="learn_more">知道更多</string>
     <string name="settings_use_generic_action_desc">大多數授權平臺仍未支援以腳本形式執行指令介面：此時改採通用格式的指令碼，便可解決相容性問題</string>
     <string name="sponsors">贊助人員</string>
     <string name="blacklisted">已受封鎖</string>

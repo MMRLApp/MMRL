@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 
 @SuppressLint("ComposableNaming")
 @Composable
@@ -98,4 +100,26 @@ fun Any?.isNull(): Boolean {
 inline fun <T> T.composeApply(block: @Composable T.() -> Unit): T {
     block()
     return this
+}
+
+/**
+ * # Requires Kotlin Reflection
+ */
+inline fun <reified T : Any> T.toMap(): Map<String, Any?> {
+    val props = T::class.memberProperties.associateBy { it.name }
+    return props.keys.associateWith { props[it]?.get(this) }
+}
+
+/**
+ * # Requires Kotlin Reflection
+ */
+inline fun <reified T : Any> Map<String, Any?>.toDataClass(): T {
+    val ctor = T::class.primaryConstructor
+        ?: throw IllegalArgumentException("No primary constructor found for ${T::class}")
+
+    val args = ctor.parameters.associateWith { param ->
+        this[param.name]
+    }
+
+    return ctor.callBy(args)
 }

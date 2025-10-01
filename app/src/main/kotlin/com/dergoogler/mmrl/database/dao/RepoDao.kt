@@ -19,6 +19,9 @@ interface RepoDao {
     @Query("SELECT * FROM repos WHERE url = :url LIMIT 1")
     suspend fun getByUrl(url: String): Repo
 
+    @Query("SELECT * FROM repos WHERE url = :url LIMIT 1")
+    fun getByUrlAsFlow(url: String): Flow<Repo>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(value: Repo)
 

@@ -1,5 +1,8 @@
 package com.dergoogler.mmrl.ext
 
+import android.annotation.SuppressLint
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -36,6 +39,37 @@ import kotlin.contracts.contract
 inline fun Boolean?.takeTrue(block: (Boolean) -> Unit) {
     if (this == true) {
         block(this)
+    }
+}
+
+/**
+ * Remembers the Boolean value and executes the given [block] if the remembered value is `true`.
+ *
+ * This Composable inline extension function is designed for use within Jetpack Compose.
+ * It uses `remember` to store the initial Boolean value based on the provided `keys`.
+ * If the remembered Boolean value is `true`, the `block` is executed with that `true` value.
+ *
+ * This can be useful for conditionally executing Composable code or side effects
+ * based on a Boolean state that should only trigger the `block` when it's `true`
+ * and its dependencies (`keys`) change.
+ *
+ * The `@SuppressLint("ComposableNaming")` is used because this function, while being
+ * a Composable, doesn't follow the typical PascalCase naming convention for Composable functions.
+ *
+ * @param keys A vararg of keys that `remember` will use. If any of these keys change,
+ *             the Boolean value will be re-evaluated and remembered.
+ * @param block A lambda function that takes a non-null Boolean (which will be `true`) as input
+ *              and returns Unit. This block is executed only if the remembered Boolean is `true`.
+ */
+@SuppressLint("ComposableNaming")
+@Composable
+inline fun Boolean?.rememberTrue(
+    vararg keys: Any?,
+    block: (Boolean) -> Unit,
+) {
+    val rem = remember(keys) { this }
+    if (rem == true) {
+        block(rem)
     }
 }
 

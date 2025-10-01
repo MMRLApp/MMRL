@@ -49,7 +49,7 @@ data class UpdateJson(
                 val (json, headers) = result.getOrThrow()
                 if (json != null) {
                     val t = headers.getInstant("Last-Modified")?.toEpochMilli()
-                    val timestamp = (t ?: System.currentTimeMillis()) / 1000f
+                    val timestamp = (t ?: 0L) / 1000f
 
                     return json.toItemOrNull(timestamp)
                 }

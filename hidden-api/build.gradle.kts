@@ -11,21 +11,6 @@ android {
         create("playstore") {
             initWith(buildTypes.getByName("release"))
         }
-        create("releaseCandidate") {
-            initWith(buildTypes.getByName("release"))
-        }
-        create("beta") {
-            initWith(buildTypes.getByName("release"))
-        }
-        create("spoofed") {
-            initWith(buildTypes.getByName("release"))
-        }
-        create("alpha") {
-            initWith(buildTypes.getByName("release"))
-        }
-        create("debugMin") {
-            initWith(buildTypes.getByName("debug"))
-        }
     }
 
     compileOptions {

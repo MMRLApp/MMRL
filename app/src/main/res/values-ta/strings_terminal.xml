@@ -6,7 +6,7 @@
     <string name="installation_aborted_due_to_an_error">! பிழை காரணமாக நிறுவல் கைவிடப்பட்டது</string>
     <string name="install_view_path">- பாதை: %1$s</string>
     <string name="copying_zip_to_temp_directory">- தற்காலிக கோப்பகத்திற்கு சிப்பை நகலெடுக்கிறது</string>
-    <string name="install_view_module_info">- தொகுதி தகவல்: %1$s</string>
+    <string name="install_view_module_info">::group::தொகுதி தகவல்</string>
     <string name="copying_failed">! நகலெடுப்பது தோல்வியுற்றது</string>
     <string name="unable_to_gather_module_info">! தொகுதி தகவலை சேகரிக்க முடியவில்லை</string>
     <string name="install_view_installing">- %1$s ஐ நிறுவுதல்</string>

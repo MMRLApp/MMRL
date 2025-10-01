@@ -1,13 +1,18 @@
+@file:Suppress("unused", "DEPRECATION")
+
 package com.dergoogler.mmrl.model.online
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import com.dergoogler.mmrl.ext.isNotNullOrEmpty
 import com.dergoogler.mmrl.platform.Platform
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.utils.Utils
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class OnlineModule(
     @Json(ignore = true) val repoUrl: String = "",
@@ -105,7 +110,7 @@ data class OnlineModule(
 
     companion object {
         fun example() = OnlineModule(
-            id = "online_example",
+            id = "##==online_example==##",
             name = "Example",
             version = "2022.08.16",
             versionCode = 1703,
@@ -152,6 +157,6 @@ inline fun <R> OnlineModule.hasCategories(block: (List<String>) -> R): R? {
 inline fun <R> OnlineModule.hasBlacklist(block: (Blacklist) -> R): R? =
     Blacklist.hasBlacklist(blacklist, block)
 
-val OnlineModule.isBlacklisted: Boolean
+val OnlineModule.isBlacklisted: State<Boolean>
     @Composable get() = Blacklist.isBlacklisted(blacklist)
 

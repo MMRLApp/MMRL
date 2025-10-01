@@ -19,7 +19,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,20 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
 import com.dergoogler.mmrl.ext.toAnnotatedString
 import com.dergoogler.mmrl.ext.thenComposeInvoke
-
-@Composable
-internal fun ProvideContentColorTextStyle(
-    contentColor: Color,
-    textStyle: TextStyle,
-    content: @Composable () -> Unit,
-) {
-    val mergedStyle = LocalTextStyle.current.merge(textStyle)
-    CompositionLocalProvider(
-        LocalContentColor provides contentColor,
-        LocalTextStyle provides mergedStyle,
-        content = content
-    )
-}
 
 @Composable
 fun HtmlText(

@@ -1,6 +1,5 @@
+
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
-import org.gradle.internal.extensions.stdlib.capitalized
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.self.application)
@@ -14,13 +13,13 @@ plugins {
 }
 
 val baseAppName = "MMRL"
-val baseModConfName = "ModConf"
+val mmrlBaseApplicationId = "com.dergoogler.mmrl"
 
 val appVersion = commitCount + 31320
 
 android {
-    compileSdk = 35
-    namespace = "com.dergoogler.mmrl"
+    compileSdk = COMPILE_SDK
+    namespace = mmrlBaseApplicationId
 
     defaultConfig {
         applicationId = namespace
@@ -56,10 +55,28 @@ android {
             keyAlias = project.releaseKeyAlias
             keyPassword = project.releaseKeyPassword
             enableV2Signing = true
-            enableV3Signing = true
+            enableV3Signing = false
         }
     } else {
         signingConfigs.getByName("debug")
+    }
+
+    flavorDimensions += "distribution"
+
+    productFlavors {
+        create("official") {
+            dimension = "distribution"
+            applicationId = mmrlBaseApplicationId
+            resValue("string", "app_name", baseAppName)
+            buildConfigField("Boolean", "IS_SPOOFED_BUILD", "false")
+        }
+
+        create("spoofed") {
+            dimension = "distribution"
+            applicationId = generateRandomPackageName()
+            resValue("string", "app_name", generateRandomName())
+            buildConfigField("Boolean", "IS_SPOOFED_BUILD", "true")
+        }
     }
 
     buildTypes {
@@ -71,7 +88,6 @@ android {
                 "proguard-rules.pro"
             )
             resValue("string", "app_name", baseAppName)
-            resValue("string", "modconf_activity", baseModConfName)
             buildConfigField("Boolean", "IS_DEV_VERSION", "false")
             buildConfigField("Boolean", "IS_GOOGLE_PLAY_BUILD", "false")
             isDebuggable = false
@@ -79,6 +95,8 @@ android {
             versionNameSuffix = "-release"
             renderscriptOptimLevel = 3
             multiDexEnabled = true
+
+            manifestPlaceholders["webuiPermissionId"] = mmrlBaseApplicationId
         }
 
         create("playstore") {
@@ -88,34 +106,8 @@ android {
             versionNameSuffix = "-playstore"
         }
 
-        create("releaseCandidate") {
-            initWith(buildTypes.getByName("release"))
-            matchingFallbacks += listOf("debug", "release")
-            versionNameSuffix = "-rc"
-        }
-
-        create("beta") {
-            initWith(buildTypes.getByName("release"))
-            matchingFallbacks += listOf("debug", "release")
-            versionNameSuffix = "-beta"
-        }
-
-        create("spoofed") {
-            initWith(buildTypes.getByName("release"))
-            resValue("string", "app_name", generateRandomName())
-            matchingFallbacks += listOf("debug", "release")
-            versionNameSuffix = "-spoofed"
-        }
-
-        create("alpha") {
-            initWith(buildTypes.getByName("release"))
-            matchingFallbacks += listOf("debug", "release")
-            versionNameSuffix = "-alpha"
-        }
-
         debug {
             resValue("string", "app_name", "$baseAppName Debug")
-            resValue("string", "modconf_activity", "$baseModConfName Debug")
             buildConfigField("Boolean", "IS_DEV_VERSION", "true")
             buildConfigField("Boolean", "IS_GOOGLE_PLAY_BUILD", "false")
             applicationIdSuffix = ".debug"
@@ -125,23 +117,19 @@ android {
             renderscriptOptimLevel = 0
             isMinifyEnabled = false
             multiDexEnabled = true
-        }
 
-        create("debugMin") {
-            initWith(buildTypes.getByName("debug"))
-            versionNameSuffix = "-debugMin"
-            isMinifyEnabled = true
-            isShrinkResources = true
-            matchingFallbacks += listOf("debug", "release")
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            manifestPlaceholders["webuiPermissionId"] = "$mmrlBaseApplicationId.debug"
         }
 
         all {
             signingConfig = releaseSigning
-        }
+
+            buildConfigField("String", "COMPILE_SDK", "\"$COMPILE_SDK\"")
+            buildConfigField("String", "BUILD_TOOLS_VERSION", "\"${BUILD_TOOLS_VERSION}\"")
+            buildConfigField("String", "MIN_SDK", "\"$MIN_SDK\"")
+            buildConfigField("String", "LATEST_COMMIT_ID", "\"${commitId}\"")
+
+            manifestPlaceholders["__packageName__"] = mmrlBaseApplicationId}
     }
 
     buildFeatures {
@@ -158,15 +146,20 @@ android {
             pickFirsts += listOf("lib/arm64-v8a/libmmrl-file-manager.so")
         }
 
-        resources.excludes += setOf(
-            "META-INF/**",
-            "okhttp3/**",
-            // "kotlin/**",
-            "org/**",
-            "**.properties",
-            "**.bin",
-            "**/*.proto"
-        )
+        resources {
+            pickFirsts += setOf(
+                "META-INF/gradle/incremental.annotation.processors"
+            )
+
+            excludes += setOf(
+                "okhttp3/**",
+                // "kotlin/**",
+                "org/**",
+                "**.properties",
+                "**.bin",
+                "**/*.proto"
+            )
+        }
     }
 
     dependenciesInfo.includeInApk = false
@@ -174,8 +167,14 @@ android {
     applicationVariants.configureEach {
         outputs.configureEach {
             (this as? ApkVariantOutputImpl)?.outputFileName =
-                "MMRL-$versionName.apk"
+                "MMRL-$versionName-$flavorName.apk"
         }
+    }
+}
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) {
+        it.packaging.resources.excludes.add("META-INF/**")
     }
 }
 
@@ -186,9 +185,11 @@ dependencies {
     implementation(projects.platform)
     implementation(projects.ui)
     implementation(projects.ext)
+    implementation(projects.compat)
     implementation(projects.datastore)
 
     implementation(libs.webuix.portable)
+    implementation(libs.webuix.helper)
 
     implementation(libs.kotlin.stdlib)
 
@@ -260,6 +261,12 @@ dependencies {
     implementation(libs.square.logging.interceptor)
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
+
+    implementation("dev.chrisbanes.haze:haze:1.6.10")
+    implementation("dev.chrisbanes.haze:haze-materials:1.6.10")
+
+    implementation(libs.composedestinations.core)
+    ksp(libs.composedestinations.ksp)
 }
 
 tasks.register("version") {

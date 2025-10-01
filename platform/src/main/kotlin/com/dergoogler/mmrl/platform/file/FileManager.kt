@@ -1,5 +1,6 @@
 package com.dergoogler.mmrl.platform.file
 
+import android.annotation.SuppressLint
 import android.os.ParcelFileDescriptor
 import android.os.RemoteException
 import android.system.ErrnoException
@@ -181,4 +182,8 @@ class FileManager : IFileManager.Stub() {
             0
         }
     }
+
+    @SuppressLint("DiscouragedPrivateApi")
+    override fun loadSharedObjects(path: Array<String>): Boolean = nativeLoadSharedObjects(path)
+    private external fun nativeLoadSharedObjects(path: Array<String>): Boolean
 }

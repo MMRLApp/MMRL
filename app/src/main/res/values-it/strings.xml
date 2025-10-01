@@ -43,7 +43,7 @@
     <string name="settings_root_granted">Concesso</string>
     <string name="settings_root_not_available">Non disponibile</string>
     <string name="settings_root_none">Nessuno</string>
-    <string name="setup_non_root_desc">Non richiede permessi di root, è disponibile solo la funzione per scaricare i moduli</string>
+    <string name="setup_non_root_desc">Non richiede permessi di root, è disponibile solo la funzione per scaricare i moduli.</string>
     <string name="install_logs_save_failed">Impossibile salvare: %s</string>
     <string name="repository_empty">La repository è vuota</string>
     <string name="view_module_update_notify">Notifica</string>
@@ -121,15 +121,41 @@
     <string name="view_module_donate_desc">Mostra un po\' di affetto a questo sviluppatore di moduli offrendogli un caffè! ☕</string>
     <string name="view_module_install_confirm_title">Installare questo modulo?</string>
     <string name="view_module_install_confirm_confirm_deps">Installa (dipendenze)</string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[Sei sicuro di voler installare <font color=\"%1$s\">%2$s</font>? Questo modulo richiede anche:]]></string>
     <string name="view_module_unsupported_device_desc">Sembra che il tuo dispositivo non sia supportato da questo modulo o sia stato escluso.</string>
     <string name="view_module_added_on">Aggiunto su</string>
     <string name="view_module_module_id">ID Modulo</string>
     <string name="view_module_required_os">Sistema operativo richiesto</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[Sei sicuro di voler installare <font color=\"%1$s\">%2$s</font>?]]></string>
+    <string name="view_module_install_confirm_desc">Sei sicuro di voler installare [color=surface_tint]%1$s[/color]?</string>
     <string name="view_module_low_root_version">Versione Root troppo bassa!</string>
     <string name="view_module_required_root_version">Versione root richiesta</string>
     <string name="view_module_unsupported_device">Dispositivo non supportato</string>
     <string name="view_module_unsupported_arch">Architettura non supportata</string>
     <string name="view_module_unsupported_arch_desc">Sembra che il tuo dispositivo non supporti l\'architettura richiesta dichiarata dallo sviluppatore.</string>
+    <string name="working_mode_kernelsu_title">KernelSU</string>
+    <string name="working_mode_kernelsu_next_title">KernelSU Next</string>
+    <string name="working_mode_apatch_title">APatch</string>
+    <string name="working_mode_shizuku_title">Shizuku</string>
+    <string name="working_mode_sukisu_title">SukiSU Ultra</string>
+    <string name="page_home">Home</string>
+    <string name="menu_show_cover">Mostra Copertina</string>
+    <string name="menu_show_verified">Mostra Verificati</string>
+    <string name="menu_sort_repolistmode_detailed">Dettagliato</string>
+    <string name="menu_sort_repolistmode_compact">Compatto</string>
+    <string name="view_module_antifeatures">Anti-Funzionalità</string>
+    <string name="view_module_features_service">Servizio</string>
+    <string name="view_module_features_post_fs_data">Dati Post FS</string>
+    <string name="view_module_features_system_properties">Proprietà del sistema</string>
+    <string name="view_module_features_selinux_policy">Politica SELinux</string>
+    <string name="view_module_features_zygisk">Zygisk</string>
+    <string name="view_module_features_apks">APKs</string>
+    <string name="view_module_features_webui">WebUI</string>
+    <string name="view_module_features_zygisk_sub">Consente ai moduli di interagire con il framework Zygisk, consentendo modifiche e interazioni a livello di sistema.</string>
+    <string name="view_module_features_apks_sub">Includendo APK aggiuntivi all\'interno del modulo.</string>
+    <string name="view_module_features_webui_sub">Interfaccia web per la gestione dei moduli. L\'utente deve confermare l\'utilizzo di diverse API JavaScript.</string>
+    <string name="view_module_features_action_sub">Consente all\'utente di eseguire uno script tramite un click</string>
+    <string name="view_module_features_postmount_sub">Esecuzione dello script dopo il montaggio di OverlayFS</string>
+    <string name="view_module_features_bootcompleted_sub">Esecuzione dello script dopo il completamento dell\'avvio</string>
+    <string name="view_module_module_support">Supporto Modulo</string>
+    <string name="view_module_install_confirm_desc_deps">Vuoi davvero installare [color=surface_tint]%1$s[/color]? Questo modulo richiede anche:</string>
+    <string name="module_reinstall">Reinstalla</string>
 </resources>

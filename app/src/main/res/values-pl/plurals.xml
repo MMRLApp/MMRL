@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="module_count_explore_repo">
+        <item quantity="one">Zawiera %1$s moduł</item>
+        <item quantity="few">Zawiera %1$s moduły</item>
+        <item quantity="many">Zawiera %1$s modułów</item>
+        <item quantity="other">Zawiera %1$s modułów</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d godzina</item>
+        <item quantity="few">%1$d godziny</item>
+        <item quantity="many">%1$d godzin</item>
+        <item quantity="other">%1$d godzin</item>
+    </plurals>
+    <plurals name="search_results">
+        <item quantity="one">Znaleziono [color=surface_tint]%1$s wynik[/color] pasujący do wyszukiwania</item>
+        <item quantity="few">Znaleziono [color=surface_tint]%1$s wyniki[/color] pasujące do wyszukiwania</item>
+        <item quantity="many">Znaleziono [color=surface_tint]%1$s wyników[/color] pasujących do wyszukiwania</item>
+        <item quantity="other">Znaleziono [color=surface_tint]%1$s wyników[/color] pasujących do wyszukiwania</item>
+    </plurals>
+</resources>

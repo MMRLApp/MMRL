@@ -4,18 +4,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,75 +26,95 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
+import com.dergoogler.mmrl.ext.rememberTrue
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.local.State
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.model.online.VersionItem
-import com.dergoogler.mmrl.ui.component.VersionItemBottomSheet
-import com.dergoogler.mmrl.ui.component.scrollbar.VerticalFastScrollbar
-import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
-import com.dergoogler.mmrl.viewmodel.ModulesViewModel
-import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
 import com.dergoogler.mmrl.ui.activity.terminal.action.ActionActivity
-import com.dergoogler.mmrl.ui.component.DropdownMenu
-import com.dergoogler.mmrl.ui.component.button.FilledTonalDoubleButton
-import com.dergoogler.mmrl.webui.model.WebUIConfig
-import com.dergoogler.mmrl.webui.model.WebUIConfig.Companion.webUiConfig
-import dev.dergoogler.mmrl.compat.core.LocalUriHandler
+import com.dergoogler.mmrl.ui.component.VersionItemBottomSheet
+import com.dergoogler.mmrl.ui.component.scaffold.ScaffoldScope
+import com.dergoogler.mmrl.ui.component.scrollbar.VerticalFastScrollbar
+import com.dergoogler.mmrl.ui.providable.LocalHazeState
+import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
+import com.dergoogler.mmrl.ui.providable.LocalModule
+import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.dergoogler.mmrl.viewmodel.ModulesViewModel
+import dev.chrisbanes.haze.hazeSource
 
 @Composable
-fun ModulesList(
+fun ScaffoldScope.ModulesList(
+    innerPadding: PaddingValues,
     list: List<LocalModule>,
     state: LazyListState,
     onDownload: (LocalModule, VersionItem, Boolean) -> Unit,
     viewModel: ModulesViewModel,
+    isProviderAlive: Boolean,
 ) = Box(
     modifier = Modifier.fillMaxSize()
 ) {
-    val browser = LocalUriHandler.current
-    val context = LocalContext.current
+    val paddingValues = LocalMainScreenInnerPaddings.current
+    val layoutDirection = LocalLayoutDirection.current
 
-    LazyColumn(
-        state = state,
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(
-            items = list,
-            key = { it.id }
-        ) { module ->
-            ModuleItem(
-                module = module,
-                viewModel = viewModel,
-                onDownload = onDownload,
-            )
+    this@ModulesList.ResponsiveContent {
+        LazyColumn(
+            state = state,
+            modifier = Modifier
+                .fillMaxSize()
+                .hazeSource(state = LocalHazeState.current),
+            contentPadding = PaddingValues(
+                top = innerPadding.calculateTopPadding() + 16.dp,
+                start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
+                bottom = paddingValues.calculateBottomPadding() + 16.dp,
+                end = 16.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(
+                items = list,
+                key = { it.id.id },
+                contentType = { "module_item" }
+            ) { module ->
+                CompositionLocalProvider(
+                    LocalModule provides module
+                ) {
+                    ModuleItem(
+                        viewModel = viewModel,
+                        onDownload = onDownload,
+                        isProviderAlive = isProviderAlive,
+                    )
+                }
+            }
         }
     }
 
     VerticalFastScrollbar(
         state = state,
-        modifier = Modifier.align(Alignment.CenterEnd)
+        modifier = Modifier
+            .align(Alignment.CenterEnd)
+            .padding(
+                top = innerPadding.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding()
+            )
     )
 }
 
 @Composable
-fun ModuleItem(
-    module: LocalModule,
+private fun ModuleItem(
     onDownload: (LocalModule, VersionItem, Boolean) -> Unit,
     viewModel: ModulesViewModel,
+    isProviderAlive: Boolean,
 ) {
+    val context = LocalContext.current
+    val module = LocalModule.current
     val userPreferences = LocalUserPreferences.current
 
     val ops by remember(userPreferences.useShellForModuleStateChange, module.state) {
@@ -104,32 +126,53 @@ fun ModuleItem(
         }
     }
 
-    val blacklist = viewModel.getBlacklist(module.id.toString())
-    val isBlacklisted = Blacklist.isBlacklisted(blacklist)
+    val blacklist by remember(module.id) {
+        derivedStateOf {
+            viewModel.getBlacklist(module.id.toString())
+        }
+    }
 
-    val context = LocalContext.current
+    val isModuleSwitchChecked by remember(module.state) {
+        derivedStateOf { module.state == State.ENABLE }
+    }
+
+    val isModuleEnabled by remember(module.state, isProviderAlive, viewModel.platform) {
+        derivedStateOf {
+            val enabled = with(viewModel.platform) {
+                when {
+                    isKernelSuNext || isKernelSU || isAPatch -> isProviderAlive && module.state != State.UPDATE
+                    else -> isProviderAlive
+                }
+            }
+            enabled && module.state != State.REMOVE
+        }
+    }
+
+    val isActionEnabled by remember(isProviderAlive, module.state) {
+        derivedStateOf {
+            isProviderAlive && module.state != State.REMOVE && module.state != State.DISABLE
+        }
+    }
+
+    val isBlacklisted by Blacklist.isBlacklisted(blacklist)
 
     val item = viewModel.getVersionItem(module)
     val progress = viewModel.getProgress(item)
 
-    val isProviderAlive = viewModel.isProviderAlive
-
     var open by remember { mutableStateOf(false) }
-    if (open && item != null) {
-        VersionItemBottomSheet(
-            isUpdate = true,
-            item = item,
-            isProviderAlive = isProviderAlive,
-            onDownload = { onDownload(module, item, it) },
-            onClose = { open = false },
-            isBlacklisted = isBlacklisted
-        )
-    }
+
+    VersionItemBottomSheetIfNeeded(
+        open = open,
+        item = item,
+        isProviderAlive = isProviderAlive,
+        onDownload = { onDownload(module, item!!, it) },
+        onClose = { open = false },
+        isBlacklisted = isBlacklisted
+    )
 
     ModuleItem(
         isProviderAlive = isProviderAlive,
-        isBlacklisted = Blacklist.isBlacklisted(blacklist),
-        module = module,
+        isBlacklisted = isBlacklisted,
         progress = progress,
         indeterminate = ops.isOpsRunning,
         alpha = when (module.state) {
@@ -141,17 +184,10 @@ fun ModuleItem(
             else -> TextDecoration.None
         },
         switch = {
-            val enabled = with(viewModel.platform) {
-                when {
-                    isKernelSuNext || isKernelSU || isAPatch -> isProviderAlive && module.state != State.UPDATE
-                    else -> isProviderAlive
-                }
-            }
-
             Switch(
-                checked = module.state == State.ENABLE,
+                checked = isModuleSwitchChecked,
                 onCheckedChange = ops.toggle,
-                enabled = enabled && module.state != State.REMOVE
+                enabled = isModuleEnabled
             )
         },
         indicator = {
@@ -162,57 +198,99 @@ fun ModuleItem(
             }
         },
         startTrailingButton = {
-            module.hasAction.takeTrue {
+            module.hasAction.rememberTrue {
                 ActionButton(
-                    enabled = isProviderAlive && module.state != State.REMOVE && module.state != State.DISABLE,
-                    onClick = {
-                        ActionActivity.start(
-                            context = context,
-                            modId = module.id
-                        )
+                    enabled = isActionEnabled,
+                    onClick = remember {
+                        {
+                            ActionActivity.start(
+                                context = context,
+                                modId = module.id
+                            )
+                        }
                     }
                 )
             }
         },
         trailingButton = {
-            if (item != null) {
+            item?.let { itm ->
+                val hasUpdate by remember(itm, module.versionCode) {
+                    derivedStateOf { itm.versionCode > module.versionCode }
+                }
+
                 UpdateButton(
-                    enabled = item.versionCode > module.versionCode,
-                    onClick = { open = true }
+                    enabled = hasUpdate,
+                    onClick = remember { { open = true } }
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
             }
 
+            val isRemoveOrRestoreEnabled by remember(
+                userPreferences.useShellForModuleStateChange,
+                module.state,
+                isProviderAlive
+            ) {
+                derivedStateOf {
+                    isProviderAlive && (!(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) || module.state != State.REMOVE)
+                }
+            }
+
             RemoveOrRestore(
                 module = module,
-                enabled = isProviderAlive && (!(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) || module.state != State.REMOVE),
+                enabled = isRemoveOrRestoreEnabled,
                 onClick = ops.change
             )
-
         }
     )
+}
+
+@Composable
+private fun VersionItemBottomSheetIfNeeded(
+    open: Boolean,
+    item: VersionItem?,
+    isProviderAlive: Boolean,
+    onDownload: (Boolean) -> Unit,
+    onClose: () -> Unit,
+    isBlacklisted: Boolean,
+) {
+    if (open && item != null) {
+        VersionItemBottomSheet(
+            isUpdate = true,
+            item = item,
+            isProviderAlive = isProviderAlive,
+            onDownload = onDownload,
+            onClose = onClose,
+            isBlacklisted = isBlacklisted
+        )
+    }
 }
 
 @Composable
 private fun UpdateButton(
     enabled: Boolean,
     onClick: () -> Unit,
-) = FilledTonalButton(
-    onClick = onClick,
-    enabled = enabled,
-    contentPadding = PaddingValues(horizontal = 12.dp)
 ) {
-    Icon(
-        modifier = Modifier.size(20.dp),
-        painter = painterResource(id = R.drawable.device_mobile_down),
-        contentDescription = null
-    )
+    val contentPadding = remember { PaddingValues(horizontal = 12.dp) }
+    val iconSize = remember { Modifier.size(20.dp) }
+    val spacerWidth = remember { Modifier.width(6.dp) }
 
-    Spacer(modifier = Modifier.width(6.dp))
-    Text(
-        text = stringResource(id = R.string.module_update)
-    )
+    FilledTonalButton(
+        onClick = onClick,
+        enabled = enabled,
+        contentPadding = contentPadding
+    ) {
+        Icon(
+            modifier = iconSize,
+            painter = painterResource(id = R.drawable.device_mobile_down),
+            contentDescription = null
+        )
+
+        Spacer(modifier = spacerWidth)
+        Text(
+            text = stringResource(id = R.string.module_update)
+        )
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -222,13 +300,17 @@ private fun RemoveOrRestore(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
+    val contentPadding = remember { PaddingValues(horizontal = 12.dp) }
+    val iconSize = remember { Modifier.size(20.dp) }
+    val spacerWidth = remember { Modifier.width(6.dp) }
+
     FilledTonalButton(
         onClick = onClick,
         enabled = enabled,
-        contentPadding = PaddingValues(horizontal = 12.dp)
+        contentPadding = contentPadding
     ) {
         Icon(
-            modifier = Modifier.size(20.dp),
+            modifier = iconSize,
             painter = painterResource(
                 id = if (module.state == State.REMOVE) {
                     R.drawable.rotate
@@ -239,7 +321,7 @@ private fun RemoveOrRestore(
             contentDescription = null
         )
 
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = spacerWidth)
         Text(
             text = stringResource(
                 id = if (module.state == State.REMOVE) {
@@ -250,123 +332,25 @@ private fun RemoveOrRestore(
             )
         )
     }
-
-    /*
-     val context = LocalContext.current
-     val density = LocalDensity.current
-     var offset = Offset.Zero
-     val config = module.webUiConfig
-
-     var expanded by remember { mutableStateOf(false) }
-     Box {
-         FilledTonalDoubleButton(
-             onClick = onClick,
-             onDropdownClick = {
-                 expanded = !expanded
-             },
-             dropdownBtnModifier = Modifier
-                 .pointerInteropFilter {
-                     offset = Offset(it.x, it.y)
-                     false
-                 },
-             enabled = enabled,
-             dropdownIcon = R.drawable.dots_vertical,
-             contentPadding = PaddingValues(horizontal = 12.dp)
-         ) {
-             Icon(
-                 modifier = Modifier.size(20.dp),
-                 painter = painterResource(
-                     id = if (module.state == State.REMOVE) {
-                         R.drawable.rotate
-                     } else {
-                         R.drawable.trash
-                     }
-                 ),
-                 contentDescription = null
-             )
-
-             Spacer(modifier = Modifier.width(6.dp))
-             Text(
-                 text = stringResource(
-                     id = if (module.state == State.REMOVE) {
-                         R.string.module_restore
-                     } else {
-                         R.string.module_remove
-                     }
-                 )
-             )
-         }
-
-         val offsets = with(density) {
-             DpOffset(
-                 offset.x.toDp(),
-                 offset.y.toDp()
-             )
-         }
-
-         DropdownMenu(
-             expanded = expanded,
-             offset = offsets,
-             onDismissRequest = { expanded = false }
-         ) {
-             when {
-                 config.hasWebUIShortcut(context) -> RemoveShortcut(config)
-                 module.state == State.REMOVE -> RemoveShortcut(config)
-                 else -> CreateShortcut(config)
-             }
-         }
-     }*/
-}
-
-@Composable
-private fun CreateShortcut(config: WebUIConfig) {
-    val context = LocalContext.current
-
-//    DropdownMenuItem(
-//        text = { Text(stringResource(R.string.create_webui_shortcut)) },
-//        leadingIcon = {
-//            Icon(
-//                painter = painterResource(R.drawable.link),
-//                contentDescription = null
-//            )
-//        },
-//        enabled = config.canAddWebUIShortcut(),
-//        onClick = {
-//            config.createShortcut(context, WebUIActivity::class.java)
-//        }
-//    )
-}
-
-@Composable
-private fun RemoveShortcut(config: WebUIConfig) {
-    val context = LocalContext.current
-
-    DropdownMenuItem(
-        text = { Text(stringResource(R.string.remove_webui_shortcut)) },
-        leadingIcon = {
-            Icon(
-                painter = painterResource(R.drawable.unlink),
-                contentDescription = null
-            )
-        },
-        onClick = {
-            config.removeShortcut(context)
-        }
-    )
 }
 
 @Composable
 private fun ActionButton(
     enabled: Boolean,
     onClick: () -> Unit,
-) = FilledTonalButton(
-    onClick = onClick,
-    enabled = enabled,
-    contentPadding = PaddingValues(horizontal = 12.dp)
 ) {
-    Icon(
-        modifier = Modifier.size(20.dp),
-        painter = painterResource(id = R.drawable.player_play),
-        contentDescription = null
-    )
+    val contentPadding = remember { PaddingValues(horizontal = 12.dp) }
+    val iconSize = remember { Modifier.size(20.dp) }
+
+    FilledTonalButton(
+        onClick = onClick,
+        enabled = enabled,
+        contentPadding = contentPadding
+    ) {
+        Icon(
+            modifier = iconSize,
+            painter = painterResource(id = R.drawable.player_play),
+            contentDescription = null
+        )
+    }
 }

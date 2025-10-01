@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="requireNewVersion_cannot_load_webui">無法加載 WebUI</string>
+    <string name="requireNewVersion_require_text">MMRL 最低版本要求 &gt;=</string>
+    <string name="requireNewVersion_try_the_following">請嘗試一下方式：</string>
+</resources>

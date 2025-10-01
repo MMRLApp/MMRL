@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_placeholder">Recherche…</string>
+    <string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="learn_more">En savoir plus</string>
+    <string name="unknown_error">Erreur inconnue</string>
+    <string name="select_a_option">Sélectionner une option</string>
+    <string name="loading">Chargement…</string>
+</resources>

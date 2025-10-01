@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="search_results">
+        <item quantity="one">Aramanızla eşleşen [color=surface_tint]%1$s sonuç[/color] bulduk</item>
+        <item quantity="other">Aramanızla eşleşen [color=surface_tint]%1$s sonuçlar[/color] bulduk</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="one">%1$s modülü saklandı</item>
+        <item quantity="other">%1$s modüller saklandı</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
+</resources>

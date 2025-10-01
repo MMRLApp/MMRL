@@ -12,6 +12,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -29,11 +30,17 @@ fun TextWithIcon(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
 ) {
+    val density = LocalDensity.current
+
     val decoratedIconContent: @Composable (() -> Unit)? =
         icon.nullable {
             {
                 Icon(
-                    modifier = Modifier.iconSize(style.textStyle, style.iconScaling),
+                    modifier = Modifier.iconSize(
+                        density = density,
+                        textStyle = style.textStyle,
+                        scaling = style.iconScaling
+                    ),
                     painter = painterResource(id = it),
                     contentDescription = null,
                     tint = style.iconTint,

@@ -5,7 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dergoogler.mmrl.model.online.ModulesJson
 import com.dergoogler.mmrl.model.state.RepoState
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "repos")
 data class Repo(
     @PrimaryKey val url: String,
@@ -20,6 +22,8 @@ data class Repo(
     @Embedded val metadata: RepoMetadata = RepoMetadata.default(),
 ) {
     val isCompatible get() = metadata.version == ModulesJson.CURRENT_VERSION
+
+    val isUpdateJson get() = name == UPDATE_JSON
 
     override fun equals(other: Any?): Boolean {
         return when (other) {
@@ -50,9 +54,12 @@ data class Repo(
     companion object {
         fun String.toRepo() = Repo(url = this)
         fun example() = RepoState.example().toRepo()
+
+        const val UPDATE_JSON = "Update Json"
     }
 }
 
+@Serializable
 @Entity(tableName = "metadata")
 data class RepoMetadata(
     val version: Int,

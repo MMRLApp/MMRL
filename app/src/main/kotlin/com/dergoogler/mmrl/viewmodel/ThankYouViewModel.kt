@@ -22,16 +22,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ThankYouViewModel @Inject constructor(
+    application: Application,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-    application: Application,
-) : MMRLViewModel(
-    localRepository = localRepository,
-    modulesRepository = modulesRepository,
-    userPreferencesRepository = userPreferencesRepository,
-    application = application,
-) {
+) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
     private val sponsorsFlow = MutableStateFlow(listOf<ExploreRepositoryMember>())
     var totalSponsorAmount by mutableIntStateOf(0)
         private set

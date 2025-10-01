@@ -13,25 +13,29 @@ import com.dergoogler.mmrl.service.ModuleService
 import com.dergoogler.mmrl.service.ProviderService
 import com.dergoogler.mmrl.service.RepositoryService
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.dialog.RadioOptionItem
-import com.dergoogler.mmrl.ui.component.listItem.ListButtonItem
-import com.dergoogler.mmrl.ui.component.listItem.ListHeader
-import com.dergoogler.mmrl.ui.component.listItem.ListRadioCheckItem
-import com.dergoogler.mmrl.ui.component.listItem.ListSwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.RadioDialogItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Section
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalSnackbarHost
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun radioOptionItem(interval: Long): RadioOptionItem<Long> {
-    return RadioOptionItem(
+fun radioDialogItem(interval: Long): RadioDialogItem<Long> {
+    return RadioDialogItem(
         title = pluralStringResource(id = R.plurals.hours, count = interval.toInt(), interval),
         value = interval
     )
 }
 
+@Destination<RootGraph>
 @Composable
 fun UpdatesScreen() {
     val viewModel = LocalSettings.current
@@ -41,134 +45,152 @@ fun UpdatesScreen() {
     val scope = rememberCoroutineScope()
 
     val optionsOfHours = listOf(
-        radioOptionItem(1),
-        radioOptionItem(2),
-        radioOptionItem(3),
-        radioOptionItem(4),
-        radioOptionItem(5),
-        radioOptionItem(6),
-        radioOptionItem(10),
-        radioOptionItem(12),
-        radioOptionItem(16),
-        radioOptionItem(24),
-        radioOptionItem(48),
-        radioOptionItem(72),
+        radioDialogItem(1),
+        radioDialogItem(2),
+        radioDialogItem(3),
+        radioDialogItem(4),
+        radioDialogItem(5),
+        radioDialogItem(6),
+        radioDialogItem(10),
+        radioDialogItem(12),
+        radioDialogItem(16),
+        radioDialogItem(24),
+        radioDialogItem(48),
+        radioDialogItem(72),
     )
 
     SettingsScaffold(
         title = R.string.settings_updates,
     ) {
-        ListButtonItem(
-            title = stringResource(id = R.string.settings_open_notification_settings),
-            onClick = {
-                val intent =
-                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        Section {
+            ButtonItem(
+                onClick = {
+                    val intent =
+                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                        }
+
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent, null)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Cannot open notification settings",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    context.startActivity(intent, null)
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Cannot open notification settings",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
-            })
+            ) {
+                Title(R.string.settings_open_notification_settings)
+            }
+        }
 
-        ListHeader(
+        Section(
             title = stringResource(id = R.string.settings_app)
-        )
+        ) {
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_check_app_updates),
-            desc = stringResource(id = R.string.settings_check_app_updates_desc),
-            checked = userPreferences.checkAppUpdates,
-            onChange = viewModel::setCheckAppUpdates
-        )
+            SwitchItem(
+                checked = userPreferences.checkAppUpdates,
+                onChange = viewModel::setCheckAppUpdates
+            ) {
+                Title(R.string.settings_check_app_updates)
+                Description(R.string.settings_check_app_updates_desc)
+            }
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_include_preleases),
-            enabled = userPreferences.checkAppUpdates,
-            checked = userPreferences.checkAppUpdatesPreReleases,
-            onChange = viewModel::setCheckAppUpdatesPreReleases
-        )
+            SwitchItem(
+                checked = userPreferences.checkAppUpdatesPreReleases,
+                enabled = userPreferences.checkAppUpdates,
+                onChange = viewModel::setCheckAppUpdatesPreReleases
+            ) {
+                Title(R.string.settings_include_preleases)
+            }
+        }
 
-        ListHeader(
+        Section(
             title = stringResource(id = R.string.page_repository)
-        )
-
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_auto_update_repos),
-            desc = stringResource(id = R.string.settings_auto_update_repos_desc),
-            checked = RepositoryService.isActive,
-            onChange = {
-                scope.launch {
-                    if (it) {
-                        RepositoryService.start(context, userPreferences.autoUpdateReposInterval)
-                        snackbarHost.showSnackbar(context.getString(R.string.repository_service_started))
-                    } else {
-                        RepositoryService.stop(context)
-                        while (RepositoryService.isActive) {
-                            delay(100)
+        ) {
+            SwitchItem(
+                checked = RepositoryService.isActive,
+                onChange = {
+                    scope.launch {
+                        if (it) {
+                            RepositoryService.start(
+                                context,
+                                userPreferences.autoUpdateReposInterval
+                            )
+                            snackbarHost.showSnackbar(context.getString(R.string.repository_service_started))
+                        } else {
+                            RepositoryService.stop(context)
+                            while (RepositoryService.isActive) {
+                                delay(100)
+                            }
+                            snackbarHost.showSnackbar(context.getString(R.string.repository_service_stopped))
                         }
-                        snackbarHost.showSnackbar(context.getString(R.string.repository_service_stopped))
                     }
                 }
+            ) {
+                Title(R.string.settings_auto_update_repos)
+                Description(R.string.settings_auto_update_repos_desc)
             }
-        )
 
-        ListRadioCheckItem(
-            title = stringResource(R.string.settings_repo_update_interval),
-            desc = stringResource(
-                R.string.settings_repo_update_interval_desc,
-                userPreferences.autoUpdateReposInterval
-            ),
-            enabled = RepositoryService.isActive,
-            value = userPreferences.autoUpdateReposInterval,
-            options = optionsOfHours,
-            onConfirm = {
-                viewModel.setAutoUpdateReposInterval(it.value)
-            })
+            RadioDialogItem(
+                selection = userPreferences.autoUpdateReposInterval,
+                options = optionsOfHours,
+                onConfirm = {
+                    viewModel.setAutoUpdateReposInterval(it.value)
+                }
+            ) {
+                Title(R.string.settings_repo_update_interval)
+                Description(
+                    R.string.settings_repo_update_interval_desc,
+                    userPreferences.autoUpdateReposInterval
+                )
+            }
+        }
 
-        ListHeader(
+        Section(
             title = stringResource(id = R.string.page_modules)
-        )
+        ) {
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_check_modules_update),
-            desc = stringResource(id = R.string.settings_check_modules_update_desc),
-            checked = ModuleService.isActive,
-            enabled = viewModel.isProviderAlive && ProviderService.isActive,
-            onChange = {
-                scope.launch {
-                    if (it) {
-                        ModuleService.start(context, userPreferences.autoUpdateReposInterval)
-                        snackbarHost.showSnackbar(context.getString(R.string.module_service_started))
-                    } else {
-                        ModuleService.stop(context)
-                        while (ModuleService.isActive) {
-                            delay(100)
+            SwitchItem(
+                checked = ModuleService.isActive,
+                enabled = viewModel.isProviderAlive && ProviderService.isActive,
+                onChange = {
+                    scope.launch {
+                        if (it) {
+                            ModuleService.start(
+                                context,
+                                userPreferences.autoUpdateReposInterval
+                            )
+                            snackbarHost.showSnackbar(context.getString(R.string.module_service_started))
+                        } else {
+                            ModuleService.stop(context)
+                            while (ModuleService.isActive) {
+                                delay(100)
+                            }
+                            snackbarHost.showSnackbar(context.getString(R.string.module_service_stopped))
                         }
-                        snackbarHost.showSnackbar(context.getString(R.string.module_service_stopped))
                     }
                 }
+            ) {
+                Title(R.string.settings_check_modules_update)
+                Description(R.string.settings_check_modules_update_desc)
             }
-        )
 
-        ListRadioCheckItem(
-            title = stringResource(R.string.settings_check_modules_update_interval),
-            desc = stringResource(
-                R.string.settings_check_modules_update_interval_desc,
-                userPreferences.checkModuleUpdatesInterval
-            ),
-            enabled = viewModel.isProviderAlive && ModuleService.isActive && ProviderService.isActive,
-            value = userPreferences.checkModuleUpdatesInterval,
-            options = optionsOfHours,
-            onConfirm = {
-                viewModel.setCheckModuleUpdatesInterval(it.value)
+            RadioDialogItem(
+                selection = userPreferences.checkModuleUpdatesInterval,
+                options = optionsOfHours,
+                enabled = viewModel.isProviderAlive && ModuleService.isActive && ProviderService.isActive,
+                onConfirm = {
+                    viewModel.setCheckModuleUpdatesInterval(it.value)
+                }
+            ) {
+                Title(R.string.settings_check_modules_update_interval)
+                Description(
+                    R.string.settings_check_modules_update_interval_desc,
+                    userPreferences.checkModuleUpdatesInterval
+                )
             }
-        )
+        }
     }
 }

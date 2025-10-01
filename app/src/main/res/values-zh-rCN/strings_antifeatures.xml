@@ -15,7 +15,7 @@
     <string name="upstreamnonfree_name">上游代码非自由</string>
     <string name="obfuscation_name">代码混淆</string>
     <string name="obfuscation_desc">此模块的源代码可能经过混淆，从而难以理解、审计和修改。</string>
-    <string name="llm_desc">此模块可能部分或完全由人工智能模型(LLM)编写。</string>
+    <string name="llm_desc">此模块可能部分或完全由人工智能模型（LLM）编写</string>
     <string name="unaskedremoval_desc">此模块会在未经用户批准的情况下删除应用，文件或其他模块。</string>
     <string name="upstreamnonfree_desc">此模块的上游源代码并非完全自由。</string>
     <string name="tracking_desc">此模块会跟踪和报告你的使用记录。</string>
@@ -27,5 +27,5 @@
     <string name="nonfreeadd_desc">此模块推广非自由插件。</string>
     <string name="llm_name">由人工智能模型(LLM)编写</string>
     <string name="closedsource_name">闭源</string>
-    <string name="closedsource_desc">该模块是闭源的专有软件，其代码仓库不可供公众审查、修改或二次分发。</string>
+    <string name="closedsource_desc">该模块是闭源的专有软件，其代码仓库不可供公众审查、修改或二次分发</string>
 </resources>

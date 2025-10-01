@@ -26,10 +26,13 @@ import com.dergoogler.mmrl.ui.component.AntiFeaturesItem
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.MarkdownText
 import com.dergoogler.mmrl.ui.component.NavigationBarsSpacer
-import com.dergoogler.mmrl.ui.component.listItem.ListButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 
 @Composable
-fun ModuleItem(
+fun ListScope.ModuleItem(
     module: Blacklist,
 ) {
     var open by remember { mutableStateOf(false) }
@@ -39,7 +42,12 @@ fun ModuleItem(
             onClose = { open = false })
     }
 
-    ListButtonItem(title = module.id, desc = module.source, onClick = { open = true })
+    ButtonItem(
+        onClick = { open = true }
+    ) {
+        Title(module.id)
+        Description(module.source)
+    }
 }
 
 
@@ -47,7 +55,6 @@ fun ModuleItem(
 fun BlacklistBottomSheet(
     module: Blacklist, onClose: () -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
-//    val context = LocalContext.current
     val browser = LocalUriHandler.current
 
     Column(
@@ -96,11 +103,11 @@ fun BlacklistBottomSheet(
         }
 
 
-        module.antifeatures?.let {
-            if (it.isNotEmpty()) {
-                AntiFeaturesItem(antifeatures = it)
-            }
-        }
+//        module.antifeatures?.let {
+//            if (it.isNotEmpty()) {
+//                AntiFeaturesItem(antifeatures = it)
+//            }
+//        }
 
         Spacer(modifier = Modifier.height(10.dp))
 

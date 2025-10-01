@@ -89,7 +89,6 @@
     <string name="view_module_update_notify">Beritahu</string>
     <string name="setup_non_root_desc">Tidak membutuhkan izin Root, hanya menyediakan fitur men-download modul</string>
     <string name="view_module_unsupported_desc">Sepertinya perangkat Anda tidak mendukung versi modul ini. Memasang modul ini dapat membahayakan perangkat anda!</string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[Apakah Anda yakin ingin memasang <font color=\"%1$s\">%2$s</font>? Modul ini juga memerlukan:]]></string>
     <string name="settings_changelo_desc">Semua perubahan terkini dalam MMRL</string>
     <string name="menu_sort_repolistmode_compact">Susun Rapat</string>
     <string name="settings_open_notification_settings">Buka Setelan Notifikasi</string>
@@ -155,7 +154,7 @@
     <string name="settings_check_app_updates_desc">Secara otomatis memeriksa Pembaruan Aplikasi setiap kali Anda membuka aplikasi</string>
     <string name="settings_hide_fingerprint">Sembunyikan Fingerprint di Beranda</string>
     <string name="settings_developer_mode">Mode Pengembang</string>
-    <string name="settings_developer_mode_desc">Menampilkan ID modul dan lainnya</string>
+    <string name="settings_developer_mode_desc">Menampilkan [color=primary]ID[/color] modul dan lainnya</string>
     <string name="settings_privacy_policy">Kebijakan Privasi</string>
     <string name="settings_hide_fingerprint_desc">Tidak peduli apakah itu asli atau palsu</string>
     <string name="settings_check_modules_update">Periksa Pembaruan Modul</string>
@@ -184,7 +183,7 @@
     <string name="pre_release">Pra-rilis</string>
     <string name="unsafe_url_redirecting">URL tidak aman: %1$s. Mengarahkan…</string>
     <string name="hidden">Tersembunyi</string>
-    <string name="new_version_available">Versi baru %s telah tersedia, klik untuk memperbaharui.</string>
+    <string name="new_version_available">Versi baru [italic]%s[/italic] telah tersedia, klik untuk memperbaharui.</string>
     <string name="install_screen_reboot_title">Reboot?</string>
     <string name="install_screen_reboot_text">Kamu yakin ingin me-reboot perangkatmu?</string>
     <string name="page_home">Halaman</string>
@@ -204,7 +203,7 @@
     <string name="view_module_required_os_value">Android %1$s atau lebih baru</string>
     <string name="view_module_share">Bagikan</string>
     <string name="view_module_install_confirm_title">Pasang Modul Ini?</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[Apakah Anda yakin ingin memasang <font color=\"%1$s\">%2$s</font>?]]></string>
+    <string name="view_module_install_confirm_desc">Apakah Anda yakin ingin memasang [color=surface_tint]%1$s[/color]?</string>
     <string name="view_module_dependencies">Dependensi</string>
     <string name="view_module_required_os">OS yang diperlukan</string>
     <string name="module_reinstall">Install Ulang</string>
@@ -225,7 +224,7 @@
     <string name="selinux_status_enforcing">Enforcing</string>
     <string name="view_module_features_action">Action</string>
     <string name="view_module_features_service_sub">Menjalankan kode saat boot (setelah sistem diinisialisasi).</string>
-    <string name="view_module_section_count">%1$s+</string>
+    <string name="view_module_section_count">+%1$s</string>
     <string name="settings_text_wrap">Bungkus Teks</string>
     <string name="settings_changelog">Catatan Perubahan</string>
     <string name="settings_text_wrap_desc">Mengaktifkan pembungkusan teks di dalam terminal instalasi</string>
@@ -286,7 +285,7 @@
     <string name="blacklisted">Didaftarhitamkan</string>
     <string name="settings_blacklist_alerts_desc">Menampilkan peringatan untuk modul lokal dan modul dari jelajah, dan juga memblokir pemasangan modul yang masuk daftar hitam</string>
     <string name="page_repositorys">Repo</string>
-    <string name="blacklisted_desc">Modul ini telah didaftarhitam oleh MMRL. Instalasi dinonaktifkan untuk memastikan keamanan. Jika masih ingin menginstal modul ini, dapat menonaktifkan peringatan daftar hitam di setelan dengan menavigasi ke **Setelan → Keamanan → Peringatan Daftar Hitam**.\n@more(Pelajari lebih lanjut)</string>
+    <string name="blacklisted_desc">Modul ini telah didaftarhitam oleh MMRL. Instalasi dinonaktifkan untuk memastikan keamanan. Jika masih ingin menginstal modul ini, dapat menonaktifkan peringatan daftar hitam di setelan dengan menavigasi ke [bold]Setelan → Keamanan → Peringatan Daftar Hitam[/bold].</string>
     <string name="settings_modules_permissions">Module &amp; Perizinan</string>
     <string name="settings_modules_permissions_desc">Izinkan API JavaScript dan lainnya tentang modul lokal</string>
     <string name="debugging">Debugging</string>
@@ -370,4 +369,11 @@
     <string name="change_platform">Ubah Platform</string>
     <string name="page_search">Cari</string>
     <string name="from_other_repositories">Dari Repositori Lain</string>
+    <string name="create_webui_shortcut">Buat Pintasan WebUI</string>
+    <string name="remove_webui_shortcut">Hapus Pintasan WebUI</string>
+    <string name="working_mode_sukisu_title">SukiSU Ultra</string>
+    <string name="view_module_no_description">Tidak ada deskripsi yang diberikan.</string>
+    <string name="architecture">Arsitektur</string>
+    <string name="settings_webui_engine">WebUI Engine</string>
+    <string name="settings_webui_engine_wx">WebUI X</string>
 </resources>

@@ -87,7 +87,6 @@
     <string name="install_logs_saved">Jurnale salvate</string>
     <string name="install_logs_save_failed">Salvare eșuată: %s</string>
     <string name="module_update">Actualizare</string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[Sigur dorești să instalezi <font color="%1$s">%2$s</font>? Acest modul necesită și:]]></string>
     <string name="view_module_features_action">Acțiuni</string>
     <string name="view_module_low_root_version_desc">Se pare că ai o versiune prea veche a furnizorului de root. Verifică dacă există actualizări pentru furnizorul tău de root.</string>
     <string name="view_module_low_root_version">Versiune root prea mică!</string>
@@ -163,7 +162,7 @@
     <string name="view_module_dependencies">Dependențe</string>
     <string name="view_module_install_confirm_title">Instalează acest Modul?</string>
     <string name="view_module_install_confirm_confirm">Instalează</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[Ești sigur că dorești să instalezi asta <font color=\"%1$s\">%2$s</font>?]]></string>
+    <string name="view_module_install_confirm_desc">Ești sigur că dorești să instalezi asta [color=surface_tint]%1$s[/color]?</string>
     <string name="settings_other">Altele</string>
     <string name="settings_changelog">Jurnalul modificărilor</string>
     <string name="settings_changelo_desc">Toate modificările actuale din MMRL</string>

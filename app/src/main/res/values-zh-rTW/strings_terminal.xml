@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="copying_zip_to_temp_directory">- 正在複製 zip 檔案至臨時目錄</string>
-    <string name="install_view_module_info">- 模組資訊：%1$s</string>
+    <string name="install_view_module_info">::group::模組資訊</string>
     <string name="copying_failed">! 無法複製檔案</string>
     <string name="installation_aborted_due_to_an_error">! 發生錯誤，無法安裝</string>
     <string name="install_view_path">- 路徑：%1$s</string>

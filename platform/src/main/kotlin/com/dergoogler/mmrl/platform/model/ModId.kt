@@ -7,11 +7,13 @@ import androidx.annotation.Keep
 import com.dergoogler.mmrl.platform.file.SuFile
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
 @Keep
 @Parcelize
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ModId(
     val id: String,
@@ -197,6 +199,8 @@ data class ModId(
         val ModId.modulesDir get() = SuFile(adbDir, MODULES_DIR)
         val ModId.moduleDir get() = SuFile(modulesDir, id)
         val ModId.webrootDir get() = SuFile(moduleDir, WEBROOT_DIR)
+        val ModId.modconfDir get() = SuFile(moduleDir, MODCONF_DIR)
+        val ModId.modconfDependenciesDir get() = SuFile(modconfDir, MODCONF_DEPENDENCIES_DIR)
         val ModId.propFile get() = SuFile(moduleDir, PROP_FILE)
         val ModId.actionFile get() = SuFile(moduleDir, ACTION_FILE)
         val ModId.serviceFile get() = SuFile(moduleDir, SERVICE_FILE)
@@ -213,6 +217,8 @@ data class ModId(
 
         const val ADB_DIR = "/data/adb"
         const val WEBROOT_DIR = "webroot"
+        const val MODCONF_DIR = "modconf"
+        const val MODCONF_DEPENDENCIES_DIR = "dependencies"
         const val MODULES_DIR = "modules"
         const val HIDDEN_CONFIG_DIR = ".config"
 

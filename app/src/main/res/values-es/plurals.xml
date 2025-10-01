@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="search_results">
+        <item quantity="one">Hemos encontrado [color=surface_tint]%1$s resultado[/color] que coincide con su búsqueda</item>
+        <item quantity="many">Hemos encontrado [color=surface_tint]%1$s resultados[/color] que coinciden con su búsqueda</item>
+        <item quantity="other">Hemos encontrado [color=surface_tint]%1$s resultados[/color] que coinciden con su búsqueda</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="one">%1$s módulo almacenado</item>
+        <item quantity="many">%1$s módulos almacenados</item>
+        <item quantity="other">%1$s módulos almacenados</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="many">%1$d horas</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+</resources>

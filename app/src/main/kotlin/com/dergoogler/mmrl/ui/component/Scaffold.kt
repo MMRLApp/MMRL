@@ -3,15 +3,14 @@ package com.dergoogler.mmrl.ui.component
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -20,8 +19,16 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.systemBarsPaddingEnd
+import com.dergoogler.mmrl.ui.component.listItem.dsl.List
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.scaffold.ResponsiveScaffold
+import com.dergoogler.mmrl.ui.component.toolbar.BlurNavigateUpToolbar
+import com.dergoogler.mmrl.ui.component.toolbar.BlurToolbar
 import com.dergoogler.mmrl.ui.component.toolbar.ToolbarTitle
+import com.dergoogler.mmrl.ui.providable.LocalHazeState
+import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
 import com.dergoogler.mmrl.ui.providable.LocalNavController
+import dev.chrisbanes.haze.hazeSource
 
 @Composable
 fun SettingsScaffold(
@@ -31,7 +38,7 @@ fun SettingsScaffold(
     actions: @Composable (RowScope.() -> Unit) = {},
     floatingActionButton: @Composable () -> Unit = {},
     absolute: @Composable (BoxScope.() -> Unit) = {},
-    relative: @Composable (ColumnScope.() -> Unit),
+    relative: @Composable (ListScope.() -> Unit),
 ) = SettingsScaffold(
     title = stringResource(id = title),
     modifier = modifier,
@@ -50,28 +57,32 @@ fun SettingsScaffold(
     actions: @Composable (RowScope.() -> Unit) = {},
     floatingActionButton: @Composable () -> Unit = {},
     absolute: @Composable (BoxScope.() -> Unit) = {},
-    relative: @Composable (ColumnScope.() -> Unit),
-) {
+    relative: @Composable (ListScope.() -> Unit),
+) = LocalScreenProvider {
     val navController = LocalNavController.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    Scaffold(
+    ResponsiveScaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             if (allowNavigateBack) {
-                NavigateUpTopBar(
+                BlurNavigateUpToolbar(
                     title = title,
-                    scrollBehavior = scrollBehavior,
                     navController = navController,
-                    actions = actions
+                    actions = actions,
+                    fade = true,
+                    fadeDistance = 50f,
+                    scrollBehavior = scrollBehavior
                 )
             } else {
-                TopAppBar(
+                BlurToolbar(
                     title = {
                         ToolbarTitle(title = title)
                     },
-                    scrollBehavior = scrollBehavior,
-                    actions = actions
+                    fade = true,
+                    fadeDistance = 50f,
+                    actions = actions,
+                    scrollBehavior = scrollBehavior
                 )
             }
         },
@@ -80,15 +91,20 @@ fun SettingsScaffold(
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .padding(innerPadding)
+                .hazeSource(state = LocalHazeState.current)
                 .then(modifier.box)
         ) {
-            Column(
+            List(
                 modifier = modifier.column
-                    .systemBarsPaddingEnd(),
-            ) {
-                relative()
-            }
+                    .systemBarsPaddingEnd()
+                    .padding(top = innerPadding.calculateTopPadding()),
+                content = {
+                    relative()
+
+                    val paddingValues = LocalMainScreenInnerPaddings.current
+                    Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                }
+            )
 
             absolute()
         }

@@ -8,20 +8,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -45,18 +43,23 @@ import com.dergoogler.mmrl.app.Event.Companion.isFinished
 import com.dergoogler.mmrl.app.Event.Companion.isLoading
 import com.dergoogler.mmrl.app.Event.Companion.isSucceeded
 import com.dergoogler.mmrl.ext.isScrollingUp
-import com.dergoogler.mmrl.ui.component.Console
-import com.dergoogler.mmrl.ui.component.NavigateUpTopBar
+import com.dergoogler.mmrl.ext.none
+import com.dergoogler.mmrl.ui.activity.MMRLComponentActivity
+import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.dialog.ConfirmDialog
+import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
+import com.dergoogler.mmrl.ui.component.terminal.TerminalView
+import com.dergoogler.mmrl.ui.component.toolbar.BlurNavigateUpToolbar
+import com.dergoogler.mmrl.ui.providable.LocalHazeState
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.InstallViewModel
-import com.dergoogler.mmrl.ui.activity.MMRLComponentActivity
+import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.launch
 
 @Composable
 fun InstallScreen(
-    viewModel: InstallViewModel
-) {
+    viewModel: InstallViewModel,
+) = LocalScreenProvider {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
@@ -69,28 +72,20 @@ fun InstallScreen(
     val isScrollingUp by listState.isScrollingUp()
     val showFab by remember {
         derivedStateOf {
-            isScrollingUp && viewModel.event.isSucceeded
+            isScrollingUp && viewModel.terminal.event.isSucceeded
         }
     }
 
     var confirmReboot by remember { mutableStateOf(false) }
     var cancelInstall by remember { mutableStateOf(false) }
 
-    val shell = viewModel.shell
-    val event = viewModel.event
+    val shell = viewModel.terminal.shell
+    val event = viewModel.terminal.event
 
     val allowCancel = userPreferences.allowCancelInstall
 
     LaunchedEffect(focusRequester) {
         focusRequester.requestFocus()
-    }
-
-    DisposableEffect(Unit) {
-        viewModel.registerReceiver()
-
-        onDispose {
-            viewModel.unregisterReceiver()
-        }
     }
 
     val backHandler = {
@@ -203,16 +198,16 @@ fun InstallScreen(
                 )
             }
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets.none
     ) {
-        Console(
-            list = viewModel.console,
+        TerminalView(
+            contentPadding = it,
+            terminal = viewModel.terminal,
             state = listState,
-            breakList = userPreferences.terminalTextWrap,
-            showLineNumbers = userPreferences.showTerminalLineNumbers,
             modifier = Modifier
-                .padding(it)
                 .fillMaxSize()
+                .hazeSource(LocalHazeState.current)
         )
     }
 }
@@ -224,7 +219,7 @@ private fun TopBar(
     onBack: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     enable: Boolean,
-) = NavigateUpTopBar(
+) = BlurNavigateUpToolbar(
     title = stringResource(id = R.string.install_screen_title),
     subtitle = stringResource(
         id = when (event) {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading">読み込み中…</string>
+    <string name="unknown_error">不明なエラー</string>
+    <string name="search_placeholder">検索…</string>
+    <string name="select_a_option">オプションを選択</string>
+    <string name="learn_more">詳しく読む</string>
+    <string name="cancel">キャンセル</string>
+    <string name="confirm">確認</string>
+</resources>

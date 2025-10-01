@@ -2,7 +2,9 @@ package com.dergoogler.mmrl.model.online
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class TrackJson(
     @Json(name = "type") val typeName: String,

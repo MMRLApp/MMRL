@@ -3,7 +3,6 @@ package com.dergoogler.mmrl.platform.manager
 import com.dergoogler.mmrl.platform.content.LocalModule
 import com.dergoogler.mmrl.platform.content.State
 import com.dergoogler.mmrl.platform.file.ExtFile
-import com.dergoogler.mmrl.platform.file.SuFile
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.platform.model.ModId.Companion.disableFile
 import com.dergoogler.mmrl.platform.model.ModId.Companion.files

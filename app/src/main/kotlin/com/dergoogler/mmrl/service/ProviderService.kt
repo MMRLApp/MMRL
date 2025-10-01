@@ -15,7 +15,7 @@ import com.dergoogler.mmrl.app.utils.NotificationUtils
 import com.dergoogler.mmrl.datastore.model.WorkingMode
 import com.dergoogler.mmrl.platform.PLATFORM_KEY
 import com.dergoogler.mmrl.platform.Platform
-import com.dergoogler.mmrl.platform.model.PlatformIntent.Companion.getPlatform
+import com.dergoogler.mmrl.platform.Platform.Companion.getPlatform
 import com.dergoogler.mmrl.utils.initPlatform
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -26,7 +26,6 @@ class ProviderService : LifecycleService() {
         Timber.d("onCreate")
         super.onCreate()
         isActive = true
-        setForeground()
     }
 
     override fun onDestroy() {
@@ -44,8 +43,10 @@ class ProviderService : LifecycleService() {
             return START_NOT_STICKY
         }
 
+        setForeground()
+
         lifecycleScope.launch {
-            isActive = initPlatform(baseContext, intent.getPlatform())
+            isActive = initPlatform(baseContext, intent.getPlatform() ?: return@launch)
         }
 
         return START_STICKY
@@ -87,7 +88,8 @@ class ProviderService : LifecycleService() {
                 )
                 putExtra(PLATFORM_KEY, mode.toPlatform())
             }
-            context.startService(intent)
+
+            context.startForegroundService(intent)
         }
 
         fun stop(

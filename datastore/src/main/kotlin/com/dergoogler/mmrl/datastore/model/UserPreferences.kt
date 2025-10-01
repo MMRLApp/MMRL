@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.dergoogler.mmrl.datastore.model
 
 import android.content.Context
@@ -5,8 +7,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.os.Environment
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.Composable
+import com.dergoogler.mmrl.datastore.BuildConfig
 import com.dergoogler.mmrl.ui.theme.Colors
 import com.dergoogler.mmrl.ui.theme.Colors.Companion.getColorScheme
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -23,7 +24,7 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
 @Serializable
-data class UserPreferences @OptIn(ExperimentalSerializationApi::class) constructor(
+data class UserPreferences(
     @ProtoNumber(1) val workingMode: WorkingMode = WorkingMode.FIRST_SETUP,
     @ProtoNumber(2) val darkMode: DarkMode = DarkMode.FollowSystem,
     @ProtoNumber(3) val themeColor: Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) Colors.Dynamic.id else Colors.MMRLBase.id,
@@ -68,7 +69,11 @@ data class UserPreferences @OptIn(ExperimentalSerializationApi::class) construct
     @ProtoNumber(36) val enableToolbarEvents: Boolean = true,
     @ProtoNumber(37) val webuiEngine: WebUIEngine = WebUIEngine.PREFER_MODULE,
     @ProtoNumber(38) val showTerminalLineNumbers: Boolean = true,
-
+    @ProtoNumber(39) val devAlwaysShowUpdateAlert: Boolean = false,
+    @ProtoNumber(40) val webuixPackageName: String = "com.dergoogler.mmrl.wx${if (BuildConfig.DEBUG) ".debug" else ""}",
+    @ProtoNumber(41) val enableBlur: Boolean = true,
+    @ProtoNumber(42) val hideBottomBarLabels: Boolean = false,
+    @ProtoNumber(43) val superUserMenu: SuperUserMenu = SuperUserMenu(),
 ) {
     fun isDarkMode() = when (darkMode) {
         DarkMode.AlwaysOff -> false
@@ -88,6 +93,17 @@ data class UserPreferences @OptIn(ExperimentalSerializationApi::class) construct
         ProtoBuf.encodeToByteArray(this)
     )
 
+    @OptIn(ExperimentalContracts::class)
+    fun developerMode(
+        also: UserPreferences.() -> Boolean,
+    ): Boolean {
+        contract {
+            callsInPlace(also, InvocationKind.AT_MOST_ONCE)
+        }
+
+        return developerMode && also()
+    }
+
     companion object {
         val PUBLIC_DOWNLOADS: File = Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_DOWNLOADS
@@ -97,49 +113,4 @@ data class UserPreferences @OptIn(ExperimentalSerializationApi::class) construct
         fun decodeFrom(input: InputStream): UserPreferences =
             ProtoBuf.decodeFromByteArray(input.readBytes())
     }
-}
-
-@OptIn(ExperimentalContracts::class)
-inline fun <R> UserPreferences.developerMode(block: UserPreferences.() -> R): R? {
-    contract {
-        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
-    }
-
-    return if (developerMode) block() else null
-}
-
-@OptIn(ExperimentalContracts::class)
-inline fun <R> UserPreferences.developerMode(
-    also: UserPreferences.() -> Boolean,
-    block: UserPreferences.() -> R,
-): R? {
-    contract {
-        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
-    }
-
-    return if (developerMode && also()) block() else null
-}
-
-@OptIn(ExperimentalContracts::class)
-inline fun UserPreferences.developerMode(
-    also: UserPreferences.() -> Boolean,
-): Boolean {
-    contract {
-        callsInPlace(also, InvocationKind.AT_MOST_ONCE)
-    }
-
-    return developerMode && also()
-}
-
-@OptIn(ExperimentalContracts::class)
-inline fun <R> UserPreferences.developerMode(
-    also: UserPreferences.() -> Boolean,
-    default: R,
-    block: UserPreferences.() -> R,
-): R {
-    contract {
-        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
-    }
-
-    return if (developerMode && also()) block() else default
 }

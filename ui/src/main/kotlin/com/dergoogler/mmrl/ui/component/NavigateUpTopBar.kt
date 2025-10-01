@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.ui.R
+import com.dergoogler.mmrl.ui.component.toolbar.Toolbar
 import com.dergoogler.mmrl.ui.component.toolbar.ToolbarTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +32,7 @@ fun NavigateUpTopBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    bottomBorder: Boolean = true,
 ) = NavigateUpTopBar(
     modifier = modifier,
     title = title,
@@ -40,7 +42,8 @@ fun NavigateUpTopBar(
     windowInsets = windowInsets,
     colors = colors,
     scrollBehavior = scrollBehavior,
-    enable = enable
+    enable = enable,
+    bottomBorder = bottomBorder
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,6 +58,7 @@ fun NavigateUpTopBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    bottomBorder: Boolean = true,
 ) = NavigateUpTopBar(
     modifier = modifier,
     title = title,
@@ -64,7 +68,8 @@ fun NavigateUpTopBar(
     windowInsets = windowInsets,
     colors = colors,
     scrollBehavior = scrollBehavior,
-    enable = enable
+    enable = enable,
+    bottomBorder = bottomBorder
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,6 +84,7 @@ fun NavigateUpTopBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    bottomBorder: Boolean = true,
 ) = NavigateUpTopBar(
     modifier = modifier,
     title = {
@@ -89,7 +95,8 @@ fun NavigateUpTopBar(
     windowInsets = windowInsets,
     colors = colors,
     scrollBehavior = scrollBehavior,
-    enable = enable
+    enable = enable,
+    bottomBorder = bottomBorder
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,7 +110,8 @@ fun NavigateUpTopBar(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
-) = TopAppBar(
+    bottomBorder: Boolean = true,
+) = Toolbar(
     title = title,
     modifier = modifier,
     navigationIcon = {
@@ -121,5 +129,6 @@ fun NavigateUpTopBar(
     actions = actions,
     windowInsets = windowInsets,
     colors = colors,
-    scrollBehavior = scrollBehavior
+    scrollBehavior = scrollBehavior,
+    bottomBorder = bottomBorder
 )

@@ -17,16 +17,6 @@ open class APatchModuleManager() : BaseModuleManager() {
 
     override fun getVersionCode(): Int = mVersionCode
 
-    override fun isSafeMode(): Boolean = false
-    override fun isLkmMode(): NullableBoolean = NullableBoolean(null)
-
-    override fun setSuEnabled(enabled: Boolean): Boolean = true
-    override fun isSuEnabled(): Boolean = true
-
-    override fun getSuperUserCount(): Int = -1
-
-    override fun uidShouldUmount(uid: Int): Boolean = false
-
     override fun getModuleCompatibility() = ModuleCompatibility(
         hasMagicMount = SuFile("/data/adb/.bind_mount_enable").exists() && (versionCode >= 11011 && !SuFile(
             "/data/adb/.overlay_enable"
@@ -115,4 +105,12 @@ open class APatchModuleManager() : BaseModuleManager() {
         "export APATCH_VER=${version}",
         "export APATCH_VER_CODE=${versionCode}",
     )
+
+    // KernelSU only
+    override fun isSafeMode(): Boolean = false
+    override fun isLkmMode(): NullableBoolean = NullableBoolean(null)
+    override fun setSuEnabled(enabled: Boolean): Boolean = true
+    override fun isSuEnabled(): Boolean = true
+    override fun getSuperUserCount(): Int = -1
+    override fun uidShouldUmount(uid: Int): Boolean = false
 }

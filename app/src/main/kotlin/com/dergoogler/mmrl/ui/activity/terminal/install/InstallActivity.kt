@@ -28,14 +28,13 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.coroutines.cancellation.CancellationException
 
-class InstallActivity : TerminalActivity<InstallViewModel>() {
+class InstallActivity : TerminalActivity() {
     private var confirmDialog by mutableStateOf(true)
+    private val viewModel by viewModels<InstallViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("InstallActivity onCreate")
         super.onCreate(savedInstanceState)
-
-        viewModel = viewModels<InstallViewModel>().value
 
         val uris: ArrayList<Uri>? = if (intent.data != null) {
             arrayListOf(intent.data!!)
@@ -67,7 +66,7 @@ class InstallActivity : TerminalActivity<InstallViewModel>() {
                 description = R.string.install_screen_confirm_text,
                 onClose = {
                     confirmDialog = false
-                    viewModel.shell.close()
+                    viewModel.terminal.shell.close()
                     finish()
                 },
                 onConfirm = {
@@ -83,7 +82,7 @@ class InstallActivity : TerminalActivity<InstallViewModel>() {
     override fun onDestroy() {
         Timber.d("InstallActivity onDestroy")
         tmpDir.deleteRecursively()
-        cancelJob("InstallActivity was destroyed")
+        viewModel.destroy()
         super.onDestroy()
     }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="confirm">Onayla</string>
+    <string name="cancel">İptal</string>
+    <string name="learn_more">Daha fazla öğren</string>
+    <string name="loading">Yükleniyor…</string>
+    <string name="unknown_error">Bilinmeyen Hata</string>
+    <string name="search_placeholder">Ara…</string>
+    <string name="select_a_option">Bir seçenek seçin</string>
+</resources>

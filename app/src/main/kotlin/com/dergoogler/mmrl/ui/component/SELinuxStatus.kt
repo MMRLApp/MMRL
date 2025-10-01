@@ -1,42 +1,41 @@
 package com.dergoogler.mmrl.ui.component
 
 import android.util.Log
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.platform.PlatformManager
-import com.dergoogler.mmrl.ui.component.listItem.ListItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import com.dergoogler.mmrl.ui.remember.remember
 
 @Composable
-fun SELinuxStatus(
-    contentPaddingValues: PaddingValues = PaddingValues(vertical = 16.dp, horizontal = 25.dp),
-) {
-    val seLinuxStatus = remember {
-        PlatformManager.get(R.string.selinux_status_unknown) {
-            try {
-                if (!isSELinuxEnabled) {
-                    return@get R.string.selinux_status_disabled
-                }
-
-                if (isSELinuxEnforced) {
-                    return@get R.string.selinux_status_enforcing
-                }
-
-                return@get R.string.selinux_status_permissive
-            } catch (e: Exception) {
-                Log.e("SELinuxStatus", "Failed to check SELinux status", e)
-                return@get R.string.selinux_status_unknown
+fun ListScope.SELinuxStatus() {
+    val seLinuxStatus by PlatformManager.remember(R.string.selinux_status_unknown) {
+        try {
+            if (!isSELinuxEnabled) {
+                return@remember R.string.selinux_status_disabled
             }
+
+            if (isSELinuxEnforced) {
+                return@remember R.string.selinux_status_enforcing
+            }
+
+            return@remember R.string.selinux_status_permissive
+        } catch (e: Exception) {
+            Log.e("SELinuxStatus", "Failed to check SELinux status", e)
+            return@remember R.string.selinux_status_unknown
         }
     }
 
-    ListItem(
-        contentPaddingValues = contentPaddingValues,
-        icon = R.drawable.shield_bolt,
-        title = stringResource(id = R.string.selinux_status),
-        desc = stringResource(id = seLinuxStatus)
-    )
+    Item {
+        Icon(painter = painterResource(R.drawable.shield_bolt))
+        Title(R.string.selinux_status)
+        Description(seLinuxStatus)
+    }
 }

@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ui.component
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -68,10 +67,7 @@ fun BottomSheet(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(unbounded = true)
-            .heightIn(max = maxHeight)
-            .animateContentSize(
-                alignment = Alignment.BottomStart
-            ),
+            .heightIn(max = maxHeight),
         horizontalAlignment = columnHorizontalAlignment
     ) {
         content()

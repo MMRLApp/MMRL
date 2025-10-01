@@ -29,6 +29,7 @@ fun Cover(
     modifier: Modifier = Modifier,
     url: String,
     shape: RoundedCornerShape = DefaultShape,
+    errorIcon: Int = R.drawable.alert_triangle,
     aspectRatio: Float = DefaultAspectRatio,
 ) {
     val context = LocalContext.current
@@ -56,7 +57,7 @@ fun Cover(
         )
     } else {
         Logo(
-            icon = R.drawable.alert_triangle,
+            icon = errorIcon,
             shape = shape,
             modifier = Modifier
                 .fillMaxWidth()

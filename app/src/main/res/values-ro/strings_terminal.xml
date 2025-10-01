@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="service_is_not_available">! Serviciul nu este disponibil</string>
+    <string name="unable_to_gather_module_info_of_file">! Nu sa putut obține informația modulului a fișierului %1$s</string>
+    <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! Nu se pot instala modulele pe lista neagră. Setări → Securitate → Alerte lista neagră</string>
+</resources>

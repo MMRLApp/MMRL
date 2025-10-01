@@ -15,13 +15,16 @@ import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.app.Const
 import com.dergoogler.mmrl.ui.component.dialog.TextFieldDialog
-import com.dergoogler.mmrl.ui.component.listItem.ListButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import java.io.File
 
 @Composable
-fun DownloadPathItem(
+fun ListScope.DownloadPathItem(
     downloadPath: String,
-    onChange: (String) -> Unit
+    onChange: (String) -> Unit,
 ) {
     var edit by remember { mutableStateOf(false) }
     if (edit) OpenDocumentTreeDialog(
@@ -30,25 +33,25 @@ fun DownloadPathItem(
         onConfirm = { if (it != downloadPath) onChange(it) }
     )
 
-    ListButtonItem(
-        title = stringResource(id = R.string.settings_download_path),
-        desc = File(downloadPath).absolutePath,
+    ButtonItem(
         onClick = { edit = true }
-    )
+    ) {
+        Title(R.string.settings_download_path)
+        Description(File(downloadPath).absolutePath)
+    }
 }
 
 @Composable
 private fun OpenDocumentTreeDialog(
-    path : String,
+    path: String,
     onClose: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: (String) -> Unit,
 ) {
     var name by remember {
         mutableStateOf(File(path).toRelativeString(Const.PUBLIC_DOWNLOADS))
     }
 
     TextFieldDialog(
-        shape = RoundedCornerShape(20.dp),
         onDismissRequest = onClose,
         title = { Text(text = stringResource(id = R.string.settings_download_path)) },
         confirmButton = {

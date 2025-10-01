@@ -2,8 +2,8 @@ package com.dergoogler.mmrl.platform.manager
 
 import com.dergoogler.mmrl.platform.content.ModuleCompatibility
 import com.dergoogler.mmrl.platform.content.NullableBoolean
+import com.dergoogler.mmrl.platform.ksu.KernelVersion
 import com.dergoogler.mmrl.platform.ksu.KsuNative
-import com.dergoogler.mmrl.platform.ksu.getKernelVersion
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.platform.model.ModId.Companion.disableFile
 import com.dergoogler.mmrl.platform.model.ModId.Companion.moduleDir
@@ -30,7 +30,7 @@ open class KernelSUModuleManager() : BaseModuleManager() {
     override fun isSuEnabled(): Boolean = KsuNative.isSuEnabled()
 
     override fun isLkmMode(): NullableBoolean = with(KsuNative) {
-        val kernelVersion = getKernelVersion()
+        val kernelVersion = KernelVersion.getKernelVersion()
         val ksuVersion = getVersion()
 
         return NullableBoolean(

@@ -58,32 +58,3 @@ fun ListHeader(
         )
     }
 }
-
-@Composable
-fun ListGroup(
-    title: String? = null,
-    content: @Composable () -> Unit,
-) = Card(
-    modifier = {
-        surface = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        column = Modifier.padding(horizontal = 0.dp, vertical = 8.dp)
-    }
-) {
-    if (title.isNotNull()) {
-        ListHeader(title = title)
-
-        val leftRightFade = Brush.horizontalGradient(
-            0f to Color.Transparent,
-            0.1f to Color.Red,
-            0.48f to Color.Red,
-            0.85f to Color.Transparent,
-        )
-
-        HorizontalDivider(
-            modifier = Modifier/*.alpha(0.5f)*/.fadingEdge(leftRightFade),
-            thickness = 0.9.dp
-        )
-    }
-
-    content()
-}

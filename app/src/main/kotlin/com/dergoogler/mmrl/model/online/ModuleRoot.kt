@@ -4,8 +4,10 @@ import com.squareup.moshi.JsonClass
 import io.github.z4kn4fein.semver.constraints.toConstraint
 import io.github.z4kn4fein.semver.satisfies
 import io.github.z4kn4fein.semver.toVersionOrNull
+import kotlinx.serialization.Serializable
 import java.util.Locale
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ModuleRoot(
     val magisk: String? = null,

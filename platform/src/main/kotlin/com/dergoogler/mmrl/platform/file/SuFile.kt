@@ -1,12 +1,21 @@
+@file:Suppress("unused")
+
 package com.dergoogler.mmrl.platform.file
 
+import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.os.RemoteException
 import android.system.ErrnoException
 import android.system.Os
+import android.util.Log
+import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.platform.Platform
+import com.dergoogler.mmrl.platform.PlatformManager
+import com.dergoogler.mmrl.platform.stub.IFileManager
 import java.io.File
 import java.io.FileFilter
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -16,13 +25,6 @@ import java.util.Locale
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import com.dergoogler.mmrl.platform.stub.IFileManager
-import android.net.Uri
-import android.util.Log
-import com.dergoogler.mmrl.ext.isNotNullOrBlank
-import com.dergoogler.mmrl.platform.PlatformManager
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 
 /**
@@ -53,22 +55,6 @@ import java.io.FileOutputStream
 class SuFile(
     vararg paths: Any,
 ) : ExtFile(*paths) {
-    private fun <R> fallback(
-        root: IFileManager.() -> R,
-        nonRoot: () -> R,
-    ): R {
-        val platform = PlatformManager.platform
-        val fileManager = PlatformManager.fileManagerOrNull
-        try {
-            if (fileManager != null && platform.isNotNonRoot) {
-                return root(fileManager)
-            }
-            return nonRoot()
-        } catch (e: Exception) {
-            return nonRoot()
-        }
-    }
-
     fun readText(): String {
         try {
             val bytes = newInputStream().use { it.readBytes() }
@@ -255,6 +241,18 @@ class SuFile(
         { false }
     )
 
+    val parentSuFile: SuFile?
+        get() = try {
+            val parent = this.parentFile
+            if (parent != null && parent.path != this.path) {
+                SuFile(parent)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+
     fun setOwner(uid: Int, gid: Int): Boolean = fallback(
         {
             this.setOwner(path, uid, gid)
@@ -356,6 +354,13 @@ class SuFile(
         const val TAG = "SuFile"
         const val PIPE_CAPACITY = 16 * 4096
 
+        fun loadSharedObjects(vararg paths: String): Boolean = fallback(
+            {
+                this.loadSharedObjects(paths)
+            },
+            { false }
+        )
+
         fun String.toSuFile(): SuFile {
             return SuFile(this)
         }
@@ -391,6 +396,22 @@ class SuFile(
                 String.format(Locale.getDefault(), "%.0f %s", size, units[unitIndex])
             } else {
                 String.format(Locale.getDefault(), "%.2f %s", size, units[unitIndex])
+            }
+        }
+
+        private fun <R> fallback(
+            root: IFileManager.() -> R,
+            nonRoot: () -> R,
+        ): R {
+            val platform = PlatformManager.platform
+            val fileManager = PlatformManager.fileManagerOrNull
+            try {
+                if (fileManager != null && platform.isNotNonRoot) {
+                    return root(fileManager)
+                }
+                return nonRoot()
+            } catch (e: Exception) {
+                return nonRoot()
             }
         }
     }

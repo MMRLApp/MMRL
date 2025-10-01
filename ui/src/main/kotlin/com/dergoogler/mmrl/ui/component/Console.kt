@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import com.dergoogler.mmrl.ext.toStyleMarkup
+import com.dergoogler.mmrl.ui.component.text.BBCodeText
 
 @Composable
 fun Console(
@@ -39,6 +39,13 @@ fun Console(
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         fontFamily = FontFamily.Monospace
     ),
+    textLine: @Composable (String) -> Unit = {
+        BBCodeText(
+            text = it,
+            style = style,
+            color = style.color
+        )
+    },
 ) {
     LaunchedEffect(list.size) {
         if (list.isNotEmpty()) {
@@ -80,11 +87,7 @@ fun Console(
                         }
                     }
 
-                    Text(
-                        text = item.toStyleMarkup(),
-                        color = style.color,
-                        style = style
-                    )
+                    textLine(item)
                 }
             }
         }

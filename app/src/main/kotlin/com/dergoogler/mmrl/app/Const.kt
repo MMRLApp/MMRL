@@ -1,7 +1,10 @@
 package com.dergoogler.mmrl.app
 
 import android.os.Environment
+import com.dergoogler.mmrl.platform.PlatformManager
 import java.io.File
+
+typealias PLM = PlatformManager
 
 object Const {
     val PUBLIC_DOWNLOADS: File = Environment.getExternalStoragePublicDirectory(

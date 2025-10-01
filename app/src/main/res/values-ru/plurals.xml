@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="search_results">
+        <item quantity="one">Мы нашли [color=surface_tint]%1$s результат[/color], которые соответствуют вашему поиску</item>
+        <item quantity="few">Мы нашли [color=surface_tint]%1$s результата[/color],которые соответствующих вашему поиску</item>
+        <item quantity="many">Мы нашли [color=surface_tint]%1$s результатов[/color], которые соответствующих вашему поиску</item>
+        <item quantity="other">Мы нашли [color=surface_tint]%1$s результатов[/color], которые соответствующих вашему поиску</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="one">Модуль %1$s сохранен</item>
+        <item quantity="few">%1$s сохраненных модулей</item>
+        <item quantity="many">%1$s сохраненных модулей</item>
+        <item quantity="other">%1$s сохраненных модулей</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="few">%1$d часа</item>
+        <item quantity="many">%1$d часов</item>
+        <item quantity="other">%1$d часов</item>
+    </plurals>
+</resources>

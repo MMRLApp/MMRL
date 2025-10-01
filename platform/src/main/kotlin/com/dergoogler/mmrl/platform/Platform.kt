@@ -1,43 +1,87 @@
+@file:Suppress("unused", "PropertyName")
+
 package com.dergoogler.mmrl.platform
 
-import android.app.ActivityThread
 import android.content.ComponentName
 import android.content.Context
-import android.content.ContextWrapper
-import android.content.ServiceConnection
+import android.content.Intent
 import android.os.Build
-import android.os.IBinder
-import android.os.IInterface
-import android.os.Parcel
-import android.os.ServiceManager
 import android.util.Log
-import androidx.compose.runtime.DisallowComposableCalls
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import com.dergoogler.mmrl.platform.content.IService
-import com.dergoogler.mmrl.platform.content.Service
-import com.dergoogler.mmrl.platform.hiddenApi.HiddenPackageManager
-import com.dergoogler.mmrl.platform.hiddenApi.HiddenUserManager
-import com.dergoogler.mmrl.platform.model.IProvider
-import com.dergoogler.mmrl.platform.model.PlatformConfig
-import com.dergoogler.mmrl.platform.model.PlatformConfigImpl
-import com.dergoogler.mmrl.platform.stub.IFileManager
-import com.dergoogler.mmrl.platform.stub.IModuleManager
-import com.dergoogler.mmrl.platform.stub.IServiceManager
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
-import org.lsposed.hiddenapibypass.HiddenApiBypass
-import java.io.FileDescriptor
+
+/**
+ * A sealed interface representing the hierarchy of supported platforms.
+ * This is used for type-safe checking and categorization of different platform implementations,
+ * particularly distinguishing between various root solutions and non-root environments.
+ */
+sealed class PlatformType(val id: String) {
+    open val MINIMAL_SUPPORTED_SU_COMPAT: Int = -1
+    open val MINIMAL_SUPPORTED_KERNEL_LKM: Int = -1
+    open val MINIMAL_SUPPORTED_KERNEL: Int = -1
+
+    // KernelSU Next
+    open val MINIMAL_SUPPORTED_HOOK_MODE = -1
+    open val MINIMAL_SUPPORTED_MANAGER_UID = -1
+
+    // SukiSU Ultra
+    open val MINIMAL_SUPPORTED_KERNEL_FULL = ""
+    open val MINIMAL_SUPPORTED_KPM = -1
+    open val MINIMAL_SUPPORTED_DYNAMIC_MANAGER = -1
+
+    /** Represents the Magisk platform. */
+    data object Magisk : PlatformType("magisk")
+
+    /** Represents the base class for KernelSU and its variants. */
+    open class KernelSU(id: String = "kernelsu") : PlatformType(id) {
+        override val MINIMAL_SUPPORTED_KERNEL = 11071
+        override val MINIMAL_SUPPORTED_KERNEL_LKM = 11648
+        override val MINIMAL_SUPPORTED_SU_COMPAT = 12040
+    }
+
+    /** Represents the KernelSU Next Gen variant, inheriting from [KernelSU]. */
+    data object KernelSuNext : KernelSU("ksunext") {
+        override val MINIMAL_SUPPORTED_KERNEL = 12797
+        override val MINIMAL_SUPPORTED_KERNEL_LKM = 12797
+        override val MINIMAL_SUPPORTED_SU_COMPAT = 12404
+        override val MINIMAL_SUPPORTED_HOOK_MODE = 12569
+        override val MINIMAL_SUPPORTED_MANAGER_UID = 12751
+    }
+
+    /** Represents the APatch platform. */
+    data object APatch : PlatformType("apatch")
+
+    /** Represents the MKSU variant, inheriting from [KernelSU]. */
+    data object MKSU : KernelSU("mksu")
+
+    /** Represents the SukiSU variant, inheriting from [KernelSU]. */
+    data object SukiSU : KernelSU("sukisu") {
+        override val MINIMAL_SUPPORTED_KERNEL = 11071
+        override val MINIMAL_SUPPORTED_KERNEL_LKM = 11648
+        override val MINIMAL_SUPPORTED_SU_COMPAT = 12040
+        override val MINIMAL_SUPPORTED_KERNEL_FULL = "v3.1.5"
+        override val MINIMAL_SUPPORTED_KPM = 12800
+        override val MINIMAL_SUPPORTED_DYNAMIC_MANAGER = 13215
+    }
+
+    /** Represents the RKSU variant, inheriting from [KernelSU]. */
+    data object RKSU : KernelSU("rksu") {
+        override val MINIMAL_SUPPORTED_SU_COMPAT: Int = 12071
+        override val MINIMAL_SUPPORTED_KERNEL_LKM: Int = 11648
+        override val MINIMAL_SUPPORTED_KERNEL: Int = 11071
+    }
+
+    /**
+     * Represents the Shizuku platform, which provides a way to use system APIs
+     * without root, via a user-granted ADB or root service.
+     */
+    data object Shizuku : PlatformType("shizuku")
+
+    /**
+     * Represents a non-root environment where no elevated privileges are available.
+     */
+    data object NonRoot : PlatformType("nonroot")
+
+    data object Unknown : PlatformType("unknown")
+}
 
 const val TIMEOUT_MILLIS = 15_000L
 const val PLATFORM_KEY = "PLATFORM"
@@ -46,41 +90,93 @@ internal const val BINDER_TRANSACTION = 84398154
 /**
  * Represents the various platforms supported by the application.
  *
- * @property id A unique identifier for the platform.
+ * @property type The platform type instance containing the unique identifier.
  */
-enum class Platform(val id: String) {
-    Magisk("magisk"),
-    KernelSU("kernelsu"),
-    KsuNext("ksunext"),
-    APatch("apatch"),
-    MKSU("mksu"),
-    SukiSU("sukisu"),
-    RKSU("rksu"),
-    NonRoot("nonroot"),
-    Unknown("unknown");
+enum class Platform(val type: PlatformType) {
+    Magisk(PlatformType.Magisk),
+    KernelSU(PlatformType.KernelSU()),
+    KsuNext(PlatformType.KernelSuNext),
+    APatch(PlatformType.APatch),
+    MKSU(PlatformType.MKSU),
+    SukiSU(PlatformType.SukiSU),
+    RKSU(PlatformType.RKSU),
+    Shizuku(PlatformType.Shizuku),
+    NonRoot(PlatformType.NonRoot),
+    Unknown(PlatformType.Unknown);
+
+    val id: String get() = type.id
 
     companion object {
-        fun from(value: String): Platform {
-            return entries.firstOrNull { it.id == value } ?: NonRoot
+        private val platformMap = entries.associateBy { it.id }
+
+        fun from(value: String): Platform = platformMap[value] ?: NonRoot
+
+        /**
+         * Creates an [Intent] for a specific platform.
+         *
+         * This function is an inline extension function on the [Context] class.
+         * It takes a reified type parameter `T` which represents the target component (e.g., Activity or Service)
+         * and a [Platform] enum value indicating the platform for which the intent is being created.
+         *
+         * The created [Intent] will have its component set to the fully qualified name of the class `T`
+         * within the current application's package.
+         * It will also include the specified [platform] as an extra, using [PLATFORM_KEY] as the key.
+         *
+         * @param T The reified type of the target component (e.g., an Activity or Service class).
+         * @param platform The [Platform] for which this intent is being created.
+         * @return An [Intent] configured to launch the specified component for the given platform.
+         */
+        inline fun <reified T> Context.createPlatformIntent(platform: Platform): Intent =
+            Intent().apply {
+                component = ComponentName(packageName, T::class.java.name)
+                putExtra(PLATFORM_KEY, platform)
+            }
+
+        fun Intent.getPlatform(): Platform? = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                getSerializableExtra(PLATFORM_KEY, Platform::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                getSerializableExtra(PLATFORM_KEY) as? Platform
+            }
+        } catch (e: Exception) {
+            Log.e("Platform", "Error getting platform", e)
+            null
+        }
+
+        fun Intent.putPlatform(platform: Platform) {
+            putExtra(PLATFORM_KEY, platform)
         }
     }
 
-    val isMagisk get() = this == Magisk
-    val isKernelSU get() = this == KernelSU
-    val isKernelSuNext get() = this == KsuNext
-    val isAPatch get() = this == APatch
+    // Primary platform checks
+    val isMagisk: Boolean get() = this == Magisk
+    val isKernelSU: Boolean get() = this == KernelSU
+    val isKernelSuNext: Boolean get() = this == KsuNext
+    val isAPatch: Boolean get() = this == APatch
+    val isMKSU: Boolean get() = this == MKSU
+    val isSukiSU: Boolean get() = this == SukiSU
+    val isRKSU: Boolean get() = this == RKSU
+    val isShizuku: Boolean get() = this == Shizuku
+    val isNonRoot: Boolean get() = this == NonRoot
 
-    val isNotMagisk get() = !isMagisk
-    val isNotKernelSU get() = this != KernelSU && this != KsuNext
-    val isNotKernelSuNext get() = !isKernelSuNext
-    val isNotAPatch get() = !isAPatch
+    // Category checks
+    val isKernelSuVariant: Boolean get() = type is PlatformType.KernelSU
+    val isKernelSuOrNext: Boolean get() = this == KernelSU || this == KsuNext
+    val isValid: Boolean get() = this != NonRoot
 
-    val isNotNonRoot get() = this != NonRoot
-    val isNonRoot get() = this == NonRoot
-    val isValid get() = this != NonRoot
-    val isNotValid get() = !isValid
-    val isKernelSuOrNext get() = this == KernelSU || this == KsuNext
+    // Negation checks (computed properties for consistency)
+    val isNotMagisk: Boolean get() = !isMagisk
+    val isNotKernelSU: Boolean get() = this != KernelSU && this != KsuNext
+    val isNotKernelSuNext: Boolean get() = !isKernelSuNext
+    val isNotAPatch: Boolean get() = !isAPatch
+    val isNotMKSU: Boolean get() = !isMKSU
+    val isNotSukiSU: Boolean get() = !isSukiSU
+    val isNotRKSU: Boolean get() = !isRKSU
+    val isNotShizuku: Boolean get() = !isShizuku
+    val isNotNonRoot: Boolean get() = !isNonRoot
+    val isNotValid: Boolean get() = !isValid
 
-    val current get() = id
+    @Deprecated("Use 'id' property instead", ReplaceWith("id"))
+    val current: String get() = id
 }
-

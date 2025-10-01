@@ -15,4 +15,5 @@ interface IServiceManager {
     IBinder getService(String name) = 7;
     boolean isSELinuxEnabled() = 8;
     boolean isSELinuxEnforced() = 9;
+    void addServiceBinder(String name, IBinder binder) = 10;
 }

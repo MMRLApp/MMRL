@@ -1,0 +1,1 @@
+Magisk ve KernelSU için modül yöneticisi.

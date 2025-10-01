@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Build
 import android.os.PowerManager
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -12,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,6 +26,15 @@ import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.dialog.ConfirmDialog
 import com.dergoogler.mmrl.ui.component.listItem.ListButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.List
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Slot
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.HomeViewModel
 
@@ -30,10 +42,9 @@ import com.dergoogler.mmrl.viewmodel.HomeViewModel
 fun RebootBottomSheet(
     onClose: () -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
-    Column(
+    List(
         modifier = Modifier.padding(bottom = 18.dp),
     ) {
-
         RebootItem(title = R.string.reboot)
 
         val pm = LocalContext.current.getSystemService(Context.POWER_SERVICE) as PowerManager?
@@ -44,9 +55,14 @@ fun RebootBottomSheet(
         RebootItem(
             enabled = hasSoftReboot,
             title = R.string.reboot_userspace,
-            labels = !hasSoftReboot nullable listOf { LabelItem("Android +11") },
             reason = "userspace"
-        )
+        ) {
+            if (!hasSoftReboot) {
+                Labels {
+                    LabelItem("Unsupported");
+                }
+            }
+        }
 
         RebootItem(title = R.string.reboot_recovery, reason = "recovery")
         RebootItem(title = R.string.reboot_bootloader, reason = "bootloader")
@@ -56,11 +72,11 @@ fun RebootBottomSheet(
 }
 
 @Composable
-private fun RebootItem(
+private fun ListScope.RebootItem(
     enabled: Boolean = true,
-    labels: List<@Composable RowScope.() -> Unit>? = null,
     viewModel: HomeViewModel = hiltViewModel(),
     @StringRes title: Int, reason: String = "",
+    content: @Composable ListItemScope.() -> Unit = {},
 ) {
     val userPreferences = LocalUserPreferences.current
 
@@ -75,14 +91,17 @@ private fun RebootItem(
         }
     )
 
-    ListButtonItem(
-        base = { this.labels = labels },
+    ButtonItem(
         enabled = enabled,
-        title = stringResource(id = title), onClick = {
+        onClick = {
             if (userPreferences.confirmReboot) {
                 confirmReboot = true
             } else {
                 viewModel.reboot(reason)
             }
-        })
+        }
+    ) {
+        Title(title)
+        content()
+    }
 }

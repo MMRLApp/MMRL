@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="requireNewVersion_cannot_load_webui">无法加载 WebUI</string>
+    <string name="requireNewVersion_require_text">需要至少MMRL &gt;=</string>
+    <string name="requireNewVersion_try_the_following">尝试以下方案：</string>
+    <string name="requireNewVersion_try_the_following_one">从 Google Play 或 Github Releases 获取最新版 MMRL。</string>
+    <string name="requireNewVersion_try_the_following_two">联系模块开发人员寻求可能的解决方法。</string>
+    <string name="requireNewVersion_refresh">刷新</string>
+</resources>

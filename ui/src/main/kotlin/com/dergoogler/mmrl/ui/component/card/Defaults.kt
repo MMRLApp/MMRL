@@ -39,8 +39,8 @@ import com.dergoogler.mmrl.ext.isNotNull
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.systemBarsPaddingEnd
 import com.dergoogler.mmrl.ui.component.card.CardDefaults.cardStyle
-import com.dergoogler.mmrl.ui.theme.fromToken
 import com.dergoogler.mmrl.ui.token.FilledCardTokens
+import com.dergoogler.mmrl.ui.token.fromToken
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

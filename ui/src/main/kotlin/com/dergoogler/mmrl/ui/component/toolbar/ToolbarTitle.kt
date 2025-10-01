@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import com.dergoogler.mmrl.ext.nullable
+import com.dergoogler.mmrl.ui.component.ProvideContentColorTextStyle
 
 /**
  * Displays a title and an optional subtitle in a toolbar.
@@ -24,8 +25,8 @@ import com.dergoogler.mmrl.ext.nullable
  * It takes string resource IDs as input and handles the string resolution internally.
  *
  * @param modifier The modifier to be applied to the layout.
- * @param title The string resource ID for the main title.
- * @param subtitle The optional string resource ID for the subtitle. If null, no subtitle is displayed.
+ * @param titleResId The string resource ID for the main title.
+ * @param subtitleResId The optional string resource ID for the subtitle. If null, no subtitle is displayed.
  *
  * @sample
  * ```kotlin
@@ -45,11 +46,11 @@ import com.dergoogler.mmrl.ext.nullable
 @Composable
 fun ToolbarTitle(
     modifier: Modifier = Modifier,
-    @StringRes title: Int,
-    @StringRes subtitle: Int? = null,
+    @StringRes titleResId: Int,
+    @StringRes subtitleResId: Int? = null,
 ) = ToolbarTitle(
-    title = stringResource(title),
-    subtitle = subtitle.nullable { stringResource(it) },
+    title = stringResource(titleResId),
+    subtitle = subtitleResId.nullable { stringResource(it) },
     modifier = modifier,
 )
 
@@ -71,29 +72,60 @@ fun ToolbarTitle(
     modifier: Modifier = Modifier,
     title: String,
     subtitle: String? = null,
-) = ToolbarTitleLayout(
+) = ToolbarTitle(
     modifier = modifier,
-    title = {
+    titleContent = {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             color = LocalContentColor.current
         )
     },
-    subtitle = subtitle.nullable {
+    subtitleContent = subtitle.nullable {
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.bodySmall,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = LocalContentColor.current.copy(alpha = 0.75f)
+                color = LocalContentColor.current
             )
         }
     }
 )
+
+@Composable
+fun ToolbarTitle(
+    modifier: Modifier = Modifier,
+    titleContent: @Composable () -> Unit,
+    subtitleContent: (@Composable () -> Unit)? = null,
+) {
+    val decoratedTitleContent: @Composable () -> Unit = {
+        ProvideContentColorTextStyle(
+            LocalContentColor.current,
+            MaterialTheme.typography.titleLarge,
+            titleContent
+        )
+    }
+
+    val decoratedSubtitleContent: (@Composable () -> Unit)? =
+        subtitleContent.nullable {
+            {
+                ProvideContentColorTextStyle(
+                    LocalContentColor.current.copy(alpha = 0.75f),
+                    MaterialTheme.typography.bodySmall,
+                    it
+                )
+            }
+        }
+
+    ToolbarTitleLayout(
+        modifier = modifier,
+        title = decoratedTitleContent,
+        subtitle = decoratedSubtitleContent
+    )
+}
+
 
 @Composable
 internal fun ToolbarTitleLayout(

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="install_view_path">- パス: %1$s</string>
-    <string name="install_view_installing">- インストール中: %1$s</string>
-    <string name="install_view_module_info">- モジュール情報: %1$s</string>
-    <string name="module_not_found">! モジュールがありません。</string>
+    <string name="install_view_installing">- [color=primary]%1$s[/color] をインストール中</string>
+    <string name="install_view_module_info">::group::モジュール情報</string>
+    <string name="module_not_found">[color=red]! モジュールがありません。[/color]</string>
     <string name="installation_aborted_due_to_an_error">! エラーのためインストールが中止されました</string>
     <string name="service_is_not_available">! サービスは利用できません</string>
     <string name="unable_to_gather_module_info_of_file">! ファイルのモジュール情報を収集できません: %1$s</string>
@@ -14,11 +14,17 @@
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! モジュールは無効化または削除されています。アクションを実行できません。</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- 実行に失敗しました。アクションの実行にシェルを使用するには、設定 → モジュールとインストーラー → 状態にシェルを使用を有効化してください。</string>
     <string name="unable_to_gather_module_info">! モジュール情報を収集できません</string>
-    <string name="unable_to_find_path_for_uri">! URI のパスが見つかりません: %1$s</string>
-    <string name="failed_to_remove_updated_folder">! 更新されたフォルダを削除できませんでした</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! URI のパスが見つかりません: %1$s[/color]</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! 更新されたフォルダを削除できませんでした[/color]</string>
     <string name="removed_updated_folder">- 更新されたフォルダを削除しました</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s はモジュールファイルではありません。Magisk モジュールは .zip ファイルである必要があります。スキップします...</string>
-    <string name="non_root_platform_is_not_supported">! root 化されていないプラットフォームは非対応です</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s はモジュールファイルではありません。Magisk モジュールは .zip ファイルである必要があります。スキップします…</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! root 化されていないプラットフォームは非対応です[/color]</string>
     <string name="file_manager_is_null">! ファイルマネージャーが null です</string>
     <string name="module_manager_is_null">! モジュールマネージャーが null です</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! プラットフォームが有効ではありません。インストールを続行できません。[/color]</string>
+    <string name="platform_initialized">[bold]- プラットフォームを初期化しました[/bold]</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- プラットフォームマネージャーの初期化を待機中…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! プラットフォームの初期化に失敗しました[/color]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! プラットフォームの初期化に失敗しました。インストールを続行できません。[/color]</string>
+    <string name="deleted_zip_file">- 削除された ZIP ファイル: %s</string>
 </resources>

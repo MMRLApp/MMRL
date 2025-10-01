@@ -3,18 +3,24 @@ package com.dergoogler.mmrl.ui.screens.settings.other
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.service.ProviderService
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.listItem.ListSwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.TextEditDialogItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalSnackbarHost
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.screens.settings.appearance.items.DownloadPathItem
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@Destination<RootGraph>
 @Composable
 fun OtherScreen() {
     val context = LocalContext.current
@@ -31,16 +37,15 @@ fun OtherScreen() {
             onChange = viewModel::setDownloadPath
         )
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_doh),
-            desc = stringResource(id = R.string.settings_doh_desc),
+        SwitchItem(
             checked = userPreferences.useDoh,
             onChange = viewModel::setUseDoh
-        )
+        ) {
+            Title(R.string.settings_doh)
+            Description(R.string.settings_doh_desc)
+        }
 
-        ListSwitchItem(
-            title = stringResource(id = R.string.settings_provider_service),
-            desc = stringResource(id = R.string.settings_provider_service_desc),
+        SwitchItem(
             checked = ProviderService.isActive,
             onChange = {
                 scope.launch {
@@ -56,6 +61,20 @@ fun OtherScreen() {
                     }
                 }
             }
-        )
+
+        ) {
+            Title(R.string.settings_provider_service)
+            Description(R.string.settings_provider_service_desc)
+        }
+
+            TextEditDialogItem(
+                value = userPreferences.webuixPackageName,
+                onConfirm = viewModel::setWebuixPackageName
+            ) {
+                Title(context.getString(R.string.settings_set_spoofed_wxp))
+                Description(context.getString(R.string.settings_set_spoofed_wxp_desc))
+            }
+    
     }
+
 }

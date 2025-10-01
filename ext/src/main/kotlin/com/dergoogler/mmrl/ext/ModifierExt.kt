@@ -1,13 +1,17 @@
 package com.dergoogler.mmrl.ext
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
@@ -17,9 +21,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -133,12 +138,28 @@ fun Modifier.fadingEdge(
 fun Modifier.applyAlpha(enabled: Boolean): Modifier = this.alpha(if (enabled) 1f else 0.5f)
 
 fun Modifier.iconSize(
+    density: Density,
     textStyle: TextStyle,
-    scaling: Float
-) = composed {
-    val density = LocalDensity.current
+    scaling: Float,
+): Modifier {
     val iconSize = with(density) { textStyle.fontSize.toDp() * scaling }
-    return@composed this.size(iconSize)
+    return this.size(iconSize)
+}
+
+fun Modifier.onClick(
+    role: Role = Role.Button,
+    enabled: Boolean = true,
+    click: () -> Unit,
+) = composed {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    clickable(
+        interactionSource = interactionSource,
+        enabled = enabled,
+        onClick = click,
+        role = role,
+        indication = ripple()
+    )
 }
 
 interface ModifierScope {

@@ -22,71 +22,60 @@ import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.takeTrue
+import com.dergoogler.mmrl.model.local.FeaturedManager
+import com.dergoogler.mmrl.model.local.FeaturedManager.Companion.name
+import com.dergoogler.mmrl.platform.PlatformManager.isAlive
+import com.dergoogler.mmrl.platform.PlatformManager.platform
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.card.Card
-import com.dergoogler.mmrl.ui.component.card.CardDefaults
 import com.dergoogler.mmrl.ui.component.text.TextRow
-import com.dergoogler.mmrl.viewmodel.HomeViewModel
+import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.dergoogler.mmrl.ui.remember.isLkmMode
+import com.dergoogler.mmrl.ui.remember.versionCode
 
 @Composable
 internal fun RootItem(
     developerMode: Boolean = false,
-    onClick: () -> Unit = {},
-    viewModel: HomeViewModel,
 ) {
-    val platform = viewModel.platform
-    val isAlive = viewModel.isProviderAlive
-    val versionCode = viewModel.versionCode
+    val userPreferences = LocalUserPreferences.current
 
+    val manager =
+        FeaturedManager.managers.find { userPreferences.workingMode == it.workingMode }
 
     Card(
-        modifier = {
-            column = Modifier.padding(20.dp)
-        },
-        style = CardDefaults.cardStyle.copy(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        ),
-        onClick = developerMode nullable onClick,
-        absolute = {
-            developerMode.takeTrue {
-                Surface(
-                    shape = RoundedCornerShape(
-                        topEnd = 20.dp,
-                        bottomStart = 15.dp,
-                        bottomEnd = 0.dp
-                    ),
-                    color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+    ) {
+        developerMode.takeTrue {
+            Surface(
+                shape = RoundedCornerShape(
+                    topEnd = 20.dp,
+                    bottomStart = 15.dp,
+                    bottomEnd = 0.dp
+                ),
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .absolute(Alignment.TopEnd)
+            ) {
+                Text(
+                    text = "USER!DEV",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                ) {
-                    Text(
-                        text = "USER!DEV",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
-                }
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
             }
         }
-    ) {
+
         Row(
+            modifier = Modifier
+                .relative()
+                .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 modifier = Modifier.size(45.dp),
                 painter = painterResource(
-                    id = if (isAlive) {
-                        when {
-                            platform.isMagisk -> R.drawable.magisk_logo
-                            platform.isKernelSU -> R.drawable.kernelsu_logo
-                            platform.isKernelSuNext -> R.drawable.kernelsu_next_logo
-                            platform.isAPatch -> R.drawable.brand_android
-                            else -> R.drawable.circle_check_filled
-                        }
-                    } else {
-                        R.drawable.alert_circle_filled
-                    }
+                    id = getManagerLogo(isAlive, manager)
                 ),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
@@ -102,7 +91,7 @@ internal fun RootItem(
                     verticalAlignment = Alignment.CenterVertically,
                     leadingContent = (developerMode && platform.isKernelSuOrNext) nullable {
                         LabelItem(
-                            text = when (viewModel.isLkmMode.value) {
+                            text = when (isLkmMode) {
                                 null -> "LTS"
                                 true -> "LKM"
                                 else -> "GKI"
@@ -130,16 +119,7 @@ internal fun RootItem(
                 Text(
                     text = if (isAlive) {
                         stringResource(
-                            id = R.string.settings_root_provider,
-                            stringResource(
-                                id = when {
-                                    platform.isMagisk -> R.string.working_mode_magisk_title
-                                    platform.isKernelSU -> R.string.working_mode_kernelsu_title
-                                    platform.isKernelSuNext -> R.string.working_mode_kernelsu_next_title
-                                    platform.isAPatch -> R.string.working_mode_apatch_title
-                                    else -> R.string.settings_root_none
-                                }
-                            )
+                            id = R.string.settings_root_provider, manager.name
                         )
                     } else {
                         stringResource(
@@ -169,4 +149,17 @@ internal fun RootItem(
             }
         }
     }
+}
+
+private fun getManagerLogo(isAlive: Boolean, manager: FeaturedManager?): Int {
+    if (!isAlive) {
+        return R.drawable.alert_circle_filled
+    }
+
+
+    if (manager == null) {
+        return R.drawable.circle_check_filled
+    }
+
+    return manager.icon
 }

@@ -1,0 +1,32 @@
+MMRL to aplikacja na Androida, która pomaga zarządzać własnym repozytorium modułów.
+
+Funkcje:
+- Zarządzanie repozytorium modułów
+- Obsługa wielu repozytoriów
+- Obsługa Magisk i KernelSU
+- Jetpack Compose i Material Design 3
+
+https://github.com/DerGoogler/MMRL
+
+<i>Magisk Module Repo Loader</i> (MMRL) umożliwia wczytywanie własnych repozytoriów Magisk za pomocą prostego interfejsu. <a href="https://github.com/Magisk-Modules-Alt-Repo">Alternatywne repozytorium modułów Magisk</a> jest domyślnie skonfigurowane, można dodawać własne repozytoria.</p>
+
+<b>Jakie menedżery roota obsługują MMRL?</b></p>
+
+* Magisk
+* KernelSU
+* APatch
+
+<b>Jakie funkcje oferuje MMRL?</b>
+
+* Przyjazny dla użytkownika interfejs
+* Konfigurowalne strony modułów (ModConf)
+* Dostosowywanie wszystkich ścieżek (np. „/data/adb/modules”, jeśli twój root używa innej ścieżki)
+* ModConf Playground
+* Podgląd zainstalowanych i aktualizowalnych modułów
+* Dodawanie okładek, zrzutów ekranu, weryfikacji, zależności i więcej (zależne od repo)
+* Funkcja wyszukiwania
+* Dodawanie do 5 repozytoriów
+
+Ta aplikacja wymaga dostępu do roota, nie zadziała bez niego!
+
+Uwaga: Do instalowania innych modułów wymagane jest MMRL-CLI

@@ -26,3 +26,13 @@ fun <T> List<T>?.isNotNullOrEmpty(): Boolean {
 
     return !this.isNullOrEmpty()
 }
+
+/**
+ * Adds an element to the list if it is not already present.
+ *
+ * @param element The element to add.
+ */
+fun <E> MutableList<E>.addIfNotThere(element: E) {
+    if (this.contains(element)) return
+    this.add(element)
+}

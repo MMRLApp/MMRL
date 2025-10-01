@@ -14,6 +14,13 @@ import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.dergoogler.mmrl.platform.PlatformManager.isAlive
+import com.dergoogler.mmrl.platform.PlatformManager.isAliveDeferred
+import com.dergoogler.mmrl.platform.PlatformManager.isAliveFlow
+import com.dergoogler.mmrl.platform.PlatformManager.mService
+import com.dergoogler.mmrl.platform.PlatformManager.proxyBy
+import com.dergoogler.mmrl.platform.PlatformManager.serviceOrNull
+import com.dergoogler.mmrl.platform.PlatformManager.state
 import com.dergoogler.mmrl.platform.content.IService
 import com.dergoogler.mmrl.platform.content.Service
 import com.dergoogler.mmrl.platform.hiddenApi.HiddenPackageManager
@@ -98,6 +105,7 @@ object PlatformManager {
     val isAliveDeferred = CompletableDeferred<Boolean>()
 
     private val _isAliveFlow = MutableStateFlow(false)
+
     /**
      * A [StateFlow] that emits `true` if the [IServiceManager] is initialized and alive,
      * `false` otherwise. This is useful for observing the liveness state in a reactive way.
@@ -137,7 +145,10 @@ object PlatformManager {
         return try {
             Log.d(TAG, "Starting synchronous initialization.")
             mServiceOrNull = provider()
-            Log.d(TAG, "Sync provider executed. mServiceOrNull is: ${if (mServiceOrNull == null) "null" else "not null"}")
+            Log.d(
+                TAG,
+                "Sync provider executed. mServiceOrNull is: ${if (mServiceOrNull == null) "null" else "not null"}"
+            )
             state()
         } catch (e: Exception) {
             mServiceOrNull = null
@@ -181,7 +192,10 @@ object PlatformManager {
 
         return scope.async(Dispatchers.IO) {
             try {
-                Log.d(TAG, "Starting background initialization on thread: ${Thread.currentThread().name}")
+                Log.d(
+                    TAG,
+                    "Starting background initialization on thread: ${Thread.currentThread().name}"
+                )
                 mServiceOrNull = provider()
                 Log.d(
                     TAG,
@@ -230,7 +244,10 @@ object PlatformManager {
                     val service = IServiceManager.Stub.asInterface(binder)
                     if (continuation.isActive) {
                         continuation.resume(service) {
-                            Log.w(TAG, "Failed to resume onServiceConnected, coroutine likely cancelled for $name.")
+                            Log.w(
+                                TAG,
+                                "Failed to resume onServiceConnected, coroutine likely cancelled for $name."
+                            )
                         }
                     }
                 }
@@ -286,12 +303,17 @@ object PlatformManager {
                 Log.w(TAG, "Provider ${provider.name} not available.")
                 throw IllegalStateException("${provider.name} not available")
             }
+
             !provider.isAuthorized() -> {
                 Log.w(TAG, "Provider ${provider.name} not authorized.")
                 throw IllegalStateException("${provider.name} not authorized")
             }
+
             else -> {
-                Log.d(TAG, "Provider ${provider.name} is available and authorized. Getting service.")
+                Log.d(
+                    TAG,
+                    "Provider ${provider.name} is available and authorized. Getting service."
+                )
                 get(provider, timeoutMillis)
             }
         }
@@ -401,6 +423,8 @@ object PlatformManager {
             }
         }
 
+    val type get() = platform.type
+
     /**
      * Updates the internal state of the PlatformManager based on whether the service manager (`mServiceOrNull`) is initialized.
      * This function should be called after any operation that might change the service manager's status (e.g., initialization, release).
@@ -506,7 +530,10 @@ object PlatformManager {
      */
     fun setHiddenApiExemptions(vararg signaturePrefixes: String = arrayOf("")): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Log.d(TAG, "Setting Hidden API exemptions with prefixes: ${signaturePrefixes.joinToString()}")
+            Log.d(
+                TAG,
+                "Setting Hidden API exemptions with prefixes: ${signaturePrefixes.joinToString()}"
+            )
             HiddenApiBypass.addHiddenApiExemptions(*signaturePrefixes)
         } else {
             Log.d(TAG, "Hidden API exemptions not needed on SDK < P.")
@@ -520,10 +547,15 @@ object PlatformManager {
 
         override fun getInterfaceDescriptor(): String? = originalBinder.interfaceDescriptor
         override fun pingBinder(): Boolean = originalBinder.pingBinder()
-        override fun isBinderAlive(): Boolean = originalBinder.isBinderAlive && serviceBinder.isBinderAlive
+        override fun isBinderAlive(): Boolean =
+            originalBinder.isBinderAlive && serviceBinder.isBinderAlive
+
         override fun queryLocalInterface(descriptor: String): IInterface? = null
-        override fun dump(fd: FileDescriptor, args: Array<out String>?) = originalBinder.dump(fd, args)
-        override fun dumpAsync(fd: FileDescriptor, args: Array<out String>?) = originalBinder.dumpAsync(fd, args)
+        override fun dump(fd: FileDescriptor, args: Array<out String>?) =
+            originalBinder.dump(fd, args)
+
+        override fun dumpAsync(fd: FileDescriptor, args: Array<out String>?) =
+            originalBinder.dumpAsync(fd, args)
 
         override fun linkToDeath(recipient: IBinder.DeathRecipient, flags: Int) {
             originalBinder.linkToDeath(recipient, flags)
@@ -555,8 +587,7 @@ object PlatformManager {
             } catch (e: Exception) {
                 Log.e(TAG, "Exception during proxy transact", e)
                 throw e
-            }
-            finally {
+            } finally {
                 newData.recycle()
             }
             return result
@@ -578,7 +609,7 @@ object PlatformManager {
      * @see Service
      */
     fun <T : IService> addService(clazz: Class<T>): IBinder? = serviceOrNull {
-        addService(Service(clazz))
+        addService(Service<T>(clazz.name))
     }
 
     /**
@@ -600,6 +631,12 @@ object PlatformManager {
         addService(service)
     }
 
+    fun <T : IInterface> addService(name: String, service: T) {
+        serviceOrNull {
+            addServiceBinder(name, service.asBinder())
+        }
+    }
+
     /**
      * Extension function for `Class<T>` where `T` is an `IService`.
      * Adds an instance of this class as a service through the PlatformManager's IServiceManager.
@@ -612,7 +649,7 @@ object PlatformManager {
      * @see Service
      */
     fun <T : IService> Class<T>.addAsService(): IBinder? = serviceOrNull {
-        addService(Service(this@addAsService))
+        addService(Service<T>(this@addAsService.name))
     }
 
     /**

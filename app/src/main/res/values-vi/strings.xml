@@ -96,7 +96,7 @@
     <string name="view_module_share">Chia sẻ</string>
     <string name="view_module_install_confirm_confirm_deps">Cài đặt (deps)</string>
     <string name="view_module_install_confirm_confirm">Cài đặt</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[Bạn có chắc chắn rằng bạn muốn cài đặt <font color=\"%1$s\">%2$s</font>?]]></string>
+    <string name="view_module_install_confirm_desc">Bạn có chắc chắn rằng bạn muốn cài đặt [color=surface_tint]%1$s[/color]?</string>
     <string name="view_module_unsupported_arch">Architecture không được hỗ trợ</string>
     <string name="view_module_unsupported_arch_desc">Có vẻ như thiết bị của bạn không hỗ trợ kiến trúc được nhà phát triển yêu cầu.</string>
     <string name="view_module_unsupported_device_desc">Có vẻ như thiết bị của bạn không được mô-đun này hỗ trợ hoặc đã bị loại trừ.</string>

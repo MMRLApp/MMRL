@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="search_results">
+        <item quantity="one">Foi encontrado [color=surface_tint]%1$s resultado[/color] para sua pesquisa</item>
+        <item quantity="many">Foram encontrados [color=surface_tint]%1$s resultados[/color] para sua pesquisa</item>
+        <item quantity="other">Foram encontrados [color=surface_tint]%1$s resultados[/color] para sua pesquisa</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="one">%1$s modulo armazenado</item>
+        <item quantity="many">%1$s modulos armazenados</item>
+        <item quantity="other">%1$s modulos armazenados</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="many">%1$d horas</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+</resources>

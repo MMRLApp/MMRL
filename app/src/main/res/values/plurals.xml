@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="search_results">
-        <item quantity="one"><![CDATA[We\'ve found <font color=\"%1$s\">%2$s result</font> that match your search]]></item>
-        <item quantity="other"><![CDATA[We\'ve found <font color=\"%1$s\">%2$s results</font> that match your search]]></item>
+        <item quantity="one">We\'ve found [color=surface_tint]%1$s result[/color] that match your search</item>
+        <item quantity="other">We\'ve found [color=surface_tint]%1$s results[/color] that match your search</item>
     </plurals>
     <plurals name="module_count_explore_repo">
         <item quantity="one">%1$s module stored</item>

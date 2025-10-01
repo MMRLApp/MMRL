@@ -20,49 +20,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.ui.component.card.Card
-import com.dergoogler.mmrl.ui.component.card.CardDefaults
 
 @Composable
 internal fun NonRootItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
     developerMode: Boolean = false,
 ) = Card(
-    modifier = {
-        surface = modifier
-        column = Modifier.padding(20.dp)
-    },
-    style = CardDefaults.cardStyle.copy(
-        containerColor = MaterialTheme.colorScheme.secondaryContainer
-    ),
-    onClick = developerMode nullable onClick,
-    absolute = {
-        developerMode.takeTrue {
-            Surface(
-                shape = RoundedCornerShape(
-                    topEnd = 20.dp,
-                    bottomStart = 15.dp,
-                    bottomEnd = 0.dp
-                ),
-                color = MaterialTheme.colorScheme.primary,
+    color = MaterialTheme.colorScheme.secondaryContainer,
+) {
+    developerMode.takeTrue {
+        Surface(
+            shape = RoundedCornerShape(
+                topEnd = 20.dp,
+                bottomStart = 15.dp,
+                bottomEnd = 0.dp
+            ),
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .absolute(Alignment.TopEnd)
+        ) {
+            Text(
+                text = "USER!DEV",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-            ) {
-                Text(
-                    text = "USER!DEV",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            )
         }
     }
-) {
+
     Row(
+        modifier = Modifier.relative().padding(20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

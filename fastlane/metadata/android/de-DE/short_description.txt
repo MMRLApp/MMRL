@@ -1,0 +1,1 @@
+Ein Modulmanager für Magisk & KernelSU.

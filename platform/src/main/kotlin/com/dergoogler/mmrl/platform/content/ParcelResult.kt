@@ -5,8 +5,8 @@ import android.os.Parcelable
 import java.io.IOException
 
 
- class ParcelResult : Parcelable {
-    private val `val`: Any?
+class ParcelResult : Parcelable {
+    val `val`: Any?
 
     constructor() {
         `val` = null
@@ -26,9 +26,9 @@ import java.io.IOException
     }
 
     @Throws(IOException::class)
-    fun <T> tryAndGet(): T? {
+    inline fun <reified T> tryAndGet(): T? {
         checkException()
-        return `val` as T?
+        return `val` as? T
     }
 
     override fun describeContents(): Int {
@@ -44,14 +44,15 @@ import java.io.IOException
         private val cl: ClassLoader? = ParcelResult::class.java.classLoader
 
         @JvmField
-        val CREATOR: Parcelable.Creator<ParcelResult?> = object : Parcelable.Creator<ParcelResult?> {
-            override fun createFromParcel(`in`: Parcel): ParcelResult {
-                return ParcelResult(`in`)
-            }
+        val CREATOR: Parcelable.Creator<ParcelResult?> =
+            object : Parcelable.Creator<ParcelResult?> {
+                override fun createFromParcel(`in`: Parcel): ParcelResult {
+                    return ParcelResult(`in`)
+                }
 
-            override fun newArray(size: Int): Array<ParcelResult?> {
-                return arrayOfNulls(size)
+                override fun newArray(size: Int): Array<ParcelResult?> {
+                    return arrayOfNulls(size)
+                }
             }
-        }
     }
 }

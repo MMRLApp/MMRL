@@ -23,17 +23,22 @@ import androidx.navigation.compose.rememberNavController
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.compat.PermissionCompat
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
+import com.dergoogler.mmrl.ext.compose.providable.LocalActivity
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
+import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalLifecycle
 import com.dergoogler.mmrl.ui.providable.LocalLifecycleScope
 import com.dergoogler.mmrl.ui.providable.LocalMainNavController
 import com.dergoogler.mmrl.ui.providable.LocalNavController
 import com.dergoogler.mmrl.ui.providable.LocalSettings
+import com.dergoogler.mmrl.ui.providable.LocalSuperUserViewModel
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.theme.Colors
 import com.dergoogler.mmrl.ui.theme.MMRLAppTheme
 import com.dergoogler.mmrl.viewmodel.SettingsViewModel
+import com.dergoogler.mmrl.viewmodel.SuperUserViewModel
+import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import dev.dergoogler.mmrl.compat.BuildCompat
 import dev.dergoogler.mmrl.compat.core.BrickException
@@ -177,8 +182,10 @@ fun BaseContent(
     val userPreferences by userPreferencesRepository.data.collectAsStateWithLifecycle(
         initialValue = null
     )
+
     val navController = rememberNavController()
     val mainNavController = rememberNavController()
+    val navigator = navController.rememberDestinationsNavigator()
 
     val preferences = if (userPreferences == null) {
         return
@@ -195,6 +202,9 @@ fun BaseContent(
         navController = navController,
         themeColor = preferences.themeColor,
         providerValues = arrayOf(
+            LocalDestinationsNavigator provides navigator,
+            LocalActivity provides activity,
+            LocalSuperUserViewModel provides hiltViewModel<SuperUserViewModel>(activity),
             LocalSettings provides hiltViewModel<SettingsViewModel>(activity),
             LocalUserPreferences provides preferences,
             dev.dergoogler.mmrl.compat.core.LocalUriHandler provides MMRLUriHandlerImpl(

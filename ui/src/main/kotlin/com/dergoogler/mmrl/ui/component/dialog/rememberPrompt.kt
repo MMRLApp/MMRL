@@ -79,7 +79,6 @@ fun Context.prompt(promptData: PromptData, colorScheme: ColorScheme) {
                         }
 
                         TextFieldDialog(
-                            shape = RoundedCornerShape(20.dp),
                             onDismissRequest = onClose,
                             title = { Text(text = promptData.title) },
                             confirmButton = {

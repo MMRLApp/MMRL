@@ -23,8 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.ui.R
-import com.dergoogler.mmrl.ui.theme.fromToken
 import com.dergoogler.mmrl.ui.token.FilledTonalButtonTokens
+import com.dergoogler.mmrl.ui.token.fromToken
 
 @Composable
 fun FilledTonalDoubleButton(

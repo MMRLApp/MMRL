@@ -2,7 +2,9 @@ package com.dergoogler.mmrl.model.online
 
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ModuleNote(
     val title: String? = null,

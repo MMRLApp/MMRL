@@ -6,16 +6,10 @@
 #include <kernelsu/ksu.hpp>
 #include <logging.hpp>
 
-static bool ksuctl(int cmd, void* arg1, void* arg2) {
+bool ksuctl(int cmd, void* arg1, void* arg2) {
     int32_t result = 0;
     prctl(KERNEL_SU_OPTION, cmd, arg1, arg2, &result);
     return result == KERNEL_SU_OPTION;
-}
-
-bool get_hook_mode(char *mode, int mode_len) {
-    if (!mode || mode_len == 0) return false;
-    memset(mode, 0, mode_len);
-    return ksuctl(CMD_HOOK_MODE, mode, nullptr);
 }
 
 bool grant_root() {
@@ -37,9 +31,9 @@ bool become_manager(const char *pkg) {
 
 int get_version() {
     int32_t version = -1;
-    int32_t lkm = 0;
-    ksuctl(CMD_GET_VERSION, &version, &lkm);
-    if (!is_lkm && lkm != 0) {
+    int32_t flags = 0;
+    ksuctl(CMD_GET_VERSION, &version, &flags);
+    if (!is_lkm && (flags & 0x1)) {
         is_lkm = true;
     }
     return version;
@@ -71,4 +65,17 @@ bool is_su_enabled() {
     // if ksuctl failed, we assume su is enabled, and it cannot be disabled.
     ksuctl(CMD_IS_SU_ENABLED, &enabled, nullptr);
     return enabled;
+}
+
+bool set_app_profile(const app_profile *profile) {
+	return ksuctl(CMD_SET_APP_PROFILE, (void*) profile, nullptr);
+}
+
+bool get_app_profile(p_key_t key, app_profile *profile) {
+	return ksuctl(CMD_GET_APP_PROFILE, (void*) profile, nullptr);
+}
+
+bool ksu_set_policy(const FfiPolicy* policy) {
+	if (!policy) return false;
+	return ksuctl(CMD_SET_SEPOLICY, nullptr,(void*) policy);
 }

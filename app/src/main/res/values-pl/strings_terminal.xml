@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="install_view_installing">- Instalowanie %1$s</string>
+    <string name="install_view_installing">- Instalowanie [color=primary]%1$s[/color]</string>
     <string name="service_is_not_available">! Usługa nie jest dostępna</string>
     <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! Nie można zainstalować modułów z czarnej listy. Ustawienia → Bezpieczeństwo → Alerty czarnej listy</string>
     <string name="installation_aborted_due_to_an_error">! Instalacja została przerwana z powodu błędu</string>
-    <string name="install_view_module_info">- Informacje o module: %1$s</string>
+    <string name="install_view_module_info">::group::Informacje o module</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! Moduł jest wyłączony lub usunięty. Nie można wykonać akcji.</string>
     <string name="install_view_path">- Ścieżka: %1$s</string>
     <string name="copying_failed">! Kopiowanie nie powiodło się</string>
     <string name="unable_to_gather_module_info">! Nie można zebrać informacji o module</string>
-    <string name="module_not_found">! Nie znaleziono modułu.</string>
+    <string name="module_not_found">[color=red]! Nie znaleziono modułu.[/color]</string>
     <string name="this_module_don_t_have_an_action">! Ten moduł nie ma akcji.</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Wykonanie nie powiodło się. Spróbuj użyć powłoki do wykonania akcji, Ustawienia → Moduły i instalator → Użyj powłoki dla akcji modułu.</string>
     <string name="unable_to_gather_module_info_of_file">! Nie można zebrać informacji o module pliku: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Kopiowanie pliku zip do katalogu tymczasowego</string>
-    <string name="unable_to_find_path_for_uri">! Nie można znaleźć ścieżki dla uri: %1$s</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s nie jest plikiem modułu. Moduły Magisk muszą być plikami .zip. Pomijanie...</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! Nie można znaleźć ścieżki dla uri: %1$s[/color]</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s nie jest plikiem modułu. Moduły Magisk muszą być plikami .zip. Pomijanie…</string>
     <string name="removed_updated_folder">- Usunięto zaktualizowany folder</string>
-    <string name="failed_to_remove_updated_folder">! Nie udało się usunąć zaktualizowanego folderu</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! Nie udało się usunąć zaktualizowanego folderu[/color]</string>
     <string name="file_manager_is_null">! Menedżer plików jest nieznany</string>
-    <string name="non_root_platform_is_not_supported">! Niezrootowane urządzenia nie są wspierane</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! Niezrootowane urządzenia nie są wspierane[/color]</string>
     <string name="module_manager_is_null">! Menedżer modułów jest nieznany</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- Oczekiwanie na zainicjowanie PlatformManager…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! Nie udało się zainicjować platformy[/color]</string>
+    <string name="platform_initialized">[bold]- Platforma zainicjowana[/bold]</string>
+    <string name="deleted_zip_file">- Usunięto plik zip: %s</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! Platforma nie jest aktywna. Nie można kontynuować instalacji.[/color]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! Inicjalizacja platformy nie powiodła się. Nie można kontynuować instalacji.[/color]</string>
 </resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отмена</string>
+    <string name="learn_more">Узнать больше</string>
+    <string name="loading">Загрузка…</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="search_placeholder">Поиск…</string>
+    <string name="select_a_option">Выберите вариант</string>
+</resources>

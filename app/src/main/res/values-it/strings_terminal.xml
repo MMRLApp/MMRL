@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="install_view_module_info">- Informazioni sul modulo: %1$s</string>
+    <string name="install_view_module_info">::group::Informazioni sul modulo</string>
     <string name="install_view_path">- Percorso: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Copia zip nella directory temporanea</string>
     <string name="copying_failed">! Copia non riuscita</string>

@@ -26,12 +26,16 @@ import com.dergoogler.mmrl.model.online.Changelog
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.MarkdownText
-import com.dergoogler.mmrl.ui.component.listItem.ListButtonItem
 import com.dergoogler.mmrl.ext.fadingEdge
-import com.dergoogler.mmrl.ext.nullable
+import com.dergoogler.mmrl.ext.takeTrue
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 
 @Composable
-fun ChangelogItem(
+fun ListScope.ChangelogItem(
     changelog: Changelog,
 ) {
     var open by remember { mutableStateOf(false) }
@@ -39,12 +43,13 @@ fun ChangelogItem(
         ChangelogBottomSheet(changelog = changelog, onClose = { open = false })
     }
 
-    ListButtonItem(
-        title = changelog.versionName,
-        desc = "${changelog.versionCode}",
-        onClick = { open = true },
-        base = {
-            labels = changelog.preRelease nullable listOf {
+    ButtonItem(
+        onClick = { open = true }
+    ) {
+        Title(changelog.versionName)
+        Description(changelog.versionCode.toString())
+        changelog.preRelease.takeTrue {
+            Labels {
                 LabelItem(
                     text = stringResource(
                         id = R.string.pre_release
@@ -52,7 +57,7 @@ fun ChangelogItem(
                 )
             }
         }
-    )
+    }
 }
 
 
@@ -88,8 +93,6 @@ fun ChangelogBottomSheet(
                     .padding(top = 8.dp)
                     .padding(bottom = 18.dp)
             )
-
-
         }
 
         Button(

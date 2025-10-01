@@ -1,6 +1,8 @@
 package com.dergoogler.mmrl.ext
 
 import android.view.View
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -12,6 +14,8 @@ import kotlin.contracts.contract
  * @return The parameter value if the receiver is non-null, or null otherwise.
  */
 infix fun <T> Any?.nullable(param: T): T? = if (this != null) param else null
+
+infix fun <T> List<T>?.empty(param: List<T>): List<T> = if (this != null) param else emptyList()
 
 /**
  * Safely invokes a block of code on a nullable receiver if it's not null, otherwise returns null.
@@ -78,6 +82,39 @@ inline fun <T, R> T?.nullable(block: (T) -> R): R? {
 
     return if (this != null) block(this) else null
 }
+
+/**
+ * Remembers the result of the [block] if the receiver `this` is not null.
+ * If the receiver `this` is null, it returns null.
+ *
+ * This Composable function is useful for remembering a value derived from a nullable
+ * object, ensuring that the calculation in the [block] is only performed if the object
+ * is not null and the result is remembered across recompositions.
+ *
+ * If the nullable receiver `this` changes from a non-null value to null,
+ * the function will return null. If it changes from null to a non-null value,
+ * the [block] will be executed, and its result will be remembered.
+ *
+ * @param T The type of the nullable receiver.
+ * @param R The type of the result produced by the [block].
+ * @param block A lambda function that takes the non-null receiver `T` as an argument
+ *              and returns a value of type `R`. This block is only executed if the
+ *              receiver is not null.
+ * @return The remembered result of the [block] if the receiver is not null, otherwise null.
+ */
+@Composable
+@OptIn(ExperimentalContracts::class)
+inline fun <T, R> T?.rememberNullable(block: (T) -> R): R? {
+    contract {
+        callsInPlace(block, InvocationKind.AT_MOST_ONCE)
+    }
+
+    val value = remember { this }
+
+    return if (value != null) block(value) else null
+}
+
+
 
 /**
  * Applies the given [block] to the receiver if it is not null, and returns the receiver itself.

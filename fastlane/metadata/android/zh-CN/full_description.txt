@@ -1,0 +1,32 @@
+MMRL 是一个可以帮你管理你自己拥有的模组的软件
+
+功能：
+- 管理你的模组仓库
+- 支持多个仓库
+- 支持 Magisk 和 KernelSU
+- Jetpack Compose & Material Design 3
+
+https://github.com/DerGoogler/MMRL
+
+<i>Magisk 模组仓库加载器</i>（MMRL）允许你使用简单的界面加载自定义 Magisk 仓库。<a href="https://github.com/Magisk-Modules-Alt-Repo">Magisk 模组替代仓库</a> 拥有已自定义模组，自定义仓库也可以被增加。</p>
+
+<b>MMRL 支持那些 root 管理器？?</b></p>
+
+* Magisk
+* KernelSU
+* APatch
+
+<b>MMRL 支持那些功能？</b>
+
+* 用户友好界面
+* 可自定义的模组界面（ModConf）
+* 自定义所有路径（例如 "/data/adb/modules"，如果你的 root 使用其他路径）
+* ModConf 游乐园
+* 可查看已安装和可升级模组
+* 增加封面、截屏、验证、依赖项和更多（基于仓库）
+* 良好的搜索
+* 可以增加多至5歌仓库
+
+这个仓库需要 root 权限，没有的话你无法运行！
+
+注意：你需要 MMRL-CLI 以下载其他模组

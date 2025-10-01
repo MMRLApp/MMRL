@@ -28,3 +28,4 @@ include(
     ":ext",
     ":datastore"
 )
+include(":compat")

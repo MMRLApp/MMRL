@@ -5,20 +5,26 @@
     <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! 无法安装被列入黑名单的模块。设置 → 安全 → 黑名单警告</string>
     <string name="unable_to_gather_module_info_of_file">! 无法获取下列模块的信息: %1$s</string>
     <string name="install_view_path">- 路径: %1$s</string>
-    <string name="install_view_module_info">- 模块信息: %1$s</string>
+    <string name="install_view_module_info">::group::模块信息</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- 执行失败。请尝试使用 Shell 来执行 action 脚本，设置 → 模块操作 &amp; 安装 → 使用 Shell 操作。</string>
     <string name="unable_to_gather_module_info">! 无法获取模块信息</string>
-    <string name="module_not_found">! 没有找到模块。</string>
+    <string name="module_not_found">[color=red]! 没有找到模块。[/color]</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">- 模块被禁用或移除，无法执行 action 脚本。</string>
-    <string name="install_view_installing">- 正在安装: %1$s</string>
+    <string name="install_view_installing">­- 正在安装: [color=primary]%1$s[/color]</string>
     <string name="copying_failed">! 复制失败</string>
     <string name="this_module_don_t_have_an_action">! 这个模块没有 action 脚本。</string>
     <string name="copying_zip_to_temp_directory">- 复制压缩文件到临时目录</string>
-    <string name="unable_to_find_path_for_uri">! 无法找到 URI 的路径：%1$s</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! 无法找到 URI 的路径：%1$s[/color]</string>
     <string name="removed_updated_folder">- 移除已更新的文件夹</string>
-    <string name="failed_to_remove_updated_folder">! 无法移除已更新的文件夹</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s 不是一个模块文件, Magisk 模块应该是 .zip 文件, 已跳过...</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! 无法移除已更新的文件夹[/color]</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s 不是一个模块文件, Magisk 模块应该是 .zip 文件, 已跳过…</string>
     <string name="module_manager_is_null">！模块管理器为空</string>
     <string name="file_manager_is_null">文件管理器为null</string>
-    <string name="non_root_platform_is_not_supported">! 不支持非root设备</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! 不支持未 root 设备[/color]</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- 等待平台管理器初始化…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! 平台初始化失败[/color]</string>
+    <string name="platform_initialized">[bold]- 平台已初始化[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! 平台初始化失败，无法继续安装 [/color]</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! 平台未激活，无法继续安装 [/color]</string>
+    <string name="deleted_zip_file">- 已删除 ZIP 文件: %s</string>
 </resources>

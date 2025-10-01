@@ -1,0 +1,114 @@
+name: Release to GitHub
+
+on:
+  workflow_call:
+
+env:
+  OFFICIAL_NAME: "official-release-apk"
+  SPOOFED_NAME: "spoofed-release-apk"
+
+jobs:
+  release-gh:
+    name: Release GH
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download Official Release APK
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.OFFICIAL_NAME }}
+          path: official-apk
+
+      - name: Download Spoofed Release APK
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.SPOOFED_NAME }}
+          path: spoofed-apk
+
+      - name: Find APKs by name
+        id: find_apks
+        run: |
+          # Look for official APK matching the artifact name
+          OFFICIAL_APK_PATH=$(find official-apk -maxdepth 1 -type f -name "*.apk" -print -quit)
+          SPOOFED_APK_PATH=$(find spoofed-apk -maxdepth 1 -type f -name "*.apk" -print -quit)
+
+          echo "OFFICIAL_APK_PATH=$OFFICIAL_APK_PATH" >> $GITHUB_OUTPUT
+          echo "SPOOFED_APK_PATH=$SPOOFED_APK_PATH" >> $GITHUB_OUTPUT
+
+          OFFICIAL_NAME=$(basename "$OFFICIAL_APK_PATH")
+          echo "OFFICIAL_NAME=$OFFICIAL_NAME" >> $GITHUB_OUTPUT
+
+          SPOOFED_NAME=$(basename "$SPOOFED_APK_PATH")
+          echo "SPOOFED_NAME=$SPOOFED_NAME" >> $GITHUB_OUTPUT
+
+      - name: Get commit info and build timestamp
+        id: meta
+        run: |
+          BUILD_DATE=$(date +"%Y-%m-%d %H:%M:%S")
+          COMMIT_COUNT=$(git rev-list --count HEAD || echo 0)
+          VERSION=$((31320 + COMMIT_COUNT))
+
+          if [ -f commits.sh ]; then
+            MESSAGE=$(bash commits.sh 10000 "${{ env.BRANCH_NAME }}")
+          else
+            MESSAGE="Latest commits not available."
+          fi
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
+          echo "MESSAGE<<EOF" >> $GITHUB_ENV
+          echo "$MESSAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Check if release exists
+        id: check_release
+        run: |
+          if gh release view v${{ env.VERSION }} --repo ${{ github.repository }} > /dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.check_release.outputs.exists == 'false'
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
+          body: |
+            ## What's new?
+
+            ${{ env.MESSAGE }}
+
+            [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Official Release APK to GitHub
+        if: steps.check_release.outputs.exists == 'false'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.find_apks.outputs.OFFICIAL_APK_PATH }}
+          asset_name: ${{ steps.find_apks.outputs.OFFICIAL_NAME }}
+          asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Spoofed Release APK to GitHub
+        if: steps.check_release.outputs.exists == 'false'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.find_apks.outputs.SPOOFED_APK_PATH }}
+          asset_name: ${{ steps.find_apks.outputs.SPOOFED_NAME }}
+          asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -19,7 +19,7 @@ data class OnlineState(
                     && local.author == author
 
             val updatable = if (installed && hasUpdatableTag) {
-                local!!.versionCode < versionCode
+                local.versionCode < versionCode
             } else {
                 false
             }
@@ -28,7 +28,7 @@ data class OnlineState(
                 installed = installed,
                 updatable = updatable,
                 hasLicense = license.orEmpty().isNotBlank(),
-                lastUpdated = versions.firstOrNull()?.timestamp ?: 1473339588.0f
+                lastUpdated = versions.firstOrNull()?.timestamp ?: 0f
             )
         }
 

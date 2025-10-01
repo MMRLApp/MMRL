@@ -3,9 +3,9 @@ package com.dergoogler.mmrl.utils
 import android.content.Context
 import android.content.ServiceConnection
 import com.dergoogler.mmrl.platform.Platform
+import com.dergoogler.mmrl.platform.Platform.Companion.createPlatformIntent
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.platform.model.IProvider
-import com.dergoogler.mmrl.platform.model.createPlatformIntent
 import com.dergoogler.mmrl.platform.stub.IServiceManager
 import com.topjohnwu.superuser.Shell
 import com.topjohnwu.superuser.ipc.RootService

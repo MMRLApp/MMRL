@@ -1,35 +1,37 @@
 package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.IntentFilter
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
-import android.widget.Toast
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.app.Const.CLEAR_CMD
 import com.dergoogler.mmrl.app.Event
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
 import com.dergoogler.mmrl.model.local.LocalModule
+import com.dergoogler.mmrl.model.terminal.TextBlock
+import com.dergoogler.mmrl.model.terminal.commands.AddMask
+import com.dergoogler.mmrl.model.terminal.commands.Card
+import com.dergoogler.mmrl.model.terminal.commands.EndCard
+import com.dergoogler.mmrl.model.terminal.commands.EndGroup
+import com.dergoogler.mmrl.model.terminal.commands.Error
+import com.dergoogler.mmrl.model.terminal.commands.Group
+import com.dergoogler.mmrl.model.terminal.commands.Notice
+import com.dergoogler.mmrl.model.terminal.commands.RemoveLine
+import com.dergoogler.mmrl.model.terminal.commands.ReplaceSelf
+import com.dergoogler.mmrl.model.terminal.commands.Warning
 import com.dergoogler.mmrl.platform.PlatformManager
-import com.dergoogler.mmrl.platform.stub.IFileManager
-import com.dergoogler.mmrl.platform.stub.IModuleManager
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
-import com.dergoogler.mmrl.ui.activity.terminal.Actions
-import com.dergoogler.mmrl.ui.activity.terminal.ShellBroadcastReceiver
-import com.dergoogler.mmrl.utils.createRootShell
+import com.dergoogler.mmrl.ui.activity.terminal.ActionCommand
+import com.dergoogler.mmrl.ui.activity.terminal.Terminal
 import com.dergoogler.mmrl.utils.initPlatform
-import dev.dergoogler.mmrl.compat.BuildCompat
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,23 +50,21 @@ open class TerminalViewModel @Inject constructor(
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
 ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+
     protected val logs = mutableListOf<String>()
-    internal val console = mutableStateListOf<String>()
-    var event by mutableStateOf(Event.LOADING)
-        protected set
-    var shell by mutableStateOf(createRootShell())
-        protected set
+
+    val terminal by mutableStateOf(Terminal())
 
     private val localFlow = MutableStateFlow<LocalModule?>(null)
     val local get() = localFlow.asStateFlow()
 
-    private var receiver: BroadcastReceiver? = null
-
-    /**
-     * Deferred that completes after the ViewModel's attempt to initialize the PlatformManager.
-     * Completes with `true` if successful, `false` otherwise.
-     */
     protected val platformReadyDeferred = CompletableDeferred<Boolean>()
+
+    private val commands =
+        listOf(
+            Group(), EndGroup(), Card(), EndCard(), AddMask(), Notice(), Warning(), Error(),
+            ReplaceSelf(), /*SetLines()*/ RemoveLine()
+        )
 
     init {
         viewModelScope.launch {
@@ -80,7 +80,7 @@ open class TerminalViewModel @Inject constructor(
 
             val platformInitializedSuccessfully = deferred.await()
             if (!platformInitializedSuccessfully) {
-                event = Event.FAILED
+                terminal.event = Event.FAILED
                 log(R.string.failed_to_initialize_platform)
                 platformReadyDeferred.complete(false)
             } else {
@@ -90,43 +90,11 @@ open class TerminalViewModel @Inject constructor(
         }
     }
 
-    fun registerReceiver() {
-        if (receiver == null) {
-            receiver = ShellBroadcastReceiver(context, console, logs)
-
-            val filter = IntentFilter().apply {
-                addAction(Actions.SET_LAST_LINE)
-                addAction(Actions.REMOVE_LAST_LINE)
-                addAction(Actions.CLEAR_TERMINAL)
-                addAction(Actions.LOG)
-            }
-
-            if (BuildCompat.atLeastT) {
-                context.registerReceiver(receiver, filter, Context.RECEIVER_NOT_EXPORTED)
-            } else {
-                @Suppress("UnspecifiedRegisterReceiverFlag")
-                context.registerReceiver(receiver, filter)
-            }
-        }
-    }
-
-    fun unregisterReceiver() {
-        if (receiver == null) {
-            Timber.w("ShellBroadcastReceiver is already null")
-            return
-        }
-
-        context.unregisterReceiver(receiver)
-        receiver = null
-    }
-
     override fun onCleared() {
-        shell.close()
+        terminal.shell.close()
+        terminal.currentCard = null
+        terminal.currentGroup = null
         super.onCleared()
-    }
-
-    private fun IntentFilter.addAction(action: Actions) {
-        addAction("${context.packageName}.${action.name}")
     }
 
     fun reboot(reason: String = "") {
@@ -155,6 +123,11 @@ open class TerminalViewModel @Inject constructor(
     private val devMode = runBlocking { userPreferencesRepository.data.first().developerMode }
 
     @MainThread
+    protected fun devLog(message: String) {
+        if (devMode) log(message)
+    }
+
+    @MainThread
     protected fun devLog(@StringRes message: Int, vararg format: Any?) {
         if (devMode) log(message, *format)
     }
@@ -180,20 +153,63 @@ open class TerminalViewModel @Inject constructor(
         )
     }
 
-    /**
-     * Logs a message to the console and the log.
-     */
     @MainThread
     protected fun log(
         message: String,
         log: String = message,
     ) {
-        viewModelScope.launch(Dispatchers.Main) {
-            if (message.startsWith(CLEAR_CMD)) {
-                console.clear()
-            } else {
-                console.add(message)
-                logs.add(log)
+        with(terminal) {
+            viewModelScope.launch(Dispatchers.Main) {
+                if (message.startsWith(CLEAR_CMD)) {
+                    console.clear()
+                    logs.clear()
+                    lineNumber = 1
+                    currentGroup = null
+                    currentCard = null
+                    lineAdded = true
+                    return@launch
+                }
+
+                val maskedMessage = message.fixNewLines.applyMasks
+                val maskedLog = log.fixNewLines.applyMasks
+
+                val command = ActionCommand.tryParseV2AndRun(
+                    message = message,
+                    terminal = this@with,
+                    registeredCommands = commands,
+                )
+
+                if (!command) {
+                    emitLogLine(maskedMessage)
+                }
+
+                logs += maskedLog
+
+                if (lineAdded) {
+                    lineNumber++
+                }
+
+                // Reset the flag for next line
+                lineAdded = true
+            }
+        }
+    }
+
+    private fun emitLogLine(text: String) {
+        with(terminal) {
+            val entry = lineNumber to text
+            when {
+                currentGroup != null -> {
+                    currentGroup!!.lines += entry
+                }
+
+                currentCard != null -> {
+                    currentCard!!.lines += entry
+                }
+
+                else -> {
+                    console += TextBlock(lineNumber, text)
+                }
             }
         }
     }

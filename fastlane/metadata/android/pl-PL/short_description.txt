@@ -1,0 +1,1 @@
+Menedżer modułów dla Magisk i KernelSU.

@@ -16,5 +16,6 @@ data class RepositoryMenu @OptIn(ExperimentalSerializationApi::class) constructo
     @ProtoNumber(8) val showCover: Boolean = true,
     @ProtoNumber(9) val showVerified: Boolean = true,
     @ProtoNumber(10) val showAntiFeatures: Boolean = true,
-    @ProtoNumber(11) val repoListMode: RepoListMode = RepoListMode.Detailed
+    @ProtoNumber(11) val repoListMode: RepoListMode = RepoListMode.Detailed,
+    @ProtoNumber(12) val showCategory: Boolean = true,
 )

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="search_results">
+        <item quantity="other">我们找到了 [color=surface_tint]%1$s 个[/color] 符合你的搜索的结果</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="other">%1$s 个模块已存储</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="other">%1$d 小时</item>
+    </plurals>
+</resources>

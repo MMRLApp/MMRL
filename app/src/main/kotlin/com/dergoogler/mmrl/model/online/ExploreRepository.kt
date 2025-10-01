@@ -5,7 +5,9 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.toEncodedUrl
+import kotlinx.serialization.Serializable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ExploreRepositoryMember(
     val avatar: String,
@@ -19,6 +21,7 @@ data class ExploreRepositoryMember(
     val actionText: String? = null,
 )
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class SocialLink(
     val icon: String,
@@ -26,6 +29,7 @@ data class SocialLink(
     val ariaLabel: String? = null,
 )
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ExploreRepository(
     val name: String,

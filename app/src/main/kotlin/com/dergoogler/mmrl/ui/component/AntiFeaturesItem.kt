@@ -2,28 +2,26 @@ package com.dergoogler.mmrl.ui.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ui.component.listItem.ListItem
-import com.dergoogler.mmrl.ui.component.listItem.ListItemDefaults
-import com.dergoogler.mmrl.ui.component.listItem.ListItemTextStyle
+import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
+import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 
 @Composable
-fun AntiFeaturesItem(
+fun ListScope.AntiFeaturesItem(
     antifeatures: List<String>,
-    contentPaddingValues: PaddingValues = PaddingValues(vertical = 16.dp, horizontal = 25.dp),
-    itemTextStyle: ListItemTextStyle = ListItemDefaults.itemStyle,
+    contentPadding: PaddingValues,
 ) = antifeatures.forEach {
     val result = getAntifeatureDetails(it)
     result?.let {
         val (nameResId, descResId) = result
-        ListItem(
-            itemTextStyle = itemTextStyle,
-            contentPaddingValues = contentPaddingValues,
-            title = stringResource(id = nameResId),
-            desc = stringResource(id = descResId)
-        )
+        Item(
+            contentPadding = contentPadding
+        ) {
+            Title(nameResId)
+            Description(descResId)
+        }
     }
 }
 

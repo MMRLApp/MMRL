@@ -15,7 +15,10 @@ import com.dergoogler.mmrl.ui.screens.settings.appearance.items.DarkModeItem
 import com.dergoogler.mmrl.ui.screens.settings.appearance.items.ExampleItem
 import com.dergoogler.mmrl.ui.screens.settings.appearance.items.ThemePaletteItem
 import com.dergoogler.mmrl.ui.screens.settings.appearance.items.TitleItem
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 
+@Destination<RootGraph>
 @Composable
 fun AppThemeScreen() {
     val userPreferences = LocalUserPreferences.current

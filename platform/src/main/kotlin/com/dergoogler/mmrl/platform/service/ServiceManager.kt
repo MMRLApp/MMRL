@@ -15,6 +15,7 @@ import com.dergoogler.mmrl.platform.manager.APatchModuleManager
 import com.dergoogler.mmrl.platform.manager.KernelSUModuleManager
 import com.dergoogler.mmrl.platform.manager.KsuNextModuleManager
 import com.dergoogler.mmrl.platform.manager.MagiskModuleManager
+import com.dergoogler.mmrl.platform.manager.SukiSUModuleManager
 import com.dergoogler.mmrl.platform.stub.IFileManager
 import com.dergoogler.mmrl.platform.stub.IModuleManager
 import com.dergoogler.mmrl.platform.stub.IServiceManager
@@ -38,6 +39,8 @@ open class ServiceManager(
                 -> KernelSUModuleManager()
 
             Platform.SukiSU,
+                -> SukiSUModuleManager()
+
             Platform.KsuNext,
                 -> KsuNextModuleManager()
 
@@ -85,6 +88,15 @@ open class ServiceManager(
             Log.e(TAG, Log.getStackTraceString(it))
 
         }.getOrNull()
+
+    override fun addServiceBinder(name: String, binder: IBinder) {
+        runCatching {
+            services[name] = binder
+        }.onFailure {
+            Log.e(TAG, Log.getStackTraceString(it))
+
+        }.getOrNull()
+    }
 
     override fun getService(name: String): IBinder? = services[name]
 

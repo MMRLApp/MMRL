@@ -3,8 +3,6 @@
     <string name="setup_mode">حالت کاری</string>
     <string name="view_module_version">نگارش</string>
     <string name="view_module_required_os">سیستم‌عامل مورد نیاز</string>
-    <string name="view_module_install_confirm_desc"><![CDATA[آیا مطمئنید که میخواهید <font color=\"%1$s\">%2$s</font> را نصب کنید؟]]></string>
-    <string name="view_module_install_confirm_desc_deps"><![CDATA[آیا مطمئنید که میخواهید <font color=\"%1$s\">%2$s</font>نصب کنید؟ همچنین این ماژول نیاز دارد به:]]></string>
     <string name="view_module_unsupported_device_desc">به نظر می‌رسد دستگاه شما توسط این ماژول پشتیبانی نمی‌شود یا کنار گذاشته شده است.</string>
     <string name="settings_security_desc">موارد مرتبط با امنیت برنامه</string>
     <string name="settings_appearance">ظاهر</string>

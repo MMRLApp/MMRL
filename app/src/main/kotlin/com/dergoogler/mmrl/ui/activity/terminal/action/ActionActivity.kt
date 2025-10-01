@@ -18,16 +18,17 @@ import com.dergoogler.mmrl.viewmodel.ActionViewModel
 import com.dergoogler.mmrl.ui.activity.MMRLComponentActivity
 import com.dergoogler.mmrl.ui.activity.TerminalActivity
 import com.dergoogler.mmrl.ui.activity.setBaseContent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class ActionActivity : TerminalActivity<ActionViewModel>() {
+class ActionActivity : TerminalActivity() {
+    private val viewModel by viewModels<ActionViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
-
-        viewModel = viewModels<ActionViewModel>().value
 
         val modId = intent.getModId()
 
@@ -39,17 +40,19 @@ class ActionActivity : TerminalActivity<ActionViewModel>() {
         }
 
         setBaseContent {
-            ActionScreen()
+            ActionScreen(viewModel)
         }
     }
 
     private fun initAction(modId: ModId) {
-        lifecycleScope.launch {
-            viewModel.runAction(
-                scope = this,
-                modId = modId,
-            )
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.runAction(modId)
         }
+    }
+
+    override fun onDestroy() {
+        viewModel.destroy()
+        super.onDestroy()
     }
 
     companion object {

@@ -3,7 +3,9 @@ package com.dergoogler.mmrl.model.online
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Deprecated("Use permissions instead")
 @JsonClass(generateAdapter = true)
 data class ModuleFeatures(

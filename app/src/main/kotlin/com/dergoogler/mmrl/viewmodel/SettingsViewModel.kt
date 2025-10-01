@@ -2,15 +2,16 @@ package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.dergoogler.mmrl.datastore.UserPreferencesRepository
 import com.dergoogler.mmrl.datastore.model.DarkMode
 import com.dergoogler.mmrl.datastore.model.Homepage
 import com.dergoogler.mmrl.datastore.model.WebUIEngine
 import com.dergoogler.mmrl.datastore.model.WorkingMode
-import com.dergoogler.mmrl.datastore.UserPreferencesRepository
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
+import com.dergoogler.mmrl.utils.BlurUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -136,6 +137,14 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun setEnableBlur(value: Boolean) {
+        if (!BlurUtil.isBlurSupported()) return
+
+        viewModelScope.launch {
+            userPreferencesRepository.setEnableBlur(value)
+        }
+    }
+
     fun setCheckAppUpdatesPreReleases(value: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setCheckAppUpdatesPreReleases(value)
@@ -163,6 +172,12 @@ class SettingsViewModel @Inject constructor(
     fun setWebUiDevUrl(value: String) {
         viewModelScope.launch {
             userPreferencesRepository.setWebUiDevUrl(value)
+        }
+    }
+
+    fun setWebuixPackageName(value: String) {
+        viewModelScope.launch {
+            userPreferencesRepository.setWebuixPackageName(value)
         }
     }
 
@@ -247,6 +262,18 @@ class SettingsViewModel @Inject constructor(
     fun setShowTerminalLineNumbers(value: Boolean) {
         viewModelScope.launch {
             userPreferencesRepository.setShowTerminalLineNumbers(value)
+        }
+    }
+
+    fun setDevAlwaysShowUpdateAlert(value: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setDevAlwaysShowUpdateAlert(value)
+        }
+    }
+
+    fun setHideBottomBarLabels(value: Boolean) {
+        viewModelScope.launch {
+            userPreferencesRepository.setHideBottomBarLabels(value)
         }
     }
 

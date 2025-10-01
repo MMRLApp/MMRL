@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="ads_name">Reclame</string>
+    <string name="ads_desc">Acest modul conține reclame.</string>
+    <string name="knownvuln_name">Vulnerabilitate cunoscută</string>
+</resources>

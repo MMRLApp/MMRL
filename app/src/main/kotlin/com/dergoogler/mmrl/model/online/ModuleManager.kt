@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import com.dergoogler.mmrl.ext.isNotNullOrEmpty
 import com.dergoogler.mmrl.platform.Platform
 import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ModuleManager(
     val magisk: ModuleManagerSolution? = null,
@@ -33,6 +35,7 @@ data class ModuleManager(
         )
 }
 
+@Serializable
 @JsonClass(generateAdapter = true)
 data class ModuleManagerSolution(
     val min: Int? = null,

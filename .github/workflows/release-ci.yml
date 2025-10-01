@@ -3,415 +3,108 @@ name: Release CI
 on:
   workflow_dispatch:
     inputs:
-      title:
-        required: false
-        default: '**MMRL**'
-        description: 'Title'
-      message:
-        required: false
-        default: 'No message.'
-        description: 'Message'
       send_telegram:
-        description: 'Release to Telegram'
-        required: true
-        default: false
-        type: boolean
-      send_playstore:
-        description: 'Release on Play Store'
-        required: true
-        default: false
-        type: boolean
-      spoof_build:
-        description: 'Attach spoofed build'
+        description: "Release to Telegram"
         required: true
         default: false
         type: boolean
       send_github:
-        description: 'Release on GitHub'
+        description: "Release on GitHub"
         required: true
         default: false
         type: boolean
-      buildType:
-        description: "Build Type"
-        type: choice
+      send_playstore:
+        description: "Release on Play Store"
         required: true
-        default: 'Alpha'
-        options:
-          - 'Release'
-          - 'Playstore'
-          - 'ReleaseCandidate'
-          - 'Beta'
-          - 'Alpha'
-          - 'Debug'
-          - 'DebugMin'
+        default: false
+        type: boolean
 
 jobs:
-  spoofed-build:
-    name: Build spoofed APK
-    if: github.event.inputs.spoof_build == 'true'
+  # Build step for both official & spoofed flavors
+  build-release:
     runs-on: ubuntu-latest
-    outputs:
-      release-name: ${{ steps.release-name.outputs.name }}
+    name: Build Matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        flavor: [official, spoofed]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
-            fetch-depth: 0
-
-      - name: Set up signing key
-        run: |
-            if [ ! -z "${{ secrets.KEY_STORE }}" ]; then
-                echo keyStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> signing.properties
-                echo keyAlias='${{ secrets.KEY_ALIAS }}' >> signing.properties
-                echo keyPassword='${{ secrets.KEY_PASSWORD }}' >> signing.properties
-                echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
-                echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
-            fi
-            
-      - name: Set up JDK
-        uses: actions/setup-java@v4.7.1
-        with:
-          distribution: 'zulu'
-          java-version: 21
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4.3.1
-        with:
-            validate-wrappers: true
-            cache-cleanup: always
-
-      - name: Spoof Package ID
-        run: chmod 755 spoof && ./spoof
-
-      - name: Build Spoofed APK
-        run: chmod 755 gradlew && ./gradlew assembleSpoofed
-
-      - name: Get release name
-        if: success() && github.ref == 'refs/heads/master'
-        id: release-name
-        run: |
-            name=`ls app/build/outputs/apk/spoofed/*.apk | awk -F '(/|.apk)' '{print $6}'` && echo "name=${name}" >> $GITHUB_OUTPUT
-
-      - name: Find APK
-        id: find_apk
-        run: |
-          APK_PATH=$(find app/build/outputs/apk/spoofed -name "*.apk" | head -n 1)
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
-
-      - name: Find mapping file
-        id: find_mapping
-        run: |
-          MAPPING_PATH=$(find app/build/outputs/mapping/spoofed -name "mapping.txt" | head -n 1)
-          echo "MAPPING_PATH=$MAPPING_PATH" >> $GITHUB_OUTPUT
-
-      - name: Upload spoofed mapping as artifact
-        uses: actions/upload-artifact@v4.6.2
-        with:
-          name: spoofed-mapping
-          path: ${{ steps.find_mapping.outputs.MAPPING_PATH }}
-
-      - name: Upload spoofed apk as artifact
-        if: success() && github.ref == 'refs/heads/master'
-        uses: actions/upload-artifact@v4.6.2
-        with:
-            name: ${{ steps.release-name.outputs.name }}
-            path: app/build/outputs/apk/spoofed/*.apk
-
-  build:
-    name: Build un-spoofed APK
-    runs-on: ubuntu-latest
-    outputs:
-      release-name: ${{ steps.release-name.outputs.name }}
-    steps:
-      - name: Parse input
-        run: |
-            BUILD_TYPE_CASED=$(echo "${{ inputs.buildType }}" | sed 's/^\(.\)/\L\1/')
-            echo "BUILD_TYPE_CASED=$BUILD_TYPE_CASED" >> $GITHUB_ENV
-
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-        with:
-            fetch-depth: 0
-    
-      - name: Set up signing key
-        run: |
-            if [ ! -z "${{ secrets.KEY_STORE }}" ]; then
-                echo keyStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> signing.properties
-                echo keyAlias='${{ secrets.KEY_ALIAS }}' >> signing.properties
-                echo keyPassword='${{ secrets.KEY_PASSWORD }}' >> signing.properties
-                echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
-                echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
-            fi
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4.7.1
-        with:
-          distribution: 'zulu'
-          java-version: 21
-
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4.3.1
-        with:
-            validate-wrappers: true
-            cache-cleanup: always
+          fetch-depth: 0
 
       - name: Build APK
-        run: chmod 755 gradlew && ./gradlew assemble${{ inputs.buildType }}
-
-      - name: Get release name
-        if: success() && github.ref == 'refs/heads/master'
-        id: release-name
-        run: |
-            name=`ls app/build/outputs/apk/${{ env.BUILD_TYPE_CASED }}/*.apk | awk -F '(/|.apk)' '{print $6}'` && echo "name=${name}" >> $GITHUB_OUTPUT
-
-      - name: Find APK
-        id: find_apk
-        run: |
-          APK_PATH=$(find app/build/outputs/apk/${{ env.BUILD_TYPE_CASED }} -name "*.apk" | head -n 1)
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
-
-      - name: Find mapping file
-        id: normal_mapping
-        run: |
-          MAPPING_PATH=$(find app/build/outputs/mapping/${{ env.BUILD_TYPE_CASED }} -name "mapping.txt" | head -n 1)
-          echo "MAPPING_PATH=$MAPPING_PATH" >> $GITHUB_OUTPUT
-
-      - name: Upload normal mapping as artifact
-        uses: actions/upload-artifact@v4.6.2
+        id: build-apk
+        uses: ./.github/actions/build-apk
         with:
-          name: mapping
-          path: ${{ steps.normal_mapping.outputs.MAPPING_PATH }}
+          flavor: ${{ matrix.flavor }}
+          buildType: "release"
+          keyStore: ${{ secrets.KEY_STORE }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyAlias: ${{ secrets.KEY_ALIAS }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-      - name: Upload normal apk as artifact
-        if: success() && github.ref == 'refs/heads/master'
-        uses: actions/upload-artifact@v4.6.2
-        with:
-            name: ${{ steps.release-name.outputs.name }}
-            path: app/build/outputs/apk/${{ env.BUILD_TYPE_CASED }}/*.apk
+  # Release to Telegram
+  release-telegram:
+    if: github.event.inputs.send_telegram == 'true'
+    name: Release to Telegram
+    needs: build-release
+    uses: ./.github/workflows/telegram.yml
+    secrets: inherit
 
-  release:
-    name: Release on Telegram or GitHub
-    runs-on: ubuntu-latest
-    if: github.event.inputs.send_telegram == 'true' || github.event.inputs.send_github == 'true'
-    needs: [ build ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4.2.2
-        with:
-            fetch-depth: 0
+  # Release to GitHub
+  release-github:
+    if: github.event.inputs.send_github == 'true'
+    name: Release to GitHub
+    needs: build-release
+    uses: ./.github/workflows/github.yml
+    secrets: inherit
 
-      - name: Download Un-Spoofed APK
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.build.outputs.release-name }}
-          path: unspoofed-apk
-
-      - name: Download Spoofed APK
-        if: github.event.inputs.spoof_build == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ needs.spoofed-build.outputs.release-name }}
-          path: spoofed-apk
-
-      - name: Download Un-Spoofed Mappings
-        uses: actions/download-artifact@v4
-        with:
-          name: mapping
-          path: mapping
-
-      - name: Download Spoofed Mappings
-        if: github.event.inputs.spoof_build == 'true'
-        uses: actions/download-artifact@v4
-        with:
-          name: spoofed-mapping
-          path: spoofed-mapping
-
-      - name: Find normal APK
-        id: find_normal_apk
-        run: |
-          APK_PATH=$(find unspoofed-apk -name "*.apk" | head -n 1)
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
-
-      - name: Find spoofed APK
-        if: github.event.inputs.spoof_build == 'true'
-        id: find_spoofed_apk
-        run: |
-          APK_PATH=$(find spoofed-apk -name "*.apk" | head -n 1)
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
-
-      - name: Find normal mapping file
-        id: normal_mapping
-        run: |
-          MAPPING_PATH=$(find mapping -name "mapping.txt" | head -n 1)
-          echo "MAPPING_PATH=$MAPPING_PATH" >> $GITHUB_OUTPUT
-
-      - name: Find spoofed mapping file
-        if: github.event.inputs.spoof_build == 'true'
-        id: spoofed_mapping
-        run: |
-          MAPPING_PATH=$(find spoofed-mapping -name "mapping.txt" | head -n 1)
-          echo "MAPPING_PATH=$MAPPING_PATH" >> $GITHUB_OUTPUT
-
-      - name: Get commit info and build timestamp
-        id: meta
-        run: |
-          BUILD_DATE=$(date +"%Y-%m-%d %H:%M:%S")
-          COMMIT_COUNT=$(git rev-list --count HEAD)
-          VERSION=$((31320 + COMMIT_COUNT))
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
-
-      - name: Upload files to Telegram
-        if: github.event.inputs.send_telegram == 'true'
-        uses: xz-dev/TelegramFileUploader@v1.1.1
-        with:
-          to-who: '@MMRLCI'
-          message: |
-              ${{ inputs.title }}
-              #ci_${{ env.VERSION }}
-              
-              Build on ${{ env.BUILD_DATE }}.
-
-              **What's new?**
-              
-              ${{ inputs.message }}
-              
-              Type: ${{ env.BUILD_TYPE_CASED }}
-              [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-          files: |
-            ${{ steps.find_normal_apk.outputs.APK_PATH }}
-            ${{ steps.find_spoofed_apk.outputs.APK_PATH }}
-        env:
-          API_ID: ${{ secrets.API_ID }}
-          API_HASH: ${{ secrets.API_HASH }}
-          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
-      - name: Check if release exists
-        if: github.event.inputs.send_github == 'true'
-        id: check_release
-        run: |
-          if gh release view v${{ env.VERSION }} --repo ${{ github.repository }} > /dev/null 2>&1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Create GitHub Release
-        if: steps.check_release.outputs.exists == 'false' && github.event.inputs.send_github == 'true'
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v${{ env.VERSION }}
-          release_name: v${{ env.VERSION }}
-          body: |
-            ${{ inputs.title }}
-            #ci_${{ env.VERSION }}
-            
-            Build on ${{ env.BUILD_DATE }}.
-            
-            ## What's new?
-              
-            ${{ inputs.message }}
-              
-            Type: ${{ inputs.buildType }}
-            [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Upload normal APK to GitHub Release
-        if: steps.check_release.outputs.exists == 'false' && github.event.inputs.send_github == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.find_normal_apk.outputs.APK_PATH }}
-          asset_name: normal.apk
-          asset_content_type: application/vnd.android.package-archive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Upload spoofed APK to GitHub Release
-        if: steps.check_release.outputs.exists == 'false' && github.event.inputs.send_github == 'true' && github.event.inputs.spoof_build == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.find_spoofed_apk.outputs.APK_PATH }}
-          asset_name: spoofed.apk
-          asset_content_type: application/vnd.android.package-archive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Upload normal mapping to GitHub Release
-        if: steps.check_release.outputs.exists == 'false' && github.event.inputs.send_github == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.normal_mapping.outputs.MAPPING_PATH }}
-          asset_name: mapping.txt
-          asset_content_type: text/plain
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Upload spoofed mapping to GitHub Release
-        if: steps.check_release.outputs.exists == 'false' && github.event.inputs.send_github == 'true' && github.event.inputs.spoof_build == 'true'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.spoofed_mapping.outputs.MAPPING_PATH }}
-          asset_name: spoofed-mapping.txt
-          asset_content_type: text/plain
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  playstore-build:
-    name: Build for Google Play Store and release
-    runs-on: ubuntu-latest
+  # Release to Play Store
+  release-playstore:
     if: github.event.inputs.send_playstore == 'true'
-    steps:
-      - name: Parse input
-        run: |
-            BUILD_TYPE_CASED=$(echo "${{ inputs.buildType }}" | sed 's/^\(.\)/\L\1/')
-            echo "BUILD_TYPE_CASED=$BUILD_TYPE_CASED" >> $GITHUB_ENV
+    name: Release to Play Store
+    runs-on: ubuntu-latest
 
+    steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4
         with:
-            fetch-depth: 0
-    
+          fetch-depth: 0
+
       - name: Set up signing key
         run: |
-            if [ ! -z "${{ secrets.KEY_STORE }}" ]; then
-                echo keyStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> signing.properties
-                echo keyAlias='${{ secrets.KEY_ALIAS }}' >> signing.properties
-                echo keyPassword='${{ secrets.KEY_PASSWORD }}' >> signing.properties
-                echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
-                echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
-            fi
+          if [ -n "${{ secrets.KEY_STORE }}" ]; then
+              echo keyStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> signing.properties
+              echo keyAlias='${{ secrets.KEY_ALIAS }}' >> signing.properties
+              echo keyPassword='${{ secrets.KEY_PASSWORD }}' >> signing.properties
+              echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
+              echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
+          fi
 
       - name: Set up JDK
-        uses: actions/setup-java@v4.7.1
+        uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: "zulu"
           java-version: 21
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4.3.1
+        uses: gradle/actions/setup-gradle@v4
         with:
-            validate-wrappers: true
-            cache-cleanup: always
+          validate-wrappers: true
 
       - name: Bundle with Gradle
-        run: chmod 755 ./gradlew && ./gradlew bundlePlaystore
-      
+        run: chmod +x ./gradlew && ./gradlew bundleOfficialPlaystore
+
       - name: Find AAB
         id: find_aab
         run: |
-          AAB_PATH=$(find app/build/outputs/bundle/playstore -name "*.aab" | head -n 1)
+          AAB_PATH=$(find app/build/outputs/bundle/officialPlaystore -name "*.aab" -print -quit)
           echo "AAB_PATH=$AAB_PATH" >> $GITHUB_OUTPUT
 
       - name: Upload to Google Play
-        uses: r0adkll/upload-google-play@v1.1.3
+        uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.dergoogler.mmrl
@@ -419,5 +112,8 @@ jobs:
           track: production
           status: completed
           inAppUpdatePriority: 5
-          # userFraction: 0.1
-  
+
+
+
+
+

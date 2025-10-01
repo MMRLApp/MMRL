@@ -34,7 +34,6 @@ open class MMRLLifecycleService : LifecycleService() {
     override fun onCreate() {
         Timber.d("onCreate")
         super.onCreate()
-        setForeground()
     }
 
     override fun onDestroy() {
@@ -50,7 +49,7 @@ open class MMRLLifecycleService : LifecycleService() {
         NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.launcher_outline)
 
-    private fun setForeground() {
+    protected fun setForeground() {
         val notification = baseNotificationBuilder()
             .setContentTitle(baseContext.getString(title))
             .setSilent(true)
