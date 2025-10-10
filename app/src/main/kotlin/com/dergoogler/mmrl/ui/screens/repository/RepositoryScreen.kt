@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -93,7 +92,6 @@ fun RepositoryScreen(repo: Repo) = LocalScreenProvider {
     val hazeState = LocalHazeState.current
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
 
     BackHandler(
         enabled = viewModel.isSearch,
@@ -151,7 +149,7 @@ fun RepositoryScreen(repo: Repo) = LocalScreenProvider {
                 }
 
                 LazyColumn(
-                    state = listState,
+                    state = viewModel.listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .hazeSource(state = hazeState),

@@ -1,7 +1,7 @@
 package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
-import android.os.Bundle
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +9,6 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.database.entity.Repo
-import com.dergoogler.mmrl.database.entity.Repo.Companion.toRepo
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
 import com.dergoogler.mmrl.datastore.model.Option
 import com.dergoogler.mmrl.datastore.model.RepositoryMenu
@@ -18,9 +17,6 @@ import com.dergoogler.mmrl.model.state.OnlineState
 import com.dergoogler.mmrl.model.state.OnlineState.Companion.createState
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
-import com.dergoogler.mmrl.ext.panicString
-import com.dergoogler.mmrl.model.json.UpdateJson
-import com.dergoogler.mmrl.model.state.RepoState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -49,6 +45,8 @@ class RepositoryViewModel @AssistedInject constructor(
         private set
     private val keyFlow = MutableStateFlow("")
     val query get() = keyFlow.asStateFlow()
+
+    val listState: LazyListState = LazyListState()
 
     private val cacheFlow = MutableStateFlow(listOf<Pair<OnlineState, OnlineModule>>())
     private val onlineFlow = MutableStateFlow(listOf<Pair<OnlineState, OnlineModule>>())

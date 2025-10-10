@@ -7,7 +7,6 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -87,8 +86,7 @@ fun RepositoriesScreen() = LocalScreenProvider {
 
     val pullToRefreshState = rememberPullToRefreshState()
 
-    val listSate = rememberLazyListState()
-    val showFab by listSate.isScrollingUp()
+    val showFab by viewModel.listState.isScrollingUp()
 
     var repoUrl by remember { mutableStateOf("") }
     var message: String by remember { mutableStateOf("") }
@@ -207,7 +205,7 @@ fun RepositoriesScreen() = LocalScreenProvider {
             this@Scaffold.RepositoriesList(
                 innerPadding = innerPadding,
                 list = list,
-                state = listSate,
+                state = viewModel.listState,
                 delete = viewModel::delete,
                 getUpdate = viewModel::getUpdate
             )

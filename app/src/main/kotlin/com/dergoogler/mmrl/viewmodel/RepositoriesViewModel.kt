@@ -1,6 +1,7 @@
 package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -45,6 +46,8 @@ class RepositoriesViewModel @Inject constructor(
 ) {
     private val reposFlow = MutableStateFlow(listOf<RepoState>())
     val repos get() = reposFlow.asStateFlow()
+
+    val listState: LazyListState = LazyListState()
 
     private val repositoriesMenu
         get() = userPreferencesRepository.data

@@ -3,6 +3,7 @@ package com.dergoogler.mmrl.viewmodel
 import android.app.Application
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -26,12 +27,12 @@ import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasWebUI
 import com.dergoogler.mmrl.platform.content.ModuleCompatibility
+import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.platform.stub.IModuleOpsCallback
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.dergoogler.mmrl.service.DownloadService
 import com.dergoogler.mmrl.utils.Utils
-import com.dergoogler.mmrl.platform.model.ModId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -89,6 +90,8 @@ class ModulesViewModel @Inject constructor(
         private set
     private val keyFlow = MutableStateFlow("")
     val query get() = keyFlow.asStateFlow()
+
+    val listState: LazyListState = LazyListState()
 
     private val cacheFlow = MutableStateFlow(listOf<LocalModule>())
     private val localFlow = MutableStateFlow(listOf<LocalModule>())

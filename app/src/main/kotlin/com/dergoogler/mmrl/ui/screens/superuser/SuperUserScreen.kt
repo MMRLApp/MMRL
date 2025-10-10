@@ -3,7 +3,6 @@ package com.dergoogler.mmrl.ui.screens.superuser
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -49,7 +48,6 @@ fun SuperUserScreen() = LocalScreenProvider {
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
 
     val pullToRefreshState = rememberPullToRefreshState()
 
@@ -103,7 +101,7 @@ fun SuperUserScreen() = LocalScreenProvider {
             this@Scaffold.SuperUserList(
                 innerPadding = innerPadding,
                 list = list,
-                state = listState,
+                state = viewModel.listState,
             )
         }
     }

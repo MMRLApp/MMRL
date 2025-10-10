@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,8 @@ class SuperUserViewModel @Inject constructor(
         private set
     private val keyFlow = MutableStateFlow("")
     val query get() = keyFlow.asStateFlow()
+
+    val listState: LazyListState = LazyListState()
 
     private val cacheFlow = MutableStateFlow(listOf<AppInfo>())
     private val localFlow = MutableStateFlow(listOf<AppInfo>())

@@ -11,7 +11,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -72,11 +71,10 @@ fun ModulesScreen(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
 
     val pullToRefreshState = rememberPullToRefreshState()
 
-    val isScrollingUp by listState.isScrollingUp()
+    val isScrollingUp by viewModel.listState.isScrollingUp()
     val showFab by remember {
         derivedStateOf {
             isScrollingUp && !viewModel.isSearch && viewModel.isProviderAlive
@@ -159,7 +157,7 @@ fun ModulesScreen(
             this@Scaffold.ModulesList(
                 innerPadding = innerPadding,
                 list = list,
-                state = listState,
+                state = viewModel.listState,
                 viewModel = viewModel,
                 onDownload = download,
                 isProviderAlive = viewModel.isProviderAlive,
