@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.datastore"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
