@@ -18,6 +18,15 @@ on:
         required: true
         default: false
         type: boolean
+      playstore_track:
+        type: choice
+        default: production
+        description: Google Play Store Track
+        options:
+        - production
+        - beta
+        - alpha
+        - qa
 
 jobs:
   # Build step for both official & spoofed flavors
@@ -109,9 +118,10 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.dergoogler.mmrl
           releaseFiles: ${{ steps.find_aab.outputs.AAB_PATH }}
-          track: production
+          track: ${{ github.event.inputs.playstore_track }}
           status: completed
           inAppUpdatePriority: 5
+
 
 
 
