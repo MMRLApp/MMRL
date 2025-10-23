@@ -5,20 +5,26 @@
     <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! نصب ماژول‌های فهرست سیاه ممکن نیست. تنظیمات → امنیت → هشدارهای فهرست سیاه</string>
     <string name="install_view_module_info">::group::درباره ماژول</string>
     <string name="copying_failed">! رونویسی ناموفق بود</string>
-    <string name="install_view_installing">- در حال نصب %1$s</string>
+    <string name="install_view_installing">- در حال نصب [color=primary]%1$s[/color]</string>
     <string name="this_module_don_t_have_an_action">! این ماژول هیچ کنشی ندارد.</string>
-    <string name="failed_to_remove_updated_folder">! پ پوشه به‌روزرسانی‌شده ناموفق بود</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! پاک‌کردن پوشه به‌روزرسانی‌شده ناموفق بود[/color]</string>
     <string name="installation_aborted_due_to_an_error">! نصب به دلیل خطا متوقف شد</string>
     <string name="install_view_path">- مسیر: %1$s</string>
-    <string name="module_not_found">! ماژول پیدا نشد.</string>
+    <string name="module_not_found">[color=red]! ماژول پیدا نشد.[/color]</string>
     <string name="module_is_disabled_or_removed_unable_to_execute_action">! ماژول خاموش یا پاک شده است. نمی‌تواند کنش را اجرا کند.</string>
     <string name="copying_zip_to_temp_directory">- رونویسی پرونده زیپ به پوشه موقت</string>
     <string name="unable_to_gather_module_info">!نمی‌توان داده‌های ماژول را گردآوری کرد</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- اجرای کنش ناموفق بود. به‌کارگیری شِل برای اجرای کنش را امتحان کنید، تنظیمات → ماژول → به‌کارگیری شِل برای کنش ماژول.</string>
-    <string name="unable_to_find_path_for_uri">! نمیتوان مسیر را برای URI پیدا کرد: %1$s</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s پرونده ماژول نیست. ماژول‌های مجیسک باید پرونده‌های .zip باشند. رد کردن...</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! نمیتوان مسیر را برای URI پیدا کرد: %1$s[/color]</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s پرونده ماژول نیست. ماژول‌های مجیسک باید پرونده‌های .zip باشند. رد کردن…</string>
     <string name="removed_updated_folder">- پوشه به‌روزرسانی‌شده پاک شد</string>
-    <string name="non_root_platform_is_not_supported">! سکو های روت نشده پشتیبانی نمی‌شوند</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! سکو های روت نشده پشتیبانی نمی‌شوند[/color]</string>
     <string name="module_manager_is_null">! مدیریت ماژول ها تهی است</string>
     <string name="file_manager_is_null">! مدیریت پرونده‌ها تهی است</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- در انتظار راه‌اندازی مدیر سکو…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! راه‌اندازی سکو ناموفق بود[/color]</string>
+    <string name="platform_initialized">[bold]- سکو راه‌اندازی شد[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! راه‌اندازی سکو ناموفق بود. نمیتوان نصب را ادامه داد.[/color]</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! سکو فعال نیست. نمیتوان نصب را ادامه داد.[/color]</string>
+    <string name="deleted_zip_file">- فایل زیپ پاک‌شده: %s</string>
 </resources>

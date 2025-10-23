@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="requireNewVersion_cannot_load_webui">نمیتوان رابط وب را بارگذاری کرد</string>
+    <string name="requireNewVersion_require_text">دست‌کم نیازمند است به نگارش MMRL &gt;=</string>
+    <string name="requireNewVersion_try_the_following">این را امتحان کنید:</string>
+    <string name="requireNewVersion_try_the_following_one">MMRL را از گیت‌هاب یا فروشگاه Play به آخرین نسخه به‌روزرسانی کنید.</string>
+    <string name="requireNewVersion_try_the_following_two">با توسعه‌دهنده ماژول برای یافتن راه‌حل ممکن تماس بگیرید.</string>
+    <string name="requireNewVersion_refresh">تازه‌سازی</string>
 </resources>

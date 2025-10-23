@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="hours">
+        <item quantity="one">%1$d ساعت</item>
+        <item quantity="other">%1$d ساعت</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="one">%1$s ماژول نگه‌داری شده</item>
+        <item quantity="other">%1$s ماژول نگه‌داری شده</item>
+    </plurals>
+    <plurals name="search_results">
+        <item quantity="one">ما [color=surface_tint]%1$s نتیجه[/color] مطابق جستجو شما پیدا کردیم</item>
+        <item quantity="other">ما [color=surface_tint]%1$s نتیجه[/color] مطابق جستجو شما پیدا کردیم</item>
+    </plurals>
 </resources>
