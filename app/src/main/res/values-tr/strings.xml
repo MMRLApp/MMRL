@@ -408,12 +408,12 @@
     <string name="settings_try_wxp">WebUI X: Taşınabilir deneyin!</string>
     <string name="external_app_required_title">Harici Uygulama Gerekli</string>
     <string name="settings_terminal_line_numbers">Satır Numaraları</string>
-    <string name="settings_terminal_line_numbers_desc">Uç birimin sol taradında satır numaralarını gösterir</string>
+    <string name="settings_terminal_line_numbers_desc">Komut satırının sol taradında satır numaralarını gösterir</string>
     <string name="super_user_apps">SuperUser Uygulamalar</string>
     <string name="view_module_permissions">İzinler</string>
     <string name="settings_always_show_update_alert">Her zaman Güncelleme Bildirimini Göster</string>
     <string name="update_available">Güncelleme var!</string>
-    <string name="settings_terminal">Uç birim</string>
+    <string name="settings_terminal">Komut satırı</string>
     <string name="settings_behavior">Davranış</string>
     <string name="settings_terminal_desc">Uç birmi kendi tercihlerine göre uyarla</string>
     <string name="hook_mode">Kanca Modu</string>
