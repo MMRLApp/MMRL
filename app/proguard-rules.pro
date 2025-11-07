@@ -53,6 +53,12 @@
     <init>(...);
     *;
 }
+
+-keep class androidx.compose.ui.graphics.Color { *; }
+-keep class androidx.compose.material3.ButtonColors { *; }
+-keep class androidx.compose.material3.CardColors { *; }
+-keep class androidx.compose.material3.ColorScheme { *; }
+
 -keep class com.dergoogler.mmrl.webui.util.WebUIOptions
 -keep class com.dergoogler.mmrl.webui.interfaces.**
 -keep class * extends com.dergoogler.mmrl.webui.interfaces.WXInterface
