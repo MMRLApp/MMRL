@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.model.online.OnlineModule
+import com.dergoogler.mmrl.model.online.VersionItem
 
 @Entity(tableName = "onlineModules", primaryKeys = ["id", "repoUrl"])
 data class OnlineModuleEntity(
@@ -79,7 +80,7 @@ data class OnlineModuleEntity(
         blacklist = BlacklistEntity(blacklist)
     )
 
-    fun toModule() = OnlineModule(
+    fun toModule(versions: List<VersionItem> = emptyList()) = OnlineModule(
         repoUrl = repoUrl,
         id = id,
         name = name,
@@ -91,7 +92,7 @@ data class OnlineModuleEntity(
         note = note?.toNote(),
         root = root?.toRoot(),
         features = features?.toFeatures(),
-        versions = listOf(),
+        versions = versions,
         maxApi = maxApi,
         minApi = minApi,
         size = size,

@@ -16,9 +16,6 @@ import com.dergoogler.mmrl.ext.merge
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.model.online.OnlineModule
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -165,15 +162,15 @@ class LocalRepository @Inject constructor(
         }
 
     suspend fun getOnlineByIdAndUrl(id: String, repoUrl: String) = withContext(Dispatchers.IO) {
-        joinDao.getOnlineByIdAndUrl(id, repoUrl).toModule()
+        joinDao.getOnlineByIdAndUrl(id, repoUrl).toModule(getVersionByIdAndUrl(id, repoUrl))
     }
 
     suspend fun getOnlineAllById(id: String) = withContext(Dispatchers.IO) {
-        onlineDao.getAllById(id).map { it.toModule() }
+        onlineDao.getAllById(id).map { it.toModule(getVersionById(it.id)) }
     }
 
     suspend fun getOnlineAllByUrl(url: String) = withContext(Dispatchers.IO) {
-        onlineDao.getAllByUrl(url).map { it.toModule() }
+        onlineDao.getAllByUrl(url).map { it.toModule(getVersionByIdAndUrl(it.id, url)) }
     }
 
     suspend fun getOnlineAllByIdAndUrl(id: String, repoUrl: String) = withContext(Dispatchers.IO) {

@@ -1,19 +1,20 @@
 package com.dergoogler.mmrl.ui.remember
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import com.dergoogler.mmrl.database.entity.Repo
 import com.dergoogler.mmrl.datastore.model.Option
 import com.dergoogler.mmrl.datastore.providable.LocalUserPreferences
+import com.dergoogler.mmrl.model.json.UpdateJson
 import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.model.state.OnlineState
 import com.dergoogler.mmrl.model.state.OnlineState.Companion.createState
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.platform.model.ModId.Companion.toModId
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 
 @Composable
 fun rememberOnlineModules(
@@ -33,10 +34,20 @@ fun rememberOnlineModules(
         val modules = localRepository.getOnlineAllByUrl(repo.url)
 
         val sorted = modules.map {
-            it.createState(
-                local = localRepository.getLocalByIdOrNull(it.id),
+            val local = localRepository.getLocalByIdOrNull(it.id)
+            val versionsList = it.versions.toMutableList()
+
+            if (local != null) {
+                UpdateJson.loadToVersionItem(local.updateJson)?.let { es ->
+                    // no need to define here a repo name since we only need to for the last updated
+                    versionsList.add(0, es)
+                }
+            }
+
+            it.copy(versions = versionsList).createState(
+                local = local,
                 hasUpdatableTag = localRepository.hasUpdatableTag(it.id)
-            ) to it
+            ) to it.copy(versions = versionsList)
         }.sortedWith(
             if (repositoryMenu.descending) {
                 when (repositoryMenu.option) {
