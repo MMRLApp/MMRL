@@ -2,11 +2,11 @@
 <resources>
     <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">Impossible d\'installer les modules sur liste noire. Paramètres → Sécurité → Alertes liste noire</string>
     <string name="removed_updated_folder">- Dossier mis à jour supprimé</string>
-    <string name="service_is_not_available">Le service n\'est pas disponible !</string>
+    <string name="service_is_not_available">Le service n\'est pas disponible</string>
     <string name="copying_zip_to_temp_directory">- Copie du zip dans le répertoire temporaire</string>
     <string name="install_view_installing">- Installation de %1$s</string>
     <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Échec de l\'exécution. Essayez d\'utiliser Shell pour exécuter l\'action : Paramètres → Module → Utiliser Shell pour l\'action du module.</string>
-    <string name="non_root_platform_is_not_supported">! Les plateformes non rootées ne sont pas prises en charge</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! Les plateformes non rootées ne sont pas prises en charge[/color]</string>
     <string name="module_manager_is_null">! Le gestionnaire de modules est nul</string>
     <string name="failed_to_remove_updated_folder">! Échec de la suppression du dossier mis à jour</string>
     <string name="unable_to_gather_module_info_of_file">! Impossible de collecter les informations de module du fichier : %1$s</string>
@@ -20,5 +20,5 @@
     <string name="install_view_module_info">::group::Informations sur le module</string>
     <string name="installation_aborted_due_to_an_error">! Installation interrompue en raison d\'une erreur</string>
     <string name="file_manager_is_null">! Le gestionnaire de fichiers est nul</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s n\'est pas un fichier de module. Les modules Magisk doivent être des fichiers .zip. Ignoré...</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s n\'est pas un fichier de module. Les modules Magisk doivent être des fichiers .zip. Ignoré…</string>
 </resources>

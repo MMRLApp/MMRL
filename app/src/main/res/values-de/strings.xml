@@ -202,4 +202,8 @@
     <string name="continue_with">Fortfahren mit %1$s</string>
     <string name="welcome">Willkommen!</string>
     <string name="menu_show_antifeatures">Zeige Anti-Features</string>
+    <string name="page_superuser">SuperNutzer</string>
+    <string name="menu_show_system_apps">Zeige System-Apps</string>
+    <string name="settings_appearance_desc">Passe die App an deine Bedürfnisse an</string>
+    <string name="settings_repo_update_interval_desc">Wähle das Zeitinterfall zum Updaten der Repositories aus</string>
 </resources>
