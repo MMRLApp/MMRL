@@ -46,6 +46,7 @@ import com.dergoogler.mmrl.datastore.model.RepositoriesMenu
 import com.dergoogler.mmrl.ext.currentScreenWidth
 import com.dergoogler.mmrl.ext.isScrollingUp
 import com.dergoogler.mmrl.ext.none
+import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
 import com.dergoogler.mmrl.ext.systemBarsPaddingEnd
 import com.dergoogler.mmrl.model.local.BulkModule
 import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
@@ -86,8 +87,11 @@ fun RepositoriesScreen() =
         val progress by viewModel.progress.collectAsStateWithLifecycle()
 
         val pullToRefreshState = rememberPullToRefreshState()
+        
+        // Use rememberSaveable to persist scroll position across navigation
+        val listState = rememberSaveableLazyListState(key = "repositories_list")
 
-        val showFab by viewModel.listState.isScrollingUp()
+        val showFab by listState.isScrollingUp()
 
         var repoUrl by remember { mutableStateOf("") }
         var message: String by remember { mutableStateOf("") }
@@ -217,7 +221,7 @@ fun RepositoriesScreen() =
                 this@Scaffold.RepositoriesList(
                     innerPadding = innerPadding,
                     list = list,
-                    state = viewModel.listState,
+                    state = listState,
                     delete = viewModel::delete,
                     getUpdate = viewModel::getUpdate,
                 )
