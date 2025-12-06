@@ -9,9 +9,11 @@ class MarkdownInterface(
     wxOptions: WXOptions,
     private val readme: String,
 ) : WXInterface(wxOptions) {
-    override var name: String = "markdown"
+    override var name: String = INTERFACE_NAME
 
     companion object {
+        const val INTERFACE_NAME = "markdown"
+        
         fun factory(readme: String) =
             JavaScriptInterface(
                 clazz = MarkdownInterface::class.java,
