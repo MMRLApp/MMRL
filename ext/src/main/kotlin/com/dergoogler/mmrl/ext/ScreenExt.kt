@@ -1,6 +1,8 @@
 package com.dergoogler.mmrl.ext
 
 import android.app.Activity
+import android.os.Build
+import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -13,6 +15,15 @@ data class ScreenWidth(
     val isLarge: Boolean,
 )
 
+/**
+ * Calculates the current screen width classification using Material 3 window size class breakpoints.
+ * 
+ * This function uses WindowMetrics API (API 30+) or display metrics to get accurate screen width
+ * measurements that are not affected by custom DPI settings. This is more reliable than using
+ * configuration.screenWidthDp directly, especially on devices with high DPI settings.
+ * 
+ * @return ScreenWidth data class with boolean flags for small/medium/large classifications
+ */
 @Composable
 fun currentScreenWidth(): ScreenWidth {
     val context = LocalContext.current
@@ -24,12 +35,22 @@ fun currentScreenWidth(): ScreenWidth {
     // especially with high DPI settings
     val activity = context as? Activity
     val screenWidthDp = if (activity != null) {
-        // Use window metrics for more accurate measurement
-        val windowMetrics = activity.windowManager.currentWindowMetrics
-        val widthPixels = windowMetrics.bounds.width()
-        with(density) { widthPixels.toDp() }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Use window metrics for more accurate measurement (API 30+)
+            val windowMetrics = activity.windowManager.currentWindowMetrics
+            val widthPixels = windowMetrics.bounds.width()
+            with(density) { widthPixels.toDp() }
+        } else {
+            // Fallback for API 26-29: use display metrics
+            @Suppress("DEPRECATION")
+            val displayMetrics = DisplayMetrics()
+            @Suppress("DEPRECATION")
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            with(density) { displayMetrics.widthPixels.toDp() }
+        }
     } else {
-        // Fallback to configuration-based width
+        // Fallback to configuration-based width when not in an Activity context
+        // Note: This may be less accurate with custom DPI settings
         configuration.screenWidthDp.dp
     }
     
