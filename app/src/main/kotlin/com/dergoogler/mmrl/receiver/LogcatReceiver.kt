@@ -9,6 +9,7 @@ import com.dergoogler.mmrl.service.RepositoryService
 import com.dergoogler.mmrl.utils.log.Logcat
 import dev.dergoogler.mmrl.compat.worker.MMRLBroadcastReceiver
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
 class LogcatReceiver : MMRLBroadcastReceiver() {
@@ -20,21 +21,39 @@ class LogcatReceiver : MMRLBroadcastReceiver() {
         Timber.i("boot-complete triggered")
 
         // Restore background services based on user preferences
-        val userPreferences = userPreferencesRepository.data.first()
+        try {
+            val userPreferences = withTimeout(10000) {
+                userPreferencesRepository.data.first()
+            }
 
-        if (userPreferences.providerServiceEnabled) {
-            Timber.i("Restoring ProviderService on boot")
-            ProviderService.start(context, userPreferences.workingMode)
-        }
+            if (userPreferences.providerServiceEnabled) {
+                try {
+                    Timber.i("Restoring ProviderService on boot")
+                    ProviderService.start(context, userPreferences.workingMode)
+                } catch (e: Exception) {
+                    Timber.e(e, "Failed to restore ProviderService on boot")
+                }
+            }
 
-        if (userPreferences.repositoryServiceEnabled) {
-            Timber.i("Restoring RepositoryService on boot")
-            RepositoryService.start(context, userPreferences.autoUpdateReposInterval)
-        }
+            if (userPreferences.repositoryServiceEnabled) {
+                try {
+                    Timber.i("Restoring RepositoryService on boot")
+                    RepositoryService.start(context, userPreferences.autoUpdateReposInterval)
+                } catch (e: Exception) {
+                    Timber.e(e, "Failed to restore RepositoryService on boot")
+                }
+            }
 
-        if (userPreferences.moduleServiceEnabled) {
-            Timber.i("Restoring ModuleService on boot")
-            ModuleService.start(context, userPreferences.checkModuleUpdatesInterval)
+            if (userPreferences.moduleServiceEnabled) {
+                try {
+                    Timber.i("Restoring ModuleService on boot")
+                    ModuleService.start(context, userPreferences.checkModuleUpdatesInterval)
+                } catch (e: Exception) {
+                    Timber.e(e, "Failed to restore ModuleService on boot")
+                }
+            }
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to read user preferences for service restoration on boot")
         }
     }
 }
