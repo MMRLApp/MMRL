@@ -398,4 +398,31 @@ class UserPreferencesDataSource
                     )
                 }
             }
+
+        suspend fun setRepositoryServiceEnabled(value: Boolean) =
+            withContext(Dispatchers.IO) {
+                userPreferences.updateData {
+                    it.copy(
+                        repositoryServiceEnabled = value,
+                    )
+                }
+            }
+
+        suspend fun setModuleServiceEnabled(value: Boolean) =
+            withContext(Dispatchers.IO) {
+                userPreferences.updateData {
+                    it.copy(
+                        moduleServiceEnabled = value,
+                    )
+                }
+            }
+
+        suspend fun setProviderServiceEnabled(value: Boolean) =
+            withContext(Dispatchers.IO) {
+                userPreferences.updateData {
+                    it.copy(
+                        providerServiceEnabled = value,
+                    )
+                }
+            }
     }

@@ -118,12 +118,14 @@ fun UpdatesScreen() {
                                 context,
                                 userPreferences.autoUpdateReposInterval,
                             )
+                            viewModel.setRepositoryServiceEnabled(true)
                             snackbarHost.showSnackbar(context.getString(R.string.repository_service_started))
                         } else {
                             RepositoryService.stop(context)
                             while (RepositoryService.isActive) {
                                 delay(100)
                             }
+                            viewModel.setRepositoryServiceEnabled(false)
                             snackbarHost.showSnackbar(context.getString(R.string.repository_service_stopped))
                         }
                     }
@@ -161,12 +163,14 @@ fun UpdatesScreen() {
                                 context,
                                 userPreferences.autoUpdateReposInterval,
                             )
+                            viewModel.setModuleServiceEnabled(true)
                             snackbarHost.showSnackbar(context.getString(R.string.module_service_started))
                         } else {
                             ModuleService.stop(context)
                             while (ModuleService.isActive) {
                                 delay(100)
                             }
+                            viewModel.setModuleServiceEnabled(false)
                             snackbarHost.showSnackbar(context.getString(R.string.module_service_stopped))
                         }
                     }

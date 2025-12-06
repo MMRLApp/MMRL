@@ -102,4 +102,10 @@ class UserPreferencesRepository
         suspend fun setHideBottomBarLabels(value: Boolean) = userPreferencesDataSource.setHideBottomBarLabels(value)
 
         suspend fun setWebUIEngine(value: WebUIEngine) = userPreferencesDataSource.setWebUIEngine(value)
+
+        suspend fun setRepositoryServiceEnabled(value: Boolean) = userPreferencesDataSource.setRepositoryServiceEnabled(value)
+
+        suspend fun setModuleServiceEnabled(value: Boolean) = userPreferencesDataSource.setModuleServiceEnabled(value)
+
+        suspend fun setProviderServiceEnabled(value: Boolean) = userPreferencesDataSource.setProviderServiceEnabled(value)
     }

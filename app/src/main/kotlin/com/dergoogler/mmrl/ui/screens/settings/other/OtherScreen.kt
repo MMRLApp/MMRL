@@ -50,12 +50,14 @@ fun OtherScreen() {
                 scope.launch {
                     if (it) {
                         ProviderService.start(context, userPreferences.workingMode)
+                        viewModel.setProviderServiceEnabled(true)
                         snackbarHost.showSnackbar(context.getString(R.string.provider_service_started))
                     } else {
                         ProviderService.stop(context)
                         while (ProviderService.isActive) {
                             delay(100)
                         }
+                        viewModel.setProviderServiceEnabled(false)
                         snackbarHost.showSnackbar(context.getString(R.string.provider_service_stopped))
                     }
                 }
