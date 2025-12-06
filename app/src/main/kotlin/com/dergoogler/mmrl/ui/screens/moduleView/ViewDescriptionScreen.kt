@@ -152,6 +152,10 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                 }
                             },
                             update = { webView ->
+                                // Remove the interface if it already exists to prevent crashes
+                                // when the screen is reopened (e.g., after navigating back)
+                                webView.removeJavascriptInterface("markdown")
+                                
                                 webView.addJavascriptInterface<MarkdownInterface>(
                                     arrayOf(readme),
                                     arrayOf(String::class.java),
