@@ -114,7 +114,7 @@ fun MainScreen() {
                             ) {
                                 items(
                                     items = MainDestination.entries,
-                                    key = { it.direction },
+                                    key = { it.name },
                                 ) { screen ->
                                     val isSelected by navController.isRouteOnBackStackAsState(screen.direction)
 
