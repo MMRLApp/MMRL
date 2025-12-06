@@ -47,8 +47,8 @@ fun currentScreenWidth(): ScreenWidth {
             with(density) { widthPixels.toDp() }
         } else {
             // Fallback for API 26-29: use display metrics
-            // Remember the DisplayMetrics instance to avoid recreating on recomposition
-            val displayMetrics = remember { DisplayMetrics() }
+            // getMetrics() updates the DisplayMetrics object in-place, so we can reuse it
+            val displayMetrics = remember(activity) { DisplayMetrics() }
             @Suppress("DEPRECATION")
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             with(density) { displayMetrics.widthPixels.toDp() }
