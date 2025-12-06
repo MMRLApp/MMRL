@@ -289,4 +289,22 @@ class SettingsViewModel
                 userPreferencesRepository.setWebUIEngine(value)
             }
         }
+
+        fun setRepositoryServiceEnabled(value: Boolean) {
+            viewModelScope.launch {
+                userPreferencesRepository.setRepositoryServiceEnabled(value)
+            }
+        }
+
+        fun setModuleServiceEnabled(value: Boolean) {
+            viewModelScope.launch {
+                userPreferencesRepository.setModuleServiceEnabled(value)
+            }
+        }
+
+        fun setProviderServiceEnabled(value: Boolean) {
+            viewModelScope.launch {
+                userPreferencesRepository.setProviderServiceEnabled(value)
+            }
+        }
     }

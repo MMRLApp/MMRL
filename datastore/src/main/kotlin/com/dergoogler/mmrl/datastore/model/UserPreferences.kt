@@ -74,6 +74,9 @@ data class UserPreferences(
     @ProtoNumber(41) val enableBlur: Boolean = true,
     @ProtoNumber(42) val hideBottomBarLabels: Boolean = false,
     @ProtoNumber(43) val superUserMenu: SuperUserMenu = SuperUserMenu(),
+    @ProtoNumber(44) val repositoryServiceEnabled: Boolean = false,
+    @ProtoNumber(45) val moduleServiceEnabled: Boolean = false,
+    @ProtoNumber(46) val providerServiceEnabled: Boolean = false,
 ) {
     fun isDarkMode() =
         when (darkMode) {
