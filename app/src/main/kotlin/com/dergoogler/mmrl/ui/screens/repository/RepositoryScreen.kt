@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,6 +56,7 @@ import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.nullply
 import com.dergoogler.mmrl.ext.onClick
+import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
 import com.dergoogler.mmrl.ext.stripLinks
 import com.dergoogler.mmrl.model.ui.TopCategory
 import com.dergoogler.mmrl.ui.component.Cover
@@ -93,6 +95,9 @@ fun RepositoryScreen(repo: Repo) =
         val hazeState = LocalHazeState.current
 
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        
+        // Use rememberSaveable to persist scroll position across navigation
+        val listState = rememberSaveableLazyListState(key = "repository_${repo.url}")
 
         BackHandler(
             enabled = viewModel.isSearch,
@@ -150,7 +155,7 @@ fun RepositoryScreen(repo: Repo) =
                     }
 
                     LazyColumn(
-                        state = viewModel.listState,
+                        state = listState,
                         modifier =
                             Modifier
                                 .fillMaxSize()
