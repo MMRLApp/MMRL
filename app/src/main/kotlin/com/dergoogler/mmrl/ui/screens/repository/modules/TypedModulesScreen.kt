@@ -2,7 +2,6 @@ package com.dergoogler.mmrl.ui.screens.repository.modules
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,6 +20,7 @@ import com.dergoogler.mmrl.database.entity.Repo
 import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.none
+import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
@@ -56,7 +56,8 @@ fun TypedModulesScreen(
     val scope = rememberCoroutineScope()
     var isSearch by remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
+    // Use rememberSaveable to persist scroll position across navigation
+    val listState = rememberSaveableLazyListState(key = "typed_modules_${repo.url}_${type}_${query}")
 
     val filterQuery = remember { query }
 
