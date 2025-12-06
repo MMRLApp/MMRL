@@ -1,11 +1,11 @@
 package com.dergoogler.mmrl.ui.token
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.material3.Typography
 
 enum class TypographyKeyTokens {
     BodyLarge,
@@ -25,9 +25,8 @@ enum class TypographyKeyTokens {
     TitleSmall,
 }
 
-
-fun Typography.fromToken(value: TypographyKeyTokens): TextStyle {
-    return when (value) {
+fun Typography.fromToken(value: TypographyKeyTokens): TextStyle =
+    when (value) {
         TypographyKeyTokens.DisplayLarge -> displayLarge
         TypographyKeyTokens.DisplayMedium -> displayMedium
         TypographyKeyTokens.DisplaySmall -> displaySmall
@@ -44,9 +43,9 @@ fun Typography.fromToken(value: TypographyKeyTokens): TextStyle {
         TypographyKeyTokens.LabelMedium -> labelMedium
         TypographyKeyTokens.LabelSmall -> labelSmall
     }
-}
 
 val TypographyKeyTokens.value: TextStyle
-    @Composable @ReadOnlyComposable get() = MaterialTheme.typography.fromToken(this)
+    @Composable @ReadOnlyComposable
+    get() = MaterialTheme.typography.fromToken(this)
 
 val LocalTypography = staticCompositionLocalOf { Typography() }

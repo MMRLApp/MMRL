@@ -1,10 +1,10 @@
 package com.dergoogler.mmrl.model.online
 
 import com.dergoogler.mmrl.app.moshi
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.toEncodedUrl
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
 
 @Serializable

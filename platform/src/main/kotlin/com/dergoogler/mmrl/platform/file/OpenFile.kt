@@ -14,7 +14,6 @@ import java.nio.ByteBuffer
 import java.nio.channels.ClosedChannelException
 import kotlin.math.min
 
-
 internal class OpenFile : Closeable {
     var fd: FileDescriptor? = null
     var read: FileDescriptor? = null
@@ -68,7 +67,10 @@ internal class OpenFile : Closeable {
 
     @Synchronized
     @Throws(ErrnoException::class, IOException::class)
-    fun lseek(offset: Long, whence: Int): Long {
+    fun lseek(
+        offset: Long,
+        whence: Int,
+    ): Long {
         ensureOpen()
         return Os.lseek(fd, offset, whence)
     }
@@ -95,13 +97,19 @@ internal class OpenFile : Closeable {
     @Throws(ErrnoException::class, IOException::class)
     fun sync(metadata: Boolean) {
         ensureOpen()
-        if (metadata) Os.fsync(fd)
-        else Os.fdatasync(fd)
+        if (metadata) {
+            Os.fsync(fd)
+        } else {
+            Os.fdatasync(fd)
+        }
     }
 
     @Synchronized
     @Throws(ErrnoException::class, IOException::class)
-    fun pread(len: Int, offset: Long): Int {
+    fun pread(
+        len: Int,
+        offset: Long,
+    ): Int {
         if (fd == null || write == null) throw ClosedChannelException()
         val result: Long
         if (!FORCE_NO_SPLICE && Build.VERSION.SDK_INT >= 28) {
@@ -109,8 +117,9 @@ internal class OpenFile : Closeable {
             result = FileUtils.splice(fd, inOff, write, null, len.toLong(), 0)
         } else {
             val st = stat
-            if (OsConstants.S_ISREG(st!!.st_mode) || OsConstants.S_ISBLK(
-                    st.st_mode
+            if (OsConstants.S_ISREG(st!!.st_mode) ||
+                OsConstants.S_ISBLK(
+                    st.st_mode,
                 )
             ) {
                 // sendfile only supports reading from mmap-able files
@@ -139,7 +148,11 @@ internal class OpenFile : Closeable {
 
     @Synchronized
     @Throws(ErrnoException::class, IOException::class)
-    fun pwrite(len: Long, offset: Long, exact: Boolean): Long {
+    fun pwrite(
+        len: Long,
+        offset: Long,
+        exact: Boolean,
+    ): Long {
         var len = len
         var offset = offset
         if (fd == null || read == null) throw ClosedChannelException()

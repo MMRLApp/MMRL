@@ -42,9 +42,10 @@ fun BlurToolbar(
     val prefs = LocalUserPreferences.current
     val state = scrollBehavior?.state
 
-    val isBlurEnabled = remember(prefs) {
-        prefs.enableBlur && BlurUtil.isBlurSupported()
-    }
+    val isBlurEnabled =
+        remember(prefs) {
+            prefs.enableBlur && BlurUtil.isBlurSupported()
+        }
 
     val targetAlpha by remember {
         derivedStateOf {
@@ -58,11 +59,12 @@ fun BlurToolbar(
 
     val animatedAlpha by animateFloatAsState(
         targetValue = targetAlpha,
-        animationSpec = tween(
-            durationMillis = 10,
-            easing = FastOutSlowInEasing
-        ),
-        label = "toolbar_alpha"
+        animationSpec =
+            tween(
+                durationMillis = 10,
+                easing = FastOutSlowInEasing,
+            ),
+        label = "toolbar_alpha",
     )
 
     val borderColor = MaterialTheme.colorScheme.outline
@@ -70,52 +72,59 @@ fun BlurToolbar(
 
     val topAppBarColors = TopAppBarDefaults.topAppBarColors()
 
-    val colors = if (isBlurEnabled) {
-        topAppBarColors.copy(
-            scrolledContainerColor = Color.Transparent,
-            containerColor = Color.Transparent
-        )
-    } else {
-        val backgroundColor = MaterialTheme.colorScheme.background
-            .let {
-                if (fadeBackgroundIfNoBlur) {
-                    it.copy(alpha = animatedAlpha)
-                } else it
-            }
+    val colors =
+        if (isBlurEnabled) {
+            topAppBarColors.copy(
+                scrolledContainerColor = Color.Transparent,
+                containerColor = Color.Transparent,
+            )
+        } else {
+            val backgroundColor =
+                MaterialTheme.colorScheme.background
+                    .let {
+                        if (fadeBackgroundIfNoBlur) {
+                            it.copy(alpha = animatedAlpha)
+                        } else {
+                            it
+                        }
+                    }
 
-        topAppBarColors.copy(
-            scrolledContainerColor = backgroundColor,
-            containerColor = backgroundColor
-        )
-    }
-
-    val blur = if (isBlurEnabled && animatedAlpha > 0.01f) {
-        Modifier.hazeEffect(
-            state = LocalHazeState.current,
-            style = HazeMaterials.ultraThin()
-        ) {
-            this@hazeEffect.backgroundColor = backgroundColor
-            this@hazeEffect.alpha = animatedAlpha
+            topAppBarColors.copy(
+                scrolledContainerColor = backgroundColor,
+                containerColor = backgroundColor,
+            )
         }
-    } else Modifier
+
+    val blur =
+        if (isBlurEnabled && animatedAlpha > 0.01f) {
+            Modifier.hazeEffect(
+                state = LocalHazeState.current,
+                style = HazeMaterials.ultraThin(),
+            ) {
+                this@hazeEffect.backgroundColor = backgroundColor
+                this@hazeEffect.alpha = animatedAlpha
+            }
+        } else {
+            Modifier
+        }
 
     TopAppBar(
         title = { title(animatedAlpha) },
-        modifier = Modifier
-            .drawBehind {
-                if (animatedAlpha > 0.01f) {
-                    val borderSize = Dp.Hairline
-                    val y = size.height - borderSize.value
-                    drawLine(
-                        color = borderColor.copy(alpha = animatedAlpha),
-                        start = Offset(0f, y),
-                        end = Offset(size.width, y),
-                        strokeWidth = borderSize.value
-                    )
-                }
-            }
-            .then(blur)
-            .then(modifier),
+        modifier =
+            Modifier
+                .drawBehind {
+                    if (animatedAlpha > 0.01f) {
+                        val borderSize = Dp.Hairline
+                        val y = size.height - borderSize.value
+                        drawLine(
+                            color = borderColor.copy(alpha = animatedAlpha),
+                            start = Offset(0f, y),
+                            end = Offset(size.width, y),
+                            strokeWidth = borderSize.value,
+                        )
+                    }
+                }.then(blur)
+                .then(modifier),
         navigationIcon = navigationIcon,
         actions = actions,
         colors = colors,

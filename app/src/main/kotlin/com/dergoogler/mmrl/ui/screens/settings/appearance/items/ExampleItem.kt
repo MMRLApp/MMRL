@@ -25,32 +25,37 @@ import com.dergoogler.mmrl.ui.component.Logo
 @Composable
 fun ExampleItem() {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
+        modifier =
+            Modifier
+                .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
     ) {
         OutlinedCard(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
+            modifier =
+                Modifier
+                    .padding(vertical = 16.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize(0.5f),
+                modifier =
+                    Modifier
+                        .fillMaxSize(0.5f),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Logo(
-                        modifier = Modifier
-                            .padding(horizontal = 10.dp)
-                            .size(20.dp),
-                        icon = R.drawable.launcher_outline
+                        modifier =
+                            Modifier
+                                .padding(horizontal = 10.dp)
+                                .size(20.dp),
+                        icon = R.drawable.launcher_outline,
                     )
 
                     Text(text = stringResource(id = R.string.app_name))
@@ -59,24 +64,26 @@ fun ExampleItem() {
                 Surface(
                     shape = RoundedCornerShape(15.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 2.dp
+                    tonalElevation = 2.dp,
                 ) {
                     Spacer(
-                        modifier = Modifier
-                            .height(60.dp)
-                            .fillMaxWidth(0.9f)
+                        modifier =
+                            Modifier
+                                .height(60.dp)
+                                .fillMaxWidth(0.9f),
                     )
                 }
 
                 Surface(
                     shape = RoundedCornerShape(15.dp),
                     color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 2.dp
+                    tonalElevation = 2.dp,
                 ) {
                     Spacer(
-                        modifier = Modifier
-                            .height(60.dp)
-                            .fillMaxWidth(0.9f)
+                        modifier =
+                            Modifier
+                                .height(60.dp)
+                                .fillMaxWidth(0.9f),
                     )
                 }
 
@@ -84,12 +91,13 @@ fun ExampleItem() {
 
                 Surface(
                     color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 2.dp
+                    tonalElevation = 2.dp,
                 ) {
                     Spacer(
-                        modifier = Modifier
-                            .height(45.dp)
-                            .fillMaxWidth()
+                        modifier =
+                            Modifier
+                                .height(45.dp)
+                                .fillMaxWidth(),
                     )
                 }
             }

@@ -3,7 +3,6 @@ package com.dergoogler.mmrl.ui.activity
 import android.os.Bundle
 
 class CrashHandlerActivity : MMRLComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -15,7 +14,7 @@ class CrashHandlerActivity : MMRLComponentActivity() {
             CrashHandlerScreen(
                 message = message,
                 stacktrace = stacktrace,
-                helpMessage = helpMessage
+                helpMessage = helpMessage,
             )
         }
     }

@@ -7,7 +7,7 @@ data class OnlineState(
     val installed: Boolean,
     val updatable: Boolean,
     val hasLicense: Boolean,
-    val lastUpdated: Float
+    val lastUpdated: Float,
 ) {
     @Suppress("FloatingPointLiteralPrecision")
     companion object {
@@ -15,28 +15,33 @@ data class OnlineState(
             local: LocalModule?,
             hasUpdatableTag: Boolean,
         ): OnlineState {
-            val installed = local != null && local.id.equals(id)
-                    && local.author == author
+            val installed =
+                local != null &&
+                    local.id.equals(id) &&
+                    local.author == author
 
-            val updatable = local !== null && if (installed && hasUpdatableTag) {
-                local.versionCode < versionCode
-            } else {
-                false
-            }
+            val updatable =
+                local !== null &&
+                    if (installed && hasUpdatableTag) {
+                        local.versionCode < versionCode
+                    } else {
+                        false
+                    }
 
             return OnlineState(
                 installed = installed,
                 updatable = updatable,
                 hasLicense = license.orEmpty().isNotBlank(),
-                lastUpdated = versions.lastOrNull()?.timestamp ?: 0f
+                lastUpdated = versions.lastOrNull()?.timestamp ?: 0f,
             )
         }
 
-        fun example() = OnlineState(
-            installed = true,
-            updatable = false,
-            hasLicense = true,
-            lastUpdated = 1660640580.0f
-        )
+        fun example() =
+            OnlineState(
+                installed = true,
+                updatable = false,
+                hasLicense = true,
+                lastUpdated = 1660640580.0f,
+            )
     }
 }

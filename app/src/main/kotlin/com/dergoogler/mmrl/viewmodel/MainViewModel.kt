@@ -16,54 +16,56 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
-    application: Application,
-    localRepository: LocalRepository,
-    modulesRepository: ModulesRepository,
-    userPreferencesRepository: UserPreferencesRepository,
-) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+class MainViewModel
+    @Inject
+    constructor(
+        application: Application,
+        localRepository: LocalRepository,
+        modulesRepository: ModulesRepository,
+        userPreferencesRepository: UserPreferencesRepository,
+    ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+        private val _updatableModuleCount = MutableStateFlow(0)
+        val updatableModuleCount: StateFlow<Int> = _updatableModuleCount
 
-    private val _updatableModuleCount = MutableStateFlow(0)
-    val updatableModuleCount: StateFlow<Int> = _updatableModuleCount
+        val versionItemCache = mutableStateMapOf<String, VersionItem?>()
 
-    val versionItemCache = mutableStateMapOf<String, VersionItem?>()
+        init {
+            refreshUpdatableModules()
+        }
 
-    init {
-        refreshUpdatableModules()
-    }
+        fun refreshUpdatableModules() {
+            viewModelScope.launch {
+                val modules = localRepository.getLocalAllAsFlow().first()
 
-    fun refreshUpdatableModules() {
-        viewModelScope.launch {
-            val modules = localRepository.getLocalAllAsFlow().first()
+                val updatableModules =
+                    modules.filter {
+                        localRepository.hasUpdatableTag(it.id.toString())
+                    }
 
-            val updatableModules = modules.filter {
-                localRepository.hasUpdatableTag(it.id.toString())
-            }
+                var count = 0
 
-            var count = 0
+                for (module in updatableModules) {
+                    val id = module.id.toString()
 
-            for (module in updatableModules) {
-                val id = module.id.toString()
+                    val updateVersionItem =
+                        if (module.updateJson.isNotBlank()) {
+                            UpdateJson.loadToVersionItem(module.updateJson)
+                        } else {
+                            localRepository.getVersionById(id).firstOrNull()
+                        }
 
-                val updateVersionItem = if (module.updateJson.isNotBlank()) {
-                    UpdateJson.loadToVersionItem(module.updateJson)
-                } else {
-                    localRepository.getVersionById(id).firstOrNull()
+                    val installedVersionCode = module.versionCode
+                    val updateVersionCode = updateVersionItem?.versionCode ?: -1
+
+                    if (updateVersionCode > installedVersionCode) {
+                        count++
+                        versionItemCache[id] = updateVersionItem
+                    } else {
+                        versionItemCache[id] = null
+                    }
                 }
 
-                val installedVersionCode = module.versionCode
-                val updateVersionCode = updateVersionItem?.versionCode ?: -1
-
-
-                if (updateVersionCode > installedVersionCode) {
-                    count++
-                    versionItemCache[id] = updateVersionItem
-                } else {
-                    versionItemCache[id] = null
-                }
+                _updatableModuleCount.value = count
             }
-
-            _updatableModuleCount.value = count
         }
     }
-}

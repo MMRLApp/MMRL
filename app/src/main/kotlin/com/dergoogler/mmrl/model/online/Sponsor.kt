@@ -12,15 +12,17 @@ data class Sponsor(
     val url: String,
     val amount: Int,
 ) {
-    fun toMember(context: Context) = ExploreRepositoryMember(
-        avatar = avatarUrl,
-        name = login,
-        title = context.getString(R.string.in_total, amount.toDollars()),
-        links = listOf(
-            SocialLink(
-                icon = "github",
-                link = url,
-            )
+    fun toMember(context: Context) =
+        ExploreRepositoryMember(
+            avatar = avatarUrl,
+            name = login,
+            title = context.getString(R.string.in_total, amount.toDollars()),
+            links =
+                listOf(
+                    SocialLink(
+                        icon = "github",
+                        link = url,
+                    ),
+                ),
         )
-    )
 }

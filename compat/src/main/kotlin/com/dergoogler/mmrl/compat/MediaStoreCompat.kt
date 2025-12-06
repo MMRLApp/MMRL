@@ -18,7 +18,6 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 
-
 object MediaStoreCompat {
     private fun Context.getDisplayNameForUri(uri: Uri): String {
         if (uri.scheme == "file") {
@@ -38,28 +37,29 @@ object MediaStoreCompat {
         return uri.toString()
     }
 
-    private fun createDownloadUri(
-        path: String,
-    ) = Environment.getExternalStoragePublicDirectory(
-        Environment.DIRECTORY_DOWNLOADS
-    ).let {
-        val file = File(it, path)
-        file.parentFile?.apply { if (!exists()) mkdirs() }
-        file.toUri()
-    }
+    private fun createDownloadUri(path: String) =
+        Environment
+            .getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS,
+            ).let {
+                val file = File(it, path)
+                file.parentFile?.apply { if (!exists()) mkdirs() }
+                file.toUri()
+            }
 
     fun Context.createDownloadUri(
         path: String,
         mimeType: String,
     ) = when {
-        BuildCompat.atLeastR -> runCatching {
-            createMediaStoreUri(
-                file = File(Environment.DIRECTORY_DOWNLOADS, path),
-                mimeType = mimeType
-            )
-        }.getOrElse {
-            createDownloadUri(path)
-        }
+        BuildCompat.atLeastR ->
+            runCatching {
+                createMediaStoreUri(
+                    file = File(Environment.DIRECTORY_DOWNLOADS, path),
+                    mimeType = mimeType,
+                )
+            }.getOrElse {
+                createDownloadUri(path)
+            }
 
         else -> createDownloadUri(path)
     }
@@ -73,11 +73,12 @@ object MediaStoreCompat {
 
         require(safeUri.scheme == "content") { "Uri lacks 'content' scheme: $uri" }
 
-        val real = if (DocumentsContract.isTreeUri(safeUri)) {
-            DocumentFile.fromTreeUri(this, safeUri)?.uri ?: safeUri
-        } else {
-            safeUri
-        }
+        val real =
+            if (DocumentsContract.isTreeUri(safeUri)) {
+                DocumentFile.fromTreeUri(this, safeUri)?.uri ?: safeUri
+            } else {
+                safeUri
+            }
 
         return contentResolver.openFileDescriptor(real, "r")?.use {
             Os.readlink("/proc/self/fd/${it.fd}")
@@ -95,7 +96,10 @@ object MediaStoreCompat {
         }
     }
 
-    fun Context.copyToDir(uri: Uri, dir: File): File? {
+    fun Context.copyToDir(
+        uri: Uri,
+        dir: File,
+    ): File? {
         val tmp = dir.resolve(getDisplayNameForUri(uri))
 
         val safeUri = findFileForUri(uri) ?: return null
@@ -119,13 +123,13 @@ object MediaStoreCompat {
         collection: Uri = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL),
         mimeType: String,
     ): Uri {
-        val entry = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, file.name)
-            put(MediaStore.MediaColumns.RELATIVE_PATH, file.parent)
-            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-        }
+        val entry =
+            ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, file.name)
+                put(MediaStore.MediaColumns.RELATIVE_PATH, file.parent)
+                put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+            }
 
         return contentResolver.insert(collection, entry) ?: throw IOException("Cannot insert $file")
     }
-
 }

@@ -94,346 +94,364 @@ val listItemContentPaddingValues: PaddingValues = PaddingValues(vertical = 8.dp,
 @Destination<RootGraph>(start = true)
 @OptIn(ExperimentalComposeApi::class)
 @Composable
-fun HomeScreen() = LocalScreenProvider {
-    val navigator = LocalDestinationsNavigator.current
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val context = LocalContext.current
-    val userPreferences = LocalUserPreferences.current
-    val browser = LocalUriHandler.current
+fun HomeScreen() =
+    LocalScreenProvider {
+        val navigator = LocalDestinationsNavigator.current
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val context = LocalContext.current
+        val userPreferences = LocalUserPreferences.current
+        val browser = LocalUriHandler.current
 
-    val analytics by rememberLocalAnalytics()
+        val analytics by rememberLocalAnalytics()
 
-    var openRebootSheet by remember { mutableStateOf(false) }
-    if (openRebootSheet) {
-        RebootBottomSheet(
-            onClose = { openRebootSheet = false })
-    }
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                onInfoClick = {
-                    navigator.navigate(AboutScreenDestination)
-                },
-                onHeartClick = {
-                    navigator.navigate(ThankYouScreenDestination)
-                },
-                onRebootClick = {
-                    openRebootSheet = true
-                },
-                scrollBehavior = scrollBehavior
+        var openRebootSheet by remember { mutableStateOf(false) }
+        if (openRebootSheet) {
+            RebootBottomSheet(
+                onClose = { openRebootSheet = false },
             )
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        ResponsiveContent {
-            Column(
-                modifier = Modifier
-                    .hazeSource(state = LocalHazeState.current)
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
-                    .padding(top = innerPadding.calculateTopPadding()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                when {
-                    userPreferences.workingMode.isRoot -> RootItem(
-                        developerMode = userPreferences.developerMode,
-                    )
+        }
 
-                    userPreferences.workingMode.isNonRoot -> NonRootItem(
-                        developerMode = userPreferences.developerMode,
-                    )
-                }
-
-                if (userPreferences.checkAppUpdates) {
-                    var changelog by remember { mutableStateOf<List<Changelog>?>(null) }
-                    LaunchedEffect(Unit) {
-                        runRequest {
-                            withContext(Dispatchers.IO) {
-                                val api = IMMRLApiManager.build()
-                                return@withContext api.changelog.execute()
-                            }
-                        }.onSuccess { list ->
-                            changelog = list
-                        }.onFailure {
-                            Timber.e(it, "unable to get changelog")
-                        }
-
-                    }
-
-                    changelog?.let {
-                        val latest = it.first()
-
-                        var changelogSheet by remember { mutableStateOf(false) }
-                        if (changelogSheet) {
-                            ChangelogBottomSheet(
-                                changelog = latest,
-                                onClose = { changelogSheet = false })
-                        }
-
-                        AnimatedVisibility(
-                            visible = userPreferences.developerMode { devAlwaysShowUpdateAlert } || (if (latest.preRelease) {
-                                userPreferences.checkAppUpdatesPreReleases && latest.versionCode > context.managerVersion.second
-                            } else {
-                                latest.versionCode > context.managerVersion.second
-                            }),
-                            enter = fadeIn() + expandVertically(),
-                            exit = shrinkVertically() + fadeOut()
-                        ) {
-                            Alert(
-                                onClick = {
-                                    changelogSheet = true
-                                },
-                                backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                title = stringResource(R.string.update_available),
-                                message = stringResource(
-                                    R.string.new_version_available,
-                                    latest.versionName
-                                ),
-                                icon = R.drawable.cloud_download,
-                            )
-                        }
-                    }
-                }
-
-                List(
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    onInfoClick = {
+                        navigator.navigate(AboutScreenDestination)
+                    },
+                    onHeartClick = {
+                        navigator.navigate(ThankYouScreenDestination)
+                    },
+                    onRebootClick = {
+                        openRebootSheet = true
+                    },
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            ResponsiveContent {
+                Column(
+                    modifier =
+                        Modifier
+                            .hazeSource(state = LocalHazeState.current)
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .padding(16.dp)
+                            .padding(top = innerPadding.calculateTopPadding()),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = listItemContentPaddingValues
                 ) {
-                    val scope = this
+                    when {
+                        userPreferences.workingMode.isRoot ->
+                            RootItem(
+                                developerMode = userPreferences.developerMode,
+                            )
 
-                    Card(
-                        modifier = Modifier.padding(vertical = 16.dp)
+                        userPreferences.workingMode.isNonRoot ->
+                            NonRootItem(
+                                developerMode = userPreferences.developerMode,
+                            )
+                    }
+
+                    if (userPreferences.checkAppUpdates) {
+                        var changelog by remember { mutableStateOf<List<Changelog>?>(null) }
+                        LaunchedEffect(Unit) {
+                            runRequest {
+                                withContext(Dispatchers.IO) {
+                                    val api = IMMRLApiManager.build()
+                                    return@withContext api.changelog.execute()
+                                }
+                            }.onSuccess { list ->
+                                changelog = list
+                            }.onFailure {
+                                Timber.e(it, "unable to get changelog")
+                            }
+                        }
+
+                        changelog?.let {
+                            val latest = it.first()
+
+                            var changelogSheet by remember { mutableStateOf(false) }
+                            if (changelogSheet) {
+                                ChangelogBottomSheet(
+                                    changelog = latest,
+                                    onClose = { changelogSheet = false },
+                                )
+                            }
+
+                            AnimatedVisibility(
+                                visible =
+                                    userPreferences.developerMode { devAlwaysShowUpdateAlert } ||
+                                        (
+                                            if (latest.preRelease) {
+                                                userPreferences.checkAppUpdatesPreReleases &&
+                                                    latest.versionCode > context.managerVersion.second
+                                            } else {
+                                                latest.versionCode > context.managerVersion.second
+                                            }
+                                        ),
+                                enter = fadeIn() + expandVertically(),
+                                exit = shrinkVertically() + fadeOut(),
+                            ) {
+                                Alert(
+                                    onClick = {
+                                        changelogSheet = true
+                                    },
+                                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    title = stringResource(R.string.update_available),
+                                    message =
+                                        stringResource(
+                                            R.string.new_version_available,
+                                            latest.versionName,
+                                        ),
+                                    icon = R.drawable.cloud_download,
+                                )
+                            }
+                        }
+                    }
+
+                    List(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        contentPadding = listItemContentPaddingValues,
                     ) {
-                        val uname = Os.uname()
-                        Column(
-                            modifier = Modifier.relative()
+                        val scope = this
+
+                        Card(
+                            modifier = Modifier.padding(vertical = 16.dp),
                         ) {
-                            scope.Item {
-                                Icon(painter = painterResource(R.drawable.cookie_man))
-                                Title(R.string.kernel)
-                                Description(uname.release)
-                            }
-
-                            scope.Item {
-                                Icon(painter = painterResource(R.drawable.launcher_outline))
-                                Title(R.string.manager_version)
-                                Description("${context.managerVersion.first} (${context.managerVersion.second})")
-                            }
-
-                            scope.Item {
-                                Icon(painter = painterResource(R.drawable.fingerprint))
-                                Title(R.string.fingerprint)
-                                Description(
-                                    if (userPreferences.hideFingerprintInHome) {
-                                        stringResource(id = R.string.hidden)
-                                    } else {
-                                        Build.FINGERPRINT
-                                    }
-                                )
-                            }
-
-                            scope.Item {
-                                Icon(painter = painterResource(R.drawable.cpu_2))
-                                Title(R.string.architecture)
-                                Description(uname.machine)
-                            }
-
-                            scope.SELinuxStatus()
-
-                            PlatformManager.platform.isKernelSuOrNext.takeTrue {
+                            val uname = Os.uname()
+                            Column(
+                                modifier = Modifier.relative(),
+                            ) {
                                 scope.Item {
-                                    Icon(painter = painterResource(R.drawable.user_outlined))
-                                    Title(R.string.super_user_apps)
-                                    Description(superUserCount.toString())
+                                    Icon(painter = painterResource(R.drawable.cookie_man))
+                                    Title(R.string.kernel)
+                                    Description(uname.release)
                                 }
-                            }
-                        }
-                    }
 
-                    PlatformManager.isAlive.takeTrue {
-                        userPreferences.developerMode.takeTrue {
-                            Card(
-                                modifier = Modifier.padding(vertical = 16.dp)
-                            ) {
-                                Column(
-                                    modifier = Modifier.relative()
-                                ) {
+                                scope.Item {
+                                    Icon(painter = painterResource(R.drawable.launcher_outline))
+                                    Title(R.string.manager_version)
+                                    Description("${context.managerVersion.first} (${context.managerVersion.second})")
+                                }
+
+                                scope.Item {
+                                    Icon(painter = painterResource(R.drawable.fingerprint))
+                                    Title(R.string.fingerprint)
+                                    Description(
+                                        if (userPreferences.hideFingerprintInHome) {
+                                            stringResource(id = R.string.hidden)
+                                        } else {
+                                            Build.FINGERPRINT
+                                        },
+                                    )
+                                }
+
+                                scope.Item {
+                                    Icon(painter = painterResource(R.drawable.cpu_2))
+                                    Title(R.string.architecture)
+                                    Description(uname.machine)
+                                }
+
+                                scope.SELinuxStatus()
+
+                                PlatformManager.platform.isKernelSuOrNext.takeTrue {
                                     scope.Item {
-                                        Title(R.string.home_root_provider_version_name)
-                                        Description(versionName)
-                                    }
-
-                                    scope.Item {
-                                        Title(R.string.home_root_provider_se_linux_context)
-                                        Description(seLinuxContext)
-                                    }
-
-                                    if (PlatformManager.platform.isKernelSuNext) {
-                                        KsuNative.getHookMode().nullable {
-                                            scope.Item {
-                                                Title(R.string.hook_mode)
-                                                Description(it)
-                                            }
-                                        }
-                                    }
-
-                                    if (PlatformManager.platform.isSukiSU) {
-                                        KsuNative.getHookType().nullable {
-                                            scope.Item {
-                                                Title(R.string.hook_mode)
-                                                Description(it)
-                                            }
-                                        }
-
-                                        scope.Item {
-                                            Title(R.string.kpm_support)
-                                            Description(if (KsuNative.isKPMEnabled()) R.string.yes else R.string.no)
-                                        }
+                                        Icon(painter = painterResource(R.drawable.user_outlined))
+                                        Title(R.string.super_user_apps)
+                                        Description(superUserCount.toString())
                                     }
                                 }
                             }
                         }
-                    }
 
-                    if (PlatformManager.platform.isValid) {
-                        analytics.nullable {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
+                        PlatformManager.isAlive.takeTrue {
+                            userPreferences.developerMode.takeTrue {
                                 Card(
-                                    modifier = Modifier
-                                        .padding(vertical = 16.dp)
-                                        .weight(1f)
+                                    modifier = Modifier.padding(vertical = 16.dp),
                                 ) {
-                                    Relative {
+                                    Column(
+                                        modifier = Modifier.relative(),
+                                    ) {
                                         scope.Item {
-                                            Title(R.string.home_installed_modules)
-                                            Description(it.totalModules.toString())
+                                            Title(R.string.home_root_provider_version_name)
+                                            Description(versionName)
                                         }
-                                    }
-                                }
 
-                                Card(
-                                    modifier = Modifier
-                                        .padding(vertical = 16.dp)
-                                        .weight(1f)
-                                ) {
-                                    Relative {
                                         scope.Item {
-                                            Title(R.string.home_updated_modules)
-                                            Description(it.totalUpdated.toString())
+                                            Title(R.string.home_root_provider_se_linux_context)
+                                            Description(seLinuxContext)
+                                        }
+
+                                        if (PlatformManager.platform.isKernelSuNext) {
+                                            KsuNative.getHookMode().nullable {
+                                                scope.Item {
+                                                    Title(R.string.hook_mode)
+                                                    Description(it)
+                                                }
+                                            }
+                                        }
+
+                                        if (PlatformManager.platform.isSukiSU) {
+                                            KsuNative.getHookType().nullable {
+                                                scope.Item {
+                                                    Title(R.string.hook_mode)
+                                                    Description(it)
+                                                }
+                                            }
+
+                                            scope.Item {
+                                                Title(R.string.kpm_support)
+                                                Description(if (KsuNative.isKPMEnabled()) R.string.yes else R.string.no)
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
 
-                            Card(
-                                modifier = Modifier
+                        if (PlatformManager.platform.isValid) {
+                            analytics.nullable {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                ) {
+                                    Card(
+                                        modifier =
+                                            Modifier
+                                                .padding(vertical = 16.dp)
+                                                .weight(1f),
+                                    ) {
+                                        Relative {
+                                            scope.Item {
+                                                Title(R.string.home_installed_modules)
+                                                Description(it.totalModules.toString())
+                                            }
+                                        }
+                                    }
+
+                                    Card(
+                                        modifier =
+                                            Modifier
+                                                .padding(vertical = 16.dp)
+                                                .weight(1f),
+                                    ) {
+                                        Relative {
+                                            scope.Item {
+                                                Title(R.string.home_updated_modules)
+                                                Description(it.totalUpdated.toString())
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Card(
+                                    modifier =
+                                        Modifier
+                                            .padding(vertical = 16.dp),
+                                ) {
+                                    Relative {
+                                        scope.Item {
+                                            Title(R.string.home_storage_usage)
+
+                                            Description {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                                ) {
+                                                    Text(
+                                                        text = it.totalModulesUsageBytes.toFormattedFileSize(),
+                                                    )
+
+                                                    LinearProgressIndicator(
+                                                        progress = {
+                                                            it.totalStorageUsage
+                                                        },
+                                                        modifier =
+                                                            Modifier
+                                                                .height(10.dp)
+                                                                .weight(1f),
+                                                        drawStopIndicator = {},
+                                                    )
+
+                                                    Text(
+                                                        text = it.totalDeviceStorageBytes.toFormattedFileSize(),
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                                ) {
+                                    Card(
+                                        modifier =
+                                            Modifier
+                                                .padding(vertical = 16.dp)
+                                                .weight(1f),
+                                    ) {
+                                        Relative {
+                                            scope.Item {
+                                                Title(R.string.home_enabled_modules)
+                                                Description(it.totalEnabled.toString())
+                                            }
+                                        }
+                                    }
+
+                                    Card(
+                                        modifier =
+                                            Modifier
+                                                .padding(vertical = 16.dp)
+                                                .weight(1f),
+                                    ) {
+                                        Relative {
+                                            scope.Item {
+                                                Title(R.string.home_disabled_modules)
+                                                Description(it.totalDisabled.toString())
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Card(
+                            modifier =
+                                Modifier
                                     .padding(vertical = 16.dp)
-                            ) {
-                                Relative {
-                                    scope.Item {
-                                        Title(R.string.home_storage_usage)
+                                    .fillMaxWidth(),
+                            onClick = {
+                                browser.openUri("https://github.com/sponsors/MMRLApp")
+                            },
+                        ) {
+                            Relative {
+                                scope.Item {
+                                    Title(
+                                        id = R.string.home_support_title,
+                                        styleTransform = {
+                                            val newStyle = it.copy(color = Color.Unspecified)
+                                            it.merge(newStyle)
+                                        },
+                                    )
 
-                                        Description {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                Text(
-                                                    text = it.totalModulesUsageBytes.toFormattedFileSize(),
-                                                )
-
-                                                LinearProgressIndicator(
-                                                    progress = {
-                                                        it.totalStorageUsage
-                                                    },
-                                                    modifier = Modifier
-                                                        .height(10.dp)
-                                                        .weight(1f),
-                                                    drawStopIndicator = {}
-                                                )
-
-                                                Text(
-                                                    text = it.totalDeviceStorageBytes.toFormattedFileSize(),
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(16.dp)
-                            ) {
-                                Card(
-                                    modifier = Modifier
-                                        .padding(vertical = 16.dp)
-                                        .weight(1f)
-                                ) {
-                                    Relative {
-                                        scope.Item {
-                                            Title(R.string.home_enabled_modules)
-                                            Description(it.totalEnabled.toString())
-                                        }
-                                    }
-                                }
-
-                                Card(
-                                    modifier = Modifier
-                                        .padding(vertical = 16.dp)
-                                        .weight(1f)
-                                ) {
-                                    Relative {
-                                        scope.Item {
-                                            Title(R.string.home_disabled_modules)
-                                            Description(it.totalDisabled.toString())
-                                        }
-                                    }
+                                    Description(
+                                        id = R.string.home_support_content,
+                                        styleTransform = {
+                                            val newStyle = it.copy(color = Color.Unspecified)
+                                            it.merge(newStyle)
+                                        },
+                                    )
                                 }
                             }
                         }
                     }
 
-                    Card(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
-                            .fillMaxWidth(),
-                        onClick = {
-                            browser.openUri("https://github.com/sponsors/MMRLApp")
-                        }
-                    ) {
-                        Relative {
-                            scope.Item {
-                                Title(
-                                    id = R.string.home_support_title,
-                                    styleTransform = {
-                                        val newStyle = it.copy(color = Color.Unspecified)
-                                        it.merge(newStyle)
-                                    }
-                                )
-
-                                Description(
-                                    id = R.string.home_support_content,
-                                    styleTransform = {
-                                        val newStyle = it.copy(color = Color.Unspecified)
-                                        it.merge(newStyle)
-                                    }
-                                )
-                            }
-                        }
-                    }
+                    val paddingValues = LocalMainScreenInnerPaddings.current
+                    Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                 }
-
-                val paddingValues = LocalMainScreenInnerPaddings.current
-                Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
             }
         }
     }
-}
 
 @Composable
 private fun TopBar(
@@ -458,7 +476,7 @@ private fun TopBar(
                 IconButton(onClick = onRebootClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.refresh),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -466,16 +484,16 @@ private fun TopBar(
             IconButton(onClick = onHeartClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.heart),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
 
             IconButton(onClick = onInfoClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.info_circle),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
-        }
+        },
     )
 }

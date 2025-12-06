@@ -40,11 +40,11 @@ fun VersionsItem(
     Surface(
         enabled = enabled,
         modifier = Modifier.semantics { role = Role.Button },
-        color =  containerColor,
+        color = containerColor,
         contentColor = contentColor,
         tonalElevation = 1.dp,
         shape = RoundedCornerShape(20.dp),
-        onClick = onClick
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
@@ -54,14 +54,14 @@ fun VersionsItem(
             Icon(
                 modifier = Modifier.size(iconSize),
                 painter = painterResource(id = R.drawable.file_zip),
-                contentDescription = null
+                contentDescription = null,
             )
 
             Spacer(modifier = Modifier.width(6.dp))
 
             Text(
                 style = style,
-                text = count.toString()
+                text = count.toString(),
             )
         }
     }

@@ -15,8 +15,11 @@ data class ModuleRoot(
     val apatch: String? = null,
 ) {
     private fun isNotEmpty() =
-        magisk.orEmpty().isNotEmpty() || kernelsu.orEmpty().isNotEmpty() || apatch.orEmpty()
-            .isNotEmpty()
+        magisk.orEmpty().isNotEmpty() ||
+            kernelsu.orEmpty().isNotEmpty() ||
+            apatch
+                .orEmpty()
+                .isNotEmpty()
 
     fun isNotSupported(version: String): Boolean {
         val parsedRootProvider = version.replace(Regex("^.*:"), "").lowercase(Locale.ROOT)
@@ -48,7 +51,11 @@ data class ModuleRoot(
     }
 }
 
-data class Version(val major: Int, val minor: Int, val patch: Int) : Comparable<Version> {
+data class Version(
+    val major: Int,
+    val minor: Int,
+    val patch: Int,
+) : Comparable<Version> {
     companion object {
         fun parse(version: String): Version {
             // Remove any prefix "v" and split by '.'
@@ -64,16 +71,18 @@ data class Version(val major: Int, val minor: Int, val patch: Int) : Comparable<
         }
     }
 
-    override fun compareTo(other: Version): Int {
-        return when {
+    override fun compareTo(other: Version): Int =
+        when {
             major != other.major -> major - other.major
             minor != other.minor -> minor - other.minor
             else -> patch - other.patch
         }
-    }
 }
 
-fun isVersionSatisfies(version: String, constraint: String): Boolean {
+fun isVersionSatisfies(
+    version: String,
+    constraint: String,
+): Boolean {
     val versionParts = constraint.split(" ", limit = 2)
     val operator = versionParts[0]
     val versionToCompare = Version.parse(versionParts[1])

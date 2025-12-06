@@ -27,25 +27,23 @@ import com.dergoogler.mmrl.ui.component.MenuChip
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 
 @Composable
-fun SuperUserMenu(
-    setMenu: (SuperUserMenu) -> Unit,
-) {
+fun SuperUserMenu(setMenu: (SuperUserMenu) -> Unit) {
     val userPreferences = LocalUserPreferences.current
     var open by rememberSaveable { mutableStateOf(false) }
 
     IconButton(
-        onClick = { open = true }
+        onClick = { open = true },
     ) {
         Icon(
             painter = painterResource(id = R.drawable.filter_outlined),
-            contentDescription = null
+            contentDescription = null,
         )
 
         if (open) {
             MenuBottomSheet(
                 onClose = { open = false },
                 menu = userPreferences.superUserMenu,
-                setMenu = setMenu
+                setMenu = setMenu,
             )
         }
     }
@@ -60,24 +58,25 @@ private fun MenuBottomSheet(
     Text(
         text = stringResource(id = R.string.menu_advanced_menu),
         style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.align(Alignment.CenterHorizontally)
+        modifier = Modifier.align(Alignment.CenterHorizontally),
     )
 
     Column(
         modifier = Modifier.padding(all = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(id = R.string.menu_sort_mode),
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
 
         FlowRow(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .wrapContentHeight(align = Alignment.Top),
+            modifier =
+                Modifier
+                    .fillMaxWidth(1f)
+                    .wrapContentHeight(align = Alignment.Top),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             /*MenuChip(
                 selected = menu.pinHasRoot,
@@ -88,7 +87,7 @@ private fun MenuBottomSheet(
             MenuChip(
                 selected = menu.showSystemApps,
                 onClick = { setMenu(menu.copy(showSystemApps = !menu.showSystemApps)) },
-                label = { Text(text = stringResource(id = R.string.menu_show_system_apps)) }
+                label = { Text(text = stringResource(id = R.string.menu_show_system_apps)) },
             )
         }
     }

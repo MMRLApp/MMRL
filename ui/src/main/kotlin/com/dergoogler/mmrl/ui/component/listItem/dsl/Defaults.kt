@@ -7,17 +7,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.unit.Dp
-import com.dergoogler.mmrl.ui.token.TypographyKeyTokens
 
 enum class ListItemSlot {
     Start,
     End,
     Title,
     Description,
-    Supporting
+    Supporting,
 }
 
 enum class DialogItemSlot {
@@ -54,7 +52,8 @@ internal class ListScopeInstance(
     private val columnScope: ColumnScope,
     override val contentPaddingValues: PaddingValues,
     override val iconSize: Dp,
-) : ListScope, ColumnScope by columnScope
+) : ListScope,
+    ColumnScope by columnScope
 
 internal class ListItemScopeInstance(
     override val contentPaddingValues: PaddingValues,
@@ -76,6 +75,7 @@ internal class ListItemSlotScopeInstance(
     private val boxScope: BoxScope,
     override val contentPaddingValues: PaddingValues,
     override val iconSize: Dp,
-) : ListItemSlotScope, BoxScope by boxScope
+) : ListItemSlotScope,
+    BoxScope by boxScope
 
 val LocalListItemEnabled = staticCompositionLocalOf { true }

@@ -43,7 +43,7 @@ fun BlurNavigateUpToolbar(
     enable = enable,
     fade = fade,
     fadeDistance = fadeDistance,
-    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur
+    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +71,7 @@ fun BlurNavigateUpToolbar(
     enable = enable,
     fade = fade,
     fadeDistance = fadeDistance,
-    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur
+    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +99,7 @@ fun BlurNavigateUpToolbar(
     enable = enable,
     fade = fade,
     fadeDistance = fadeDistance,
-    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur
+    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -128,7 +128,7 @@ fun BlurNavigateUpToolbar(
     enable = enable,
     fade = fade,
     fadeDistance = fadeDistance,
-    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur
+    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -150,11 +150,11 @@ fun BlurNavigateUpToolbar(
     navigationIcon = {
         enable.takeTrue {
             IconButton(
-                onClick = { if (it) onBack() }
+                onClick = { if (it) onBack() },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -164,5 +164,5 @@ fun BlurNavigateUpToolbar(
     scrollBehavior = scrollBehavior,
     fade = fade,
     fadeDistance = fadeDistance,
-    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur
+    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
 )

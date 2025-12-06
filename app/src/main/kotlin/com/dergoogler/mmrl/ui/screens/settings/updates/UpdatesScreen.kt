@@ -28,12 +28,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun radioDialogItem(interval: Long): RadioDialogItem<Long> {
-    return RadioDialogItem(
+fun radioDialogItem(interval: Long): RadioDialogItem<Long> =
+    RadioDialogItem(
         title = pluralStringResource(id = R.plurals.hours, count = interval.toInt(), interval),
-        value = interval
+        value = interval,
     )
-}
 
 @Destination<RootGraph>
 @Composable
@@ -44,20 +43,21 @@ fun UpdatesScreen() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    val optionsOfHours = listOf(
-        radioDialogItem(1),
-        radioDialogItem(2),
-        radioDialogItem(3),
-        radioDialogItem(4),
-        radioDialogItem(5),
-        radioDialogItem(6),
-        radioDialogItem(10),
-        radioDialogItem(12),
-        radioDialogItem(16),
-        radioDialogItem(24),
-        radioDialogItem(48),
-        radioDialogItem(72),
-    )
+    val optionsOfHours =
+        listOf(
+            radioDialogItem(1),
+            radioDialogItem(2),
+            radioDialogItem(3),
+            radioDialogItem(4),
+            radioDialogItem(5),
+            radioDialogItem(6),
+            radioDialogItem(10),
+            radioDialogItem(12),
+            radioDialogItem(16),
+            radioDialogItem(24),
+            radioDialogItem(48),
+            radioDialogItem(72),
+        )
 
     SettingsScaffold(
         title = R.string.settings_updates,
@@ -73,25 +73,25 @@ fun UpdatesScreen() {
                     if (intent.resolveActivity(context.packageManager) != null) {
                         context.startActivity(intent, null)
                     } else {
-                        Toast.makeText(
-                            context,
-                            "Cannot open notification settings",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast
+                            .makeText(
+                                context,
+                                "Cannot open notification settings",
+                                Toast.LENGTH_SHORT,
+                            ).show()
                     }
-                }
+                },
             ) {
                 Title(R.string.settings_open_notification_settings)
             }
         }
 
         Section(
-            title = stringResource(id = R.string.settings_app)
+            title = stringResource(id = R.string.settings_app),
         ) {
-
             SwitchItem(
                 checked = userPreferences.checkAppUpdates,
-                onChange = viewModel::setCheckAppUpdates
+                onChange = viewModel::setCheckAppUpdates,
             ) {
                 Title(R.string.settings_check_app_updates)
                 Description(R.string.settings_check_app_updates_desc)
@@ -100,14 +100,14 @@ fun UpdatesScreen() {
             SwitchItem(
                 checked = userPreferences.checkAppUpdatesPreReleases,
                 enabled = userPreferences.checkAppUpdates,
-                onChange = viewModel::setCheckAppUpdatesPreReleases
+                onChange = viewModel::setCheckAppUpdatesPreReleases,
             ) {
                 Title(R.string.settings_include_preleases)
             }
         }
 
         Section(
-            title = stringResource(id = R.string.page_repository)
+            title = stringResource(id = R.string.page_repository),
         ) {
             SwitchItem(
                 checked = RepositoryService.isActive,
@@ -116,7 +116,7 @@ fun UpdatesScreen() {
                         if (it) {
                             RepositoryService.start(
                                 context,
-                                userPreferences.autoUpdateReposInterval
+                                userPreferences.autoUpdateReposInterval,
                             )
                             snackbarHost.showSnackbar(context.getString(R.string.repository_service_started))
                         } else {
@@ -127,7 +127,7 @@ fun UpdatesScreen() {
                             snackbarHost.showSnackbar(context.getString(R.string.repository_service_stopped))
                         }
                     }
-                }
+                },
             ) {
                 Title(R.string.settings_auto_update_repos)
                 Description(R.string.settings_auto_update_repos_desc)
@@ -138,20 +138,19 @@ fun UpdatesScreen() {
                 options = optionsOfHours,
                 onConfirm = {
                     viewModel.setAutoUpdateReposInterval(it.value)
-                }
+                },
             ) {
                 Title(R.string.settings_repo_update_interval)
                 Description(
                     R.string.settings_repo_update_interval_desc,
-                    userPreferences.autoUpdateReposInterval
+                    userPreferences.autoUpdateReposInterval,
                 )
             }
         }
 
         Section(
-            title = stringResource(id = R.string.page_modules)
+            title = stringResource(id = R.string.page_modules),
         ) {
-
             SwitchItem(
                 checked = ModuleService.isActive,
                 enabled = viewModel.isProviderAlive && ProviderService.isActive,
@@ -160,7 +159,7 @@ fun UpdatesScreen() {
                         if (it) {
                             ModuleService.start(
                                 context,
-                                userPreferences.autoUpdateReposInterval
+                                userPreferences.autoUpdateReposInterval,
                             )
                             snackbarHost.showSnackbar(context.getString(R.string.module_service_started))
                         } else {
@@ -171,7 +170,7 @@ fun UpdatesScreen() {
                             snackbarHost.showSnackbar(context.getString(R.string.module_service_stopped))
                         }
                     }
-                }
+                },
             ) {
                 Title(R.string.settings_check_modules_update)
                 Description(R.string.settings_check_modules_update_desc)
@@ -183,12 +182,12 @@ fun UpdatesScreen() {
                 enabled = viewModel.isProviderAlive && ModuleService.isActive && ProviderService.isActive,
                 onConfirm = {
                     viewModel.setCheckModuleUpdatesInterval(it.value)
-                }
+                },
             ) {
                 Title(R.string.settings_check_modules_update_interval)
                 Description(
                     R.string.settings_check_modules_update_interval_desc,
-                    userPreferences.checkModuleUpdatesInterval
+                    userPreferences.checkModuleUpdatesInterval,
                 )
             }
         }

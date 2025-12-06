@@ -64,16 +64,17 @@ internal fun Header() {
 
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
         if (repositoryMenu.showIcon) {
             if (module.icon.isNotNullOrBlank()) {
                 AsyncImage(
                     model = module.icon,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(20)),
-                    contentDescription = null
+                    modifier =
+                        Modifier
+                            .size(60.dp)
+                            .clip(RoundedCornerShape(20)),
+                    contentDescription = null,
                 )
             } else {
                 Logo(
@@ -81,7 +82,7 @@ internal fun Header() {
                     modifier = Modifier.size(60.dp),
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    shape = RoundedCornerShape(20)
+                    shape = RoundedCornerShape(20),
                 )
             }
 
@@ -89,7 +90,7 @@ internal fun Header() {
         }
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             IconText(
                 style = MaterialTheme.typography.titleLarge,
@@ -104,22 +105,23 @@ internal fun Header() {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                modifier = Modifier.clickable(
-                    onClick = {
-                        navigator.navigate(
-                            TypedModulesScreenDestination(
-                                type = ModulesFilter.AUTHOR,
-                                title = module.author,
-                                query = module.author,
-                                repo = repo,
+                modifier =
+                    Modifier.clickable(
+                        onClick = {
+                            navigator.navigate(
+                                TypedModulesScreenDestination(
+                                    type = ModulesFilter.AUTHOR,
+                                    title = module.author,
+                                    query = module.author,
+                                    repo = repo,
+                                ),
                             )
-                        )
-                    }
-                ),
+                        },
+                    ),
                 text = module.author,
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.surfaceTint),
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -129,28 +131,31 @@ internal fun Header() {
     Row(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         local.isValid {
             val ops by remember(
                 userPreferences.useShellForModuleStateChange,
                 it,
-                it.state
+                it.state,
             ) {
                 derivedStateOf {
                     viewModel.createModuleOps(
                         userPreferences.useShellForModuleStateChange,
-                        it
+                        it,
                     )
                 }
             }
 
             OutlinedButton(
-                enabled = viewModel.isProviderAlive && (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                onClick = ops.change
+                enabled =
+                    viewModel.isProviderAlive &&
+                        (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                onClick = ops.change,
             ) {
                 val style = LocalTextStyle.current
                 val progressSize =
@@ -160,41 +165,45 @@ internal fun Header() {
                     CircularProgressIndicator(
                         modifier = Modifier.size(progressSize),
                         color = MaterialTheme.colorScheme.onPrimary,
-                        strokeWidth = 2.dp
+                        strokeWidth = 2.dp,
                     )
                 } else {
                     Text(
-                        text = stringResource(
-                            id = if (it.state == State.REMOVE) {
-                                R.string.module_restore
-                            } else {
-                                R.string.module_remove
-                            }
-                        ),
-                        maxLines = 1
+                        text =
+                            stringResource(
+                                id =
+                                    if (it.state == State.REMOVE) {
+                                        R.string.module_restore
+                                    } else {
+                                        R.string.module_remove
+                                    },
+                            ),
+                        maxLines = 1,
                     )
                 }
             }
         }
 
-        val buttonTextResId = when {
-            local.isEmpty -> R.string.module_install
-            lastVersionItem.isEmpty && module.versionCode > local.versionCode -> R.string.module_update
-            else -> R.string.module_reinstall
-        }
+        val buttonTextResId =
+            when {
+                local.isEmpty -> R.string.module_install
+                lastVersionItem.isEmpty && module.versionCode > local.versionCode -> R.string.module_update
+                else -> R.string.module_reinstall
+            }
 
         Button(
             enabled = viewModel.isProviderAlive && !lastVersionItem.isEmpty && !isBlacklisted,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
             onClick = {
                 viewModel.installConfirm = true
             },
         ) {
             Text(
                 text = stringResource(id = buttonTextResId),
-                maxLines = 1
+                maxLines = 1,
             )
         }
     }

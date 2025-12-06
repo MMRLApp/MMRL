@@ -42,133 +42,137 @@ import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 
 @Destination<RootGraph>
 @Composable
-fun AboutScreen() = LocalScreenProvider {
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val browser = LocalUriHandler.current
+fun AboutScreen() =
+    LocalScreenProvider {
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val browser = LocalUriHandler.current
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            BlurNavigateUpToolbar(
-                title = stringResource(id = R.string.settings_about),
-            )
-        },
-        contentWindowInsets = WindowInsets(0.dp)
-    ) { innerPadding ->
-        this@Scaffold.ResponsiveContent {
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(all = 16.dp)
-                    .navigationBarsPadding(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Logo(
-                    icon = R.drawable.launcher_outline,
-                    modifier = Modifier.size(65.dp),
-                    contentColor = MaterialTheme.colorScheme.primary,
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    fraction = 0.7f
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                BlurNavigateUpToolbar(
+                    title = stringResource(id = R.string.settings_about),
                 )
-
+            },
+            contentWindowInsets = WindowInsets(0.dp),
+        ) { innerPadding ->
+            this@Scaffold.ResponsiveContent {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    Text(
-                        text = stringResource(
-                            id = R.string.about_app_version,
-                            BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 5.dp)
-                    )
-                }
-
-                Column(
+                    modifier =
+                        Modifier
+                            .padding(innerPadding)
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .padding(all = 16.dp)
+                            .navigationBarsPadding(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    FilledTonalButton(
-                        onClick = { browser.openUri(Const.GITHUB_URL) }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.github),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-                        Text(text = stringResource(id = R.string.about_github))
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-                        FilledTonalButton(
-                            onClick = { browser.openUri(Const.TRANSLATE_URL) }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.weblate),
-                                contentDescription = null,
-                                modifier = Modifier.size(ButtonDefaults.IconSize)
-                            )
-                            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-                            Text(text = stringResource(id = R.string.about_weblate))
-                        }
-
-                        FilledTonalButton(
-                            onClick = { browser.openUri(Const.TELEGRAM_URL) }
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.telegram),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
-                            Text(text = stringResource(id = R.string.about_telegram))
-                        }
-                    }
-                }
-
-                val style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                OutlinedCard {
-
-                    Text(
-                        text = stringResource(id = R.string.about_desc1),
-                        style = style
+                    Logo(
+                        icon = R.drawable.launcher_outline,
+                        modifier = Modifier.size(65.dp),
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        fraction = 0.7f,
                     )
 
-                    Spacer(modifier = Modifier.height(15.dp))
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.app_name),
+                            style = MaterialTheme.typography.titleLarge,
+                        )
 
-                    MarkdownText(
-                        text = stringResource(
-                            id = R.string.about_desc2,
-                            "@sanmer(Sanmer) & @googler(Der_Googler)"
-                        ),
-                        style = style,
-                        onTagClick = {
-                            when (it) {
-                                "sanmer" -> browser.openUri(Const.SANMER_GITHUB_URL)
-                                "googler" -> browser.openUri(Const.GOOGLER_GITHUB_URL)
+                        Text(
+                            text =
+                                stringResource(
+                                    id = R.string.about_app_version,
+                                    BuildConfig.VERSION_NAME,
+                                    BuildConfig.VERSION_CODE,
+                                ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = 5.dp),
+                        )
+                    }
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        FilledTonalButton(
+                            onClick = { browser.openUri(Const.GITHUB_URL) },
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.github),
+                                contentDescription = null,
+                            )
+                            Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                            Text(text = stringResource(id = R.string.about_github))
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            FilledTonalButton(
+                                onClick = { browser.openUri(Const.TRANSLATE_URL) },
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.weblate),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(ButtonDefaults.IconSize),
+                                )
+                                Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                                Text(text = stringResource(id = R.string.about_weblate))
+                            }
+
+                            FilledTonalButton(
+                                onClick = { browser.openUri(Const.TELEGRAM_URL) },
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.telegram),
+                                    contentDescription = null,
+                                )
+                                Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                                Text(text = stringResource(id = R.string.about_telegram))
                             }
                         }
-                    )
-                }
+                    }
 
-                val paddingValues = LocalMainScreenInnerPaddings.current
-                Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                    val style =
+                        MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+
+                    OutlinedCard {
+                        Text(
+                            text = stringResource(id = R.string.about_desc1),
+                            style = style,
+                        )
+
+                        Spacer(modifier = Modifier.height(15.dp))
+
+                        MarkdownText(
+                            text =
+                                stringResource(
+                                    id = R.string.about_desc2,
+                                    "@sanmer(Sanmer) & @googler(Der_Googler)",
+                                ),
+                            style = style,
+                            onTagClick = {
+                                when (it) {
+                                    "sanmer" -> browser.openUri(Const.SANMER_GITHUB_URL)
+                                    "googler" -> browser.openUri(Const.GOOGLER_GITHUB_URL)
+                                }
+                            },
+                        )
+                    }
+
+                    val paddingValues = LocalMainScreenInnerPaddings.current
+                    Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                }
             }
         }
     }
-}

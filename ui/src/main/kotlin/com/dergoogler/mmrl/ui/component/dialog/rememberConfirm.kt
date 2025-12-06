@@ -36,7 +36,10 @@ data class ConfirmData(
  *                    including title, description, and callbacks for confirm/close actions.
  * @param colorScheme The MaterialTheme ColorScheme to be applied to the dialog.
  */
-fun Context.confirm(confirmData: ConfirmData, colorScheme: ColorScheme) {
+fun Context.confirm(
+    confirmData: ConfirmData,
+    colorScheme: ColorScheme,
+) {
     (this as? Activity)?.addContentView(
         ComposeView(this).apply {
             setContent {
@@ -53,22 +56,25 @@ fun Context.confirm(confirmData: ConfirmData, colorScheme: ColorScheme) {
                                     return@ConfirmDialog
                                 }
                             },
-                            closeText = confirmData.closeText
-                                ?: stringResource(id = R.string.cancel),
-                            confirmText = confirmData.confirmText
-                                ?: stringResource(id = R.string.confirm),
+                            closeText =
+                                confirmData.closeText
+                                    ?: stringResource(id = R.string.cancel),
+                            confirmText =
+                                confirmData.confirmText
+                                    ?: stringResource(id = R.string.confirm),
                             title = confirmData.title,
                             description = confirmData.description,
-                            onClose = confirmData.onClose.nullable {
-                                {
-                                    showDialog = false
-                                    it()
-                                }
-                            },
+                            onClose =
+                                confirmData.onClose.nullable {
+                                    {
+                                        showDialog = false
+                                        it()
+                                    }
+                                },
                             onConfirm = {
                                 showDialog = false
                                 confirmData.onConfirm()
-                            }
+                            },
                         )
                     }
                 }
@@ -76,22 +82,21 @@ fun Context.confirm(confirmData: ConfirmData, colorScheme: ColorScheme) {
         },
         ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        ),
     )
 }
 
 @Composable
-fun rememberConfirm(
-    context: Context = LocalContext.current,
-): (ConfirmData) -> Unit {
+fun rememberConfirm(context: Context = LocalContext.current): (ConfirmData) -> Unit {
     val theme = MaterialTheme.colorScheme
 
-    val confirm: (ConfirmData) -> Unit = remember {
-        { confirm ->
-            context.confirm(confirm, theme)
+    val confirm: (ConfirmData) -> Unit =
+        remember {
+            { confirm ->
+                context.confirm(confirm, theme)
+            }
         }
-    }
 
     return confirm
 }

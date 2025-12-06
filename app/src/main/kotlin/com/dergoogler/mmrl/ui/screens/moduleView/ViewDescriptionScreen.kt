@@ -55,109 +55,116 @@ const val launchUrl = "https://mui.kernelsu.org/internal/assets/markdown.html"
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 @Destination<RootGraph>
-fun ViewDescriptionScreen(
-    readmeUrl: String,
-) = LocalScreenProvider {
-    val density = LocalDensity.current
-    val navigator = LocalDestinationsNavigator.current
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val userPrefs = LocalUserPreferences.current
+fun ViewDescriptionScreen(readmeUrl: String) =
+    LocalScreenProvider {
+        val density = LocalDensity.current
+        val navigator = LocalDestinationsNavigator.current
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val userPrefs = LocalUserPreferences.current
 
-    var readme by remember { mutableStateOf("") }
-    val event = requestString(
-        url = readmeUrl,
-        onSuccess = { readme = it }
-    )
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                scrollBehavior = scrollBehavior,
-                navigator = navigator
+        var readme by remember { mutableStateOf("") }
+        val event =
+            requestString(
+                url = readmeUrl,
+                onSuccess = { readme = it },
             )
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        val bottomBarPaddingValues = LocalMainScreenInnerPaddings.current
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeSource(LocalHazeState.current)
-        ) {
-            AnimatedVisibility(
-                modifier = Modifier.fillMaxSize(),
-                visible = event.isLoading,
-                enter = fadeIn(),
-                exit = fadeOut()
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    scrollBehavior = scrollBehavior,
+                    navigator = navigator,
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            val bottomBarPaddingValues = LocalMainScreenInnerPaddings.current
+
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .hazeSource(LocalHazeState.current),
             ) {
-                Loading()
-            }
+                AnimatedVisibility(
+                    modifier = Modifier.fillMaxSize(),
+                    visible = event.isLoading,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Loading()
+                }
 
-            AnimatedVisibility(
-                visible = event.isFailed,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Failed()
-            }
+                AnimatedVisibility(
+                    visible = event.isFailed,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Failed()
+                }
 
-            AnimatedVisibility(
-                visible = event.isSucceeded,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                this@Scaffold.ResponsiveContent {
-                    AndroidView(
-                        factory = { context ->
-                            val options = WebUIOptions(
-                                context = context,
-                                isDarkMode = userPrefs.isDarkMode(),
-                                colorScheme = userPrefs.colorScheme(context),
-                            )
-
-                            val assetsLoader = wxAssetLoader(
-                                handlers = listOf(
-                                    "/internal/" to internalPathHandler(
-                                        options,
-                                        Insets(
-                                            top = with(density) {
-                                                val pad = innerPadding.calculateTopPadding()
-                                                val px = with(density) { pad.toPx() }.toInt()
-                                                (px / this.density).toInt()
-                                            },
-                                            bottom = with(density) {
-                                                val pad =
-                                                    bottomBarPaddingValues.calculateBottomPadding()
-                                                val px = with(density) { pad.toPx() }.toInt()
-                                                (px / this.density).toInt()
-                                            },
-                                            left = 0,
-                                            right = 0
-                                        )
+                AnimatedVisibility(
+                    visible = event.isSucceeded,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    this@Scaffold.ResponsiveContent {
+                        AndroidView(
+                            factory = { context ->
+                                val options =
+                                    WebUIOptions(
+                                        context = context,
+                                        isDarkMode = userPrefs.isDarkMode(),
+                                        colorScheme = userPrefs.colorScheme(context),
                                     )
+
+                                val assetsLoader =
+                                    wxAssetLoader(
+                                        handlers =
+                                            listOf(
+                                                "/internal/" to
+                                                    internalPathHandler(
+                                                        options,
+                                                        Insets(
+                                                            top =
+                                                                with(density) {
+                                                                    val pad = innerPadding.calculateTopPadding()
+                                                                    val px = with(density) { pad.toPx() }.toInt()
+                                                                    (px / this.density).toInt()
+                                                                },
+                                                            bottom =
+                                                                with(density) {
+                                                                    val pad =
+                                                                        bottomBarPaddingValues.calculateBottomPadding()
+                                                                    val px = with(density) { pad.toPx() }.toInt()
+                                                                    (px / this.density).toInt()
+                                                                },
+                                                            left = 0,
+                                                            right = 0,
+                                                        ),
+                                                    ),
+                                            ),
+                                    )
+
+                                WebUIView(options).apply {
+                                    webViewClient = WXClient(options, assetsLoader)
+                                }
+                            },
+                            update = { webView ->
+                                webView.addJavascriptInterface<MarkdownInterface>(
+                                    arrayOf(readme),
+                                    arrayOf(String::class.java),
                                 )
-                            )
 
-                            WebUIView(options).apply {
-                                webViewClient = WXClient(options, assetsLoader)
-                            }
-                        },
-                        update = { webView ->
-                            webView.addJavascriptInterface<MarkdownInterface>(
-                                arrayOf(readme),
-                                arrayOf(String::class.java)
-                            )
-
-                            webView.loadUrl(launchUrl)
-                        }
-                    )
+                                webView.loadUrl(launchUrl)
+                            },
+                        )
+                    }
                 }
             }
         }
     }
-}
 
 @Composable
 private fun TopBar(
@@ -167,10 +174,11 @@ private fun TopBar(
     navigationIcon = {
         IconButton(onClick = { navigator.popBackStack() }) {
             Icon(
-                painter = painterResource(id = R.drawable.arrow_left), contentDescription = null
+                painter = painterResource(id = R.drawable.arrow_left),
+                contentDescription = null,
             )
         }
     },
     title = { Text(text = stringResource(id = R.string.view_module_about_this_module)) },
-    scrollBehavior = scrollBehavior
+    scrollBehavior = scrollBehavior,
 )

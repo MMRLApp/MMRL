@@ -46,7 +46,7 @@ fun SettingsScaffold(
     allowNavigateBack = allowNavigateBack,
     floatingActionButton = floatingActionButton,
     absolute = absolute,
-    relative = relative
+    relative = relative,
 )
 
 @Composable
@@ -72,7 +72,7 @@ fun SettingsScaffold(
                     actions = actions,
                     fade = true,
                     fadeDistance = 50f,
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
             } else {
                 BlurToolbar(
@@ -82,28 +82,30 @@ fun SettingsScaffold(
                     fade = true,
                     fadeDistance = 50f,
                     actions = actions,
-                    scrollBehavior = scrollBehavior
+                    scrollBehavior = scrollBehavior,
                 )
             }
         },
         floatingActionButton = floatingActionButton,
-        contentWindowInsets = WindowInsets.none
+        contentWindowInsets = WindowInsets.none,
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .hazeSource(state = LocalHazeState.current)
-                .then(modifier.box)
+            modifier =
+                Modifier
+                    .hazeSource(state = LocalHazeState.current)
+                    .then(modifier.box),
         ) {
             List(
-                modifier = modifier.column
-                    .systemBarsPaddingEnd()
-                    .padding(top = innerPadding.calculateTopPadding()),
+                modifier =
+                    modifier.column
+                        .systemBarsPaddingEnd()
+                        .padding(top = innerPadding.calculateTopPadding()),
                 content = {
                     relative()
 
                     val paddingValues = LocalMainScreenInnerPaddings.current
                     Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
-                }
+                },
             )
 
             absolute()
@@ -130,9 +132,11 @@ class ScaffoldModifier internal constructor(
     fun copy(
         box: Modifier = this.box,
         column: Modifier = this.column,
-    ): ScaffoldModifier = ScaffoldModifier(
-        box, column
-    )
+    ): ScaffoldModifier =
+        ScaffoldModifier(
+            box,
+            column,
+        )
 
     override fun hashCode(): Int {
         var result = box.hashCode()
@@ -143,16 +147,19 @@ class ScaffoldModifier internal constructor(
 
 object ScaffoldDefaults {
     val settingsScaffoldModifier
-        get() = ScaffoldModifier(
-            box = Modifier.fillMaxSize(),
-            column = Modifier.fillMaxSize()
-        )
+        get() =
+            ScaffoldModifier(
+                box = Modifier.fillMaxSize(),
+                column = Modifier.fillMaxSize(),
+            )
 
     val settingsScaffoldScrollModifier
-        @Composable get() = ScaffoldModifier(
-            box = Modifier.fillMaxSize(),
-            column = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        )
+        @Composable get() =
+            ScaffoldModifier(
+                box = Modifier.fillMaxSize(),
+                column =
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+            )
 }

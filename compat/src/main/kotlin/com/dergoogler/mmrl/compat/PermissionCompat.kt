@@ -11,13 +11,11 @@ import java.util.UUID
 
 object PermissionCompat {
     data class PermissionState(
-        private val results: Map<String, Boolean>
+        private val results: Map<String, Boolean>,
     ) {
         val allGranted = results.all { it.value }
 
-        override fun toString(): String {
-            return results.toString()
-        }
+        override fun toString(): String = results.toString()
     }
 
     private fun Context.findActivity(): Activity? {
@@ -32,13 +30,15 @@ object PermissionCompat {
 
     fun checkPermissions(
         context: Context,
-        permissions: List<String>
+        permissions: List<String>,
     ): PermissionState {
-        val results = permissions.associateWith {
-            ContextCompat.checkSelfPermission(
-                context, it
-            ) == PackageManager.PERMISSION_GRANTED
-        }
+        val results =
+            permissions.associateWith {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    it,
+                ) == PackageManager.PERMISSION_GRANTED
+            }
 
         return PermissionState(results)
     }
@@ -46,7 +46,7 @@ object PermissionCompat {
     fun requestPermissions(
         context: Context,
         permissions: List<String>,
-        callback: (PermissionState) -> Unit
+        callback: (PermissionState) -> Unit,
     ) {
         val state = checkPermissions(context, permissions)
         if (state.allGranted) {
@@ -59,12 +59,13 @@ object PermissionCompat {
 
         val activityResultRegistry = activity.activityResultRegistry
         val key = UUID.randomUUID().toString()
-        val launcher = activityResultRegistry.register(
-            key,
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { results ->
-            callback(PermissionState(results))
-        }
+        val launcher =
+            activityResultRegistry.register(
+                key,
+                ActivityResultContracts.RequestMultiplePermissions(),
+            ) { results ->
+                callback(PermissionState(results))
+            }
 
         launcher.launch(permissions.toTypedArray())
     }

@@ -31,7 +31,7 @@ fun SecurityScreen() {
     ) {
         SwitchItem(
             checked = userPreferences.confirmReboot,
-            onChange = viewModel::setConfirmReboot
+            onChange = viewModel::setConfirmReboot,
         ) {
             Title(R.string.settings_reboot_protection)
             Description(R.string.settings_reboot_protection_desc)
@@ -39,8 +39,7 @@ fun SecurityScreen() {
 
         SwitchItem(
             checked = userPreferences.blacklistAlerts,
-            onChange = viewModel::setBlacklistAlerts
-
+            onChange = viewModel::setBlacklistAlerts,
         ) {
             Title(R.string.settings_blacklist_alerts)
             Description(R.string.settings_blacklist_alerts_desc)
@@ -48,7 +47,7 @@ fun SecurityScreen() {
 
         SwitchItem(
             checked = userPreferences.hideFingerprintInHome,
-            onChange = viewModel::setHideFingerprintInHome
+            onChange = viewModel::setHideFingerprintInHome,
         ) {
             Title(R.string.settings_hide_fingerprint)
             Description(R.string.settings_hide_fingerprint_desc)
@@ -56,14 +55,15 @@ fun SecurityScreen() {
 
         SwitchItem(
             checked = userPreferences.strictMode,
-            onChange = viewModel::setStrictMode
+            onChange = viewModel::setStrictMode,
         ) {
             Title(R.string.settings_strict_mode)
         }
 
-        val isSuDisableSupported = remember {
-            KsuNative.hasFeature { MINIMAL_SUPPORTED_SU_COMPAT }
-        }
+        val isSuDisableSupported =
+            remember {
+                KsuNative.hasFeature { MINIMAL_SUPPORTED_SU_COMPAT }
+            }
 
         var isSuDisabled by rememberSaveable {
             mutableStateOf(!KsuNative.isSuEnabled())
@@ -77,7 +77,7 @@ fun SecurityScreen() {
                 if (KsuNative.setSuEnabled(shouldEnable)) {
                     isSuDisabled = !shouldEnable
                 }
-            }
+            },
         ) {
             Title(R.string.settings_disable_su)
             Description(R.string.settings_disable_su_desc)

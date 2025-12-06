@@ -19,10 +19,11 @@ data class TrackJsonEntity(
         antifeatures = original.antifeatures,
     )
 
-    fun toTrack() = TrackJson(
-        typeName = type,
-        added = added,
-        source = source,
-        antifeatures = antifeatures
-    )
+    fun toTrack() =
+        TrackJson(
+            typeName = type,
+            added = added,
+            source = source,
+            antifeatures = antifeatures,
+        )
 }

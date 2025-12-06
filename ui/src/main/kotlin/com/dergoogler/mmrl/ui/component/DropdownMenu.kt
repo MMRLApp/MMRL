@@ -27,7 +27,7 @@ fun DropdownMenu(
     shadowElevation: Dp = MenuDefaults.ShadowElevation,
     offset: DpOffset = DpOffset.Zero,
     properties: PopupProperties = PopupProperties(focusable = true),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     ProvideMenuShape(shape) {
         DropdownMenu(
@@ -39,7 +39,7 @@ fun DropdownMenu(
             tonalElevation = tonalElevation,
             shadowElevation = shadowElevation,
             properties = properties,
-            content = content
+            content = content,
         )
     }
 }
@@ -54,14 +54,14 @@ fun DropdownMenu(
     offset: DpOffset = DpOffset.Zero,
     properties: PopupProperties = PopupProperties(focusable = true),
     surface: @Composable () -> Unit,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) = Box {
     surface()
 
     ProvideMenuShape(shape) {
         Box(
             modifier = Modifier.align(contentAlignment),
-            contentAlignment = contentAlignment
+            contentAlignment = contentAlignment,
         ) {
             DropdownMenu(
                 expanded = expanded,
@@ -69,7 +69,7 @@ fun DropdownMenu(
                 modifier = modifier,
                 offset = offset,
                 properties = properties,
-                content = content
+                content = content,
             )
         }
     }

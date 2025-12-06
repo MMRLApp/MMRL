@@ -54,7 +54,7 @@ fun <T> RadioCheckDialog(
         title = { Text(title) },
         text = {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 items(
                     items = options,
@@ -65,24 +65,24 @@ fun <T> RadioCheckDialog(
                     if (option.title == null) return@items
 
                     Row(
-                        modifier = Modifier
-                            .toggleable(
-                                enabled = option.enabled,
-                                value = checked,
-                                onValueChange = {
-                                    selectedOption = option.value
-                                },
-                                role = Role.RadioButton,
-                                interactionSource = interactionSource,
-                                indication = ripple()
-                            )
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .toggleable(
+                                    enabled = option.enabled,
+                                    value = checked,
+                                    onValueChange = {
+                                        selectedOption = option.value
+                                    },
+                                    role = Role.RadioButton,
+                                    interactionSource = interactionSource,
+                                    indication = ripple(),
+                                ).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RadioButton(
                             enabled = option.enabled,
                             selected = checked,
-                            onClick = null
+                            onClick = null,
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
@@ -105,6 +105,6 @@ fun <T> RadioCheckDialog(
             TextButton(onClick = onClose) {
                 Text(stringResource(id = R.string.cancel))
             }
-        }
+        },
     )
 }

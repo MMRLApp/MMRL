@@ -44,14 +44,14 @@ fun ConfirmDialog(
         Buttons {
             onClose.nullable {
                 TextButton(
-                    onClick = it
+                    onClick = it,
                 ) {
                     closeText()
                 }
             }
 
             TextButton(
-                onClick = onConfirm
+                onClick = onConfirm,
             ) {
                 confirmText()
             }
@@ -83,7 +83,7 @@ fun ConfirmDialog(
         Text(text = closeText)
     },
     onClose = onClose,
-    onConfirm = onConfirm
+    onConfirm = onConfirm,
 )
 
 @Composable
@@ -112,5 +112,5 @@ fun ConfirmDialog(
         Text(text = stringResource(closeText))
     },
     onClose = onClose,
-    onConfirm = onConfirm
+    onConfirm = onConfirm,
 )

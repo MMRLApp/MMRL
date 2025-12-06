@@ -36,15 +36,16 @@ fun ListScope.ButtonItem(
 ) {
     this.Item(
         contentPadding = contentPadding,
-        modifier = modifier
-            .clickable(
-                enabled = enabled,
-                interactionSource = interactionSource,
-                role = Role.Button,
-                indication = ripple(),
-                onClick = onClick
-            ),
+        modifier =
+            modifier
+                .clickable(
+                    enabled = enabled,
+                    interactionSource = interactionSource,
+                    role = Role.Button,
+                    indication = ripple(),
+                    onClick = onClick,
+                ),
         enabled = enabled,
-        content = content
+        content = content,
     )
 }

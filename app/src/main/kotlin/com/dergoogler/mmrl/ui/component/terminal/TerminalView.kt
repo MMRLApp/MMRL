@@ -36,23 +36,27 @@ import com.dergoogler.mmrl.ui.activity.terminal.Terminal
 import com.dergoogler.mmrl.ui.component.NavigationBarsSpacer
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 
-val LocalTerminalWidth = staticCompositionLocalOf<Dp> {
-    error("CompositionLocal LocalTerminalWidth not present")
-}
+val LocalTerminalWidth =
+    staticCompositionLocalOf<Dp> {
+        error("CompositionLocal LocalTerminalWidth not present")
+    }
 
-val LocalTerminal = staticCompositionLocalOf<Terminal> {
-    error("CompositionLocal LocalTerminal not present")
-}
+val LocalTerminal =
+    staticCompositionLocalOf<Terminal> {
+        error("CompositionLocal LocalTerminal not present")
+    }
+
 @Composable
 fun TerminalView(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     terminal: Terminal,
     state: LazyListState,
-    style: TextStyle = MaterialTheme.typography.bodySmall.copy(
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontFamily = FontFamily.Monospace
-    ),
+    style: TextStyle =
+        MaterialTheme.typography.bodySmall.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontFamily = FontFamily.Monospace,
+        ),
 ) {
     val userPrefs = LocalUserPreferences.current
     val density = LocalDensity.current
@@ -62,14 +66,16 @@ fun TerminalView(
         derivedStateOf { terminal.console }
     }
 
-    val textStyle = remember(style, colorScheme) {
-        style.copy(color = colorScheme.onSurfaceVariant)
-    }
+    val textStyle =
+        remember(style, colorScheme) {
+            style.copy(color = colorScheme.onSurfaceVariant)
+        }
 
     var lazyColumnWidth by remember { mutableIntStateOf(0) }
-    val widthDp = remember(lazyColumnWidth, density) {
-        with(density) { lazyColumnWidth.toDp() }
-    }
+    val widthDp =
+        remember(lazyColumnWidth, density) {
+            with(density) { lazyColumnWidth.toDp() }
+        }
 
     LaunchedEffect(list.size) {
         if (list.isNotEmpty()) {
@@ -79,33 +85,37 @@ fun TerminalView(
 
     ProvideTextStyle(value = textStyle) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .let {
-                    if (userPrefs.terminalTextWrap) it
-                    else it.horizontalScroll(rememberScrollState())
-                }
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .let {
+                        if (userPrefs.terminalTextWrap) {
+                            it
+                        } else {
+                            it.horizontalScroll(rememberScrollState())
+                        }
+                    },
         ) {
             SelectionContainer {
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned { coords ->
-                            lazyColumnWidth = coords.size.width
-                        }
-                        .then(modifier),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned { coords ->
+                                lazyColumnWidth = coords.size.width
+                            }.then(modifier),
                     state = state,
-                    contentPadding = contentPadding
+                    contentPadding = contentPadding,
                 ) {
                     itemsIndexed(
                         items = list,
                         key = { index, block ->
                             "${index}_${block.hashCode()}"
-                        }
+                        },
                     ) { _, block ->
                         CompositionLocalProvider(
                             LocalTerminal provides terminal,
-                            LocalTerminalWidth provides widthDp
+                            LocalTerminalWidth provides widthDp,
                         ) {
                             TerminalBlockContent(block)
                         }

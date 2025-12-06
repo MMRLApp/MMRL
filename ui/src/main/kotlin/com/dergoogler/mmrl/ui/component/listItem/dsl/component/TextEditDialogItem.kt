@@ -67,25 +67,28 @@ fun ListScope.TextEditDialogItem(
         }
     }
 
-    val kbActions = remember(isError, text) {
-        keyboardActions ?: KeyboardActions {
-            if (text.isNotBlank() && !isError) onDone()
+    val kbActions =
+        remember(isError, text) {
+            keyboardActions ?: KeyboardActions {
+                if (text.isNotBlank() && !isError) onDone()
+            }
         }
-    }
 
-    val kbOptions = remember {
-        keyboardOptions ?: KeyboardOptions(
-            keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Done
-        )
-    }
+    val kbOptions =
+        remember {
+            keyboardOptions ?: KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+            )
+        }
 
-    val data = remember(text, isError) {
-        TextEditDialogItemData(
-            value = text,
-            isError = isError
-        )
-    }
+    val data =
+        remember(text, isError) {
+            TextEditDialogItemData(
+                value = text,
+                isError = isError,
+            )
+        }
 
     ButtonItem(
         enabled = enabled,
@@ -102,7 +105,7 @@ fun ListScope.TextEditDialogItem(
                     },
                     title = {
                         ProvideTitleTypography(
-                            token = TypographyKeyTokens.HeadlineSmall
+                            token = TypographyKeyTokens.HeadlineSmall,
                         ) {
                             FromSlot(ListItemSlot.Title) {
                                 content(data)
@@ -112,7 +115,7 @@ fun ListScope.TextEditDialogItem(
                     confirmButton = {
                         TextButton(
                             onClick = onDone,
-                            enabled = !isError && (!strict || text.isNotEmpty())
+                            enabled = !isError && (!strict || text.isNotEmpty()),
                         ) {
                             Text(text = stringResource(id = R.string.confirm))
                         }
@@ -121,11 +124,11 @@ fun ListScope.TextEditDialogItem(
                         TextButton(
                             onClick = {
                                 open = false
-                            }
+                            },
                         ) {
                             Text(text = stringResource(id = R.string.cancel))
                         }
-                    }
+                    },
                 ) { focusRequester ->
                     Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -148,15 +151,17 @@ fun ListScope.TextEditDialogItem(
                                             Layout(
                                                 content = {
                                                     this@ButtonItem.content(data)
-                                                }
+                                                },
                                             ) { measurables, constraints ->
                                                 val supportingPlaceable =
-                                                    measurables.firstOrNull { it.layoutId == DialogItemSlot.SupportingText }
+                                                    measurables
+                                                        .firstOrNull { it.layoutId == DialogItemSlot.SupportingText }
                                                         ?.measure(constraints)
 
-                                                val totalHeight = listOfNotNull(
-                                                    supportingPlaceable?.height,
-                                                ).sum()
+                                                val totalHeight =
+                                                    listOfNotNull(
+                                                        supportingPlaceable?.height,
+                                                    ).sum()
 
                                                 layout(constraints.maxWidth, totalHeight) {
                                                     var y = 0
@@ -171,25 +176,28 @@ fun ListScope.TextEditDialogItem(
                                         isError = isError,
                                         keyboardOptions = kbOptions,
                                         keyboardActions = kbActions,
-                                        shape = RoundedCornerShape(15.dp)
+                                        shape = RoundedCornerShape(15.dp),
                                     )
                                 }
-                            }
+                            },
                         ) { measurables, constraints ->
                             val spacing = 16.dp.roundToPx()
 
                             val descriptionPlaceable =
-                                measurables.firstOrNull { it.layoutId == DialogItemSlot.Description }
+                                measurables
+                                    .firstOrNull { it.layoutId == DialogItemSlot.Description }
                                     ?.measure(constraints)
                             val textFieldPlaceable =
-                                measurables.first { it.layoutId == DialogItemSlot.TextField }
+                                measurables
+                                    .first { it.layoutId == DialogItemSlot.TextField }
                                     .measure(constraints)
 
-                            val totalHeight = listOfNotNull(
-                                descriptionPlaceable?.height,
-                                spacing.takeIf { descriptionPlaceable != null },
-                                textFieldPlaceable.height
-                            ).sum()
+                            val totalHeight =
+                                listOfNotNull(
+                                    descriptionPlaceable?.height,
+                                    spacing.takeIf { descriptionPlaceable != null },
+                                    textFieldPlaceable.height,
+                                ).sum()
 
                             layout(constraints.maxWidth, totalHeight) {
                                 var y = 0
@@ -205,6 +213,6 @@ fun ListScope.TextEditDialogItem(
                     }
                 }
             }
-        }
+        },
     )
 }

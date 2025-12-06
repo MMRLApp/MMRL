@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.platform.file
 
-import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.os.RemoteException
 import android.system.ErrnoException
@@ -35,21 +34,23 @@ import java.util.concurrent.Executors
 open class ExtFile(
     vararg paths: Any,
 ) : File(Path.parse(*paths)) {
-    open suspend fun lengthAsync(): Long = withContext<Long>(Dispatchers.IO) {
-        this@ExtFile.length(recursive = false)
-    }
+    open suspend fun lengthAsync(): Long =
+        withContext<Long>(Dispatchers.IO) {
+            this@ExtFile.length(recursive = false)
+        }
 
     open suspend fun lengthAsync(
         recursive: Boolean = false,
         skipPaths: List<String> = emptyList(),
         skipSymLinks: Boolean = true,
-    ): Long = withContext<Long>(Dispatchers.IO) {
-        this@ExtFile.length(
-            recursive = recursive,
-            skipPaths = skipPaths,
-            skipSymLinks = skipSymLinks,
-        )
-    }
+    ): Long =
+        withContext<Long>(Dispatchers.IO) {
+            this@ExtFile.length(
+                recursive = recursive,
+                skipPaths = skipPaths,
+                skipSymLinks = skipSymLinks,
+            )
+        }
 
     open fun length(
         recursive: Boolean = false,
@@ -96,73 +97,70 @@ open class ExtFile(
                 continue
             }
 
-            totalSize += if (itemSuFile.isDirectory()) {
-                itemSuFile.length(
-                    recursive = true,
-                    skipPaths = skipPaths,
-                    skipSymLinks = skipSymLinks
-                )
-            } else {
-                itemSuFile.length()
-            }
+            totalSize +=
+                if (itemSuFile.isDirectory()) {
+                    itemSuFile.length(
+                        recursive = true,
+                        skipPaths = skipPaths,
+                        skipSymLinks = skipSymLinks,
+                    )
+                } else {
+                    itemSuFile.length()
+                }
         }
 
         return totalSize
     }
 
-
-    open fun isBlock(): Boolean {
-        return try {
+    open fun isBlock(): Boolean =
+        try {
             OsConstants.S_ISBLK(getMode(path))
         } catch (e: RemoteException) {
             false
         }
-    }
 
-    open fun isCharacter(): Boolean {
-        return try {
+    open fun isCharacter(): Boolean =
+        try {
             OsConstants.S_ISCHR(getMode(path))
         } catch (e: RemoteException) {
             false
         }
-    }
 
-    open fun isSymlink(): Boolean {
-        return try {
+    open fun isSymlink(): Boolean =
+        try {
             OsConstants.S_ISLNK(getMode(path))
         } catch (e: RemoteException) {
             false
         }
-    }
 
-    open fun isNamedPipe(): Boolean {
-        return try {
+    open fun isNamedPipe(): Boolean =
+        try {
             OsConstants.S_ISFIFO(getMode(path))
         } catch (e: RemoteException) {
             false
         }
-    }
 
-    open fun isSocket(): Boolean {
-        return try {
+    open fun isSocket(): Boolean =
+        try {
             OsConstants.S_ISSOCK(getMode(path))
         } catch (e: RemoteException) {
             false
         }
-    }
 
-    open fun getMode(path: String?): Int {
-        return try {
+    open fun getMode(path: String?): Int =
+        try {
             Os.lstat(path).st_mode
         } catch (e: ErrnoException) {
             0
         }
-    }
 
     private val extFileStreamPool: ExecutorService = Executors.newCachedThreadPool()
 
     @UiThread
-    protected fun openReadStream(path: String, fd: ParcelFileDescriptor): ParcelResult {
+    protected fun openReadStream(
+        path: String,
+        fd: ParcelFileDescriptor,
+    ): ParcelResult {
         val f = OpenFile()
         return try {
             f.fd = Os.open(path, O_RDONLY, 0)

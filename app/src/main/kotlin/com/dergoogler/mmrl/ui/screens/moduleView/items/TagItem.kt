@@ -14,16 +14,17 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TagItem(
     @DrawableRes icon: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) = FilledTonalIconButton(
     onClick = onClick,
-    colors = IconButtonDefaults.filledTonalIconButtonColors(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant
-    ),
+    colors =
+        IconButtonDefaults.filledTonalIconButtonColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
     modifier = Modifier.size(35.dp),
 ) {
     Icon(
         painter = painterResource(id = icon),
-        contentDescription = null
+        contentDescription = null,
     )
 }

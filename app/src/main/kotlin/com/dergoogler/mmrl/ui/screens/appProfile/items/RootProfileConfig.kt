@@ -41,14 +41,14 @@ fun ListScope.RootProfileConfig(
     onProfileChange: (Profile) -> Unit,
 ) {
     Section(
-        title = stringResource(R.string.profile_custom)
+        title = stringResource(R.string.profile_custom),
     ) {
         RadioDialogItem(
             selection = profile.namespace,
             options = NamespaceOptions,
             onConfirm = {
                 onProfileChange(profile.copy(namespace = it.value))
-            }
+            },
         ) {
             Title(R.string.profile_namespace)
             it.title.nullable { t ->
@@ -63,10 +63,10 @@ fun ListScope.RootProfileConfig(
                 onProfileChange(
                     profile.copy(
                         uid = it,
-                        rootUseDefault = false
-                    )
+                        rootUseDefault = false,
+                    ),
                 )
-            }
+            },
         )
 
         UidPanel(
@@ -76,43 +76,45 @@ fun ListScope.RootProfileConfig(
                 onProfileChange(
                     profile.copy(
                         gid = it,
-                        rootUseDefault = false
-                    )
+                        rootUseDefault = false,
+                    ),
                 )
-            }
+            },
         )
 
-        val selectedGroups = profile.groups.ifEmpty { listOf(0) }.let { e ->
-            e.mapNotNull { g ->
-                Groups.entries.find { it.gid == g }
+        val selectedGroups =
+            profile.groups.ifEmpty { listOf(0) }.let { e ->
+                e.mapNotNull { g ->
+                    Groups.entries.find { it.gid == g }
+                }
             }
-        }
 
         GroupsPanel(selectedGroups) {
             onProfileChange(
                 profile.copy(
                     groups = it.map { group -> group.gid }.ifEmpty { listOf(0) },
-                    rootUseDefault = false
-                )
+                    rootUseDefault = false,
+                ),
             )
         }
 
-        val selectedCaps = profile.capabilities.mapNotNull { e ->
-            Capabilities.entries.find { it.cap == e }
-        }
+        val selectedCaps =
+            profile.capabilities.mapNotNull { e ->
+                Capabilities.entries.find { it.cap == e }
+            }
 
         CapsPanel(selectedCaps) {
             onProfileChange(
                 profile.copy(
                     capabilities = it.map { cap -> cap.cap },
-                    rootUseDefault = false
-                )
+                    rootUseDefault = false,
+                ),
             )
         }
     }
 
     Section(
-        stringResource(R.string.profile_selinux)
+        stringResource(R.string.profile_selinux),
     ) {
         SELinuxPanel(
             profile = profile,
@@ -121,10 +123,10 @@ fun ListScope.RootProfileConfig(
                     profile.copy(
                         context = domain,
                         rules = rules,
-                        rootUseDefault = false
-                    )
+                        rootUseDefault = false,
+                    ),
                 )
-            }
+            },
         )
     }
 }
@@ -134,32 +136,34 @@ fun ListScope.GroupsPanel(
     selected: List<Groups>,
     closeSelection: (selection: List<Groups>) -> Unit,
 ) {
-    val groups = remember(selected) {
-        Groups.entries.toTypedArray().sortedWith(
-            compareBy<Groups> { if (selected.contains(it)) 0 else 1 }
-                .then(compareBy {
-                    when (it) {
-                        Groups.ROOT -> 0
-                        Groups.SYSTEM -> 1
-                        Groups.SHELL -> 2
-                        else -> Int.MAX_VALUE
-                    }
-                })
-                .then(compareBy { it.name })
-
-        )
-    }
-
-    val options = remember(groups) {
-        groups.map { value ->
-            CheckboxItem(
-                value = value,
-                title = value.display,
-                desc = value.desc,
-                checked = selected.contains(value),
+    val groups =
+        remember(selected) {
+            Groups.entries.toTypedArray().sortedWith(
+                compareBy<Groups> { if (selected.contains(it)) 0 else 1 }
+                    .then(
+                        compareBy {
+                            when (it) {
+                                Groups.ROOT -> 0
+                                Groups.SYSTEM -> 1
+                                Groups.SHELL -> 2
+                                else -> Int.MAX_VALUE
+                            }
+                        },
+                    ).then(compareBy { it.name }),
             )
         }
-    }
+
+    val options =
+        remember(groups) {
+            groups.map { value ->
+                CheckboxItem(
+                    value = value,
+                    title = value.display,
+                    desc = value.desc,
+                    checked = selected.contains(value),
+                )
+            }
+        }
 
     CheckboxDialogItem(
         strict = false,
@@ -168,7 +172,7 @@ fun ListScope.GroupsPanel(
         options = options,
         onConfirm = {
             closeSelection(it.map { item -> item.value })
-        }
+        },
     ) {
         Title(R.string.profile_groups)
         Labels {
@@ -184,23 +188,25 @@ fun ListScope.CapsPanel(
     selected: Collection<Capabilities>,
     closeSelection: (selection: List<Capabilities>) -> Unit,
 ) {
-    val caps = remember(selected) {
-        Capabilities.entries.toTypedArray().sortedWith(
-            compareBy<Capabilities> { if (selected.contains(it)) 0 else 1 }
-                .then(compareBy { it.name })
-        )
-    }
-
-    val options = remember(caps) {
-        caps.map { value ->
-            CheckboxItem(
-                value = value,
-                title = value.display,
-                desc = value.desc,
-                checked = selected.contains(value),
+    val caps =
+        remember(selected) {
+            Capabilities.entries.toTypedArray().sortedWith(
+                compareBy<Capabilities> { if (selected.contains(it)) 0 else 1 }
+                    .then(compareBy { it.name }),
             )
         }
-    }
+
+    val options =
+        remember(caps) {
+            caps.map { value ->
+                CheckboxItem(
+                    value = value,
+                    title = value.display,
+                    desc = value.desc,
+                    checked = selected.contains(value),
+                )
+            }
+        }
 
     CheckboxDialogItem(
         strict = false,
@@ -208,7 +214,7 @@ fun ListScope.CapsPanel(
         options = options,
         onConfirm = {
             closeSelection(it.map { item -> item.value })
-        }
+        },
     ) {
         Title(R.string.profile_capabilities)
         Labels {
@@ -220,7 +226,11 @@ fun ListScope.CapsPanel(
 }
 
 @Composable
-private fun ListScope.UidPanel(uid: Int, label: String, onUidChange: (Int) -> Unit) {
+private fun ListScope.UidPanel(
+    uid: Int,
+    label: String,
+    onUidChange: (Int) -> Unit,
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var lastValidUid by remember {
@@ -232,13 +242,15 @@ private fun ListScope.UidPanel(uid: Int, label: String, onUidChange: (Int) -> Un
         onValid = {
             isTextValidUid(it)
         },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(onDone = {
-            keyboardController?.hide()
-        }),
+        keyboardOptions =
+            KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done,
+            ),
+        keyboardActions =
+            KeyboardActions(onDone = {
+                keyboardController?.hide()
+            }),
         onConfirm = {
             if (it.isEmpty()) {
                 onUidChange(0)
@@ -252,7 +264,7 @@ private fun ListScope.UidPanel(uid: Int, label: String, onUidChange: (Int) -> Un
             }
 
             onUidChange(targetUid)
-        }
+        },
     ) {
         Title(label)
         Description(it.value)
@@ -276,7 +288,7 @@ private fun ListScope.SELinuxPanel(
         },
         onConfirm = {
             onSELinuxChange(it, profile.rules)
-        }
+        },
     ) {
         if (it.isError) {
             DialogSupportingText(stringResource(R.string.profile_selinux_context_invalid))
@@ -294,7 +306,7 @@ private fun ListScope.SELinuxPanel(
         },
         onConfirm = {
             onSELinuxChange(profile.context, it)
-        }
+        },
     ) {
         Title(stringResource(R.string.profile_selinux_rules))
 
@@ -310,24 +322,23 @@ private fun ListScope.SELinuxPanel(
     }
 }
 
-
 @get:Composable
 private val NamespaceOptions: List<RadioDialogItem<Int>>
     get() {
         return enumValues<Namespace>().map {
-            val title = when (it) {
-                Namespace.INHERITED -> stringResource(R.string.profile_namespace_inherited)
-                Namespace.GLOBAL -> stringResource(R.string.profile_namespace_global)
-                Namespace.INDIVIDUAL -> stringResource(R.string.profile_namespace_individual)
-            }
+            val title =
+                when (it) {
+                    Namespace.INHERITED -> stringResource(R.string.profile_namespace_inherited)
+                    Namespace.GLOBAL -> stringResource(R.string.profile_namespace_global)
+                    Namespace.INDIVIDUAL -> stringResource(R.string.profile_namespace_individual)
+                }
 
             RadioDialogItem(
                 value = it.ordinal,
-                title = title
+                title = title,
             )
         }
     }
 
-private fun isTextValidUid(text: String): Boolean {
-    return text.isNotEmpty() && text.isDigitsOnly() && text.toInt() >= 0 && text.toInt() <= Int.MAX_VALUE
-}
+private fun isTextValidUid(text: String): Boolean =
+    text.isNotEmpty() && text.isDigitsOnly() && text.toInt() >= 0 && text.toInt() <= Int.MAX_VALUE

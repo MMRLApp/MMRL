@@ -32,16 +32,17 @@ data class ModuleFeaturesEntity(
         action = original?.action,
     )
 
-    fun toFeatures() = ModuleFeatures(
-        service = service,
-        postFsData = postFsData,
-        resetprop = resetprop,
-        sepolicy = sepolicy,
-        zygisk = zygisk,
-        apks = apks,
-        webroot = webroot,
-        postMount = postMount,
-        bootCompleted = bootCompleted,
-        action = action
-    )
+    fun toFeatures() =
+        ModuleFeatures(
+            service = service,
+            postFsData = postFsData,
+            resetprop = resetprop,
+            sepolicy = sepolicy,
+            zygisk = zygisk,
+            apks = apks,
+            webroot = webroot,
+            postMount = postMount,
+            bootCompleted = bootCompleted,
+            action = action,
+        )
 }

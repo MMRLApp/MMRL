@@ -26,26 +26,35 @@ import dev.dergoogler.mmrl.compat.Converters
         OnlineModuleEntity::class,
         VersionItemEntity::class,
         LocalModuleEntity::class,
-        BlacklistEntity::class
+        BlacklistEntity::class,
     ],
     version = 14,
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun repoDao(): RepoDao
+
     abstract fun onlineDao(): OnlineDao
+
     abstract fun versionDao(): VersionDao
+
     abstract fun localDao(): LocalDao
+
     abstract fun joinDao(): JoinDao
+
     abstract fun blacklistDao(): BlacklistDao
 
     companion object {
         /**
          * Only migrate data for [Repo] and [LocalModuleUpdatable]
          */
-        fun build(context: Context) = Room.databaseBuilder(
-            context, AppDatabase::class.java, "mmrl_v2"
-        ).fallbackToDestructiveMigration()
-            .build()
+        fun build(context: Context) =
+            Room
+                .databaseBuilder(
+                    context,
+                    AppDatabase::class.java,
+                    "mmrl_v2",
+                ).fallbackToDestructiveMigration()
+                .build()
     }
 }

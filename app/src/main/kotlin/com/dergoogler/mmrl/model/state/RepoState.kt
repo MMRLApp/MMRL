@@ -33,41 +33,44 @@ data class RepoState(
         support = repo.support,
         submission = repo.submission,
         donate = repo.donate,
-        size = repo.metadata.size
+        size = repo.metadata.size,
     )
 
-    fun toRepo() = Repo(
-        url = url,
-        name = name,
-        enable = enable,
-        website = website,
-        support = support,
-        submission = submission,
-        cover = cover,
-        description = description,
-        donate = donate,
-        metadata = RepoMetadata(
-            version = version,
-            timestamp = timestamp,
-            size = size
+    fun toRepo() =
+        Repo(
+            url = url,
+            name = name,
+            enable = enable,
+            website = website,
+            support = support,
+            submission = submission,
+            cover = cover,
+            description = description,
+            donate = donate,
+            metadata =
+                RepoMetadata(
+                    version = version,
+                    timestamp = timestamp,
+                    size = size,
+                ),
         )
-    )
 
     companion object {
-        fun example() = RepoState(
-            url = "",
-            name = "Fortnite Mods Repository",
-            enable = true,
-            cover = "https://raw.githubusercontent.com/DerGoogler/cdn/refs/heads/master/images/Fortnite-Cover.webp",
-            description = "This repository contains all the mods for Fortnite. Wall hack, ESP and free V-Bucks!",
-            donate = "",
-            support = "",
-            submission = "",
-            website = "",
-            size = 69,
-            version = 0,
-            timestamp = 0f,
-            compatible = true
-        )
+        fun example() =
+            RepoState(
+                url = "",
+                name = "Fortnite Mods Repository",
+                enable = true,
+                cover = "https://raw.githubusercontent.com/DerGoogler/cdn/refs/heads/master/images/Fortnite-Cover.webp",
+                description = "This repository contains all the mods for Fortnite. Wall hack, ESP and free V-Bucks!",
+                donate = "",
+                support = "",
+                submission = "",
+                website = "",
+                size = 69,
+                version = 0,
+                timestamp = 0f,
+                compatible = true,
+            )
     }
 }

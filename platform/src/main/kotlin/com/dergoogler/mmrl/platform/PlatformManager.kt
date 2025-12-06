@@ -29,9 +29,17 @@ import com.dergoogler.mmrl.platform.model.IProvider
 import com.dergoogler.mmrl.platform.stub.IFileManager
 import com.dergoogler.mmrl.platform.stub.IModuleManager
 import com.dergoogler.mmrl.platform.stub.IServiceManager
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.FileDescriptor
 import kotlin.coroutines.resumeWithException
@@ -76,9 +84,10 @@ object PlatformManager {
     @Volatile
     var mServiceOrNull: IServiceManager? = null
     val mService
-        get() = checkNotNull(mServiceOrNull) {
-            "IServiceManager has not been initialized or has been released."
-        }
+        get() =
+            checkNotNull(mServiceOrNull) {
+                "IServiceManager has not been initialized or has been released."
+            }
 
     /**
      * Indicates whether the [IServiceManager] is currently initialized and considered "alive".
@@ -136,9 +145,7 @@ object PlatformManager {
      *         the provider execution) or if the manager was already alive. Returns `false` if
      *         the provider returns `null` or if an exception occurs during initialization.
      */
-    suspend inline fun init(
-        crossinline provider: suspend PlatformManager.() -> IServiceManager?,
-    ): Boolean {
+    suspend inline fun init(crossinline provider: suspend PlatformManager.() -> IServiceManager?): Boolean {
         if (isAlive) {
             return true
         }
@@ -147,7 +154,7 @@ object PlatformManager {
             mServiceOrNull = provider()
             Log.d(
                 TAG,
-                "Sync provider executed. mServiceOrNull is: ${if (mServiceOrNull == null) "null" else "not null"}"
+                "Sync provider executed. mServiceOrNull is: ${if (mServiceOrNull == null) "null" else "not null"}",
             )
             state()
         } catch (e: Exception) {
@@ -194,12 +201,12 @@ object PlatformManager {
             try {
                 Log.d(
                     TAG,
-                    "Starting background initialization on thread: ${Thread.currentThread().name}"
+                    "Starting background initialization on thread: ${Thread.currentThread().name}",
                 )
                 mServiceOrNull = provider()
                 Log.d(
                     TAG,
-                    "Async provider executed. mServiceOrNull is: ${if (mServiceOrNull == null) "null" else "not null"}"
+                    "Async provider executed. mServiceOrNull is: ${if (mServiceOrNull == null) "null" else "not null"}",
                 )
                 state()
             } catch (e: Exception) {
@@ -236,48 +243,53 @@ object PlatformManager {
     suspend fun get(
         provider: IProvider,
         timeoutMillis: Long = TIMEOUT_MILLIS,
-    ): IServiceManager = withTimeout(timeoutMillis) {
-        suspendCancellableCoroutine { continuation ->
-            val connection = object : ServiceConnection {
-                override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-                    Log.d(TAG, "Service connected: $name")
-                    val service = IServiceManager.Stub.asInterface(binder)
-                    if (continuation.isActive) {
-                        continuation.resume(service) {
-                            Log.w(
-                                TAG,
-                                "Failed to resume onServiceConnected, coroutine likely cancelled for $name."
-                            )
+    ): IServiceManager =
+        withTimeout(timeoutMillis) {
+            suspendCancellableCoroutine { continuation ->
+                val connection =
+                    object : ServiceConnection {
+                        override fun onServiceConnected(
+                            name: ComponentName,
+                            binder: IBinder,
+                        ) {
+                            Log.d(TAG, "Service connected: $name")
+                            val service = IServiceManager.Stub.asInterface(binder)
+                            if (continuation.isActive) {
+                                continuation.resume(service) {
+                                    Log.w(
+                                        TAG,
+                                        "Failed to resume onServiceConnected, coroutine likely cancelled for $name.",
+                                    )
+                                }
+                            }
+                        }
+
+                        override fun onServiceDisconnected(name: ComponentName) {
+                            Log.w(TAG, "Service disconnected: $name")
+                            if (continuation.isActive) {
+                                continuation.resumeWithException(IllegalStateException("IServiceManager ($name) disconnected"))
+                            }
+                        }
+
+                        override fun onBindingDied(name: ComponentName?) {
+                            Log.e(TAG, "Binding died for service: $name")
+                            if (continuation.isActive) {
+                                continuation.resumeWithException(IllegalStateException("IServiceManager ($name) binding died"))
+                            }
                         }
                     }
-                }
-
-                override fun onServiceDisconnected(name: ComponentName) {
-                    Log.w(TAG, "Service disconnected: $name")
-                    if (continuation.isActive) {
-                        continuation.resumeWithException(IllegalStateException("IServiceManager ($name) disconnected"))
+                Log.d(TAG, "Binding to provider: ${provider.name}")
+                provider.bind(connection)
+                continuation.invokeOnCancellation {
+                    Log.d(TAG, "Coroutine cancelled, unbinding from provider: ${provider.name}")
+                    try {
+                        provider.unbind(connection)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error unbinding provider '${provider.name}' on cancellation", e)
                     }
-                }
-
-                override fun onBindingDied(name: ComponentName?) {
-                    Log.e(TAG, "Binding died for service: $name")
-                    if (continuation.isActive) {
-                        continuation.resumeWithException(IllegalStateException("IServiceManager ($name) binding died"))
-                    }
-                }
-            }
-            Log.d(TAG, "Binding to provider: ${provider.name}")
-            provider.bind(connection)
-            continuation.invokeOnCancellation {
-                Log.d(TAG, "Coroutine cancelled, unbinding from provider: ${provider.name}")
-                try {
-                    provider.unbind(connection)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error unbinding provider '${provider.name}' on cancellation", e)
                 }
             }
         }
-    }
 
     /**
      * Attempts to retrieve an [IServiceManager] from the given [provider].
@@ -296,28 +308,29 @@ object PlatformManager {
     suspend fun from(
         provider: IProvider,
         timeoutMillis: Long = TIMEOUT_MILLIS,
-    ): IServiceManager = withContext(Dispatchers.Main) {
-        Log.d(TAG, "Attempting to get service from provider: ${provider.name}")
-        when {
-            !provider.isAvailable() -> {
-                Log.w(TAG, "Provider ${provider.name} not available.")
-                throw IllegalStateException("${provider.name} not available")
-            }
+    ): IServiceManager =
+        withContext(Dispatchers.Main) {
+            Log.d(TAG, "Attempting to get service from provider: ${provider.name}")
+            when {
+                !provider.isAvailable() -> {
+                    Log.w(TAG, "Provider ${provider.name} not available.")
+                    throw IllegalStateException("${provider.name} not available")
+                }
 
-            !provider.isAuthorized() -> {
-                Log.w(TAG, "Provider ${provider.name} not authorized.")
-                throw IllegalStateException("${provider.name} not authorized")
-            }
+                !provider.isAuthorized() -> {
+                    Log.w(TAG, "Provider ${provider.name} not authorized.")
+                    throw IllegalStateException("${provider.name} not authorized")
+                }
 
-            else -> {
-                Log.d(
-                    TAG,
-                    "Provider ${provider.name} is available and authorized. Getting service."
-                )
-                get(provider, timeoutMillis)
+                else -> {
+                    Log.d(
+                        TAG,
+                        "Provider ${provider.name} is available and authorized. Getting service.",
+                    )
+                    get(provider, timeoutMillis)
+                }
             }
         }
-    }
 
     /**
      * Provides access to the module management functionalities.
@@ -414,14 +427,15 @@ object PlatformManager {
      * @return The current [Platform], or [Platform.Unknown] if an error occurs or the service is unavailable.
      */
     val platform: Platform
-        get() = serviceOrNull(Platform.Unknown) {
-            try {
-                Platform.from(currentPlatform())
-            } catch (e: Exception) {
-                Log.e(TAG, "Error getting current platform from service, defaulting to NonRoot.", e)
-                Platform.Unknown
+        get() =
+            serviceOrNull(Platform.Unknown) {
+                try {
+                    Platform.from(currentPlatform())
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error getting current platform from service, defaulting to NonRoot.", e)
+                    Platform.Unknown
+                }
             }
-        }
 
     val type get() = platform.type
 
@@ -465,9 +479,10 @@ object PlatformManager {
      *              This block will only be executed if the service is alive.
      * @return The result of the `block` if the service is alive, or the `fallback` value otherwise.
      */
-    fun <T> get(fallback: T, block: PlatformManager.() -> T): T {
-        return if (isAlive) block(this) else fallback
-    }
+    fun <T> get(
+        fallback: T,
+        block: PlatformManager.() -> T,
+    ): T = if (isAlive) block(this) else fallback
 
     /**
      * Asynchronously executes a block of code if the [PlatformManager] is alive.
@@ -494,8 +509,8 @@ object PlatformManager {
         scope: CoroutineScope,
         fallback: T,
         crossinline block: @DisallowComposableCalls suspend PlatformManager.() -> T,
-    ): Deferred<T> {
-        return scope.async(Dispatchers.IO) {
+    ): Deferred<T> =
+        scope.async(Dispatchers.IO) {
             if (isAlive) {
                 try {
                     block()
@@ -507,7 +522,6 @@ object PlatformManager {
                 fallback
             }
         }
-    }
 
     /**
      * Sets Hidden API exemptions using [HiddenApiBypass.addHiddenApiExemptions].
@@ -528,71 +542,86 @@ object PlatformManager {
      *         `false` otherwise (e.g., if `HiddenApiBypass.addHiddenApiExemptions` returns `false`).
      * @see HiddenApiBypass.addHiddenApiExemptions
      */
-    fun setHiddenApiExemptions(vararg signaturePrefixes: String = arrayOf("")): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+    fun setHiddenApiExemptions(vararg signaturePrefixes: String = arrayOf("")): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Log.d(
                 TAG,
-                "Setting Hidden API exemptions with prefixes: ${signaturePrefixes.joinToString()}"
+                "Setting Hidden API exemptions with prefixes: ${signaturePrefixes.joinToString()}",
             )
             HiddenApiBypass.addHiddenApiExemptions(*signaturePrefixes)
         } else {
             Log.d(TAG, "Hidden API exemptions not needed on SDK < P.")
             true
         }
-    }
 
-    fun <T : IBinder> T.proxyBy(service: IServiceManager): IBinder = object : IBinder {
-        private val originalBinder: IBinder = this@proxyBy
-        private val serviceBinder: IBinder = service.asBinder()
+    fun <T : IBinder> T.proxyBy(service: IServiceManager): IBinder =
+        object : IBinder {
+            private val originalBinder: IBinder = this@proxyBy
+            private val serviceBinder: IBinder = service.asBinder()
 
-        override fun getInterfaceDescriptor(): String? = originalBinder.interfaceDescriptor
-        override fun pingBinder(): Boolean = originalBinder.pingBinder()
-        override fun isBinderAlive(): Boolean =
-            originalBinder.isBinderAlive && serviceBinder.isBinderAlive
+            override fun getInterfaceDescriptor(): String? = originalBinder.interfaceDescriptor
 
-        override fun queryLocalInterface(descriptor: String): IInterface? = null
-        override fun dump(fd: FileDescriptor, args: Array<out String>?) =
-            originalBinder.dump(fd, args)
+            override fun pingBinder(): Boolean = originalBinder.pingBinder()
 
-        override fun dumpAsync(fd: FileDescriptor, args: Array<out String>?) =
-            originalBinder.dumpAsync(fd, args)
+            override fun isBinderAlive(): Boolean = originalBinder.isBinderAlive && serviceBinder.isBinderAlive
 
-        override fun linkToDeath(recipient: IBinder.DeathRecipient, flags: Int) {
-            originalBinder.linkToDeath(recipient, flags)
-        }
+            override fun queryLocalInterface(descriptor: String): IInterface? = null
 
-        override fun unlinkToDeath(recipient: IBinder.DeathRecipient, flags: Int): Boolean {
-            return originalBinder.unlinkToDeath(recipient, flags)
-        }
+            override fun dump(
+                fd: FileDescriptor,
+                args: Array<out String>?,
+            ) = originalBinder.dump(fd, args)
 
-        override fun transact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
-            if (!serviceBinder.isBinderAlive) {
-                Log.e(TAG, "Proxy transact: ServiceManager is dead.")
-                return false
+            override fun dumpAsync(
+                fd: FileDescriptor,
+                args: Array<out String>?,
+            ) = originalBinder.dumpAsync(fd, args)
+
+            override fun linkToDeath(
+                recipient: IBinder.DeathRecipient,
+                flags: Int,
+            ) {
+                originalBinder.linkToDeath(recipient, flags)
             }
-            val newData = Parcel.obtain()
-            var result = false
-            try {
-                newData.apply {
-                    writeInterfaceToken(IServiceManager.DESCRIPTOR)
-                    writeStrongBinder(originalBinder)
-                    writeInt(code)
-                    writeInt(flags)
-                    if (data.dataSize() > 0) {
-                        appendFrom(data, 0, data.dataSize())
-                    }
+
+            override fun unlinkToDeath(
+                recipient: IBinder.DeathRecipient,
+                flags: Int,
+            ): Boolean = originalBinder.unlinkToDeath(recipient, flags)
+
+            override fun transact(
+                code: Int,
+                data: Parcel,
+                reply: Parcel?,
+                flags: Int,
+            ): Boolean {
+                if (!serviceBinder.isBinderAlive) {
+                    Log.e(TAG, "Proxy transact: ServiceManager is dead.")
+                    return false
                 }
+                val newData = Parcel.obtain()
+                var result = false
+                try {
+                    newData.apply {
+                        writeInterfaceToken(IServiceManager.DESCRIPTOR)
+                        writeStrongBinder(originalBinder)
+                        writeInt(code)
+                        writeInt(flags)
+                        if (data.dataSize() > 0) {
+                            appendFrom(data, 0, data.dataSize())
+                        }
+                    }
 
-                result = serviceBinder.transact(BINDER_TRANSACTION, newData, reply, 0)
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception during proxy transact", e)
-                throw e
-            } finally {
-                newData.recycle()
+                    result = serviceBinder.transact(BINDER_TRANSACTION, newData, reply, 0)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Exception during proxy transact", e)
+                    throw e
+                } finally {
+                    newData.recycle()
+                }
+                return result
             }
-            return result
         }
-    }
 
     /**
      * Adds a service defined by its class to the PlatformManager.
@@ -608,9 +637,10 @@ object PlatformManager {
      * @see serviceOrNull
      * @see Service
      */
-    fun <T : IService> addService(clazz: Class<T>): IBinder? = serviceOrNull {
-        addService(Service<T>(clazz.name))
-    }
+    fun <T : IService> addService(clazz: Class<T>): IBinder? =
+        serviceOrNull {
+            addService(Service<T>(clazz.name))
+        }
 
     /**
      * Adds a service to the IServiceManager.
@@ -627,11 +657,15 @@ object PlatformManager {
      * @see IServiceManager.addService
      * @see serviceOrNull
      */
-    fun <T : IService> addService(service: Service<T>): IBinder? = serviceOrNull {
-        addService(service)
-    }
+    fun <T : IService> addService(service: Service<T>): IBinder? =
+        serviceOrNull {
+            addService(service)
+        }
 
-    fun <T : IInterface> addService(name: String, service: T) {
+    fun <T : IInterface> addService(
+        name: String,
+        service: T,
+    ) {
         serviceOrNull {
             addServiceBinder(name, service.asBinder())
         }
@@ -648,9 +682,10 @@ object PlatformManager {
      * @see PlatformManager.addService
      * @see Service
      */
-    fun <T : IService> Class<T>.addAsService(): IBinder? = serviceOrNull {
-        addService(Service<T>(this@addAsService.name))
-    }
+    fun <T : IService> Class<T>.addAsService(): IBinder? =
+        serviceOrNull {
+            addService(Service<T>(this@addAsService.name))
+        }
 
     /**
      * Retrieves a system service by its name.
@@ -662,12 +697,12 @@ object PlatformManager {
      * @return The IBinder interface for the service if found and the `IServiceManager` is available,
      *         otherwise `null`.
      */
-    fun getService(name: String): IBinder? = serviceOrNull {
-        getService(name)
-    }
+    fun getService(name: String): IBinder? =
+        serviceOrNull {
+            getService(name)
+        }
 
-    fun <T : IInterface> T.proxyBy(service: IServiceManager): IBinder =
-        this.asBinder().proxyBy(service)
+    fun <T : IInterface> T.proxyBy(service: IServiceManager): IBinder = this.asBinder().proxyBy(service)
 
     /**
      * Retrieves a system service by its name and wraps it in a proxy.
@@ -692,17 +727,19 @@ object PlatformManager {
         return systemServiceBinder?.proxyBy(this@PlatformManager.mService)
     }
 
-    fun <T> serviceOrNull(default: T, block: IServiceManager.() -> T): T =
-        mServiceOrNull?.let { block(it) } ?: default
+    fun <T> serviceOrNull(
+        default: T,
+        block: IServiceManager.() -> T,
+    ): T = mServiceOrNull?.let { block(it) } ?: default
 
-    fun <T> serviceOrNull(block: IServiceManager.() -> T): T? =
-        mServiceOrNull?.let { block(it) }
+    fun <T> serviceOrNull(block: IServiceManager.() -> T): T? = mServiceOrNull?.let { block(it) }
 
     val context: Context
         @Throws(IllegalStateException::class)
         get() {
-            val currentApp = ActivityThread.currentApplication()
-                ?: throw IllegalStateException("Application is not initialized yet.")
+            val currentApp =
+                ActivityThread.currentApplication()
+                    ?: throw IllegalStateException("Application is not initialized yet.")
             var ctx: Context = currentApp
             while (ctx is ContextWrapper) {
                 ctx = ctx.baseContext ?: return ctx

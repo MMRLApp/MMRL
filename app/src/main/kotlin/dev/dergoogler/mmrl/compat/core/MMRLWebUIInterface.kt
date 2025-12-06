@@ -8,8 +8,11 @@ import android.webkit.WebView
 
 interface WebUIConsole {
     fun error(message: String)
+
     fun info(message: String)
+
     fun log(message: String)
+
     fun warn(message: String)
 }
 
@@ -18,8 +21,11 @@ open class MMRLWebUIInterface(
     internal val context: Context,
 ) {
     internal val activity = context as Activity
+
     internal fun runOnUiThread(block: () -> Unit) = (context as Activity).runOnUiThread(block)
+
     internal fun runJs(script: String) = runOnUiThread { webView.evaluateJavascript(script, null) }
+
     internal fun runPost(action: WebView.() -> Unit) {
         webView.post { action(webView) }
     }
@@ -38,23 +44,28 @@ open class MMRLWebUIInterface(
         }
     }
 
-    internal val console = object : WebUIConsole {
-        override fun error(message: String) = runJs("console.error('$message')")
-        override fun info(message: String) = runJs("console.info('$message')")
-        override fun log(message: String) = runJs("console.log('$message')")
-        override fun warn(message: String) = runJs("console.warn('$message')")
-    }
+    internal val console =
+        object : WebUIConsole {
+            override fun error(message: String) = runJs("console.error('$message')")
+
+            override fun info(message: String) = runJs("console.info('$message')")
+
+            override fun log(message: String) = runJs("console.log('$message')")
+
+            override fun warn(message: String) = runJs("console.warn('$message')")
+        }
 
     internal fun <R> runTry(
         message: String = "Unknown Error",
         default: R,
         block: () -> R,
-    ): R = try {
-        block()
-    } catch (e: Throwable) {
-        runJs("new Error('$message', { cause: \"${e.message}\" })")
-        default
-    }
+    ): R =
+        try {
+            block()
+        } catch (e: Throwable) {
+            runJs("new Error('$message', { cause: \"${e.message}\" })")
+            default
+        }
 
     internal fun <R> runTry(
         message: String = "Unknown Error",

@@ -10,13 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun NavigationBarsSpacer(
-    modifier: Modifier = Modifier
-) {
+fun NavigationBarsSpacer(modifier: Modifier = Modifier) {
     val paddingValues = WindowInsets.navigationBars.asPaddingValues()
 
     Box(
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier.padding(paddingValues),
     ) {
         Spacer(modifier = modifier)
     }

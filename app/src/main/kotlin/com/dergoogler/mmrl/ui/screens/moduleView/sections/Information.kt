@@ -46,20 +46,21 @@ internal fun Information() {
     userPreferences.developerMode.takeTrue {
         ModuleInfoListItem(
             title = R.string.view_module_module_id,
-            desc = module.id
+            desc = module.id,
         )
     }
 
     module.license.ifNotNullOrBlank {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
         ) {
             Text(
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.outline),
                 modifier = Modifier.weight(1f),
-                text = stringResource(id = R.string.view_module_license)
+                text = stringResource(id = R.string.view_module_license),
             )
             LicenseItem(licenseId = it)
         }
@@ -67,39 +68,41 @@ internal fun Information() {
 
     ModuleInfoListItem(
         title = R.string.view_module_version,
-        desc = "${module.version} (${module.versionCode})"
+        desc = "${module.version} (${module.versionCode})",
     )
 
     lastVersionItem.isValid {
         ModuleInfoListItem(
             title = R.string.view_module_last_updated,
-            desc = it.timestamp.toFormattedDateSafely
+            desc = it.timestamp.toFormattedDateSafely,
         )
     }
 
     module.size?.let {
         ModuleInfoListItem(
             title = R.string.view_module_file_size,
-            desc = it.toFormattedFileSize()
+            desc = it.toFormattedFileSize(),
         )
     }
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
     ) {
         Text(
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.outline),
             modifier = Modifier.weight(1f),
-            text = stringResource(id = R.string.view_module_provided_by)
+            text = stringResource(id = R.string.view_module_provided_by),
         )
 
         Text(
             style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.surfaceTint),
-            modifier = Modifier.clickable(
-                onClick = { viewModel.viewTrackBottomSheet = true }
-            ),
+            modifier =
+                Modifier.clickable(
+                    onClick = { viewModel.viewTrackBottomSheet = true },
+                ),
             text = viewModel.repo.name,
         )
     }
@@ -107,54 +110,56 @@ internal fun Information() {
     module.manager(viewModel.platform).min?.let {
         ModuleInfoListItem(
             title = R.string.view_module_required_root_version,
-            desc = it.toString()
+            desc = it.toString(),
         )
     }
 
     module.minApi?.let {
         ModuleInfoListItem(
             title = R.string.view_module_required_os,
-            desc = stringResource(
-                R.string.view_module_required_os_value, when (it) {
-                    Build.VERSION_CODES.JELLY_BEAN -> "4.1"
-                    Build.VERSION_CODES.JELLY_BEAN_MR1 -> "4.2"
-                    Build.VERSION_CODES.JELLY_BEAN_MR2 -> "4.3"
-                    Build.VERSION_CODES.KITKAT -> "4.4"
-                    Build.VERSION_CODES.KITKAT_WATCH -> "4.4"
-                    Build.VERSION_CODES.LOLLIPOP -> "5.0"
-                    Build.VERSION_CODES.LOLLIPOP_MR1 -> "5.1"
-                    Build.VERSION_CODES.M -> "6.0"
-                    Build.VERSION_CODES.N -> "7.0"
-                    Build.VERSION_CODES.N_MR1 -> "7.1"
-                    Build.VERSION_CODES.O -> "8.0"
-                    Build.VERSION_CODES.O_MR1 -> "8.1"
-                    Build.VERSION_CODES.P -> "9.0"
-                    Build.VERSION_CODES.Q -> "10"
-                    Build.VERSION_CODES.R -> "11"
-                    Build.VERSION_CODES.S -> "12"
-                    Build.VERSION_CODES.S_V2 -> "12"
-                    Build.VERSION_CODES.TIRAMISU -> "13"
-                    Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> "14"
-                    else -> "[Sdk: $it]"
-                }
-            )
+            desc =
+                stringResource(
+                    R.string.view_module_required_os_value,
+                    when (it) {
+                        Build.VERSION_CODES.JELLY_BEAN -> "4.1"
+                        Build.VERSION_CODES.JELLY_BEAN_MR1 -> "4.2"
+                        Build.VERSION_CODES.JELLY_BEAN_MR2 -> "4.3"
+                        Build.VERSION_CODES.KITKAT -> "4.4"
+                        Build.VERSION_CODES.KITKAT_WATCH -> "4.4"
+                        Build.VERSION_CODES.LOLLIPOP -> "5.0"
+                        Build.VERSION_CODES.LOLLIPOP_MR1 -> "5.1"
+                        Build.VERSION_CODES.M -> "6.0"
+                        Build.VERSION_CODES.N -> "7.0"
+                        Build.VERSION_CODES.N_MR1 -> "7.1"
+                        Build.VERSION_CODES.O -> "8.0"
+                        Build.VERSION_CODES.O_MR1 -> "8.1"
+                        Build.VERSION_CODES.P -> "9.0"
+                        Build.VERSION_CODES.Q -> "10"
+                        Build.VERSION_CODES.R -> "11"
+                        Build.VERSION_CODES.S -> "12"
+                        Build.VERSION_CODES.S_V2 -> "12"
+                        Build.VERSION_CODES.TIRAMISU -> "13"
+                        Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> "14"
+                        else -> "[Sdk: $it]"
+                    },
+                ),
         )
     }
 
     module.track.added?.let {
         ModuleInfoListItem(
             title = R.string.view_module_added_on,
-            desc = it.toFormattedDateSafely
+            desc = it.toFormattedDateSafely,
         )
     }
 
-
     local.isValid { loc ->
         List(
-            contentPadding = PaddingValues(
-                vertical = 8.dp,
-                horizontal = 16.dp
-            )
+            contentPadding =
+                PaddingValues(
+                    vertical = 8.dp,
+                    horizontal = 16.dp,
+                ),
         ) {
             CollapseItem(
                 meta = { icon, rotation ->
@@ -165,31 +170,32 @@ internal fun Information() {
                                 MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.surfaceTint)
 
                             it.merge(newStyle)
-                        }
+                        },
                     )
                     Icon(
                         slot = ListItemSlot.End,
-                        modifier = Modifier
-                            .graphicsLayer(rotationZ = rotation),
+                        modifier =
+                            Modifier
+                                .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
-                }
+                },
             ) {
                 userPreferences.developerMode.takeTrue {
                     ModuleInfoListItem(
                         title = R.string.view_module_module_id,
-                        desc = loc.id.toString()
+                        desc = loc.id.toString(),
                     )
                 }
 
                 ModuleInfoListItem(
                     title = R.string.view_module_version,
-                    desc = "${loc.version} (${loc.versionCode})"
+                    desc = "${loc.version} (${loc.versionCode})",
                 )
 
                 ModuleInfoListItem(
                     title = R.string.view_module_last_updated,
-                    desc = loc.lastUpdated.toFormattedDateSafely
+                    desc = loc.lastUpdated.toFormattedDateSafely,
                 )
             }
         }
@@ -204,18 +210,19 @@ private fun ModuleInfoListItem(
     infoCanDiffer: Boolean = false,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
     ) {
         Text(
             style = style.copy(color = MaterialTheme.colorScheme.outline),
             modifier = Modifier.weight(1f),
-            text = stringResource(id = title) + if (infoCanDiffer) " *" else ""
+            text = stringResource(id = title) + if (infoCanDiffer) " *" else "",
         )
         Text(
             style = style,
-            text = desc
+            text = desc,
         )
     }
 }

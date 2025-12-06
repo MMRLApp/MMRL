@@ -28,7 +28,7 @@ fun ListScope.Section(
 
     title.nullable {
         Item(
-            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 25.dp)
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 25.dp),
         ) {
             Slot(ListItemSlot.Title) {
                 ProvideTextStyle(style) {
@@ -43,10 +43,7 @@ fun ListScope.Section(
     divider.takeTrue {
         HorizontalDivider(
             modifier = Modifier.padding(vertical = 8.dp),
-            thickness = Dp.Hairline
+            thickness = Dp.Hairline,
         )
     }
 }
-
-
-

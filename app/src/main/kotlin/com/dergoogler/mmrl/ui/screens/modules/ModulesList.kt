@@ -59,7 +59,7 @@ fun ScaffoldScope.ModulesList(
     viewModel: ModulesViewModel,
     isProviderAlive: Boolean,
 ) = Box(
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier.fillMaxSize(),
 ) {
     val paddingValues = LocalMainScreenInnerPaddings.current
     val layoutDirection = LocalLayoutDirection.current
@@ -67,24 +67,26 @@ fun ScaffoldScope.ModulesList(
     this@ModulesList.ResponsiveContent {
         LazyColumn(
             state = state,
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeSource(state = LocalHazeState.current),
-            contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding() + 16.dp,
-                start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
-                bottom = paddingValues.calculateBottomPadding() + 16.dp,
-                end = 16.dp
-            ),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .hazeSource(state = LocalHazeState.current),
+            contentPadding =
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding() + 16.dp,
+                    start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
+                    bottom = paddingValues.calculateBottomPadding() + 16.dp,
+                    end = 16.dp,
+                ),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(
                 items = list,
                 key = { it.id.id },
-                contentType = { "module_item" }
+                contentType = { "module_item" },
             ) { module ->
                 CompositionLocalProvider(
-                    LocalModule provides module
+                    LocalModule provides module,
                 ) {
                     ModuleItem(
                         viewModel = viewModel,
@@ -98,12 +100,13 @@ fun ScaffoldScope.ModulesList(
 
     VerticalFastScrollbar(
         state = state,
-        modifier = Modifier
-            .align(Alignment.CenterEnd)
-            .padding(
-                top = innerPadding.calculateTopPadding(),
-                bottom = paddingValues.calculateBottomPadding()
-            )
+        modifier =
+            Modifier
+                .align(Alignment.CenterEnd)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding(),
+                ),
     )
 }
 
@@ -121,7 +124,7 @@ private fun ModuleItem(
         derivedStateOf {
             viewModel.createModuleOps(
                 userPreferences.useShellForModuleStateChange,
-                module
+                module,
             )
         }
     }
@@ -138,12 +141,13 @@ private fun ModuleItem(
 
     val isModuleEnabled by remember(module.state, isProviderAlive, viewModel.platform) {
         derivedStateOf {
-            val enabled = with(viewModel.platform) {
-                when {
-                    isKernelSuNext || isKernelSU || isAPatch -> isProviderAlive && module.state != State.UPDATE
-                    else -> isProviderAlive
+            val enabled =
+                with(viewModel.platform) {
+                    when {
+                        isKernelSuNext || isKernelSU || isAPatch -> isProviderAlive && module.state != State.UPDATE
+                        else -> isProviderAlive
+                    }
                 }
-            }
             enabled && module.state != State.REMOVE
         }
     }
@@ -167,7 +171,7 @@ private fun ModuleItem(
         isProviderAlive = isProviderAlive,
         onDownload = { onDownload(module, item!!, it) },
         onClose = { open = false },
-        isBlacklisted = isBlacklisted
+        isBlacklisted = isBlacklisted,
     )
 
     ModuleItem(
@@ -175,19 +179,21 @@ private fun ModuleItem(
         isBlacklisted = isBlacklisted,
         progress = progress,
         indeterminate = ops.isOpsRunning,
-        alpha = when (module.state) {
-            State.DISABLE, State.REMOVE -> 0.5f
-            else -> 1f
-        },
-        decoration = when (module.state) {
-            State.REMOVE -> TextDecoration.LineThrough
-            else -> TextDecoration.None
-        },
+        alpha =
+            when (module.state) {
+                State.DISABLE, State.REMOVE -> 0.5f
+                else -> 1f
+            },
+        decoration =
+            when (module.state) {
+                State.REMOVE -> TextDecoration.LineThrough
+                else -> TextDecoration.None
+            },
         switch = {
             Switch(
                 checked = isModuleSwitchChecked,
                 onCheckedChange = ops.toggle,
-                enabled = isModuleEnabled
+                enabled = isModuleEnabled,
             )
         },
         indicator = {
@@ -201,14 +207,15 @@ private fun ModuleItem(
             module.hasAction.rememberTrue {
                 ActionButton(
                     enabled = isActionEnabled,
-                    onClick = remember {
-                        {
-                            ActionActivity.start(
-                                context = context,
-                                modId = module.id
-                            )
-                        }
-                    }
+                    onClick =
+                        remember {
+                            {
+                                ActionActivity.start(
+                                    context = context,
+                                    modId = module.id,
+                                )
+                            }
+                        },
                 )
             }
         },
@@ -220,7 +227,7 @@ private fun ModuleItem(
 
                 UpdateButton(
                     enabled = hasUpdate,
-                    onClick = remember { { open = true } }
+                    onClick = remember { { open = true } },
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
@@ -229,19 +236,23 @@ private fun ModuleItem(
             val isRemoveOrRestoreEnabled by remember(
                 userPreferences.useShellForModuleStateChange,
                 module.state,
-                isProviderAlive
+                isProviderAlive,
             ) {
                 derivedStateOf {
-                    isProviderAlive && (!(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) || module.state != State.REMOVE)
+                    isProviderAlive &&
+                        (
+                            !(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) ||
+                                module.state != State.REMOVE
+                        )
                 }
             }
 
             RemoveOrRestore(
                 module = module,
                 enabled = isRemoveOrRestoreEnabled,
-                onClick = ops.change
+                onClick = ops.change,
             )
-        }
+        },
     )
 }
 
@@ -261,7 +272,7 @@ private fun VersionItemBottomSheetIfNeeded(
             isProviderAlive = isProviderAlive,
             onDownload = onDownload,
             onClose = onClose,
-            isBlacklisted = isBlacklisted
+            isBlacklisted = isBlacklisted,
         )
     }
 }
@@ -278,17 +289,17 @@ private fun UpdateButton(
     FilledTonalButton(
         onClick = onClick,
         enabled = enabled,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         Icon(
             modifier = iconSize,
             painter = painterResource(id = R.drawable.device_mobile_down),
-            contentDescription = null
+            contentDescription = null,
         )
 
         Spacer(modifier = spacerWidth)
         Text(
-            text = stringResource(id = R.string.module_update)
+            text = stringResource(id = R.string.module_update),
         )
     }
 }
@@ -307,29 +318,33 @@ private fun RemoveOrRestore(
     FilledTonalButton(
         onClick = onClick,
         enabled = enabled,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         Icon(
             modifier = iconSize,
-            painter = painterResource(
-                id = if (module.state == State.REMOVE) {
-                    R.drawable.rotate
-                } else {
-                    R.drawable.trash
-                }
-            ),
-            contentDescription = null
+            painter =
+                painterResource(
+                    id =
+                        if (module.state == State.REMOVE) {
+                            R.drawable.rotate
+                        } else {
+                            R.drawable.trash
+                        },
+                ),
+            contentDescription = null,
         )
 
         Spacer(modifier = spacerWidth)
         Text(
-            text = stringResource(
-                id = if (module.state == State.REMOVE) {
-                    R.string.module_restore
-                } else {
-                    R.string.module_remove
-                }
-            )
+            text =
+                stringResource(
+                    id =
+                        if (module.state == State.REMOVE) {
+                            R.string.module_restore
+                        } else {
+                            R.string.module_remove
+                        },
+                ),
         )
     }
 }
@@ -345,12 +360,12 @@ private fun ActionButton(
     FilledTonalButton(
         onClick = onClick,
         enabled = enabled,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         Icon(
             modifier = iconSize,
             painter = painterResource(id = R.drawable.player_play),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

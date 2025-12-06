@@ -63,10 +63,11 @@ enum class ColorSchemeKeyTokens {
 }
 
 val ColorSchemeKeyTokens.value: Color
-    @Composable @ReadOnlyComposable get() = MaterialTheme.colorScheme.fromToken(this)
+    @Composable @ReadOnlyComposable
+    get() = MaterialTheme.colorScheme.fromToken(this)
 
-fun ColorScheme.fromToken(value: ColorSchemeKeyTokens): Color {
-    return when (value) {
+fun ColorScheme.fromToken(value: ColorSchemeKeyTokens): Color =
+    when (value) {
         ColorSchemeKeyTokens.Background -> background
         ColorSchemeKeyTokens.Error -> error
         ColorSchemeKeyTokens.ErrorContainer -> errorContainer
@@ -105,10 +106,12 @@ fun ColorScheme.fromToken(value: ColorSchemeKeyTokens): Color {
         ColorSchemeKeyTokens.TertiaryContainer -> tertiaryContainer
         else -> Color.Unspecified
     }
-}
 
 @Composable
-fun ColorScheme.applyTonalElevation(backgroundColor: Color, elevation: Dp): Color {
+fun ColorScheme.applyTonalElevation(
+    backgroundColor: Color,
+    elevation: Dp,
+): Color {
     val tonalElevationEnabled = LocalTonalElevationEnabled.current
     return if (backgroundColor == surface && tonalElevationEnabled) {
         surfaceColorAtElevation(elevation)
@@ -117,9 +120,7 @@ fun ColorScheme.applyTonalElevation(backgroundColor: Color, elevation: Dp): Colo
     }
 }
 
-fun ColorScheme.surfaceColorAtElevation(
-    elevation: Dp,
-): Color {
+fun ColorScheme.surfaceColorAtElevation(elevation: Dp): Color {
     if (elevation == 0.dp) return surface
     val alpha = ((4.5f * ln(elevation.value + 1)) + 2f) / 100f
     return surfaceTint.copy(alpha = alpha).compositeOver(surface)

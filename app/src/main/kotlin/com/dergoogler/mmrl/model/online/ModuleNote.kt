@@ -14,10 +14,8 @@ data class ModuleNote(
     val hasMessage = message.isNotNullOrBlank()
     val isDeprecated = title.orEmpty().lowercase() == "deprecated"
 
-    fun isNotEmpty() =
-        title.isNotNullOrBlank() || message.isNotNullOrBlank()
+    fun isNotEmpty() = title.isNotNullOrBlank() || message.isNotNullOrBlank()
 }
-
 
 inline fun <R> ModuleNote?.hasValidMessage(block: (ModuleNote) -> R): R? {
     if (this != null && isNotEmpty()) {

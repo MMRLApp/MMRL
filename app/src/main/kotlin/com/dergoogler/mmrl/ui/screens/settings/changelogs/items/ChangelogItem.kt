@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.app.Const
+import com.dergoogler.mmrl.ext.fadingEdge
+import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.model.online.Changelog
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.MarkdownText
-import com.dergoogler.mmrl.ext.fadingEdge
-import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
@@ -35,77 +35,80 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 
 @Composable
-fun ListScope.ChangelogItem(
-    changelog: Changelog,
-) {
+fun ListScope.ChangelogItem(changelog: Changelog) {
     var open by remember { mutableStateOf(false) }
     if (open) {
         ChangelogBottomSheet(changelog = changelog, onClose = { open = false })
     }
 
     ButtonItem(
-        onClick = { open = true }
+        onClick = { open = true },
     ) {
         Title(changelog.versionName)
         Description(changelog.versionCode.toString())
         changelog.preRelease.takeTrue {
             Labels {
                 LabelItem(
-                    text = stringResource(
-                        id = R.string.pre_release
-                    )
+                    text =
+                        stringResource(
+                            id = R.string.pre_release,
+                        ),
                 )
             }
         }
     }
 }
 
-
 @Composable
 fun ChangelogBottomSheet(
-    changelog: Changelog, onClose: () -> Unit,
+    changelog: Changelog,
+    onClose: () -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
     val browser = LocalUriHandler.current
 
-    val topBottomFade = Brush.verticalGradient(
-        0f to Color.Transparent,
-        0.03f to Color.Red,
-        0.97f to Color.Red,
-        1f to Color.Transparent
-    )
-
+    val topBottomFade =
+        Brush.verticalGradient(
+            0f to Color.Transparent,
+            0.03f to Color.Red,
+            0.97f to Color.Red,
+            1f to Color.Transparent,
+        )
 
     Column(
-        modifier = Modifier
-            .padding(bottom = 16.dp)
+        modifier =
+            Modifier
+                .padding(bottom = 16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .fadingEdge(topBottomFade)
-                .verticalScroll(rememberScrollState()),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fadingEdge(topBottomFade)
+                    .verticalScroll(rememberScrollState()),
         ) {
             MarkdownText(
                 text = "# ${changelog.versionName} (${changelog.versionCode})\n${changelog.changes}",
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(horizontal = 18.dp)
-                    .padding(top = 8.dp)
-                    .padding(bottom = 18.dp)
+                modifier =
+                    Modifier
+                        .padding(horizontal = 18.dp)
+                        .padding(top = 8.dp)
+                        .padding(bottom = 18.dp),
             )
         }
 
         Button(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
             onClick = {
                 if (BuildConfig.IS_GOOGLE_PLAY_BUILD) {
                     browser.openUri(Const.GOOGLE_PLAY_DOWNLOAD)
                 } else {
                     browser.openUri(Const.GITHUB_DOWNLOAD + "/tag/${changelog.versionName}")
                 }
-            }
+            },
         ) {
             Text(stringResource(id = R.string.module_download))
         }

@@ -1,8 +1,8 @@
 package com.dergoogler.mmrl.ui.providable
 
+import androidx.compose.runtime.CompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavHostController
-import androidx.compose.runtime.CompositionLocal;
 
 /**
  * [CompositionLocal] for providing the [NavHostController] within a Compose hierarchy.
@@ -38,6 +38,7 @@ import androidx.compose.runtime.CompositionLocal;
  * }
  * ```
  */
-val LocalNavController = staticCompositionLocalOf<NavHostController> {
-    error("CompositionLocal NavController not present")
-}
+val LocalNavController =
+    staticCompositionLocalOf<NavHostController> {
+        error("CompositionLocal NavController not present")
+    }

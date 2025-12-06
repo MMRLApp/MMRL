@@ -33,5 +33,5 @@ fun NavigateUpTopBar(
     colors = colors,
     scrollBehavior = scrollBehavior,
     enable = enable,
-    bottomBorder = bottomBorder
+    bottomBorder = bottomBorder,
 )

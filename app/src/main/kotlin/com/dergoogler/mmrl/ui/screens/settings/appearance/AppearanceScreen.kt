@@ -28,19 +28,19 @@ fun AppearanceScreen() {
     val userPreferences = LocalUserPreferences.current
 
     SettingsScaffold(
-        title = R.string.settings_appearance
+        title = R.string.settings_appearance,
     ) {
         NavButton(
             title = R.string.settings_app_theme,
             desc = R.string.settings_app_theme_desc,
-            route = AppThemeScreenDestination
+            route = AppThemeScreenDestination,
         )
 
         TextEditDialogItem(
             value = userPreferences.datePattern,
             onConfirm = {
                 viewModel.setDatePattern(it)
-            }
+            },
         ) {
             Title(R.string.settings_date_pattern)
             Description(R.string.settings_date_pattern_desc)
@@ -49,47 +49,22 @@ fun AppearanceScreen() {
             DialogDescription(R.string.settings_date_pattern_dialog_desc, date)
         }
 
-        /* // TODO: Add new support for start homepage. This maybe not possible due to the libraries behavior.
-        RadioDialogItem(
-            selection = userPreferences.homepage,
-            options = listOf(
-                RadioDialogItem(
-                    value = Homepage.Home,
-                    title = stringResource(R.string.page_home)
-                ),
-                RadioDialogItem(
-                    value = Homepage.Repositories,
-                    title = stringResource(R.string.page_repositorys)
-                ),
-                RadioDialogItem(
-                    value = Homepage.Modules,
-                    enabled = viewModel.isProviderAlive,
-                    title = stringResource(R.string.page_modules)
-                )
-            ),
-            onConfirm = {
-                viewModel.setHomepage(it.value)
-            }
-        ) {
-            Title(R.string.settings_homepage)
-            Description(R.string.settings_homepage_desc)
-        }*/
-
         SwitchItem(
             checked = userPreferences.enableToolbarEvents,
-            onChange = viewModel::setEnableToolbarEvents
+            onChange = viewModel::setEnableToolbarEvents,
         ) {
             Title(R.string.settings_enable_toolbar_events)
         }
 
-        val isBlurSupported = remember(Unit) {
-            BlurUtil.isBlurSupported()
-        }
+        val isBlurSupported =
+            remember(Unit) {
+                BlurUtil.isBlurSupported()
+            }
 
         SwitchItem(
             enabled = isBlurSupported,
             checked = userPreferences.enableBlur,
-            onChange = viewModel::setEnableBlur
+            onChange = viewModel::setEnableBlur,
         ) {
             Title(R.string.settings_enable_blur)
             Description(R.string.settings_enable_blur_desc)
@@ -103,7 +78,7 @@ fun AppearanceScreen() {
 
         SwitchItem(
             checked = userPreferences.hideBottomBarLabels,
-            onChange = viewModel::setHideBottomBarLabels
+            onChange = viewModel::setHideBottomBarLabels,
         ) {
             Title(R.string.settings_hide_bottom_bar_labels)
         }

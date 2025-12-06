@@ -4,7 +4,7 @@ data class ScriptError(
     val filePath: String,
     val lineNumber: Int,
     val title: String,
-    val message: String
+    val message: String,
 ) {
     companion object {
         private val regex = Regex("""^(.*): line (\d+): (.+): (.+)$""")
@@ -16,7 +16,7 @@ data class ScriptError(
                 filePath = filePath,
                 lineNumber = lineStr.toInt(),
                 title = errorTitle,
-                message = errorMessage
+                message = errorMessage,
             )
         }
     }

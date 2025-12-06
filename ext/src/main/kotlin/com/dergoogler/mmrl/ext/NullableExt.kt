@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ext
 
-import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import kotlin.contracts.ExperimentalContracts
@@ -114,8 +113,6 @@ inline fun <T, R> T?.rememberNullable(block: (T) -> R): R? {
     return if (value != null) block(value) else null
 }
 
-
-
 /**
  * Applies the given [block] to the receiver if it is not null, and returns the receiver itself.
  * If the receiver is null, returns null. This is similar to the standard library's `apply`
@@ -133,7 +130,9 @@ inline fun <T> T?.nullply(block: T.() -> Unit): T? {
     return if (this != null) {
         block()
         this
-    } else null
+    } else {
+        null
+    }
 }
 
 /**
@@ -144,7 +143,10 @@ inline fun <T> T?.nullply(block: T.() -> Unit): T? {
  * @return The result of the block or the default value.
  */
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> T?.nullable(default: R, block: (T) -> R): R {
+inline fun <T, R> T?.nullable(
+    default: R,
+    block: (T) -> R,
+): R {
     contract {
         callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
@@ -161,7 +163,10 @@ inline fun <T, R> T?.nullable(default: R, block: (T) -> R): R {
  * @return The result of the block or the result of the default function.
  */
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> T?.nullable(default: () -> R, block: (T) -> R): R {
+inline fun <T, R> T?.nullable(
+    default: () -> R,
+    block: (T) -> R,
+): R {
     contract {
         callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
@@ -177,7 +182,10 @@ inline fun <T, R> T?.nullable(default: () -> R, block: (T) -> R): R {
  * @return The result of the block or null.
  */
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> T?.nullable(condition: Boolean, block: (T) -> R): R? {
+inline fun <T, R> T?.nullable(
+    condition: Boolean,
+    block: (T) -> R,
+): R? {
     contract {
         callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
@@ -193,7 +201,10 @@ inline fun <T, R> T?.nullable(condition: Boolean, block: (T) -> R): R? {
  * @return The result of the block if the condition is met, or null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> T?.nullable(condition: (T) -> Boolean, block: (T) -> R): R? {
+inline fun <T, R> T?.nullable(
+    condition: (T) -> Boolean,
+    block: (T) -> R,
+): R? {
     contract {
         callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
@@ -210,7 +221,11 @@ inline fun <T, R> T?.nullable(condition: (T) -> Boolean, block: (T) -> R): R? {
  * @return The result of the block, or the default value.
  */
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> T?.nullable(condition: Boolean, default: R, block: (T) -> R): R {
+inline fun <T, R> T?.nullable(
+    condition: Boolean,
+    default: R,
+    block: (T) -> R,
+): R {
     contract {
         callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }
@@ -227,7 +242,11 @@ inline fun <T, R> T?.nullable(condition: Boolean, default: R, block: (T) -> R): 
  * @return The result of the block if the condition is met, or the default value otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-inline fun <T, R> T?.nullable(condition: (T) -> Boolean, default: R, block: (T) -> R): R {
+inline fun <T, R> T?.nullable(
+    condition: (T) -> Boolean,
+    default: R,
+    block: (T) -> R,
+): R {
     contract {
         callsInPlace(block, InvocationKind.AT_MOST_ONCE)
     }

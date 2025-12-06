@@ -48,18 +48,19 @@ fun ListProgressBarItem(
     }
 
     Row(
-        modifier = modifier
-            .alpha(alpha = if (enabled) 1f else 0.5f)
-            .padding(contentPaddingValues)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .alpha(alpha = if (enabled) 1f else 0.5f)
+                .padding(contentPaddingValues)
+                .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         icon?.let {
             Icon(
                 modifier = Modifier.size(itemTextStyle.iconSize),
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                tint = LocalContentColor.current
+                tint = LocalContentColor.current,
             )
 
             Spacer(modifier = Modifier.width(start))
@@ -69,15 +70,16 @@ fun ListProgressBarItem(
             title = title,
             desc = {
                 Row(
-                    modifier = Modifier
-                        .padding(top = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .padding(top = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     startDesc.thenCompose<String> {
                         Text(
                             text = it,
                             style = itemTextStyle.descTextStyle,
-                            color = itemTextStyle.descTextColor
+                            color = itemTextStyle.descTextColor,
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
@@ -87,10 +89,11 @@ fun ListProgressBarItem(
                         progress = {
                             progress
                         },
-                        modifier = Modifier
-                            .height(progressBarHeight)
-                            .then(progressBarModifier),
-                        drawStopIndicator = {}
+                        modifier =
+                            Modifier
+                                .height(progressBarHeight)
+                                .then(progressBarModifier),
+                        drawStopIndicator = {},
                     )
 
                     endDesc.thenCompose<String> {
@@ -99,13 +102,13 @@ fun ListProgressBarItem(
                         Text(
                             text = it,
                             style = itemTextStyle.descTextStyle,
-                            color = itemTextStyle.descTextColor
+                            color = itemTextStyle.descTextColor,
                         )
                     }
                 }
             },
             itemTextStyle = itemTextStyle,
-            base = base
+            base = base,
         )
     }
 }

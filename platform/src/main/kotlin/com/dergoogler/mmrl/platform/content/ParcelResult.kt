@@ -4,7 +4,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.io.IOException
 
-
 class ParcelResult : Parcelable {
     val `val`: Any?
 
@@ -16,7 +15,10 @@ class ParcelResult : Parcelable {
         `val` = v
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
+    override fun writeToParcel(
+        dest: Parcel,
+        flags: Int,
+    ) {
         dest.writeValue(`val`)
     }
 
@@ -31,9 +33,7 @@ class ParcelResult : Parcelable {
         return `val` as? T
     }
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    override fun describeContents(): Int = 0
 
     private constructor(`in`: Parcel) {
         `val` = `in`.readValue(cl)
@@ -46,13 +46,9 @@ class ParcelResult : Parcelable {
         @JvmField
         val CREATOR: Parcelable.Creator<ParcelResult?> =
             object : Parcelable.Creator<ParcelResult?> {
-                override fun createFromParcel(`in`: Parcel): ParcelResult {
-                    return ParcelResult(`in`)
-                }
+                override fun createFromParcel(`in`: Parcel): ParcelResult = ParcelResult(`in`)
 
-                override fun newArray(size: Int): Array<ParcelResult?> {
-                    return arrayOfNulls(size)
-                }
+                override fun newArray(size: Int): Array<ParcelResult?> = arrayOfNulls(size)
             }
     }
 }

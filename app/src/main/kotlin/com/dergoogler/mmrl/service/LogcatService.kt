@@ -19,22 +19,28 @@ import kotlinx.coroutines.launch
 class LogcatService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
-        isActive.value =  true
+        isActive.value = true
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         lifecycleScope.launch(Dispatchers.Default) {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 Logcat.readLogs().apply {
                     console.addAll(
-                        filter { it !in console }
+                        filter { it !in console },
                     )
                 }
 
                 while (isActive) {
-                    val new = Logcat.getCurrent()
-                        .toLogTextList()
-                        .filter { it !in console }
+                    val new =
+                        Logcat
+                            .getCurrent()
+                            .toLogTextList()
+                            .filter { it !in console }
 
                     if (new.isNotEmpty()) {
                         console.addAll(new)
@@ -58,16 +64,12 @@ class LogcatService : LifecycleService() {
         val console = mutableStateListOf<LogText>()
         val isActive = MutableStateFlow(false)
 
-        fun start(
-            context: Context,
-        ) {
+        fun start(context: Context) {
             val intent = Intent(context, LogcatService::class.java)
             context.startService(intent)
         }
 
-        fun stop(
-            context: Context,
-        ) {
+        fun stop(context: Context) {
             val intent = Intent(context, LogcatService::class.java)
             context.stopService(intent)
         }

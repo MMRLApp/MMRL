@@ -11,12 +11,10 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ListItemScope.Labels(
-    content: @Composable FlowRowScope.() -> Unit,
-) {
+fun ListItemScope.Labels(content: @Composable FlowRowScope.() -> Unit) {
     Slot(ListItemSlot.Supporting) {
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(2.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             content()
         }

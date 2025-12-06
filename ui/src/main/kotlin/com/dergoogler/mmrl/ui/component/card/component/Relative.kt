@@ -23,8 +23,9 @@ fun CardScope.Relative(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) = Box(
-    modifier = Modifier
-        .relative()
-        .then(modifier),
-    content = content
+    modifier =
+        Modifier
+            .relative()
+            .then(modifier),
+    content = content,
 )

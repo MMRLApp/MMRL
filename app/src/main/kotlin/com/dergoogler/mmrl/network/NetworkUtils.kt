@@ -23,9 +23,10 @@ import java.util.Locale
 object NetworkUtils {
     private var useDoh: Boolean = false
     private var cacheDirOrNull: File? = null
-    private val cacheOrNull: Cache? get() = cacheDirOrNull?.let {
-        Cache(File(it, "okhttp"), 10 * 1024 * 1024)
-    }
+    private val cacheOrNull: Cache? get() =
+        cacheDirOrNull?.let {
+            Cache(File(it, "okhttp"), 10 * 1024 * 1024)
+        }
 
     fun setCacheDir(dir: File) {
         cacheDirOrNull = dir
@@ -55,7 +56,7 @@ object NetworkUtils {
                 HttpLoggingInterceptor { Timber.i(it) }
                     .apply {
                         level = HttpLoggingInterceptor.Level.BASIC
-                    }
+                    },
             )
         } else {
             builder.connectionSpecs(listOf(ConnectionSpec.MODERN_TLS))
@@ -76,20 +77,23 @@ object NetworkUtils {
     fun createRetrofit(): Retrofit.Builder {
         val client = createOkHttpClient()
 
-        return Retrofit.Builder()
+        return Retrofit
+            .Builder()
             .addConverterFactory(MoshiConverterFactory.create())
             .client(client)
     }
 
     suspend inline fun <reified T> request(
         url: String,
-        crossinline get: (ResponseBody, Headers) -> T
+        crossinline get: (ResponseBody, Headers) -> T,
     ) = withContext(Dispatchers.IO) {
         runRequest(get = get) {
             val client = createOkHttpClient()
-            val request = Request.Builder()
-                .url(url)
-                .build()
+            val request =
+                Request
+                    .Builder()
+                    .url(url)
+                    .build()
 
             client.newCall(request).execute()
         }
@@ -100,19 +104,20 @@ object NetworkUtils {
             url = url,
             get = { body, _ ->
                 body.string()
-            }
+            },
         )
 
-    suspend inline fun <reified T> requestJson(
-        url: String
-    ): Result<T> {
-        val result = request(url) { body, _ ->
-            val adapter = Moshi.Builder()
-                .build()
-                .adapter<T>()
+    suspend inline fun <reified T> requestJson(url: String): Result<T> {
+        val result =
+            request(url) { body, _ ->
+                val adapter =
+                    Moshi
+                        .Builder()
+                        .build()
+                        .adapter<T>()
 
-            adapter.fromJson(body.string())
-        }
+                adapter.fromJson(body.string())
+            }
 
         if (result.isSuccess) {
             val json = result.getOrThrow()
@@ -125,7 +130,7 @@ object NetworkUtils {
     suspend fun downloader(
         url: String,
         output: OutputStream,
-        onProgress: (Float) -> Unit
+        onProgress: (Float) -> Unit,
     ) = request(url) { body, headers ->
         val buffer = ByteArray(2048)
         val input = body.byteStream()

@@ -40,9 +40,13 @@ object KsuNative {
     external fun becomeManager(pkg: String?): Boolean
 
     external fun getAllowList(): IntArray
+
     external fun isSafeMode(): Boolean
+
     external fun getVersion(): Int
+
     external fun isLkmMode(): Boolean?
+
     external fun uidShouldUmount(uid: Int): Boolean
 
     /**
@@ -52,6 +56,7 @@ object KsuNative {
      *  negative : error
      */
     external fun isSuEnabled(): Boolean
+
     external fun setSuEnabled(enabled: Boolean): Boolean
 
     fun isDefaultUmountModules(): Boolean {
@@ -65,20 +70,26 @@ object KsuNative {
      * @param key usually the package name
      * @return return null if failed.
      */
-    external fun getAppProfile(key: String?, uid: Int): Profile
+    external fun getAppProfile(
+        key: String?,
+        uid: Int,
+    ): Profile
+
     external fun setAppProfile(profile: Profile?): Boolean
 
     private const val NON_ROOT_DEFAULT_PROFILE_KEY = "$"
     private const val NOBODY_UID = 9999
 
     @Throws(RuntimeException::class)
-    external fun applyPolicyRules(statements: Array<AtomicStatement>, strict: Boolean): Boolean
+    external fun applyPolicyRules(
+        statements: Array<AtomicStatement>,
+        strict: Boolean,
+    ): Boolean
 
-    fun requireNewKernel(): Boolean {
-        return getVersion() < PlatformManager.type.MINIMAL_SUPPORTED_KERNEL
-    }
+    fun requireNewKernel(): Boolean = getVersion() < PlatformManager.type.MINIMAL_SUPPORTED_KERNEL
 
     fun hasFeature(type: Int): Boolean = hasFeature { type }
+
     fun hasFeature(feature: PlatformType.() -> Int): Boolean {
         val type = feature(PlatformManager.type)
         if (type == -1) return false

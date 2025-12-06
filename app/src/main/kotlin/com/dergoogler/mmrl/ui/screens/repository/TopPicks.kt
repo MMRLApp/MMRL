@@ -32,22 +32,24 @@ fun TopPicks(
     onMoreClick: () -> Unit,
     list: List<OnlineModule>,
 ) {
-    val randomModules = remember(list) {
-        list.shuffled()
-            .sortedBy { if (it == OnlineModule.example()) 1 else 0 }
-    }
+    val randomModules =
+        remember(list) {
+            list
+                .shuffled()
+                .sortedBy { if (it == OnlineModule.example()) 1 else 0 }
+        }
 
     val pagerState =
         rememberPagerState(pageCount = { (randomModules.size + 2) / 3 })
 
     List {
         ButtonItem(
-            onClick = onMoreClick
+            onClick = onMoreClick,
         ) {
             Title(label)
             Icon(
                 slot = ListItemSlot.End,
-                painter = painterResource(R.drawable.arrow_right)
+                painter = painterResource(R.drawable.arrow_right),
             )
         }
 
@@ -55,15 +57,17 @@ fun TopPicks(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(),
+            contentPadding = PaddingValues(horizontal = 16.dp),
         ) { page ->
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 6.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 6.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

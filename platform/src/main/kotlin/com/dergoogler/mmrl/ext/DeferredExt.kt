@@ -1,15 +1,15 @@
 package com.dergoogler.mmrl.ext
 
+import android.util.Log // For logging
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.withTimeoutOrNull
-import android.util.Log // For logging
-import androidx.compose.runtime.MutableState
 
 private const val DEFAULT_AWAIT_TIMEOUT_MILLIS = 30000L // Default timeout of 30 seconds
 
@@ -45,16 +45,17 @@ fun <T> Deferred<T>.awaitAsState(
     timeoutMillis: Long = DEFAULT_AWAIT_TIMEOUT_MILLIS,
     key1: Any? = null,
     key2: Any? = null,
-    onError: ((exception: Throwable, state: MutableState<T>) -> Unit)? = null
+    onError: ((exception: Throwable, state: MutableState<T>) -> Unit)? = null,
 ): State<T> {
     val state = remember(this, key1, key2) { mutableStateOf(initial) }
 
     LaunchedEffect(this, key1, key2) {
         try {
             Log.d("awaitAsState", "Awaiting Deferred. Timeout: $timeoutMillis ms. Initial value: $initial")
-            val result = withTimeoutOrNull(timeoutMillis) {
-                this@awaitAsState.await()
-            }
+            val result =
+                withTimeoutOrNull(timeoutMillis) {
+                    this@awaitAsState.await()
+                }
 
             if (result != null) {
                 Log.d("awaitAsState", "Deferred completed with result: $result")

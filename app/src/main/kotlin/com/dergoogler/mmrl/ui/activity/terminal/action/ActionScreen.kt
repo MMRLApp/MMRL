@@ -49,119 +49,124 @@ import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.launch
 
 @Composable
-fun ActionScreen(
-    viewModel: ActionViewModel,
-) = LocalScreenProvider {
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+fun ActionScreen(viewModel: ActionViewModel) =
+    LocalScreenProvider {
+        val scope = rememberCoroutineScope()
+        val snackbarHostState = remember { SnackbarHostState() }
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    val userPreferences = LocalUserPreferences.current
-    val context = LocalContext.current
+        val userPreferences = LocalUserPreferences.current
+        val context = LocalContext.current
 
-    val focusRequester = remember { FocusRequester() }
-    val listState = rememberLazyListState()
+        val focusRequester = remember { FocusRequester() }
+        val listState = rememberLazyListState()
 
-    LaunchedEffect(focusRequester) {
-        focusRequester.requestFocus()
-    }
-
-    var cancelAction by remember { mutableStateOf(false) }
-
-    val shell = viewModel.terminal.shell
-    val event = viewModel.terminal.event
-
-    val allowCancel = userPreferences.allowCancelAction
-
-    val backHandler = {
-        if (allowCancel) {
-            when {
-                event.isLoading && shell.isAlive -> cancelAction = true
-                event.isFinished -> (context as MMRLComponentActivity).finish()
-            }
-        } else {
-            if (event.isFinished) {
-                (context as MMRLComponentActivity).finish()
-            }
+        LaunchedEffect(focusRequester) {
+            focusRequester.requestFocus()
         }
-    }
 
-    BackHandler(
-        enabled = if (!allowCancel) event.isLoading else true,
-        onBack = backHandler
-    )
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("*/*")
-    ) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
+        var cancelAction by remember { mutableStateOf(false) }
 
-        scope.launch {
-            viewModel.writeLogsTo(uri)
-                .onSuccess {
-                    val message = context.getString(R.string.install_logs_saved)
-                    snackbarHostState.showSnackbar(
-                        message = message,
-                        duration = SnackbarDuration.Short
-                    )
-                }.onFailure {
-                    val message = context.getString(
-                        R.string.install_logs_save_failed,
-                        it.message ?: context.getString(R.string.unknown_error)
-                    )
-                    snackbarHostState.showSnackbar(
-                        message = message,
-                        duration = SnackbarDuration.Short
-                    )
+        val shell = viewModel.terminal.shell
+        val event = viewModel.terminal.event
+
+        val allowCancel = userPreferences.allowCancelAction
+
+        val backHandler = {
+            if (allowCancel) {
+                when {
+                    event.isLoading && shell.isAlive -> cancelAction = true
+                    event.isFinished -> (context as MMRLComponentActivity).finish()
                 }
-        }
-    }
-
-    if (cancelAction) ConfirmDialog(
-        title = R.string.action_screen_cancel_title,
-        description = R.string.action_screen_cancel_text,
-        onClose = { cancelAction = false },
-        onConfirm = {
-            scope.launch {
-                cancelAction = false
-                shell.close()
-            }
-        }
-    )
-
-    Scaffold(
-        modifier = Modifier
-            .onKeyEvent {
-                when (it.key) {
-                    Key.VolumeUp, Key.VolumeDown -> event.isLoading
-
-                    else -> false
+            } else {
+                if (event.isFinished) {
+                    (context as MMRLComponentActivity).finish()
                 }
             }
-            .focusRequester(focusRequester)
-            .focusable()
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                exportLog = { launcher.launch(viewModel.logfile) },
-                event = event,
-                enable = if (!allowCancel) event.isFinished else true,
-                scrollBehavior = scrollBehavior,
-                onBack = backHandler
-            )
-        },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.none
-    ) {
-        TerminalView(
-            contentPadding = it,
-            terminal = viewModel.terminal,
-            state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeSource(LocalHazeState.current),
+        }
+
+        BackHandler(
+            enabled = if (!allowCancel) event.isLoading else true,
+            onBack = backHandler,
         )
+        val launcher =
+            rememberLauncherForActivityResult(
+                ActivityResultContracts.CreateDocument("*/*"),
+            ) { uri ->
+                if (uri == null) return@rememberLauncherForActivityResult
+
+                scope.launch {
+                    viewModel
+                        .writeLogsTo(uri)
+                        .onSuccess {
+                            val message = context.getString(R.string.install_logs_saved)
+                            snackbarHostState.showSnackbar(
+                                message = message,
+                                duration = SnackbarDuration.Short,
+                            )
+                        }.onFailure {
+                            val message =
+                                context.getString(
+                                    R.string.install_logs_save_failed,
+                                    it.message ?: context.getString(R.string.unknown_error),
+                                )
+                            snackbarHostState.showSnackbar(
+                                message = message,
+                                duration = SnackbarDuration.Short,
+                            )
+                        }
+                }
+            }
+
+        if (cancelAction) {
+            ConfirmDialog(
+                title = R.string.action_screen_cancel_title,
+                description = R.string.action_screen_cancel_text,
+                onClose = { cancelAction = false },
+                onConfirm = {
+                    scope.launch {
+                        cancelAction = false
+                        shell.close()
+                    }
+                },
+            )
+        }
+
+        Scaffold(
+            modifier =
+                Modifier
+                    .onKeyEvent {
+                        when (it.key) {
+                            Key.VolumeUp, Key.VolumeDown -> event.isLoading
+
+                            else -> false
+                        }
+                    }.focusRequester(focusRequester)
+                    .focusable()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    exportLog = { launcher.launch(viewModel.logfile) },
+                    event = event,
+                    enable = if (!allowCancel) event.isFinished else true,
+                    scrollBehavior = scrollBehavior,
+                    onBack = backHandler,
+                )
+            },
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            contentWindowInsets = WindowInsets.none,
+        ) {
+            TerminalView(
+                contentPadding = it,
+                terminal = viewModel.terminal,
+                state = listState,
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .hazeSource(LocalHazeState.current),
+            )
+        }
     }
-}
 
 @Composable
 private fun TopBar(
@@ -172,26 +177,28 @@ private fun TopBar(
     enable: Boolean,
 ) = BlurNavigateUpToolbar(
     title = stringResource(id = R.string.action_activity),
-    subtitle = stringResource(
-        id = when (event) {
-            Event.LOADING -> R.string.action_executing
-            Event.FAILED -> R.string.action_failure
-            else -> R.string.install_done
-        }
-    ),
+    subtitle =
+        stringResource(
+            id =
+                when (event) {
+                    Event.LOADING -> R.string.action_executing
+                    Event.FAILED -> R.string.action_failure
+                    else -> R.string.install_done
+                },
+        ),
     enable = enable,
     scrollBehavior = scrollBehavior,
     onBack = onBack,
     actions = {
         if (event.isFinished) {
             IconButton(
-                onClick = exportLog
+                onClick = exportLog,
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.device_floppy),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
-    }
+    },
 )

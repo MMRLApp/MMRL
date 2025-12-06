@@ -43,13 +43,13 @@ class MainActivity : MMRLComponentActivity() {
             val userPreferences by userPreferencesRepository.data
                 .collectAsStateWithLifecycle(initialValue = null)
 
-            val preferences = if (userPreferences == null) {
-                return@setBaseContent
-            } else {
-                isLoading = false
-                checkNotNull(userPreferences)
-            }
-
+            val preferences =
+                if (userPreferences == null) {
+                    return@setBaseContent
+                } else {
+                    isLoading = false
+                    checkNotNull(userPreferences)
+                }
 
             LaunchedEffect(userPreferences) {
                 if (preferences.workingMode.isSetup) {
@@ -71,11 +71,11 @@ class MainActivity : MMRLComponentActivity() {
 
             Crossfade(
                 targetState = preferences.workingMode.isSetup,
-                label = "MainActivity"
+                label = "MainActivity",
             ) { isSetup ->
                 if (isSetup) {
                     SetupScreen(
-                        setWorkingMode = ::setWorkingMode
+                        setWorkingMode = ::setWorkingMode,
                     )
                 } else {
                     MainScreen()

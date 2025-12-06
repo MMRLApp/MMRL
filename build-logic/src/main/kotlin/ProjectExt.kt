@@ -3,8 +3,8 @@
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.extra
 import java.io.File
-import java.util.Properties
 import java.security.SecureRandom
+import java.util.Properties
 
 // #### CONFIG START ####
 
@@ -17,9 +17,13 @@ const val MIN_SDK = 26
 val Project.commitId: String get() = exec("git rev-parse --short HEAD")
 val Project.commitCount: Int get() = exec("git rev-list --count HEAD").toInt()
 
-fun Project.exec(command: String): String = providers.exec {
-    commandLine(command.split(" "))
-}.standardOutput.asText.get().trim()
+fun Project.exec(command: String): String =
+    providers
+        .exec {
+            commandLine(command.split(" "))
+        }.standardOutput.asText
+        .get()
+        .trim()
 
 val Project.releaseKeyStore: File get() = File(extra["keyStore"] as String)
 val Project.releaseKeyStorePassword: String get() = extra["keyStorePassword"] as String
@@ -33,7 +37,10 @@ val Project.hasReleaseKeyStore: Boolean get() {
     return extra.has("keyStore")
 }
 
-fun Project.generateRandomName(minLength: Int = 5, maxLength: Int = 12): String {
+fun Project.generateRandomName(
+    minLength: Int = 5,
+    maxLength: Int = 12,
+): String {
     val chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     val random = SecureRandom()
     val length = random.nextInt(maxLength - minLength + 1) + minLength
@@ -45,7 +52,7 @@ fun Project.generateRandomName(minLength: Int = 5, maxLength: Int = 12): String 
 fun Project.generateRandomPackageName(
     segments: Int = 3,
     minLength: Int = 5,
-    maxLength: Int = 20
+    maxLength: Int = 20,
 ): String {
     val letters = "abcdefghijklmnopqrstuvwxyz"
     val lettersAndDigits = "abcdefghijklmnopqrstuvwxyz0123456789"
@@ -54,9 +61,10 @@ fun Project.generateRandomPackageName(
     return (1..segments).joinToString(".") {
         val length = random.nextInt(maxLength - minLength + 1) + minLength
         val firstChar = letters[random.nextInt(letters.length)] // must start with a letter
-        val rest = (1 until length)
-            .map { lettersAndDigits[random.nextInt(lettersAndDigits.length)] }
-            .joinToString("")
+        val rest =
+            (1 until length)
+                .map { lettersAndDigits[random.nextInt(lettersAndDigits.length)] }
+                .joinToString("")
         firstChar + rest
     }
 }

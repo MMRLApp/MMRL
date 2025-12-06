@@ -10,7 +10,5 @@ object BlurUtil {
         return disableBlurs || blursExpensive
     }
 
-    fun isBlurSupported(): Boolean {
-        return  BuildCompat.atLeastS && !isBlurDisabledBySystem()
-    }
+    fun isBlurSupported(): Boolean = BuildCompat.atLeastS && !isBlurDisabledBySystem()
 }

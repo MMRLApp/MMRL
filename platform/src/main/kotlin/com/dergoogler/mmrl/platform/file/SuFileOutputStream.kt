@@ -29,4 +29,3 @@ class SuFileOutputStream : OutputStream {
 
     override fun write(b: Int) = ops.write(b)
 }
-

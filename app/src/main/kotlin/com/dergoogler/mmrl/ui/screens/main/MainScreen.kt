@@ -87,19 +87,20 @@ fun MainScreen() {
     CompositionLocalProvider(
         LocalHazeState provides hazeState,
         LocalSnackbarHost provides snackbarHostState,
-        LocalBulkInstall provides bulkInstallViewModel
+        LocalBulkInstall provides bulkInstallViewModel,
     ) {
         if (width.isLarge) {
             Scaffold(
-                contentWindowInsets = WindowInsets.none
+                contentWindowInsets = WindowInsets.none,
             ) { paddingValues ->
                 val navController = LocalNavController.current
 
                 PermanentNavigationDrawer(
                     drawerContent = {
                         PermanentDrawerSheet(
-                            modifier = Modifier
-                                .width(240.dp)
+                            modifier =
+                                Modifier
+                                    .width(240.dp),
                         ) {
                             TopAppBar(
                                 title = {
@@ -113,7 +114,7 @@ fun MainScreen() {
                             ) {
                                 items(
                                     items = MainDestination.entries,
-                                    key = { it.direction }
+                                    key = { it.direction },
                                 ) { screen ->
                                     val isSelected by navController.isRouteOnBackStackAsState(screen.direction)
 
@@ -126,7 +127,7 @@ fun MainScreen() {
                                         label = {
                                             Text(
                                                 text = stringResource(id = screen.label),
-                                                style = MaterialTheme.typography.labelLarge
+                                                style = MaterialTheme.typography.labelLarge,
                                             )
                                         },
                                         selected = isSelected,
@@ -145,19 +146,17 @@ fun MainScreen() {
                                     )
                                 }
                             }
-
                         }
-                    }
+                    },
                 ) {
                     CurrentNavHost(
-                        Modifier.padding(paddingValues)
+                        Modifier.padding(paddingValues),
                     )
                 }
             }
 
             return@CompositionLocalProvider
         }
-
 
         ResponsiveScaffold(
             bottomBar = {
@@ -166,7 +165,7 @@ fun MainScreen() {
             railBar = {
                 RailNav(updates)
             },
-            contentWindowInsets = WindowInsets.none
+            contentWindowInsets = WindowInsets.none,
         ) { paddingValues ->
             CompositionLocalProvider(
                 LocalMainScreenInnerPaddings provides paddingValues,
@@ -186,12 +185,13 @@ private fun CurrentNavHost(modifier: Modifier = Modifier) {
         modifier = modifier,
         navGraph = NavGraphs.root,
         navController = navController,
-        defaultTransitions = object : NavHostAnimatedDestinationStyle() {
-            override val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition
-                get() = { fadeIn(animationSpec = tween(340)) }
-            override val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition
-                get() = { fadeOut(animationSpec = tween(340)) }
-        }
+        defaultTransitions =
+            object : NavHostAnimatedDestinationStyle() {
+                override val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition
+                    get() = { fadeIn(animationSpec = tween(340)) }
+                override val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition
+                    get() = { fadeOut(animationSpec = tween(340)) }
+            },
     )
 }
 
@@ -202,8 +202,9 @@ private fun BottomNav(updates: Int) {
     val navController = LocalNavController.current
 
     BlurBottomToolbar(
-        modifier = Modifier
-            .imePadding()
+        modifier =
+            Modifier
+                .imePadding(),
     ) {
         MainDestination.entries.forEach { screen ->
             val isSelected by navController.isRouteOnBackStackAsState(screen.direction)
@@ -217,7 +218,7 @@ private fun BottomNav(updates: Int) {
                 label = {
                     Text(
                         text = stringResource(id = screen.label),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 },
                 alwaysShowLabel = !prefs.hideBottomBarLabels,
@@ -233,7 +234,7 @@ private fun BottomNav(updates: Int) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
+                },
             )
         }
     }
@@ -241,14 +242,14 @@ private fun BottomNav(updates: Int) {
 
 @Composable
 private fun RailNav(updates: Int) {
-    val prefs= LocalUserPreferences.current
+    val prefs = LocalUserPreferences.current
     val navigator = LocalDestinationsNavigator.current
     val navController = LocalNavController.current
 
     NavigationRail(
         header = {
             TopAppBarEventIcon()
-        }
+        },
     ) {
         MainDestination.entries.forEach { screen ->
             val isSelected by navController.isRouteOnBackStackAsState(screen.direction)
@@ -262,7 +263,7 @@ private fun RailNav(updates: Int) {
                 label = {
                     Text(
                         text = stringResource(id = screen.label),
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge,
                     )
                 },
                 alwaysShowLabel = !prefs.hideBottomBarLabels,
@@ -278,30 +279,36 @@ private fun RailNav(updates: Int) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                }
+                },
             )
         }
     }
 }
 
 @Composable
-private fun BaseNavIcon(screen: MainDestination, selected: Boolean, updates: Int) {
+private fun BaseNavIcon(
+    screen: MainDestination,
+    selected: Boolean,
+    updates: Int,
+) {
     if (screen == MainDestination.Modules && updates > 0) {
         BadgedBox(
             badge = {
                 Badge {
                     Text(text = updates.toString())
                 }
-            }
+            },
         ) {
             Icon(
-                painter = painterResource(
-                    id = if (selected) {
-                        screen.iconFilled
-                    } else {
-                        screen.icon
-                    }
-                ),
+                painter =
+                    painterResource(
+                        id =
+                            if (selected) {
+                                screen.iconFilled
+                            } else {
+                                screen.icon
+                            },
+                    ),
                 contentDescription = null,
             )
         }
@@ -310,13 +317,15 @@ private fun BaseNavIcon(screen: MainDestination, selected: Boolean, updates: Int
     }
 
     Icon(
-        painter = painterResource(
-            id = if (selected) {
-                screen.iconFilled
-            } else {
-                screen.icon
-            }
-        ),
+        painter =
+            painterResource(
+                id =
+                    if (selected) {
+                        screen.iconFilled
+                    } else {
+                        screen.icon
+                    },
+            ),
         contentDescription = null,
     )
 }

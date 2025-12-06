@@ -20,7 +20,6 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.viewmodel.SuperUserViewModel
 import com.dergoogler.mmrl.viewmodel.SuperUserViewModel.AppInfo.Companion.loadIcon
 
-
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListScope.SuperUserItem(
@@ -30,7 +29,7 @@ fun ListScope.SuperUserItem(
     val context = LocalContext.current
 
     ButtonItem(
-        onClick = onClick
+        onClick = onClick,
     ) {
         Title(app.label)
         Description(app.packageName)
@@ -39,7 +38,7 @@ fun ListScope.SuperUserItem(
             AsyncImage(
                 model = app.loadIcon(context),
                 contentDescription = app.label,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             )
         }
 
@@ -52,28 +51,31 @@ fun ListScope.SuperUserItem(
                 if (KsuNative.uidShouldUmount(app.uid)) {
                     LabelItem(
                         text = "UMOUNT",
-                        style = LabelItemDefaults.style.copy(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
+                        style =
+                            LabelItemDefaults.style.copy(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            ),
                     )
                 }
             }
             if (app.hasCustomProfile) {
                 LabelItem(
                     text = "CUSTOM",
-                    style = LabelItemDefaults.style.copy(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                    )
+                    style =
+                        LabelItemDefaults.style.copy(
+                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        ),
                 )
             } else if (!app.allowSu && !KsuNative.uidShouldUmount(app.uid)) {
                 LabelItem(
                     text = "DEFAULT",
-                    style = LabelItemDefaults.style.copy(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
+                    style =
+                        LabelItemDefaults.style.copy(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        ),
                 )
             }
         }

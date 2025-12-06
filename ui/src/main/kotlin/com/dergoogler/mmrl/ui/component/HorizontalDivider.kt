@@ -22,9 +22,10 @@ import com.dergoogler.mmrl.ext.fadingEdge
 @Composable
 fun HorizontalDividerWithText(
     text: String,
-    textStyle: TextStyle = MaterialTheme.typography.titleMedium.copy(
-        color = MaterialTheme.colorScheme.outline
-    ),
+    textStyle: TextStyle =
+        MaterialTheme.typography.titleMedium.copy(
+            color = MaterialTheme.colorScheme.outline,
+        ),
     paddingValues: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     thickness: Dp = DividerDefaults.Thickness,
     color: Color = DividerDefaults.color,
@@ -36,45 +37,49 @@ fun HorizontalDividerWithText(
     ) {
         HorizontalDivider(
             color = color,
-            modifier = Modifier
-                .weight(1f)
-                .fadingEdge(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fadingEdge(
+                        Brush.horizontalGradient(
+                            colors =
+                                listOf(
+                                    Color.Transparent,
+                                    Color.Black,
+                                ),
+                            startX = 0f,
+                            endX = Float.POSITIVE_INFINITY,
                         ),
-                        startX = 0f,
-                        endX = Float.POSITIVE_INFINITY
-                    )
-                ),
-            thickness = thickness
+                    ),
+            thickness = thickness,
         )
 
         Box(
-            modifier = Modifier.padding(horizontal = 24.dp)
+            modifier = Modifier.padding(horizontal = 24.dp),
         ) {
             Text(
                 text = text,
-                style = textStyle
+                style = textStyle,
             )
         }
 
         HorizontalDivider(
             color = color,
-            modifier = Modifier
-                .weight(1f)
-                .fadingEdge(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fadingEdge(
+                        Brush.horizontalGradient(
+                            colors =
+                                listOf(
+                                    Color.Transparent,
+                                    Color.Black,
+                                ),
+                            startX = Float.POSITIVE_INFINITY,
+                            endX = 0f,
                         ),
-                        startX = Float.POSITIVE_INFINITY,
-                        endX = 0f
-                    )
-                ),
-            thickness = thickness
+                    ),
+            thickness = thickness,
         )
     }
 }

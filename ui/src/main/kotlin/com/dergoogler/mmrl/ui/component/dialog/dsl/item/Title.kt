@@ -21,19 +21,20 @@ fun DialogContainerScope.Title(
     contentPadding: PaddingValues = this.contentPadding.title,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) = ProvideContentColorTextStyle(
     contentColor = style.titleContentColor,
     textStyle = MaterialTheme.typography.headlineSmall,
 ) {
     Row(
-        modifier = Modifier
-            .layoutId(DialogContainerSlot.TITLE)
-            .fillMaxWidth()
-            .padding(contentPadding)
-            .then(modifier),
+        modifier =
+            Modifier
+                .layoutId(DialogContainerSlot.TITLE)
+                .fillMaxWidth()
+                .padding(contentPadding)
+                .then(modifier),
         horizontalArrangement = horizontalArrangement,
         verticalAlignment = verticalAlignment,
-        content = content
+        content = content,
     )
 }

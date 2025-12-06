@@ -6,13 +6,14 @@ import com.dergoogler.mmrl.model.state.OnlineState
 data class OtherSources(
     val repo: Repo,
     val online: OnlineModule,
-    val state: OnlineState
+    val state: OnlineState,
 ) {
     companion object {
-        val example = OtherSources(
-            repo = Repo.example(),
-            online = OnlineModule.example(),
-            state = OnlineState.example()
-        )
+        val example =
+            OtherSources(
+                repo = Repo.example(),
+                online = OnlineModule.example(),
+                state = OnlineState.example(),
+            )
     }
 }

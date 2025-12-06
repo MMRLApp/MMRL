@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 
 val WindowInsets.Companion.none get() = WindowInsets(0, 0, 0, 0)
 val WindowInsets.Companion.bars
-    @Composable get() = WindowInsets.displayCutout
-        .add(WindowInsets.statusBars)
-        .add(WindowInsets.navigationBars)
+    @Composable get() =
+        WindowInsets.displayCutout
+            .add(WindowInsets.statusBars)
+            .add(WindowInsets.navigationBars)
 
 val WindowInsets.Companion.barsWithSystem
-    @Composable get() = WindowInsets.displayCutout
-        .add(WindowInsets.statusBars)
-        .add(WindowInsets.navigationBars)
-        .add(WindowInsets.systemBars)
+    @Composable get() =
+        WindowInsets.displayCutout
+            .add(WindowInsets.statusBars)
+            .add(WindowInsets.navigationBars)
+            .add(WindowInsets.systemBars)

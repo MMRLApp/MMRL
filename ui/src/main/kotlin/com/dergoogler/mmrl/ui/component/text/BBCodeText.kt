@@ -42,27 +42,22 @@ import java.util.Stack
  * Enum class representing different types of BBCode tags that can be disabled.
  */
 enum class BBCodeTag {
-    BOLD,      // [b] and [bold]
-    ITALIC,    // [i] and [italic]
+    BOLD, // [b] and [bold]
+    ITALIC, // [i] and [italic]
     UNDERLINE, // [u] and [underline]
-    COLOR,     // [color=...]
-    BACKGROUND,// [bg=...]
-    LINK,      // [link=...]
-    ICON,      // [icon=...]
-    IMAGE;     // [image=...]
+    COLOR, // [color=...]
+    BACKGROUND, // [bg=...]
+    LINK, // [link=...]
+    ICON, // [icon=...]
+    IMAGE, // [image=...]
+    ;
 
     companion object {
-        fun disableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> {
-            return entries.filterNot { it in tags }.toSet()
-        }
+        fun disableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> = entries.filterNot { it in tags }.toSet()
 
-        fun disableAll(): Set<BBCodeTag> {
-            return entries.toSet()
-        }
+        fun disableAll(): Set<BBCodeTag> = entries.toSet()
 
-        fun enableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> {
-            return entries.filterNot { it in tags }.toSet()
-        }
+        fun enableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> = entries.filterNot { it in tags }.toSet()
     }
 }
 
@@ -156,63 +151,68 @@ fun BBCodeText(
 
     val (bbText, inline) = text.toStyleMarkup(disabledTags, iconContent, imageContent)
 
-    val string = buildAnnotatedString {
-        if (prefix != null) {
-            val (prefix, prefixInlineContent) = prefix.toStyleMarkup(
-                iconContent = iconContent,
-                imageContent = imageContent
-            )
+    val string =
+        buildAnnotatedString {
+            if (prefix != null) {
+                val (prefix, prefixInlineContent) =
+                    prefix.toStyleMarkup(
+                        iconContent = iconContent,
+                        imageContent = imageContent,
+                    )
 
-            inline.putAll(prefixInlineContent)
+                inline.putAll(prefixInlineContent)
 
-            append(prefix)
+                append(prefix)
+            }
+
+            if (bbEnabled) {
+                append(bbText)
+            } else {
+                append(text)
+            }
+
+            if (suffix != null) {
+                val (suffix, suffixInlineContent) =
+                    suffix.toStyleMarkup(
+                        iconContent = iconContent,
+                        imageContent = imageContent,
+                    )
+
+                inline.putAll(suffixInlineContent)
+
+                append(suffix)
+            }
         }
-
-        if (bbEnabled) {
-            append(bbText)
-        } else {
-            append(text)
-        }
-
-        if (suffix != null) {
-            val (suffix, suffixInlineContent) = suffix.toStyleMarkup(
-                iconContent = iconContent,
-                imageContent = imageContent
-            )
-
-            inline.putAll(suffixInlineContent)
-
-            append(suffix)
-        }
-    }
 
     Text(
         text = string,
-        modifier = modifier.pointerInput(Unit) {
-            awaitPointerEventScope {
-                while (true) {
-                    val event = awaitPointerEvent(PointerEventPass.Initial)
-                    if (event.changes.any { it.pressed }) {
-                        val offset = event.changes.first().position
-                        layoutResult?.let { layout ->
-                            val position = layout.getOffsetForPosition(offset)
+        modifier =
+            modifier.pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                        if (event.changes.any { it.pressed }) {
+                            val offset = event.changes.first().position
+                            layoutResult?.let { layout ->
+                                val position = layout.getOffsetForPosition(offset)
 
-                            val ann = string
-                                .getStringAnnotations(tag = "URL", start = position, end = position)
-                                .firstOrNull()
+                                val ann =
+                                    string
+                                        .getStringAnnotations(tag = "URL", start = position, end = position)
+                                        .firstOrNull()
 
-                            ann?.let {
-                                if (onLinkClick != null) {
-                                    onLinkClick(it.item)
-                                } else {
-                                    handler.openUri(it.item)
+                                ann?.let {
+                                    if (onLinkClick != null) {
+                                        onLinkClick(it.item)
+                                    } else {
+                                        handler.openUri(it.item)
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        },
+            },
         style = style,
         inlineContent = inline,
         onTextLayout = {
@@ -233,7 +233,7 @@ fun BBCodeText(
         fontWeight = fontWeight,
         fontStyle = fontStyle,
         fontSize = fontSize,
-        color = textColor
+        color = textColor,
     )
 }
 
@@ -262,121 +262,132 @@ private fun String.toStyleMarkup(
     var iconCounter by remember { mutableIntStateOf(0) }
     var imageCounter by remember { mutableIntStateOf(0) }
 
-    val annotated = buildAnnotatedString {
-        var lastIndex = 0
-        matches.forEach { match ->
-            val text = this@toStyleMarkup.substring(lastIndex, match.range.first)
-            if (text.isNotEmpty()) {
-                applyStyle(this, text, styleStack.peek())
-            }
+    val annotated =
+        buildAnnotatedString {
+            var lastIndex = 0
+            matches.forEach { match ->
+                val text = this@toStyleMarkup.substring(lastIndex, match.range.first)
+                if (text.isNotEmpty()) {
+                    applyStyle(this, text, styleStack.peek())
+                }
 
-            val isClosing = match.groupValues[1] == "/"
-            val tag = match.groupValues[2]
-            val value = match.groupValues[3]
+                val isClosing = match.groupValues[1] == "/"
+                val tag = match.groupValues[2]
+                val value = match.groupValues[3]
 
-            // Check if the tag type is disabled
-            val tagType = when (tag) {
-                "b", "bold" -> BBCodeTag.BOLD
-                "i", "italic" -> BBCodeTag.ITALIC
-                "u", "underline" -> BBCodeTag.UNDERLINE
-                "color" -> BBCodeTag.COLOR
-                "bg" -> BBCodeTag.BACKGROUND
-                "link" -> BBCodeTag.LINK
-                "icon" -> BBCodeTag.ICON
-                "image" -> BBCodeTag.IMAGE
-                else -> null
-            }
+                // Check if the tag type is disabled
+                val tagType =
+                    when (tag) {
+                        "b", "bold" -> BBCodeTag.BOLD
+                        "i", "italic" -> BBCodeTag.ITALIC
+                        "u", "underline" -> BBCodeTag.UNDERLINE
+                        "color" -> BBCodeTag.COLOR
+                        "bg" -> BBCodeTag.BACKGROUND
+                        "link" -> BBCodeTag.LINK
+                        "icon" -> BBCodeTag.ICON
+                        "image" -> BBCodeTag.IMAGE
+                        else -> null
+                    }
 
-            // If the tag type is disabled, treat it as plain text
-            if (tagType != null && tagType in disabledTags) {
-                val fullMatch = this@toStyleMarkup.substring(match.range)
-                applyStyle(this, fullMatch, styleStack.peek())
+                // If the tag type is disabled, treat it as plain text
+                if (tagType != null && tagType in disabledTags) {
+                    val fullMatch = this@toStyleMarkup.substring(match.range)
+                    applyStyle(this, fullMatch, styleStack.peek())
+                    lastIndex = match.range.last + 1
+                    return@forEach
+                }
+
+                when {
+                    isClosing -> {
+                        if (styleStack.size > 1 && styleStack.peek().tag == tagType) {
+                            styleStack.pop()
+                        }
+                    }
+
+                    tagType == BBCodeTag.ICON && iconContent != null && value.isNotBlank() -> {
+                        val iconId = "inlineIcon_${iconCounter++}"
+                        appendInlineContent(iconId, "[$value]")
+
+                        inlineContent[iconId] =
+                            InlineTextContent(
+                                Placeholder(
+                                    width = LocalTextStyle.current.fontSize,
+                                    height = LocalTextStyle.current.fontSize,
+                                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
+                                ),
+                            ) {
+                                runCatching {
+                                    iconContent(value)
+                                }
+                            }
+                    }
+
+                    tagType == BBCodeTag.IMAGE && imageContent != null && value.isNotBlank() -> {
+                        val imageId = "inlineImage_${imageCounter++}"
+                        appendInlineContent(imageId, "[$value]")
+
+                        inlineContent[imageId] =
+                            InlineTextContent(
+                                Placeholder(
+                                    width = LocalTextStyle.current.fontSize,
+                                    height = LocalTextStyle.current.fontSize,
+                                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
+                                ),
+                            ) {
+                                runCatching {
+                                    imageContent(value)
+                                }
+                            }
+                    }
+
+                    else -> {
+                        val current = styleStack.peek()
+                        val newStyle =
+                            when (tagType) {
+                                BBCodeTag.COLOR -> current.copy(tag = tagType, color = colorFromName(value))
+                                BBCodeTag.BACKGROUND -> current.copy(tag = tagType, bg = colorFromName(value))
+                                BBCodeTag.BOLD -> current.copy(tag = tagType, bold = true)
+                                BBCodeTag.ITALIC -> current.copy(tag = tagType, italic = true)
+                                BBCodeTag.UNDERLINE -> current.copy(tag = tagType, underline = true)
+                                BBCodeTag.LINK ->
+                                    current.copy(
+                                        tag = tagType,
+                                        link = value,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        underline = true,
+                                    )
+
+                                else -> current
+                            }
+                        styleStack.push(newStyle)
+                    }
+                }
+
                 lastIndex = match.range.last + 1
-                return@forEach
             }
 
-            when {
-                isClosing -> {
-                    if (styleStack.size > 1 && styleStack.peek().tag == tagType) {
-                        styleStack.pop()
-                    }
-                }
-
-                tagType == BBCodeTag.ICON && iconContent != null && value.isNotBlank() -> {
-                    val iconId = "inlineIcon_${iconCounter++}"
-                    appendInlineContent(iconId, "[$value]")
-
-                    inlineContent[iconId] = InlineTextContent(
-                        Placeholder(
-                            width = LocalTextStyle.current.fontSize,
-                            height = LocalTextStyle.current.fontSize,
-                            placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                        )
-                    ) {
-                        runCatching {
-                            iconContent(value)
-                        }
-                    }
-                }
-
-                tagType == BBCodeTag.IMAGE && imageContent != null && value.isNotBlank() -> {
-                    val imageId = "inlineImage_${imageCounter++}"
-                    appendInlineContent(imageId, "[$value]")
-
-                    inlineContent[imageId] = InlineTextContent(
-                        Placeholder(
-                            width = LocalTextStyle.current.fontSize,
-                            height = LocalTextStyle.current.fontSize,
-                            placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                        )
-                    ) {
-                        runCatching {
-                            imageContent(value)
-                        }
-                    }
-                }
-
-                else -> {
-                    val current = styleStack.peek()
-                    val newStyle = when (tagType) {
-                        BBCodeTag.COLOR -> current.copy(tag = tagType, color = colorFromName(value))
-                        BBCodeTag.BACKGROUND -> current.copy(tag = tagType, bg = colorFromName(value))
-                        BBCodeTag.BOLD -> current.copy(tag = tagType, bold = true)
-                        BBCodeTag.ITALIC -> current.copy(tag = tagType, italic = true)
-                        BBCodeTag.UNDERLINE -> current.copy(tag = tagType, underline = true)
-                        BBCodeTag.LINK -> current.copy(
-                            tag = tagType,
-                            link = value,
-                            color = MaterialTheme.colorScheme.primary,
-                            underline = true
-                        )
-
-                        else -> current
-                    }
-                    styleStack.push(newStyle)
-                }
+            if (lastIndex < this@toStyleMarkup.length) {
+                val remaining = this@toStyleMarkup.substring(lastIndex)
+                applyStyle(this, remaining, styleStack.peek())
             }
-
-            lastIndex = match.range.last + 1
         }
-
-        if (lastIndex < this@toStyleMarkup.length) {
-            val remaining = this@toStyleMarkup.substring(lastIndex)
-            applyStyle(this, remaining, styleStack.peek())
-        }
-    }
 
     return annotated to inlineContent
 }
 
-private fun applyStyle(builder: AnnotatedString.Builder, text: String, style: StyleState) {
-    val spanStyle = SpanStyle(
-        color = style.color,
-        background = style.bg,
-        fontWeight = if (style.bold) FontWeight.Bold else FontWeight.Normal,
-        fontStyle = if (style.italic) FontStyle.Italic else FontStyle.Normal,
-        textDecoration = if (style.underline) TextDecoration.Underline else null,
-    )
+private fun applyStyle(
+    builder: AnnotatedString.Builder,
+    text: String,
+    style: StyleState,
+) {
+    val spanStyle =
+        SpanStyle(
+            color = style.color,
+            background = style.bg,
+            fontWeight = if (style.bold) FontWeight.Bold else FontWeight.Normal,
+            fontStyle = if (style.italic) FontStyle.Italic else FontStyle.Normal,
+            textDecoration = if (style.underline) TextDecoration.Underline else null,
+        )
 
     if (style.link != null) {
         builder.pushStringAnnotation(tag = "URL", annotation = style.link)

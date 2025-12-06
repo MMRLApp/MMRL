@@ -12,16 +12,17 @@ data class UpdateJson(
     val versionCode: Int,
     val zipUrl: String,
     val size: Int = 0,
-    val changelog: String = ""
+    val changelog: String = "",
 ) {
     fun toItemOrNull(timestamp: Float): VersionItem? {
         if (!NetworkUtils.isUrl(zipUrl)) return null
 
-        val changelog = when {
-            !NetworkUtils.isUrl(changelog) -> ""
-            NetworkUtils.isBlobUrl(changelog) -> ""
-            else -> changelog
-        }
+        val changelog =
+            when {
+                !NetworkUtils.isUrl(changelog) -> ""
+                NetworkUtils.isBlobUrl(changelog) -> ""
+                else -> changelog
+            }
 
         return VersionItem(
             timestamp = timestamp,
@@ -29,7 +30,7 @@ data class UpdateJson(
             versionCode = versionCode,
             zipUrl = zipUrl,
             size = size,
-            changelog = changelog
+            changelog = changelog,
         )
     }
 
@@ -37,13 +38,16 @@ data class UpdateJson(
         suspend fun loadToVersionItem(url: String): VersionItem? {
             if (!NetworkUtils.isUrl(url)) return null
 
-            val result = NetworkUtils.request(url) { body, headers ->
-                val adapter = Moshi.Builder()
-                    .build()
-                    .adapter<UpdateJson>()
+            val result =
+                NetworkUtils.request(url) { body, headers ->
+                    val adapter =
+                        Moshi
+                            .Builder()
+                            .build()
+                            .adapter<UpdateJson>()
 
-                adapter.fromJson(body.string()) to headers
-            }
+                    adapter.fromJson(body.string()) to headers
+                }
 
             if (result.isSuccess) {
                 val (json, headers) = result.getOrThrow()

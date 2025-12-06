@@ -19,15 +19,16 @@ fun <T> runRequest(
     var event by remember { mutableStateOf(Event.LOADING) }
 
     LaunchedEffect(null) {
-        get().onSuccess {
-            event = Event.SUCCEEDED
-            onSuccess(it)
-        }.onFailure {
-            event = Event.FAILED
-            onFailure(it)
+        get()
+            .onSuccess {
+                event = Event.SUCCEEDED
+                onSuccess(it)
+            }.onFailure {
+                event = Event.FAILED
+                onFailure(it)
 
-            Timber.e(it)
-        }
+                Timber.e(it)
+            }
     }
 
     return event
@@ -43,7 +44,7 @@ fun requestString(
     return runRequest(
         get = { NetworkUtils.requestString(url) },
         onSuccess = onSuccess,
-        onFailure = onFailure
+        onFailure = onFailure,
     )
 }
 
@@ -55,5 +56,5 @@ inline fun <reified T> requestJson(
 ) = runRequest(
     get = { NetworkUtils.requestJson(url) },
     onSuccess = onSuccess,
-    onFailure = onFailure
+    onFailure = onFailure,
 )

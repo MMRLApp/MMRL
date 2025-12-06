@@ -35,7 +35,10 @@ object Path {
         }
     }
 
-    fun normalizeStringPosix(path: String, allowAboveRoot: Boolean): String {
+    fun normalizeStringPosix(
+        path: String,
+        allowAboveRoot: Boolean,
+    ): String {
         var res = ""
         var lastSegmentLength = 0
         var lastSlash = -1
@@ -53,10 +56,15 @@ object Path {
                         if (res.length > 2) {
                             val lastSlashIndex = res.lastIndexOf('/')
                             if (lastSlashIndex != res.length - 1) {
-                                res = if (lastSlashIndex == -1) "" else res.substring(
-                                    0,
-                                    lastSlashIndex
-                                )
+                                res =
+                                    if (lastSlashIndex == -1) {
+                                        ""
+                                    } else {
+                                        res.substring(
+                                            0,
+                                            lastSlashIndex,
+                                        )
+                                    }
                                 lastSegmentLength = res.length - 1 - res.lastIndexOf('/')
                                 lastSlash = i
                                 dots = 0
@@ -75,12 +83,17 @@ object Path {
                         lastSegmentLength = 2
                     }
                 } else {
-                    res = if (res.isNotEmpty()) "$res/${
-                        path.substring(
-                            lastSlash + 1,
-                            i
-                        )
-                    }" else path.substring(lastSlash + 1, i)
+                    res =
+                        if (res.isNotEmpty()) {
+                            "$res/${
+                                path.substring(
+                                    lastSlash + 1,
+                                    i,
+                                )
+                            }"
+                        } else {
+                            path.substring(lastSlash + 1, i)
+                        }
                     lastSegmentLength = i - lastSlash - 1
                 }
                 lastSlash = i
@@ -94,15 +107,19 @@ object Path {
         return res
     }
 
-    fun parse(vararg paths: Any): String = resolve(*paths.map {
-        when (it) {
-            is ExtFile,
-            is File,
-                -> it.path
+    fun parse(vararg paths: Any): String =
+        resolve(
+            *paths
+                .map {
+                    when (it) {
+                        is ExtFile,
+                        is File,
+                        -> it.path
 
-            is String -> it
-            is Uri -> it.toString()
-            else -> throw IllegalArgumentException("Unsupported type: ${it::class}")
-        }
-    }.toTypedArray())
+                        is String -> it
+                        is Uri -> it.toString()
+                        else -> throw IllegalArgumentException("Unsupported type: ${it::class}")
+                    }
+                }.toTypedArray(),
+        )
 }

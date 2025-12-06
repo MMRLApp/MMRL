@@ -23,11 +23,12 @@ object LocalScreen {
         val paddingValues = LocalMainScreenInnerPaddings.current
 
         androidx.compose.material3.SnackbarHost(
-            modifier = Modifier
-                .padding(bottom = paddingValues.calculateBottomPadding())
-                .then(modifier),
+            modifier =
+                Modifier
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+                    .then(modifier),
             snackbar = snackbar,
-            hostState = host
+            hostState = host,
         )
     }
 }
@@ -36,12 +37,10 @@ object LocalScreen {
  * Provides the screen with composition locals that shouldn't be used globally.
  */
 @Composable
-fun LocalScreenProvider(
-    content: @Composable () -> Unit,
-) {
+fun LocalScreenProvider(content: @Composable () -> Unit) {
     CompositionLocalProvider(
         LocalSnackbarHost provides remember { SnackbarHostState() },
-        LocalHazeState provides rememberHazeState()
+        LocalHazeState provides rememberHazeState(),
     ) {
         content()
     }

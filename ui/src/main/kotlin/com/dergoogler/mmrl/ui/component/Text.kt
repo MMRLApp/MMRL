@@ -42,8 +42,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.text.HtmlCompat
-import com.dergoogler.mmrl.ext.toAnnotatedString
 import com.dergoogler.mmrl.ext.thenComposeInvoke
+import com.dergoogler.mmrl.ext.toAnnotatedString
 
 @Composable
 fun HtmlText(
@@ -57,19 +57,19 @@ fun HtmlText(
     val spanned = HtmlCompat.fromHtml(spannableString, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
     Text(
-        modifier = if (onClick != null) {
-            modifier.clickable(
-                onClick = onClick
-            )
-        } else {
-            modifier
-        },
+        modifier =
+            if (onClick != null) {
+                modifier.clickable(
+                    onClick = onClick,
+                )
+            } else {
+                modifier
+            },
         style = style,
         color = color,
-        text = spanned.toAnnotatedString()
+        text = spanned.toAnnotatedString(),
     )
 }
-
 
 @Composable
 fun MarkdownText(
@@ -81,68 +81,69 @@ fun MarkdownText(
 ) {
     val boldPattern = """\*\*(.+?)\*\*""".toRegex() // Bold (double asterisks)
     val italicPattern = """(?<!\*)\*(?![*\s])(?:[^*]*[^*\s])?\*(?!\*)""".toRegex() // Italic (single asterisk with the new regex)
-    val underlinePattern = """_(.+?)_""".toRegex()  // Underline (underscores)
+    val underlinePattern = """_(.+?)_""".toRegex() // Underline (underscores)
     val strikethroughPattern = """~~(.+?)~~""".toRegex() // Strikethrough (double tildes)
     val clickablePattern = """@(\w+)\((.*?)\)""".toRegex() // Clickable tag
 
-    val annotatedString = buildAnnotatedString {
-        var currentIndex = 0
-        val processedRanges = mutableListOf<IntRange>()
+    val annotatedString =
+        buildAnnotatedString {
+            var currentIndex = 0
+            val processedRanges = mutableListOf<IntRange>()
 
-        val matches = mutableListOf<Pair<MatchResult, SpanStyle?>>()
+            val matches = mutableListOf<Pair<MatchResult, SpanStyle?>>()
 
-        listOf(
-            boldPattern to SpanStyle(fontWeight = FontWeight.Bold),
-            italicPattern to SpanStyle(fontStyle = FontStyle.Italic),
-            underlinePattern to SpanStyle(textDecoration = TextDecoration.Underline),
-            strikethroughPattern to SpanStyle(textDecoration = TextDecoration.LineThrough)
-        ).forEach { (regex, style) ->
-            matches.addAll(regex.findAll(text).map { it to style })
-        }
-
-        matches.addAll(clickablePattern.findAll(text).map { it to null })
-
-        matches.sortBy { it.first.range.first }
-
-        matches.forEach { (matchResult, style) ->
-            val matchRange = matchResult.range
-            if (processedRanges.any { it.first <= matchRange.last && it.last >= matchRange.first }) return@forEach
-
-            if (currentIndex < matchRange.first) {
-                append(text.substring(currentIndex, matchRange.first))
+            listOf(
+                boldPattern to SpanStyle(fontWeight = FontWeight.Bold),
+                italicPattern to SpanStyle(fontStyle = FontStyle.Italic),
+                underlinePattern to SpanStyle(textDecoration = TextDecoration.Underline),
+                strikethroughPattern to SpanStyle(textDecoration = TextDecoration.LineThrough),
+            ).forEach { (regex, style) ->
+                matches.addAll(regex.findAll(text).map { it to style })
             }
 
-            if (style != null) {
-                if (style == SpanStyle(fontStyle = FontStyle.Italic)) {
-                    val matchText = matchResult.value
-                    val textForItalics = matchText.substring(1, matchText.length - 1)
-                    withStyle(style) {
-                        append(textForItalics)
+            matches.addAll(clickablePattern.findAll(text).map { it to null })
+
+            matches.sortBy { it.first.range.first }
+
+            matches.forEach { (matchResult, style) ->
+                val matchRange = matchResult.range
+                if (processedRanges.any { it.first <= matchRange.last && it.last >= matchRange.first }) return@forEach
+
+                if (currentIndex < matchRange.first) {
+                    append(text.substring(currentIndex, matchRange.first))
+                }
+
+                if (style != null) {
+                    if (style == SpanStyle(fontStyle = FontStyle.Italic)) {
+                        val matchText = matchResult.value
+                        val textForItalics = matchText.substring(1, matchText.length - 1)
+                        withStyle(style) {
+                            append(textForItalics)
+                        }
+                    } else {
+                        withStyle(style) {
+                            append(matchResult.groupValues[1])
+                        }
                     }
                 } else {
-                    withStyle(style) {
-                        append(matchResult.groupValues[1])
+                    // Clickable tag
+                    val id = matchResult.groupValues[1]
+                    val displayText = matchResult.groupValues[2]
+                    pushStringAnnotation(tag = "clickable", annotation = id)
+                    withStyle(SpanStyle(color = clickTagColor)) {
+                        append(displayText)
                     }
+                    pop()
                 }
-            } else {
-                // Clickable tag
-                val id = matchResult.groupValues[1]
-                val displayText = matchResult.groupValues[2]
-                pushStringAnnotation(tag = "clickable", annotation = id)
-                withStyle(SpanStyle(color = clickTagColor)) {
-                    append(displayText)
-                }
-                pop()
+
+                processedRanges.add(matchRange)
+                currentIndex = matchRange.last + 1
             }
 
-            processedRanges.add(matchRange)
-            currentIndex = matchRange.last + 1
+            if (currentIndex < text.length) {
+                append(text.substring(currentIndex))
+            }
         }
-
-        if (currentIndex < text.length) {
-            append(text.substring(currentIndex))
-        }
-    }
 
     var layoutResult: TextLayoutResult? by remember { mutableStateOf(null) }
 
@@ -150,23 +151,24 @@ fun MarkdownText(
         text = annotatedString,
         style = style,
         onTextLayout = { layoutResult = it },
-        modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures { offset ->
-                    layoutResult?.let { layout ->
-                        val position = layout.getOffsetForPosition(offset)
-                        annotatedString
-                            .getStringAnnotations(
-                                tag = "clickable", start = position, end = position
-                            )
-                            .firstOrNull()
-                            ?.let { annotation ->
-                                onTagClick(annotation.item)
-                            }
+        modifier =
+            Modifier
+                .pointerInput(Unit) {
+                    detectTapGestures { offset ->
+                        layoutResult?.let { layout ->
+                            val position = layout.getOffsetForPosition(offset)
+                            annotatedString
+                                .getStringAnnotations(
+                                    tag = "clickable",
+                                    start = position,
+                                    end = position,
+                                ).firstOrNull()
+                                ?.let { annotation ->
+                                    onTagClick(annotation.item)
+                                }
+                        }
                     }
-                }
-            }
-            .then(modifier)
+                }.then(modifier),
     )
 }
 
@@ -190,7 +192,7 @@ fun BulletList(
                 text = it,
                 style = style,
                 modifier = Modifier.weight(1f, fill = true),
-                onClick = onItemClick
+                onClick = onItemClick,
             )
         }
         if (lineSpacing > 0.dp && it != items.last()) {
@@ -223,7 +225,7 @@ fun TextWithIcon(
     Row(
         modifier = rowModifier,
         verticalAlignment = verticalAlignment,
-        horizontalArrangement = horizontalArrangement
+        horizontalArrangement = horizontalArrangement,
     ) {
         if (icon != null && !rightIcon) {
             icon(iconSize)
@@ -267,25 +269,28 @@ fun TextWithIcon(
     iconScalingFactor = iconScalingFactor,
     spacing = spacing,
     rightIcon = rightIcon,
-    text = text.thenComposeInvoke<String, RowScope, TextStyle>(showText) { it, stl ->
-        Text(
-            text = it,
-            style = stl,
-            modifier = textModifier,
-            maxLines = maxLines,
-            overflow = overflow,
-        )
-    },
-    icon = icon.thenComposeInvoke<Int, RowScope, Dp> { it, size ->
-        Icon(
-            painter = painterResource(id = it),
-            contentDescription = contentDescription,
-            tint = tint,
-            modifier = Modifier
-                .size(size)
-                .then(iconModifier)
-        )
-    },
+    text =
+        text.thenComposeInvoke<String, RowScope, TextStyle>(showText) { it, stl ->
+            Text(
+                text = it,
+                style = stl,
+                modifier = textModifier,
+                maxLines = maxLines,
+                overflow = overflow,
+            )
+        },
+    icon =
+        icon.thenComposeInvoke<Int, RowScope, Dp> { it, size ->
+            Icon(
+                painter = painterResource(id = it),
+                contentDescription = contentDescription,
+                tint = tint,
+                modifier =
+                    Modifier
+                        .size(size)
+                        .then(iconModifier),
+            )
+        },
     verticalAlignment = verticalAlignment,
-    horizontalArrangement = horizontalArrangement
+    horizontalArrangement = horizontalArrangement,
 )

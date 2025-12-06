@@ -13,7 +13,9 @@ import android.util.Log
  * This is used for type-safe checking and categorization of different platform implementations,
  * particularly distinguishing between various root solutions and non-root environments.
  */
-sealed class PlatformType(val id: String) {
+sealed class PlatformType(
+    val id: String,
+) {
     open val MINIMAL_SUPPORTED_SU_COMPAT: Int = -1
     open val MINIMAL_SUPPORTED_KERNEL_LKM: Int = -1
     open val MINIMAL_SUPPORTED_KERNEL: Int = -1
@@ -31,7 +33,9 @@ sealed class PlatformType(val id: String) {
     data object Magisk : PlatformType("magisk")
 
     /** Represents the base class for KernelSU and its variants. */
-    open class KernelSU(id: String = "kernelsu") : PlatformType(id) {
+    open class KernelSU(
+        id: String = "kernelsu",
+    ) : PlatformType(id) {
         override val MINIMAL_SUPPORTED_KERNEL = 11071
         override val MINIMAL_SUPPORTED_KERNEL_LKM = 11648
         override val MINIMAL_SUPPORTED_SU_COMPAT = 12040
@@ -92,7 +96,9 @@ internal const val BINDER_TRANSACTION = 84398154
  *
  * @property type The platform type instance containing the unique identifier.
  */
-enum class Platform(val type: PlatformType) {
+enum class Platform(
+    val type: PlatformType,
+) {
     Magisk(PlatformType.Magisk),
     KernelSU(PlatformType.KernelSU()),
     KsuNext(PlatformType.KernelSuNext),
@@ -102,7 +108,8 @@ enum class Platform(val type: PlatformType) {
     RKSU(PlatformType.RKSU),
     Shizuku(PlatformType.Shizuku),
     NonRoot(PlatformType.NonRoot),
-    Unknown(PlatformType.Unknown);
+    Unknown(PlatformType.Unknown),
+    ;
 
     val id: String get() = type.id
 
@@ -132,17 +139,18 @@ enum class Platform(val type: PlatformType) {
                 putExtra(PLATFORM_KEY, platform)
             }
 
-        fun Intent.getPlatform(): Platform? = try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                getSerializableExtra(PLATFORM_KEY, Platform::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                getSerializableExtra(PLATFORM_KEY) as? Platform
+        fun Intent.getPlatform(): Platform? =
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    getSerializableExtra(PLATFORM_KEY, Platform::class.java)
+                } else {
+                    @Suppress("DEPRECATION")
+                    getSerializableExtra(PLATFORM_KEY) as? Platform
+                }
+            } catch (e: Exception) {
+                Log.e("Platform", "Error getting platform", e)
+                null
             }
-        } catch (e: Exception) {
-            Log.e("Platform", "Error getting platform", e)
-            null
-        }
 
         fun Intent.putPlatform(platform: Platform) {
             putExtra(PLATFORM_KEY, platform)

@@ -8,10 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun TitleItem(
-    text: String,
-) = Text(
-    text = text,
-    style = MaterialTheme.typography.titleSmall,
-    modifier = Modifier.padding(start = 18.dp, top = 18.dp)
-)
+internal fun TitleItem(text: String) =
+    Text(
+        text = text,
+        style = MaterialTheme.typography.titleSmall,
+        modifier = Modifier.padding(start = 18.dp, top = 18.dp),
+    )

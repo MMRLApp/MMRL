@@ -10,7 +10,6 @@ import com.dergoogler.mmrl.platform.ksu.KsuNative.ROOT_GID
 import com.dergoogler.mmrl.platform.ksu.KsuNative.ROOT_UID
 import kotlinx.parcelize.Parcelize
 
-
 @Immutable
 @Parcelize
 @Keep
@@ -20,10 +19,8 @@ data class Profile(
     // current uid for the package, this is convivent for kernel to check
     // if the package name doesn't match uid, then it should be invalidated.
     val currentUid: Int = 0,
-
     // if this is true, kernel will grant root permission to this package
     val allowSu: Boolean = false,
-
     // these are used for root profile
     val rootUseDefault: Boolean = true,
     val rootTemplate: String? = null,
@@ -33,7 +30,6 @@ data class Profile(
     val capabilities: List<Int> = mutableListOf(),
     val context: String = KERNEL_SU_DOMAIN,
     val namespace: Int = Namespace.INHERITED.ordinal,
-
     val nonRootUseDefault: Boolean = true,
     val umountModules: Boolean = true,
     var rules: String = "", // this field is save in ksud!!
@@ -48,7 +44,6 @@ data class Profile(
 
     companion object {
         fun onChange(profile: Profile) {
-
         }
     }
 }

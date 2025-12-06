@@ -46,44 +46,44 @@ fun ListSwitchItem(
     }
 
     Row(
-        modifier = modifier
-            .alpha(alpha = if (enabled) 1f else 0.5f)
-            .toggleable(
-                value = checked,
-                enabled = enabled,
-                onValueChange = onChange,
-                role = Role.Switch,
-                interactionSource = interactionSource,
-                indication = ripple()
-            )
-            .padding(contentPaddingValues)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .alpha(alpha = if (enabled) 1f else 0.5f)
+                .toggleable(
+                    value = checked,
+                    enabled = enabled,
+                    onValueChange = onChange,
+                    role = Role.Switch,
+                    interactionSource = interactionSource,
+                    indication = ripple(),
+                ).padding(contentPaddingValues)
+                .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         icon?.let {
             Icon(
                 modifier = Modifier.size(itemTextStyle.iconSize),
                 painter = painterResource(id = icon),
-                contentDescription = null
+                contentDescription = null,
             )
 
             Spacer(modifier = Modifier.width(start))
         }
 
-
         BaseListContent(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = itemTextStyle.textSwitchPadding),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(end = itemTextStyle.textSwitchPadding),
             title = title,
             desc = desc,
             itemTextStyle = itemTextStyle,
-            base = base
+            base = base,
         )
 
         Switch(
             checked = checked,
-            onCheckedChange = null
+            onCheckedChange = null,
         )
     }
 }

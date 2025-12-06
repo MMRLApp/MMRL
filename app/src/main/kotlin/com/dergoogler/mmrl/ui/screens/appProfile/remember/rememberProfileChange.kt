@@ -26,45 +26,52 @@ fun rememberProfileChange(info: SuperUserViewModel.AppInfo): Pair<Profile, (Prof
     val scope = rememberCoroutineScope()
     val viewModel = LocalSuperUserViewModel.current
 
-    val initialProfile = remember(info.packageName, info.uid) {
-        val profile = KsuNative.getAppProfile(info.packageName, info.uid)
-        if (profile.allowSu) {
-            profile.rules = getSepolicy(info.packageName)
+    val initialProfile =
+        remember(info.packageName, info.uid) {
+            val profile = KsuNative.getAppProfile(info.packageName, info.uid)
+            if (profile.allowSu) {
+                profile.rules = getSepolicy(info.packageName)
+            }
+            profile
         }
-        profile
-    }
 
     var profile by rememberSaveable(info.packageName, info.uid) {
         mutableStateOf(initialProfile)
     }
 
     // Cache string resources to avoid recomposition
-    val errorMessages = remember {
-        ErrorMessages(
-            failToUpdateAppProfile = R.string.failed_to_update_app_profile,
-            failToUpdateSepolicy = R.string.failed_to_update_sepolicy,
-            suNotAllowed = R.string.su_not_allowed
-        )
-    }
+    val errorMessages =
+        remember {
+            ErrorMessages(
+                failToUpdateAppProfile = R.string.failed_to_update_app_profile,
+                failToUpdateSepolicy = R.string.failed_to_update_sepolicy,
+                suNotAllowed = R.string.su_not_allowed,
+            )
+        }
 
-    val updateProfile: (Profile) -> Unit = remember(info, snackBarHost, scope, viewModel) {
-        { newProfile ->
-            scope.launch {
-                try {
-                    val result = updateProfileSafely(
-                        newProfile, info, errorMessages, snackBarHost,
-                    )
-                    if (result.isSuccess) {
-                        profile = newProfile
-                        viewModel.updateAppProfile(info.packageName, newProfile)
+    val updateProfile: (Profile) -> Unit =
+        remember(info, snackBarHost, scope, viewModel) {
+            { newProfile ->
+                scope.launch {
+                    try {
+                        val result =
+                            updateProfileSafely(
+                                newProfile,
+                                info,
+                                errorMessages,
+                                snackBarHost,
+                            )
+                        if (result.isSuccess) {
+                            profile = newProfile
+                            viewModel.updateAppProfile(info.packageName, newProfile)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("ProfileChange", "Error updating profile", e)
+                        snackBarHost.showSnackbar("An unexpected error occurred")
                     }
-                } catch (e: Exception) {
-                    Log.e("ProfileChange", "Error updating profile", e)
-                    snackBarHost.showSnackbar("An unexpected error occurred")
                 }
             }
         }
-    }
 
     return profile to updateProfile
 }
@@ -77,7 +84,11 @@ private data class ErrorMessages(
 
 private sealed class UpdateResult {
     object Success : UpdateResult()
-    data class Error(val messageRes: Int, val args: List<Any>) : UpdateResult()
+
+    data class Error(
+        val messageRes: Int,
+        val args: List<Any>,
+    ) : UpdateResult()
 
     val isSuccess: Boolean get() = this is Success
 }
@@ -93,7 +104,7 @@ private suspend fun updateProfileSafely(
         if (isSystemUidForbidden(info.uid)) {
             snackBarHost.showSnackbar(
                 // You'll need to resolve string resource here or pass context
-                "SU not allowed for system UID ${info.uid}"
+                "SU not allowed for system UID ${info.uid}",
             )
             return UpdateResult.Error(errorMessages.suNotAllowed, listOf(info.label))
         }
@@ -123,10 +134,9 @@ private fun isSystemUidForbidden(uid: Int): Boolean {
     return uid < 2000 && uid != 1000
 }
 
-private fun shouldUpdateSepolicy(profile: Profile): Boolean {
-    return !profile.rootUseDefault && profile.rules.isNotEmpty()
-}
+private fun shouldUpdateSepolicy(profile: Profile): Boolean = !profile.rootUseDefault && profile.rules.isNotEmpty()
 
-val LocalProfileChange = staticCompositionLocalOf<Pair<Profile, (Profile) -> Unit>> {
-    error("CompositionLocal LocalProfileChange not present")
-}
+val LocalProfileChange =
+    staticCompositionLocalOf<Pair<Profile, (Profile) -> Unit>> {
+        error("CompositionLocal LocalProfileChange not present")
+    }

@@ -26,7 +26,6 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
-
 /**
  * A [File] abstraction that utilizes root privileges for file operations if available,
  * otherwise falling back to standard [java.io.File] operations.
@@ -90,29 +89,31 @@ class SuFile(
 
     fun writeBytes(data: ByteArray) = newOutputStream(false).use { it.write(data) }
 
-    override fun list(): Array<String>? = fallback(
-        { this.list(path) },
-        { super.list() }
-    )
+    override fun list(): Array<String>? =
+        fallback(
+            { this.list(path) },
+            { super.list() },
+        )
 
-    override fun length(): Long = fallback(
-        { this.length(path) },
-        { super.length() }
-    )
+    override fun length(): Long =
+        fallback(
+            { this.length(path) },
+            { super.length() },
+        )
 
-    fun stat(): Long {
-        return this.lastModified()
-    }
+    fun stat(): Long = this.lastModified()
 
-    override fun lastModified(): Long = fallback(
-        { this.stat(path) },
-        { super.lastModified() }
-    )
+    override fun lastModified(): Long =
+        fallback(
+            { this.stat(path) },
+            { super.lastModified() },
+        )
 
-    override fun exists(): Boolean = fallback(
-        { this.exists(path) },
-        { super.exists() }
-    )
+    override fun exists(): Boolean =
+        fallback(
+            { this.exists(path) },
+            { super.exists() },
+        )
 
     @OptIn(ExperimentalContracts::class)
     inline fun <R> exists(block: (SuFile) -> R): R? {
@@ -123,158 +124,175 @@ class SuFile(
         return if (exists()) block(this) else null
     }
 
-    override fun isDirectory(): Boolean = fallback(
-        { this.isDirectory(path) },
-        { super.isDirectory() }
-    )
+    override fun isDirectory(): Boolean =
+        fallback(
+            { this.isDirectory(path) },
+            { super.isDirectory() },
+        )
 
-    override fun isFile(): Boolean = fallback(
-        { this.isFile(path) },
-        { super.isFile() }
-    )
+    override fun isFile(): Boolean =
+        fallback(
+            { this.isFile(path) },
+            { super.isFile() },
+        )
 
-    override fun isBlock(): Boolean = fallback(
-        { this.isBlock(path) },
-        { super.isBlock() }
-    )
+    override fun isBlock(): Boolean =
+        fallback(
+            { this.isBlock(path) },
+            { super.isBlock() },
+        )
 
-    override fun isCharacter(): Boolean = fallback(
-        { this.isCharacter(path) },
-        { super.isCharacter() }
-    )
+    override fun isCharacter(): Boolean =
+        fallback(
+            { this.isCharacter(path) },
+            { super.isCharacter() },
+        )
 
-    override fun isSymlink(): Boolean = fallback(
-        { this.isSymlink(path) },
-        { super.isSymlink() }
-    )
+    override fun isSymlink(): Boolean =
+        fallback(
+            { this.isSymlink(path) },
+            { super.isSymlink() },
+        )
 
-    override fun isNamedPipe(): Boolean = fallback(
-        { this.isNamedPipe(path) },
-        { super.isNamedPipe() }
-    )
+    override fun isNamedPipe(): Boolean =
+        fallback(
+            { this.isNamedPipe(path) },
+            { super.isNamedPipe() },
+        )
 
-    override fun isSocket(): Boolean = fallback(
-        { this.isSocket(path) },
-        { super.isSocket() }
-    )
+    override fun isSocket(): Boolean =
+        fallback(
+            { this.isSocket(path) },
+            { super.isSocket() },
+        )
 
-    override fun mkdir(): Boolean = fallback(
-        { this.mkdir(path) },
-        { super.mkdir() }
-    )
+    override fun mkdir(): Boolean =
+        fallback(
+            { this.mkdir(path) },
+            { super.mkdir() },
+        )
 
-    override fun mkdirs(): Boolean = fallback(
-        { this.mkdirs(path) },
-        { super.mkdirs() }
-    )
+    override fun mkdirs(): Boolean =
+        fallback(
+            { this.mkdirs(path) },
+            { super.mkdirs() },
+        )
 
-    override fun createNewFile(): Boolean = fallback(
-        { this.createNewFile(path) },
-        { super.createNewFile() }
-    )
+    override fun createNewFile(): Boolean =
+        fallback(
+            { this.createNewFile(path) },
+            { super.createNewFile() },
+        )
 
+    override fun renameTo(dest: File): Boolean =
+        fallback(
+            { this.renameTo(path, dest.path) },
+            { super.renameTo(dest) },
+        )
 
-    override fun renameTo(dest: File): Boolean = fallback(
-        { this.renameTo(path, dest.path) },
-        { super.renameTo(dest) }
-    )
-
-    fun copyTo(dest: File, overwrite: Boolean = false) = fallback(
+    fun copyTo(
+        dest: File,
+        overwrite: Boolean = false,
+    ) = fallback(
         { this.copyTo(path, dest.path, overwrite) },
-        { File(path).copyTo(dest, overwrite) }
+        { File(path).copyTo(dest, overwrite) },
     )
 
-    override fun canExecute(): Boolean = fallback(
-        { this.canExecute(path) },
-        { super.canExecute() }
-    )
+    override fun canExecute(): Boolean =
+        fallback(
+            { this.canExecute(path) },
+            { super.canExecute() },
+        )
 
-    override fun canRead(): Boolean = fallback(
-        { this.canRead(path) },
-        { super.canRead() }
-    )
+    override fun canRead(): Boolean =
+        fallback(
+            { this.canRead(path) },
+            { super.canRead() },
+        )
 
-    override fun canWrite(): Boolean = fallback(
-        { this.canWrite(path) },
-        { super.canWrite() }
-    )
+    override fun canWrite(): Boolean =
+        fallback(
+            { this.canWrite(path) },
+            { super.canWrite() },
+        )
 
-    override fun delete(): Boolean = fallback(
-        { this.delete(path) },
-        { super.delete() }
-    )
+    override fun delete(): Boolean =
+        fallback(
+            { this.delete(path) },
+            { super.delete() },
+        )
 
     override fun deleteOnExit() {
         fallback(
             {
                 this.deleteOnExit(path)
             },
-            { super.deleteOnExit() }
+            { super.deleteOnExit() },
         )
     }
 
-    override fun isHidden(): Boolean = fallback(
-        { this.isHidden(path) },
-        { super.isHidden() }
-    )
+    override fun isHidden(): Boolean =
+        fallback(
+            { this.isHidden(path) },
+            { super.isHidden() },
+        )
 
-    override fun setReadOnly(): Boolean {
-        return setPermissions(
+    override fun setReadOnly(): Boolean =
+        setPermissions(
             SuFilePermissions.combine(
                 SuFilePermissions.OWNER_READ,
                 SuFilePermissions.GROUP_READ,
                 SuFilePermissions.OTHERS_READ,
-            )
+            ),
         )
-    }
 
-    override fun setExecutable(executable: Boolean): Boolean {
-        return setPermissions(SuFilePermissions.PERMISSION_755)
-    }
+    override fun setExecutable(executable: Boolean): Boolean = setPermissions(SuFilePermissions.PERMISSION_755)
 
-    fun setPermissions(permissions: SuFilePermissions): Boolean {
-        return this.setPermissions(permissions.value)
-    }
+    fun setPermissions(permissions: SuFilePermissions): Boolean = this.setPermissions(permissions.value)
 
-    fun setPermissions(permissions: Int): Boolean = fallback(
-        { this.setPermissions(path, permissions) },
-        { false }
-    )
+    fun setPermissions(permissions: Int): Boolean =
+        fallback(
+            { this.setPermissions(path, permissions) },
+            { false },
+        )
 
     val parentSuFile: SuFile?
-        get() = try {
-            val parent = this.parentFile
-            if (parent != null && parent.path != this.path) {
-                SuFile(parent)
-            } else {
+        get() =
+            try {
+                val parent = this.parentFile
+                if (parent != null && parent.path != this.path) {
+                    SuFile(parent)
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
                 null
             }
-        } catch (e: Exception) {
-            null
-        }
 
-    fun setOwner(uid: Int, gid: Int): Boolean = fallback(
-        {
-            this.setOwner(path, uid, gid)
-        },
-        {
-            try {
-                Os.chown(path, uid, gid)
-                true
-            } catch (e: ErrnoException) {
-                false
-            }
-        }
-    )
+    fun setOwner(
+        uid: Int,
+        gid: Int,
+    ): Boolean =
+        fallback(
+            {
+                this.setOwner(path, uid, gid)
+            },
+            {
+                try {
+                    Os.chown(path, uid, gid)
+                    true
+                } catch (e: ErrnoException) {
+                    false
+                }
+            },
+        )
 
-    override fun listFiles(): Array<SuFile>? {
-        return this.list()?.map { SuFile(it, this) }?.toTypedArray()
-    }
+    override fun listFiles(): Array<SuFile>? = this.list()?.map { SuFile(it, this) }?.toTypedArray()
 
     override fun listFiles(filter: FileFilter?): Array<SuFile>? {
         val ss = list()
         val files = ArrayList<SuFile>()
-        if (ss == null) return null;
+        if (ss == null) return null
         for (s in ss) {
             val f = SuFile(s, this)
             if ((filter == null) || filter.accept(f)) files.add(f)
@@ -283,43 +301,45 @@ class SuFile(
     }
 
     @Throws(IOException::class)
-    fun newInputStream(): InputStream = fallback(
-        {
-            val pipe = ParcelFileDescriptor.createPipe()
-            try {
-                this.openReadStream(path, pipe[1]).checkException()
-            } catch (e: RemoteException) {
-                pipe[0].close()
-                throw IOException(e)
-            } finally {
-                pipe[1].close()
-            }
+    fun newInputStream(): InputStream =
+        fallback(
+            {
+                val pipe = ParcelFileDescriptor.createPipe()
+                try {
+                    this.openReadStream(path, pipe[1]).checkException()
+                } catch (e: RemoteException) {
+                    pipe[0].close()
+                    throw IOException(e)
+                } finally {
+                    pipe[1].close()
+                }
 
-            return@fallback ParcelFileDescriptor.AutoCloseInputStream(pipe[0])
-        },
-        {
-            FileInputStream(this)
-        }
-    )
+                return@fallback ParcelFileDescriptor.AutoCloseInputStream(pipe[0])
+            },
+            {
+                FileInputStream(this)
+            },
+        )
 
     @Throws(IOException::class)
-    fun newOutputStream(append: Boolean): OutputStream = fallback(
-        {
-            val pipe = ParcelFileDescriptor.createPipe()
-            try {
-                this.openWriteStream(path, pipe[0], append).checkException()
-            } catch (e: RemoteException) {
-                pipe[1].close()
-                throw IOException(e)
-            } finally {
-                pipe[0].close()
-            }
-            return@fallback ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])
-        },
-        {
-            FileOutputStream(this)
-        }
-    )
+    fun newOutputStream(append: Boolean): OutputStream =
+        fallback(
+            {
+                val pipe = ParcelFileDescriptor.createPipe()
+                try {
+                    this.openWriteStream(path, pipe[0], append).checkException()
+                } catch (e: RemoteException) {
+                    pipe[1].close()
+                    throw IOException(e)
+                } finally {
+                    pipe[0].close()
+                }
+                return@fallback ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])
+            },
+            {
+                FileOutputStream(this)
+            },
+        )
 
     @Throws(IOException::class)
     fun getCanonicalDirPath(): String {
@@ -346,24 +366,21 @@ class SuFile(
      *
      * @return An [ExtFile] object representing the same file path as this [SuFile].
      */
-    fun toExtFile(): ExtFile {
-        return ExtFile(this)
-    }
+    fun toExtFile(): ExtFile = ExtFile(this)
 
     companion object {
         const val TAG = "SuFile"
         const val PIPE_CAPACITY = 16 * 4096
 
-        fun loadSharedObjects(vararg paths: String): Boolean = fallback(
-            {
-                this.loadSharedObjects(paths)
-            },
-            { false }
-        )
+        fun loadSharedObjects(vararg paths: String): Boolean =
+            fallback(
+                {
+                    this.loadSharedObjects(paths)
+                },
+                { false },
+            )
 
-        fun String.toSuFile(): SuFile {
-            return SuFile(this)
-        }
+        fun String.toSuFile(): SuFile = SuFile(this)
 
         fun createDirectories(vararg file: SuFile): Boolean {
             for (f in file) {
@@ -416,4 +433,3 @@ class SuFile(
         }
     }
 }
-

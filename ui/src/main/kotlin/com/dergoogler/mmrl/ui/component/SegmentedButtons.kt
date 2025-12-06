@@ -55,32 +55,35 @@ fun SegmentedButtons(
     contentColor: Color = LocalContentColor.current,
     shape: Shape = SegmentedButtonsDefaults.Shape,
     border: BorderStroke = SegmentedButtonsDefaults.border(),
-    segments: @Composable () -> Unit
+    segments: @Composable () -> Unit,
 ) {
     Surface(
-        modifier = modifier
-            .selectableGroup()
-            .defaultMinSize(minHeight = 40.dp),
+        modifier =
+            modifier
+                .selectableGroup()
+                .defaultMinSize(minHeight = 40.dp),
         shape = shape,
         contentColor = contentColor,
         color = containerColor,
-        border = border
+        border = border,
     ) {
         SubcomposeLayout { constraints ->
             val segmentsMeasurable = subcompose(SegmentSlots.Segment, segments)
             val segmentCount = segmentsMeasurable.size
-            val segmentsPlaceable = segmentsMeasurable.map {
-                val width = it.maxIntrinsicWidth(constraints.maxHeight)
-                it.measure(constraints.copy(minWidth = 0, maxWidth = width))
-            }
+            val segmentsPlaceable =
+                segmentsMeasurable.map {
+                    val width = it.maxIntrinsicWidth(constraints.maxHeight)
+                    it.measure(constraints.copy(minWidth = 0, maxWidth = width))
+                }
 
             val segmentedButtonsHeight = segmentsPlaceable.maxBy { it.height }.height
             val segmentedButtonsWidth = segmentsPlaceable.sumOf { it.width }
 
-            val divider = SegmentedButtonsDefaults.divider(
-                height = segmentedButtonsHeight.toDp(),
-                border = border
-            )
+            val divider =
+                SegmentedButtonsDefaults.divider(
+                    height = segmentedButtonsHeight.toDp(),
+                    border = border,
+                )
             val dividerWidth = border.width.roundToPx()
 
             layout(segmentedButtonsWidth, segmentedButtonsHeight) {
@@ -92,8 +95,10 @@ fun SegmentedButtons(
                     if (index == segmentCount - 1) return@forEachIndexed
 
                     val dividerMeasurable = subcompose(index, divider)
-                    val placeableDivider = dividerMeasurable
-                        .first().measure(constraints.copy(minWidth = 0))
+                    val placeableDivider =
+                        dividerMeasurable
+                            .first()
+                            .measure(constraints.copy(minWidth = 0))
 
                     placeableDivider.placeRelative(x, 0)
                     x += dividerWidth
@@ -113,23 +118,25 @@ fun Segment(
     contentPadding: PaddingValues = SegmentedButtonsDefaults.ContentPadding,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     icon: (@Composable () -> Unit)? = { SegmentedButtonsDefaults.SegmentIcon(selected) },
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     val containerColor by colors.containerColor(selected)
     val contentColor by colors.contentColor(selected)
 
     Surface(
-        modifier = modifier
-            .clickable(
-                enabled = enabled,
-                role = Role.Button,
-                onClick = onClick,
-                interactionSource = interactionSource,
-                indication = ripple(
-                    bounded = true,
-                    color = colors.containerColor(selected).value
-                )
-            ),
+        modifier =
+            modifier
+                .clickable(
+                    enabled = enabled,
+                    role = Role.Button,
+                    onClick = onClick,
+                    interactionSource = interactionSource,
+                    indication =
+                        ripple(
+                            bounded = true,
+                            color = colors.containerColor(selected).value,
+                        ),
+                ),
         color = containerColor,
         contentColor = contentColor,
     ) {
@@ -138,7 +145,7 @@ fun Segment(
                 Row(
                     modifier = Modifier.padding(contentPadding),
                     horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (icon != null) icon()
                     if (icon != null && selected) {
@@ -153,7 +160,7 @@ fun Segment(
 }
 
 private enum class SegmentSlots {
-    Segment
+    Segment,
 }
 
 object SegmentedButtonsDefaults {
@@ -165,10 +172,10 @@ object SegmentedButtonsDefaults {
     @Composable
     fun border(
         width: Dp = 1.dp,
-        color: Color =  MaterialTheme.colorScheme.outline
+        color: Color = MaterialTheme.colorScheme.outline,
     ) = BorderStroke(
         width = width,
-        color = color
+        color = color,
     )
 
     @Composable
@@ -176,28 +183,29 @@ object SegmentedButtonsDefaults {
         containerColor: Color = Color.Transparent,
         contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
         selectedContainerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-        selectedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer
+        selectedContentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
     ) = SegmentColors(
         containerColor = containerColor,
         contentColor = contentColor,
         selectedContainerColor = selectedContainerColor,
-        selectedContentColor = selectedContentColor
+        selectedContentColor = selectedContentColor,
     )
 
     fun divider(
         height: Dp,
-        border: BorderStroke
+        border: BorderStroke,
     ) = @Composable {
         Canvas(
-            modifier = Modifier
-                .height(height)
-                .width(border.width)
+            modifier =
+                Modifier
+                    .height(height)
+                    .width(border.width),
         ) {
             drawLine(
                 brush = border.brush,
                 start = Offset(center.x, 0f),
                 end = Offset(center.x, size.height),
-                strokeWidth  = size.width
+                strokeWidth = size.width,
             )
         }
     }
@@ -207,7 +215,7 @@ object SegmentedButtonsDefaults {
         Icon(
             imageVector = Icons.Filled.Check,
             contentDescription = null,
-            modifier = Modifier.size(IconSize)
+            modifier = Modifier.size(IconSize),
         )
     }
 
@@ -215,24 +223,26 @@ object SegmentedButtonsDefaults {
     fun SegmentIcon(
         active: Boolean,
         activeContent: @Composable () -> Unit = { ActiveIcon() },
-        inactiveContent: (@Composable () -> Unit)? = null
+        inactiveContent: (@Composable () -> Unit)? = null,
     ) {
         if (inactiveContent == null) {
             AnimatedVisibility(
                 visible = active,
                 exit = ExitTransition.None,
-                enter = fadeIn(tween(350)) + scaleIn(
-                    initialScale = 0f,
-                    transformOrigin = TransformOrigin(0f, 1f),
-                    animationSpec = tween(350),
-                ),
+                enter =
+                    fadeIn(tween(350)) +
+                        scaleIn(
+                            initialScale = 0f,
+                            transformOrigin = TransformOrigin(0f, 1f),
+                            animationSpec = tween(350),
+                        ),
             ) {
                 activeContent()
             }
         } else {
             Crossfade(
                 targetState = active,
-                label = "SegmentIcon"
+                label = "SegmentIcon",
             ) {
                 if (it) activeContent() else inactiveContent()
             }
@@ -248,14 +258,11 @@ class SegmentColors internal constructor(
     private val selectedContentColor: Color,
 ) {
     @Composable
-    internal fun containerColor(selected: Boolean): State<Color> {
-        return rememberUpdatedState(if (selected) selectedContainerColor else containerColor)
-    }
+    internal fun containerColor(selected: Boolean): State<Color> =
+        rememberUpdatedState(if (selected) selectedContainerColor else containerColor)
 
     @Composable
-    internal fun contentColor(selected: Boolean): State<Color> {
-        return rememberUpdatedState(if (selected) selectedContentColor else contentColor)
-    }
+    internal fun contentColor(selected: Boolean): State<Color> = rememberUpdatedState(if (selected) selectedContentColor else contentColor)
 
     @Suppress("RedundantIf")
     override fun equals(other: Any?): Boolean {
