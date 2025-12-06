@@ -18,7 +18,6 @@ import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasWebUI
 import com.dergoogler.mmrl.platform.model.ModId
 import kotlinx.coroutines.flow.firstOrNull
-import org.apache.commons.lang3.ClassUtils.comparator
 
 @Composable
 fun rememberLocalModules(query: String = ""): State<List<LocalModule>> {
