@@ -49,26 +49,28 @@ fun ChangelogScreen() {
         }.onFailure {
             Timber.e(it, "unable to get changelog")
         }
-
     }
-
 
     SettingsScaffold(
         modifier = ScaffoldDefaults.settingsScaffoldModifier,
-        title = R.string.settings_changelog
+        title = R.string.settings_changelog,
     ) {
         AnimatedVisibility(
-            visible = changelog == null, enter = fadeIn(), exit = fadeOut()
+            visible = changelog == null,
+            enter = fadeIn(),
+            exit = fadeOut(),
         ) {
             Loading()
         }
 
         AnimatedVisibility(
-            visible = changelog != null, enter = fadeIn(), exit = fadeOut()
+            visible = changelog != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
         ) {
             changelog?.let { bl ->
                 LazyColumn(
-                    modifier = Modifier.hazeSource(LocalHazeState.current)
+                    modifier = Modifier.hazeSource(LocalHazeState.current),
                 ) {
                     items(items = bl, key = { it.versionCode }) { entry ->
                         if (!userPreferences.checkAppUpdatesPreReleases && entry.preRelease) return@items

@@ -46,7 +46,7 @@ fun ModuleItemCompact(
     onClick = onClick,
     modifier = modifier.fillMaxWidth(),
     enabled = enabled,
-    shape = RoundedCornerShape(10.dp)
+    shape = RoundedCornerShape(10.dp),
 ) {
     val module = LocalOnlineModule.current
     val state = LocalOnlineModuleState.current
@@ -59,23 +59,24 @@ fun ModuleItemCompact(
 
     Row(
         modifier = Modifier.padding(all = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (menu.showIcon) {
             if (module.icon != null) {
                 AsyncImage(
                     model = module.icon,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape),
-                    contentDescription = null
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .clip(CircleShape),
+                    contentDescription = null,
                 )
             } else {
                 Logo(
                     icon = R.drawable.box,
                     modifier = Modifier.size(40.dp),
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 )
             }
 
@@ -83,12 +84,13 @@ fun ModuleItemCompact(
         }
 
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             IconText(
-                style = MaterialTheme.typography.titleSmall.copy(
-                    fontWeight = FontWeight.Bold
-                ),
+                style =
+                    MaterialTheme.typography.titleSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
                 tint = MaterialTheme.colorScheme.surfaceTint,
                 alignment = Alignment.End,
                 maxLines = 2,
@@ -102,31 +104,32 @@ fun ModuleItemCompact(
                 text = module.author,
                 style = MaterialTheme.typography.bodyMedium.copy(),
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = module.versionDisplay,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.outline
+                color = MaterialTheme.colorScheme.outline,
             )
 
             sourceProvider.nullable {
                 Text(
                     text = it,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.surfaceTint
+                    color = MaterialTheme.colorScheme.surfaceTint,
                 )
             }
 
             menu.showUpdatedTime.nullable(showLastUpdated) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = stringResource(
-                        id = R.string.module_update_at,
-                        state.lastUpdated.toFormattedDateSafely
-                    ),
+                    text =
+                        stringResource(
+                            id = R.string.module_update_at,
+                            state.lastUpdated.toFormattedDateSafely,
+                        ),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
 
@@ -134,7 +137,7 @@ fun ModuleItemCompact(
                 Row(
                     modifier = Modifier.padding(top = 4.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     if (menu.showLicense && module.hasLicense) {
                         module.license?.let { LabelItem(text = it) }
@@ -145,10 +148,11 @@ fun ModuleItemCompact(
                             if (it.isNotEmpty()) {
                                 LabelItem(
                                     text = stringResource(id = R.string.view_module_antifeatures),
-                                    style = LabelItemDefaults.style.copy(
-                                        containerColor = MaterialTheme.colorScheme.onTertiary,
-                                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    )
+                                    style =
+                                        LabelItemDefaults.style.copy(
+                                            containerColor = MaterialTheme.colorScheme.onTertiary,
+                                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        ),
                                 )
                             }
                         }
@@ -158,10 +162,11 @@ fun ModuleItemCompact(
                         state.updatable ->
                             LabelItem(
                                 text = stringResource(id = R.string.module_new),
-                                style = LabelItemDefaults.style.copy(
-                                    containerColor = MaterialTheme.colorScheme.error,
-                                    contentColor = MaterialTheme.colorScheme.onError
-                                )
+                                style =
+                                    LabelItemDefaults.style.copy(
+                                        containerColor = MaterialTheme.colorScheme.error,
+                                        contentColor = MaterialTheme.colorScheme.onError,
+                                    ),
                             )
 
                         state.installed ->

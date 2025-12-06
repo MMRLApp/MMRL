@@ -57,55 +57,61 @@ fun ListEditTextSwitchItem(
     }
 
     var open by remember { mutableStateOf(false) }
-    if (open) EditTextDialog(
-        value = value,
-        title = title,
-        onClose = { open = false },
-        onConfirm = onConfirm,
-        onValid = onValid,
-        dialogParameters = dialogParameters,
-    )
+    if (open) {
+        EditTextDialog(
+            value = value,
+            title = title,
+            onClose = { open = false },
+            onConfirm = onConfirm,
+            onValid = onValid,
+            dialogParameters = dialogParameters,
+        )
+    }
 
     val alpha = remember(enabled) { if (enabled) Modifier.alpha(1f) else Modifier.alpha(0.38f) }
 
     Row(
-        modifier = modifier
-            .let {
-                if (checked) {
-                    it.clickable(
-                        enabled = enabled,
-                        onClick = { open = true },
-                        interactionSource = interactionSource,
-                        indication = ripple()
-                    )
-                } else Modifier
-            }
-            .padding(contentPaddingValues)
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .let {
+                    if (checked) {
+                        it.clickable(
+                            enabled = enabled,
+                            onClick = { open = true },
+                            interactionSource = interactionSource,
+                            indication = ripple(),
+                        )
+                    } else {
+                        Modifier
+                    }
+                }.padding(contentPaddingValues)
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         icon?.let {
             Icon(
-                modifier = Modifier
-                    .size(itemTextStyle.iconSize)
-                    .then(alpha),
+                modifier =
+                    Modifier
+                        .size(itemTextStyle.iconSize)
+                        .then(alpha),
                 painter = painterResource(id = icon),
-                contentDescription = null
+                contentDescription = null,
             )
 
             Spacer(modifier = Modifier.width(start))
         }
 
         BaseListContent(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = itemTextStyle.textSwitchPadding)
-                .then(alpha),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .padding(end = itemTextStyle.textSwitchPadding)
+                    .then(alpha),
             title = title,
             desc = desc,
             itemTextStyle = itemTextStyle,
-            base = base
+            base = base,
         )
 
         VerticalDivider(
@@ -116,7 +122,7 @@ fun ListEditTextSwitchItem(
         Switch(
             enabled = enabled,
             checked = checked,
-            onCheckedChange = onChange
+            onCheckedChange = onChange,
         )
     }
 }

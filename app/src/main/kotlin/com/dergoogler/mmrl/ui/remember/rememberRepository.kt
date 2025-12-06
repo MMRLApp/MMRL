@@ -16,7 +16,7 @@ fun rememberRepository(): RepositoryEntryPoints {
     return remember(Unit) {
         EntryPointAccessors.fromApplication(
             context.applicationContext,
-            RepositoryEntryPoints::class.java
+            RepositoryEntryPoints::class.java,
         )
     }
 }
@@ -38,4 +38,3 @@ fun rememberUserPreferencesRepository(): UserPreferencesRepository {
     val repository = rememberRepository()
     return remember(repository) { repository.userPreferencesRepository() }
 }
-

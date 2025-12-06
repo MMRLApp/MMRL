@@ -17,16 +17,15 @@ fun DialogContainerScope.Buttons(
     modifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.End,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) = Row(
-    modifier = Modifier
-        .layoutId(DialogContainerSlot.BUTTONS)
-        .fillMaxWidth()
-        .padding(contentPadding.buttons)
-        .then(modifier),
+    modifier =
+        Modifier
+            .layoutId(DialogContainerSlot.BUTTONS)
+            .fillMaxWidth()
+            .padding(contentPadding.buttons)
+            .then(modifier),
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment,
-    content = content
+    content = content,
 )
-
-

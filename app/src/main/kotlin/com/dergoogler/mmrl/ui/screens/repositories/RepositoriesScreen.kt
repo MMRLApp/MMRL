@@ -72,161 +72,176 @@ import kotlin.reflect.KFunction1
 
 @Destination<RootGraph>
 @Composable
-fun RepositoriesScreen() = LocalScreenProvider {
-    val viewModel = hiltViewModel<RepositoriesViewModel>()
+fun RepositoriesScreen() =
+    LocalScreenProvider {
+        val viewModel = hiltViewModel<RepositoriesViewModel>()
 
-    val userPrefs = LocalUserPreferences.current
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val list by viewModel.repos.collectAsStateWithLifecycle()
-    val bulkInstallViewModel = LocalBulkInstall.current
-    val bulkModules by bulkInstallViewModel.bulkModules.collectAsStateWithLifecycle()
+        val userPrefs = LocalUserPreferences.current
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val list by viewModel.repos.collectAsStateWithLifecycle()
+        val bulkInstallViewModel = LocalBulkInstall.current
+        val bulkModules by bulkInstallViewModel.bulkModules.collectAsStateWithLifecycle()
 
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
-    val progress by viewModel.progress.collectAsStateWithLifecycle()
+        val state by viewModel.screenState.collectAsStateWithLifecycle()
+        val progress by viewModel.progress.collectAsStateWithLifecycle()
 
-    val pullToRefreshState = rememberPullToRefreshState()
+        val pullToRefreshState = rememberPullToRefreshState()
 
-    val showFab by viewModel.listState.isScrollingUp()
+        val showFab by viewModel.listState.isScrollingUp()
 
-    var repoUrl by remember { mutableStateOf("") }
-    var message: String by remember { mutableStateOf("") }
+        var repoUrl by remember { mutableStateOf("") }
+        var message: String by remember { mutableStateOf("") }
 
-    var failure by remember { mutableStateOf(false) }
-    if (failure) FailureDialog(
-        name = repoUrl,
-        message = message,
-        onClose = {
-            failure = false
-            message = ""
+        var failure by remember { mutableStateOf(false) }
+        if (failure) {
+            FailureDialog(
+                name = repoUrl,
+                message = message,
+                onClose = {
+                    failure = false
+                    message = ""
+                },
+            )
         }
-    )
 
-    var add by remember { mutableStateOf(false) }
-    if (add) AddDialog(
-        onClose = { add = false },
-        onAdd = {
-            repoUrl = it
-            viewModel.insert(it) { e ->
-                failure = true
-                message = e.stackTraceToString()
-            }
+        var add by remember { mutableStateOf(false) }
+        if (add) {
+            AddDialog(
+                onClose = { add = false },
+                onAdd = {
+                    repoUrl = it
+                    viewModel.insert(it) { e ->
+                        failure = true
+                        message = e.stackTraceToString()
+                    }
+                },
+            )
         }
-    )
 
-    val context = LocalContext.current
-    var bulkInstallBottomSheet by remember { mutableStateOf(false) }
+        val context = LocalContext.current
+        var bulkInstallBottomSheet by remember { mutableStateOf(false) }
 
-    val bulkDownload: (List<BulkModule>, Boolean) -> Unit = { item, install ->
-        bulkInstallViewModel.downloadMultiple(
-            items = item,
-            onAllSuccess = {
-                bulkInstallViewModel.clearBulkModules()
-                bulkInstallBottomSheet = false
-                if (install) {
-                    InstallActivity.start(
-                        context = context,
-                        uri = it
+        val bulkDownload: (List<BulkModule>, Boolean) -> Unit = { item, install ->
+            bulkInstallViewModel.downloadMultiple(
+                items = item,
+                onAllSuccess = {
+                    bulkInstallViewModel.clearBulkModules()
+                    bulkInstallBottomSheet = false
+                    if (install) {
+                        InstallActivity.start(
+                            context = context,
+                            uri = it,
+                        )
+                    }
+                },
+                onFailure = {
+                    Timber.e(it)
+                },
+            )
+        }
+
+        if (bulkInstallBottomSheet) {
+            BulkBottomSheet(
+                onClose = {
+                    bulkInstallBottomSheet = false
+                },
+                modules = bulkModules,
+                onDownload = bulkDownload,
+                bulkInstallViewModel = bulkInstallViewModel,
+            )
+        }
+
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    setMenu = viewModel::setRepositoriesMenu,
+                    onAdd = { add = true },
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = showFab,
+                    enter =
+                        scaleIn(
+                            animationSpec = tween(100),
+                            initialScale = 0.8f,
+                        ),
+                    exit =
+                        scaleOut(
+                            animationSpec = tween(100),
+                            targetScale = 0.8f,
+                        ),
+                ) {
+                    FloatingButton(
+                        onClick = {
+                            bulkInstallBottomSheet = true
+                        },
                     )
                 }
             },
-            onFailure = {
-                Timber.e(it)
+        ) { innerPadding ->
+
+            if (viewModel.isLoading) {
+                Loading()
             }
-        )
-    }
 
-    if (bulkInstallBottomSheet) BulkBottomSheet(
-        onClose = {
-            bulkInstallBottomSheet = false
-        },
-        modules = bulkModules,
-        onDownload = bulkDownload,
-        bulkInstallViewModel = bulkInstallViewModel,
-    )
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                setMenu = viewModel::setRepositoriesMenu,
-                onAdd = { add = true },
-                scrollBehavior = scrollBehavior
-            )
-        },
-        contentWindowInsets = WindowInsets.none,
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = showFab,
-                enter = scaleIn(
-                    animationSpec = tween(100),
-                    initialScale = 0.8f
-                ),
-                exit = scaleOut(
-                    animationSpec = tween(100),
-                    targetScale = 0.8f
-                )
-            ) {
-                FloatingButton(
-                    onClick = {
-                        bulkInstallBottomSheet = true
-                    }
+            if (list.isEmpty() && !viewModel.isLoading) {
+                PageIndicator(
+                    icon = R.drawable.git_pull_request,
+                    text = R.string.repo_empty,
                 )
             }
-        },
-    ) { innerPadding ->
 
-        if (viewModel.isLoading) {
-            Loading()
-        }
-
-        if (list.isEmpty() && !viewModel.isLoading) {
-            PageIndicator(
-                icon = R.drawable.git_pull_request,
-                text = R.string.repo_empty
-            )
-        }
-
-        PullToRefreshBox(
-            state = pullToRefreshState,
-            isRefreshing = state.isRefreshing,
-            onRefresh = viewModel::getRepoAll,
-            indicator = {
-                Indicator(
-                    modifier = Modifier.align(Alignment.TopCenter).let {
-                        if (!userPrefs.enableBlur) {
-                            it.padding(top = innerPadding.calculateTopPadding())
-                        } else it
-                    },
-                    isRefreshing = state.isRefreshing,
-                    state = pullToRefreshState
-                )
-            }
-        ) {
-            this@Scaffold.RepositoriesList(
-                innerPadding = innerPadding,
-                list = list,
-                state = viewModel.listState,
-                delete = viewModel::delete,
-                getUpdate = viewModel::getUpdate
-            )
-        }
-
-        AnimatedVisibility(
-            visible = progress,
-            enter = slideInTopToBottom(),
-            exit = slideOutBottomToTop()
-        ) {
-            LinearProgressIndicator(
-                modifier = Modifier.fillMaxWidth().let {
-                    if (!userPrefs.enableBlur) {
-                        it.padding(top = innerPadding.calculateTopPadding())
-                    } else it
+            PullToRefreshBox(
+                state = pullToRefreshState,
+                isRefreshing = state.isRefreshing,
+                onRefresh = viewModel::getRepoAll,
+                indicator = {
+                    Indicator(
+                        modifier =
+                            Modifier.align(Alignment.TopCenter).let {
+                                if (!userPrefs.enableBlur) {
+                                    it.padding(top = innerPadding.calculateTopPadding())
+                                } else {
+                                    it
+                                }
+                            },
+                        isRefreshing = state.isRefreshing,
+                        state = pullToRefreshState,
+                    )
                 },
-                strokeCap = StrokeCap.Round
-            )
+            ) {
+                this@Scaffold.RepositoriesList(
+                    innerPadding = innerPadding,
+                    list = list,
+                    state = viewModel.listState,
+                    delete = viewModel::delete,
+                    getUpdate = viewModel::getUpdate,
+                )
+            }
+
+            AnimatedVisibility(
+                visible = progress,
+                enter = slideInTopToBottom(),
+                exit = slideOutBottomToTop(),
+            ) {
+                LinearProgressIndicator(
+                    modifier =
+                        Modifier.fillMaxWidth().let {
+                            if (!userPrefs.enableBlur) {
+                                it.padding(top = innerPadding.calculateTopPadding())
+                            } else {
+                                it
+                            }
+                        },
+                    strokeCap = StrokeCap.Round,
+                )
+            }
         }
     }
-}
 
 @Composable
 private fun AddDialog(
@@ -236,7 +251,7 @@ private fun AddDialog(
     var domain by remember { mutableStateOf("") }
 
     val onDone: () -> Unit = {
-        onAdd("https://${domain}/")
+        onAdd("https://$domain/")
         onClose()
     }
 
@@ -246,18 +261,18 @@ private fun AddDialog(
         confirmButton = {
             TextButton(
                 onClick = onDone,
-                enabled = domain.isNotBlank()
+                enabled = domain.isNotBlank(),
             ) {
                 Text(text = stringResource(id = R.string.repo_add_dialog_add))
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onClose
+                onClick = onClose,
             ) {
                 Text(text = stringResource(id = R.string.dialog_cancel))
             }
-        }
+        },
     ) { focusRequester ->
         OutlinedTextField(
             modifier = Modifier.focusRequester(focusRequester),
@@ -266,18 +281,19 @@ private fun AddDialog(
             onValueChange = { domain = it },
             prefix = { Text(text = "https://") },
             singleLine = false,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions {
-                if (domain.isNotBlank()) onDone()
-            },
-            shape = RoundedCornerShape(15.dp)
+            keyboardOptions =
+                KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+            keyboardActions =
+                KeyboardActions {
+                    if (domain.isNotBlank()) onDone()
+                },
+            shape = RoundedCornerShape(15.dp),
         )
     }
 }
-
 
 @Composable
 private fun TopBar(
@@ -301,48 +317,47 @@ private fun TopBar(
             IconButton(
                 onClick = {
                     navigator.navigate(SearchScreenDestination)
-                }
+                },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.search),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
             IconButton(
-                onClick = onAdd
+                onClick = onAdd,
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.plus),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
 
             RepositoriesMenu(
-                setMenu = setMenu
+                setMenu = setMenu,
             )
-        }
+        },
     )
 }
 
 @Composable
-private fun FloatingButton(
-    onClick: () -> Unit,
-) {
+private fun FloatingButton(onClick: () -> Unit) {
     val paddingValues = LocalMainScreenInnerPaddings.current
 
     FloatingActionButton(
-        modifier = Modifier
-            .systemBarsPaddingEnd()
-            .padding(
-                bottom = paddingValues.calculateBottomPadding()
-            ),
+        modifier =
+            Modifier
+                .systemBarsPaddingEnd()
+                .padding(
+                    bottom = paddingValues.calculateBottomPadding(),
+                ),
         onClick = onClick,
         contentColor = MaterialTheme.colorScheme.onPrimary,
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
         Icon(
             painter = painterResource(id = R.drawable.package_import),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

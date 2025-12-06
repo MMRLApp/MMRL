@@ -62,9 +62,10 @@ fun <T> ListScope.CheckboxDialogItem(
 ) {
     var open by remember { mutableStateOf(false) }
 
-    val initialSelectedOptions = remember(options) {
-        options.filter { it.checked }
-    }
+    val initialSelectedOptions =
+        remember(options) {
+            options.filter { it.checked }
+        }
 
     var selectedOptions by remember {
         mutableStateOf(initialSelectedOptions)
@@ -81,7 +82,7 @@ fun <T> ListScope.CheckboxDialogItem(
                     strict = strict,
                     title = {
                         ProvideTitleTypography(
-                            token = TypographyKeyTokens.HeadlineSmall
+                            token = TypographyKeyTokens.HeadlineSmall,
                         ) {
                             this@ButtonItem.FromSlot(ListItemSlot.Title) {
                                 content(selectedOptions)
@@ -96,10 +97,10 @@ fun <T> ListScope.CheckboxDialogItem(
                     onConfirm = { confirmedOptions ->
                         selectedOptions = confirmedOptions
                         onConfirm(confirmedOptions)
-                    }
+                    },
                 )
             }
-        }
+        },
     )
 }
 
@@ -151,69 +152,74 @@ private fun <T> ListScope.AlertCheckboxDialog(
         }
 
         Content(
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(0.dp),
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .heightIn(max = 450.dp)
-                    .fadingEdge(
-                        Brush.verticalGradient(
-                            0f to Color.Transparent,
-                            0.03f to Color.Red,
-                            0.97f to Color.Red,
-                            1f to Color.Transparent
-                        )
-                    ),
-                contentPadding = PaddingValues(vertical = 4.dp)
+                modifier =
+                    Modifier
+                        .heightIn(max = 450.dp)
+                        .fadingEdge(
+                            Brush.verticalGradient(
+                                0f to Color.Transparent,
+                                0.03f to Color.Red,
+                                0.97f to Color.Red,
+                                1f to Color.Transparent,
+                            ),
+                        ),
+                contentPadding = PaddingValues(vertical = 4.dp),
             ) {
                 items(
                     items = options,
-                    key = { it.value.hashCode() }
+                    key = { it.value.hashCode() },
                 ) { option ->
                     val isChecked = selectedValues.contains(option.value)
                     val interactionSource = remember { MutableInteractionSource() }
 
                     if (option.title == null) return@items
 
-                    val isOptionEnabled = option.enabled &&
+                    val isOptionEnabled =
+                        option.enabled &&
                             (isChecked || canSelectMore || !multiple)
 
                     Row(
-                        modifier = Modifier
-                            .toggleable(
-                                enabled = isOptionEnabled,
-                                value = isChecked,
-                                onValueChange = { checked ->
-                                    if (multiple) {
-                                        selectedValues = if (checked) {
-                                            if (selectedValues.size < maxChoices) {
-                                                selectedValues + option.value
-                                            } else {
-                                                selectedValues
-                                            }
+                        modifier =
+                            Modifier
+                                .toggleable(
+                                    enabled = isOptionEnabled,
+                                    value = isChecked,
+                                    onValueChange = { checked ->
+                                        if (multiple) {
+                                            selectedValues =
+                                                if (checked) {
+                                                    if (selectedValues.size < maxChoices) {
+                                                        selectedValues + option.value
+                                                    } else {
+                                                        selectedValues
+                                                    }
+                                                } else {
+                                                    selectedValues - option.value
+                                                }
                                         } else {
-                                            selectedValues - option.value
+                                            selectedValues =
+                                                if (checked) {
+                                                    setOf(option.value)
+                                                } else {
+                                                    emptySet()
+                                                }
                                         }
-                                    } else {
-                                        selectedValues = if (checked) {
-                                            setOf(option.value)
-                                        } else {
-                                            emptySet()
-                                        }
-                                    }
-                                },
-                                role = Role.Checkbox,
-                                interactionSource = interactionSource,
-                                indication = ripple()
-                            )
-                            .fillMaxWidth(),
+                                    },
+                                    role = Role.Checkbox,
+                                    interactionSource = interactionSource,
+                                    indication = ripple(),
+                                ).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         this@AlertCheckboxDialog.Item(
-                            contentPadding = PaddingValues(
-                                vertical = 8.dp,
-                                horizontal = 25.dp
-                            )
+                            contentPadding =
+                                PaddingValues(
+                                    vertical = 8.dp,
+                                    horizontal = 25.dp,
+                                ),
                         ) {
                             Title(option.title)
 
@@ -225,7 +231,7 @@ private fun <T> ListScope.AlertCheckboxDialog(
                                 Checkbox(
                                     enabled = isOptionEnabled,
                                     checked = isChecked,
-                                    onCheckedChange = null
+                                    onCheckedChange = null,
                                 )
                             }
                         }
@@ -241,7 +247,7 @@ private fun <T> ListScope.AlertCheckboxDialog(
 
             TextButton(
                 onClick = onDone,
-                enabled = if (multiple && strict) selectedValues.isNotEmpty() else true
+                enabled = if (multiple && strict) selectedValues.isNotEmpty() else true,
             ) {
                 Text(stringResource(id = R.string.confirm))
             }

@@ -50,7 +50,9 @@ import com.dergoogler.mmrl.ui.component.toolbar.ToolbarTitle
 
 @Composable
 fun CrashHandlerScreen(
-    message: String, stacktrace: String, helpMessage: String?,
+    message: String,
+    stacktrace: String,
+    helpMessage: String?,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val context = LocalContext.current
@@ -59,12 +61,14 @@ fun CrashHandlerScreen(
 
     val hasHelp = helpMessage != null
     var helperSheet by remember { mutableStateOf(false) }
-    if (helperSheet && hasHelp) HelpBottomSheet(
-        text = helpMessage!!,
-        onClose = {
-            helperSheet = false
-        }
-    )
+    if (helperSheet && hasHelp) {
+        HelpBottomSheet(
+            text = helpMessage!!,
+            onClose = {
+                helperSheet = false
+            },
+        )
+    }
 
     val borderModifier = 2.5.dp
     val borderRadius = 20.dp
@@ -76,39 +80,44 @@ fun CrashHandlerScreen(
                 scrollBehavior = scrollBehavior,
             )
         },
-        contentWindowInsets = WindowInsets.none
+        contentWindowInsets = WindowInsets.none,
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
                 Surface(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                     color = MaterialTheme.colorScheme.surface,
                     tonalElevation = 1.dp,
-                    shape = helpMessage.nullable(default = RoundedCornerShape(20.dp)) {
-                        RoundedCornerShape(
-                            topStart = borderRadius,
-                            topEnd = borderRadius,
-                            bottomStart = borderModifier,
-                            bottomEnd = borderModifier,
-                        )
-                    },
+                    shape =
+                        helpMessage.nullable(default = RoundedCornerShape(20.dp)) {
+                            RoundedCornerShape(
+                                topStart = borderRadius,
+                                topEnd = borderRadius,
+                                bottomStart = borderModifier,
+                                bottomEnd = borderModifier,
+                            )
+                        },
                 ) {
                     SelectionContainer {
                         Text(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .horizontalScroll(rememberScrollState()),
+                            modifier =
+                                Modifier
+                                    .padding(16.dp)
+                                    .horizontalScroll(rememberScrollState()),
                             text = message,
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontFamily = FontFamily.Monospace
-                            )
+                            style =
+                                MaterialTheme.typography.bodyLarge.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                ),
                         )
                     }
                 }
@@ -119,27 +128,30 @@ fun CrashHandlerScreen(
                         color = MaterialTheme.colorScheme.surface,
                         tonalElevation = 1.dp,
                         contentColor = MaterialTheme.colorScheme.surfaceTint,
-                        shape = RoundedCornerShape(
-                            topStart = borderModifier,
-                            topEnd = borderModifier,
-                            bottomStart = borderRadius,
-                            bottomEnd = borderRadius,
-                        ),
-                        onClick = { helperSheet = true }
+                        shape =
+                            RoundedCornerShape(
+                                topStart = borderModifier,
+                                topEnd = borderModifier,
+                                bottomStart = borderRadius,
+                                bottomEnd = borderRadius,
+                            ),
+                        onClick = { helperSheet = true },
                     ) {
                         TextWithIcon(
-                            style = TextWithIconDefaults.style.copy(
-                                rightIcon = true,
-                                textStyle = MaterialTheme.typography.labelLarge
-                            ),
+                            style =
+                                TextWithIconDefaults.style.copy(
+                                    rightIcon = true,
+                                    textStyle = MaterialTheme.typography.labelLarge,
+                                ),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(
-                                vertical = 8.dp,
-                                horizontal = 24.dp
-                            ),
+                            modifier =
+                                Modifier.padding(
+                                    vertical = 8.dp,
+                                    horizontal = 24.dp,
+                                ),
                             icon = R.drawable.help_outlined,
-                            text = stringResource(R.string.help)
+                            text = stringResource(R.string.help),
                         )
                     }
                 }
@@ -147,29 +159,30 @@ fun CrashHandlerScreen(
 
             item {
                 Surface(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                     color = MaterialTheme.colorScheme.surface,
                     tonalElevation = 1.dp,
-                    shape = RoundedCornerShape(20.dp)
+                    shape = RoundedCornerShape(20.dp),
                 ) {
                     SelectionContainer {
                         Text(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .horizontalScroll(rememberScrollState()),
+                            modifier =
+                                Modifier
+                                    .padding(16.dp)
+                                    .horizontalScroll(rememberScrollState()),
                             text = stacktrace,
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontFamily = FontFamily.Monospace
-                            )
+                            style =
+                                MaterialTheme.typography.bodyLarge.copy(
+                                    fontFamily = FontFamily.Monospace,
+                                ),
                         )
                     }
                 }
             }
 
             item {
-
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center,
@@ -178,10 +191,10 @@ fun CrashHandlerScreen(
                         modifier = Modifier.weight(1f),
                         onClick = {
                             browser.openUri("https://github.com/DerGoogler/MMRL/issues")
-                        }
+                        },
                     ) {
                         Text(
-                            text = stringResource(R.string.report_to_issues)
+                            text = stringResource(R.string.report_to_issues),
                         )
                     }
 
@@ -191,10 +204,10 @@ fun CrashHandlerScreen(
                         modifier = Modifier.weight(1f),
                         onClick = {
                             context.shareText("$message\n\n$stacktrace")
-                        }
+                        },
                     ) {
                         Text(
-                            text = stringResource(R.string.copy_logs)
+                            text = stringResource(R.string.copy_logs),
                         )
                     }
                 }
@@ -218,11 +231,10 @@ private fun HelpBottomSheet(
 }
 
 @Composable
-private fun TopBar(
-    scrollBehavior: TopAppBarScrollBehavior,
-) = TopAppBar(
-    title = {
-        ToolbarTitle(titleResId = R.string.we_hit_a_brick_crash)
-    },
-    scrollBehavior = scrollBehavior,
-)
+private fun TopBar(scrollBehavior: TopAppBarScrollBehavior) =
+    TopAppBar(
+        title = {
+            ToolbarTitle(titleResId = R.string.we_hit_a_brick_crash)
+        },
+        scrollBehavior = scrollBehavior,
+    )

@@ -37,48 +37,49 @@ import com.dergoogler.mmrl.datastore.model.DarkMode
 private enum class DarkModeItem(
     val value: DarkMode,
     val icon: Int,
-    val text: Int
+    val text: Int,
 ) {
     Auto(
         value = DarkMode.FollowSystem,
         icon = R.drawable.brightness_2,
-        text = R.string.app_theme_dark_theme_auto
+        text = R.string.app_theme_dark_theme_auto,
     ),
 
     Light(
         value = DarkMode.AlwaysOff,
         icon = R.drawable.sun,
-        text = R.string.app_theme_dark_theme_light
+        text = R.string.app_theme_dark_theme_light,
     ),
 
     Dark(
         value = DarkMode.AlwaysOn,
         icon = R.drawable.moon_stars,
-        text = R.string.app_theme_dark_theme_dark
-    )
+        text = R.string.app_theme_dark_theme_dark,
+    ),
 }
 
-private val modes = listOf(
-    DarkModeItem.Auto,
-    DarkModeItem.Light,
-    DarkModeItem.Dark
-)
+private val modes =
+    listOf(
+        DarkModeItem.Auto,
+        DarkModeItem.Light,
+        DarkModeItem.Dark,
+    )
 
 @Composable
 fun DarkModeItem(
     darkMode: DarkMode,
-    onChange: (DarkMode) -> Unit
+    onChange: (DarkMode) -> Unit,
 ) = LazyRow(
     contentPadding = PaddingValues(horizontal = 18.dp, vertical = 16.dp),
-    horizontalArrangement = Arrangement.spacedBy(15.dp)
+    horizontalArrangement = Arrangement.spacedBy(15.dp),
 ) {
     items(
         items = modes,
-        key = { it.value }
+        key = { it.value },
     ) {
         DarkModeItem(
             item = it,
-            darkMode = darkMode
+            darkMode = darkMode,
         ) { value ->
             onChange(value)
         }
@@ -89,58 +90,62 @@ fun DarkModeItem(
 private fun DarkModeItem(
     item: DarkModeItem,
     darkMode: DarkMode,
-    onClick: (DarkMode) -> Unit
+    onClick: (DarkMode) -> Unit,
 ) {
     val selected = item.value == darkMode
 
     Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(15.dp))
-            .clickable(
-                onClick = { onClick(item.value) },
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() }
-            )
-            .background(color = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)),
-        contentAlignment = Alignment.Center
-    ){
+        modifier =
+            Modifier
+                .clip(RoundedCornerShape(15.dp))
+                .clickable(
+                    onClick = { onClick(item.value) },
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ).background(color = MaterialTheme.colorScheme.surfaceColorAtElevation(6.dp)),
+        contentAlignment = Alignment.Center,
+    ) {
         Row(
             modifier = Modifier.padding(all = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             val animateZ by animateFloatAsState(
                 targetValue = if (selected) 0f else 360f,
-                animationSpec = tween(
-                    durationMillis = 350,
-                    easing = FastOutSlowInEasing
-                ),
-                label = "animateZ"
+                animationSpec =
+                    tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing,
+                    ),
+                label = "animateZ",
             )
 
             Icon(
-                modifier = Modifier
-                    .size(20.dp)
-                    .graphicsLayer {
-                        rotationZ = if (selected) animateZ else 0f
-                    },
+                modifier =
+                    Modifier
+                        .size(20.dp)
+                        .graphicsLayer {
+                            rotationZ = if (selected) animateZ else 0f
+                        },
                 painter = painterResource(id = item.icon),
                 contentDescription = null,
-                tint = if (selected) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    LocalContentColor.current
-                }
+                tint =
+                    if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        LocalContentColor.current
+                    },
             )
 
             Text(
                 text = stringResource(id = item.text),
                 style = MaterialTheme.typography.labelLarge,
-                color = if (selected) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    Color.Unspecified
-                }
+                color =
+                    if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        Color.Unspecified
+                    },
             )
         }
     }

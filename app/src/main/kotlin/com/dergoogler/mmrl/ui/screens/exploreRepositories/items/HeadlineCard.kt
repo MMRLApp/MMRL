@@ -29,32 +29,33 @@ import com.dergoogler.mmrl.ui.component.text.BBCodeText
 @Composable
 fun HeadlineCard(
     repoCount: Int,
-    moduleCount: Int
+    moduleCount: Int,
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
-                        MaterialTheme.colorScheme.background
-                    ),
-                    start = Offset(0f, 0f),
-                    end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                ),
-                RoundedCornerShape(20.dp)
-            )
-            .border(
-                Dp.Hairline,
-                MaterialTheme.colorScheme.outlineVariant,
-                RoundedCornerShape(20.dp)
-            )
-            .padding(24.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    brush =
+                        Brush.linearGradient(
+                            colors =
+                                listOf(
+                                    MaterialTheme.colorScheme.surfaceColorAtElevation(1.dp),
+                                    MaterialTheme.colorScheme.background,
+                                ),
+                            start = Offset(0f, 0f),
+                            end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
+                        ),
+                    RoundedCornerShape(20.dp),
+                ).border(
+                    Dp.Hairline,
+                    MaterialTheme.colorScheme.outlineVariant,
+                    RoundedCornerShape(20.dp),
+                ).padding(24.dp),
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text(
                 text = stringResource(R.string.module_repositories),
@@ -68,15 +69,16 @@ fun HeadlineCard(
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.outlineVariant,
-                lineHeight = 20.sp
+                lineHeight = 20.sp,
             )
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(20.dp)
+                horizontalArrangement = Arrangement.spacedBy(20.dp),
             ) {
                 StatBox(repoCount.toString(), stringResource(R.string.page_repos))
-                StatBox(stringResource(R.string.count_with_plus, moduleCount),
-                    stringResource(R.string.available_modules)
+                StatBox(
+                    stringResource(R.string.count_with_plus, moduleCount),
+                    stringResource(R.string.available_modules),
                 )
             }
         }
@@ -84,23 +86,26 @@ fun HeadlineCard(
 }
 
 @Composable
-fun StatBox(value: String, label: String) {
+fun StatBox(
+    value: String,
+    label: String,
+) {
     Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
-            .border(
-                Dp.Hairline,
-                MaterialTheme.colorScheme.outlineVariant,
-                RoundedCornerShape(20.dp)
-            )
-            .padding(horizontal = 24.dp, vertical = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier
+                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(20.dp))
+                .border(
+                    Dp.Hairline,
+                    MaterialTheme.colorScheme.outlineVariant,
+                    RoundedCornerShape(20.dp),
+                ).padding(horizontal = 24.dp, vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = value,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.surfaceTint
+            color = MaterialTheme.colorScheme.surfaceTint,
         )
         Text(
             text = label,

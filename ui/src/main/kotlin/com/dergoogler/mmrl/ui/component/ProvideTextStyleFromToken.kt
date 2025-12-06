@@ -19,7 +19,7 @@ fun ProvideContentColorTextStyle(
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
         LocalTextStyle provides mergedStyle,
-        content = content
+        content = content,
     )
 }
 
@@ -28,9 +28,8 @@ fun ProvideTextStyleFromToken(
     color: Color,
     textToken: TypographyKeyTokens,
     content: @Composable () -> Unit,
-) =
-    ProvideContentColorTextStyle(
-        contentColor = color,
-        textStyle = textToken.value,
-        content = content
-    )
+) = ProvideContentColorTextStyle(
+    contentColor = color,
+    textStyle = textToken.value,
+    content = content,
+)

@@ -16,7 +16,9 @@ import com.dergoogler.mmrl.ui.token.DialogContainerTokens
 import com.dergoogler.mmrl.ui.token.value
 
 enum class DialogContainerSlot {
-    TITLE, CONTENT, BUTTONS
+    TITLE,
+    CONTENT,
+    BUTTONS,
 }
 
 @LayoutScopeMarker
@@ -33,7 +35,7 @@ infix fun TextStyle.Provide(content: @Composable () -> Unit) {
 
 internal class DialogContainerScopeInstance(
     override val style: DialogContainerStyle,
-    override val contentPadding: DialogContentPadding
+    override val contentPadding: DialogContentPadding,
 ) : DialogContainerScope
 
 data class DialogContainerStyle(
@@ -50,38 +52,43 @@ data class DialogContainerStyle(
 data class DialogContentPadding(
     val title: PaddingValues,
     val content: PaddingValues,
-    val buttons: PaddingValues
+    val buttons: PaddingValues,
 ) {
     val EMPTY_CONTENT get() = this.copy(content = PaddingValues(0.dp))
 }
 
 object DialogContainerDefaults {
-    val contentPadding = DialogContentPadding(
-        title = PaddingValues(
-            top = 25.dp,
-            bottom = 16.dp,
-            start = 25.dp,
-            end = 25.dp
-        ),
-        content = PaddingValues(
-            vertical = 0.dp,
-            horizontal = 25.dp
-        ),
-        buttons = PaddingValues(
-            vertical = 16.dp,
-            horizontal = 25.dp
+    val contentPadding =
+        DialogContentPadding(
+            title =
+                PaddingValues(
+                    top = 25.dp,
+                    bottom = 16.dp,
+                    start = 25.dp,
+                    end = 25.dp,
+                ),
+            content =
+                PaddingValues(
+                    vertical = 0.dp,
+                    horizontal = 25.dp,
+                ),
+            buttons =
+                PaddingValues(
+                    vertical = 16.dp,
+                    horizontal = 25.dp,
+                ),
         )
-    )
 
     val style
-        @Composable get() = DialogContainerStyle(
-            borderWidth = Dp.Hairline,
-            shape = DialogContainerTokens.ContainerShape.value,
-            containerOutline = DialogContainerTokens.ContainerOutline.value,
-            containerColor = DialogContainerTokens.ContainerColor.value,
-            iconContentColor = DialogContainerTokens.IconColor.value,
-            titleContentColor = DialogContainerTokens.HeadlineColor.value,
-            textContentColor = DialogContainerTokens.SupportingTextColor.value,
-            tonalElevation = 0.dp
-        )
+        @Composable get() =
+            DialogContainerStyle(
+                borderWidth = Dp.Hairline,
+                shape = DialogContainerTokens.ContainerShape.value,
+                containerOutline = DialogContainerTokens.ContainerOutline.value,
+                containerColor = DialogContainerTokens.ContainerColor.value,
+                iconContentColor = DialogContainerTokens.IconColor.value,
+                titleContentColor = DialogContainerTokens.HeadlineColor.value,
+                textContentColor = DialogContainerTokens.SupportingTextColor.value,
+                tonalElevation = 0.dp,
+            )
 }

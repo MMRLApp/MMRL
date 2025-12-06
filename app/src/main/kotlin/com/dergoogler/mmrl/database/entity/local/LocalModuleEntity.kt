@@ -34,18 +34,19 @@ data class LocalModuleEntity(
         lastUpdated = original.lastUpdated,
     )
 
-    fun toModule() = LocalModule(
-        id = ModId(id),
-        name = name,
-        version = version,
-        versionCode = versionCode,
-        author = author,
-        description = description,
-        updateJson = updateJson,
-        state = State.valueOf(state),
-        size = size,
-        lastUpdated = lastUpdated,
-    )
+    fun toModule() =
+        LocalModule(
+            id = ModId(id),
+            name = name,
+            version = version,
+            versionCode = versionCode,
+            author = author,
+            description = description,
+            updateJson = updateJson,
+            state = State.valueOf(state),
+            size = size,
+            lastUpdated = lastUpdated,
+        )
 }
 
 @Entity(tableName = "localModules_updatable")

@@ -18,45 +18,50 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
-open class MMRLViewModel @Inject constructor(
-    application: Application,
-    val localRepository: LocalRepository,
-    val modulesRepository: ModulesRepository,
-    val userPreferencesRepository: UserPreferencesRepository,
-) : AndroidViewModel(application) {
-    val isProviderAlive get() = PlatformManager.isAlive
-    val platform get() = PlatformManager.platform
+open class MMRLViewModel
+    @Inject
+    constructor(
+        application: Application,
+        val localRepository: LocalRepository,
+        val modulesRepository: ModulesRepository,
+        val userPreferencesRepository: UserPreferencesRepository,
+    ) : AndroidViewModel(application) {
+        val isProviderAlive get() = PlatformManager.isAlive
+        val platform get() = PlatformManager.platform
 
-    val context
-        get(): Context {
-            return getApplication<Application>().applicationContext
+        val context
+            get(): Context {
+                return getApplication<Application>().applicationContext
+            }
+
+        internal suspend fun getBlacklistById(id: String?): Blacklist? =
+            id?.let { localRepository.getBlacklistByIdOrNullAsFlow(it).first() }
+
+        internal suspend fun localModule(id: String?): LocalModule? = id?.let { localRepository.getLocalByIdOrNullAsFlow(it).first() }
+
+        private val _dialogQueue = MutableStateFlow<List<DialogQueueData>?>(null)
+        val currentDialog =
+            _dialogQueue.map { it?.firstOrNull() }.stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                null,
+            )
+
+        private var onQueueFinished: (() -> Unit)? = null
+
+        fun showDialogs(
+            dialogs: List<DialogQueueData>?,
+            onFinished: () -> Unit = {},
+        ) {
+            _dialogQueue.value = dialogs
+            onQueueFinished = onFinished
         }
 
-    internal suspend fun getBlacklistById(id: String?): Blacklist? {
-        return id?.let { localRepository.getBlacklistByIdOrNullAsFlow(it).first() }
-    }
-
-    internal suspend fun localModule(id: String?): LocalModule? {
-        return id?.let { localRepository.getLocalByIdOrNullAsFlow(it).first() }
-    }
-
-    private val _dialogQueue = MutableStateFlow<List<DialogQueueData>?>(null)
-    val currentDialog = _dialogQueue.map { it?.firstOrNull() }.stateIn(
-        viewModelScope, SharingStarted.Eagerly, null
-    )
-
-    private var onQueueFinished: (() -> Unit)? = null
-
-    fun showDialogs(dialogs: List<DialogQueueData>?, onFinished: () -> Unit = {}) {
-        _dialogQueue.value = dialogs
-        onQueueFinished = onFinished
-    }
-
-    fun dismissDialog() {
-        _dialogQueue.value = _dialogQueue.value?.drop(1)?.takeIf { it.isNotEmpty() }
-        if (_dialogQueue.value == null) {
-            onQueueFinished?.invoke()
-            onQueueFinished = null
+        fun dismissDialog() {
+            _dialogQueue.value = _dialogQueue.value?.drop(1)?.takeIf { it.isNotEmpty() }
+            if (_dialogQueue.value == null) {
+                onQueueFinished?.invoke()
+                onQueueFinished = null
+            }
         }
     }
-}

@@ -14,8 +14,7 @@ import com.dergoogler.mmrl.platform.stub.IModuleManager
 import com.dergoogler.mmrl.platform.util.Shell.exec
 import org.apache.commons.compress.archivers.zip.ZipFile
 
-abstract class BaseModuleManager() : IModuleManager.Stub() {
-
+abstract class BaseModuleManager : IModuleManager.Stub() {
     protected val mVersion by lazy {
         "su -v".exec().getOrDefault("unknown")
     }
@@ -32,12 +31,14 @@ abstract class BaseModuleManager() : IModuleManager.Stub() {
         "/system/bin/svc power reboot $reason || /system/bin/reboot $reason".exec()
     }
 
-    override fun getModules() = ExtFile(ModId.ADB_DIR, ModId.MODULES_DIR).listFiles()
-        .orEmpty()
-        .mapNotNull { dir ->
-            val id = ModId(dir.name)
-            id.readProps?.toModule()
-        }
+    override fun getModules() =
+        ExtFile(ModId.ADB_DIR, ModId.MODULES_DIR)
+            .listFiles()
+            .orEmpty()
+            .mapNotNull { dir ->
+                val id = ModId(dir.name)
+                id.readProps?.toModule()
+            }
 
     override fun getModuleById(id: ModId): LocalModule? = id.readProps?.toModule()
 
@@ -46,22 +47,25 @@ abstract class BaseModuleManager() : IModuleManager.Stub() {
         val entry = zipFile.getEntry(ModId.PROP_FILE) ?: return null
 
         return zipFile.getInputStream(entry).use {
-            it.bufferedReader()
+            it
+                .bufferedReader()
                 .readText()
                 .let(::readProps)
                 .toModule()
         }
     }
 
-    protected fun readProps(props: String) = props.lines()
-        .associate { line ->
-            val items = line.split("=", limit = 2).map { it.trim() }
-            if (items.size != 2) {
-                "" to ""
-            } else {
-                items[0] to items[1]
+    protected fun readProps(props: String) =
+        props
+            .lines()
+            .associate { line ->
+                val items = line.split("=", limit = 2).map { it.trim() }
+                if (items.size != 2) {
+                    "" to ""
+                } else {
+                    items[0] to items[1]
+                }
             }
-        }
 
     protected val ModId.readProps
         get() =
@@ -102,10 +106,11 @@ abstract class BaseModuleManager() : IModuleManager.Stub() {
     protected fun Map<String, String>.toModule(baseDir: String = ModId.ADB_DIR): LocalModule {
         val id = ModId(getOrDefault("id", "unknown"), baseDir)
 
-        val size = id.moduleDir.length(
-            recursive = true,
-            skipSymLinks = true
-        )
+        val size =
+            id.moduleDir.length(
+                recursive = true,
+                skipSymLinks = true,
+            )
 
         return LocalModule(
             id = id,
@@ -117,7 +122,7 @@ abstract class BaseModuleManager() : IModuleManager.Stub() {
             updateJson = getOrDefault("updateJson", ""),
             state = id.readState,
             size = size,
-            lastUpdated = readLastUpdated(id)
+            lastUpdated = readLastUpdated(id),
         )
     }
 

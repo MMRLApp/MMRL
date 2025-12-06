@@ -3,7 +3,6 @@ package com.dergoogler.mmrl.ui.screens.settings.other
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.service.ProviderService
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
@@ -30,16 +29,16 @@ fun OtherScreen() {
     val userPreferences = LocalUserPreferences.current
 
     SettingsScaffold(
-        title = R.string.settings_other
+        title = R.string.settings_other,
     ) {
         DownloadPathItem(
             downloadPath = userPreferences.downloadPath,
-            onChange = viewModel::setDownloadPath
+            onChange = viewModel::setDownloadPath,
         )
 
         SwitchItem(
             checked = userPreferences.useDoh,
-            onChange = viewModel::setUseDoh
+            onChange = viewModel::setUseDoh,
         ) {
             Title(R.string.settings_doh)
             Description(R.string.settings_doh_desc)
@@ -60,21 +59,18 @@ fun OtherScreen() {
                         snackbarHost.showSnackbar(context.getString(R.string.provider_service_stopped))
                     }
                 }
-            }
-
+            },
         ) {
             Title(R.string.settings_provider_service)
             Description(R.string.settings_provider_service_desc)
         }
 
-            TextEditDialogItem(
-                value = userPreferences.webuixPackageName,
-                onConfirm = viewModel::setWebuixPackageName
-            ) {
-                Title(context.getString(R.string.settings_set_spoofed_wxp))
-                Description(context.getString(R.string.settings_set_spoofed_wxp_desc))
-            }
-    
+        TextEditDialogItem(
+            value = userPreferences.webuixPackageName,
+            onConfirm = viewModel::setWebuixPackageName,
+        ) {
+            Title(context.getString(R.string.settings_set_spoofed_wxp))
+            Description(context.getString(R.string.settings_set_spoofed_wxp_desc))
+        }
     }
-
 }

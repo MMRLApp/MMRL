@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
+import com.dergoogler.mmrl.ui.component.listItem.dsl.DefaultIconSize
 import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemScope
 import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
-import com.dergoogler.mmrl.ui.component.listItem.dsl.DefaultIconSize
 
 /**
  * A composable function that adds an icon to a list item.
@@ -34,8 +34,7 @@ fun ListItemScope.Icon(
             modifier = Modifier.size(size).then(modifier),
             painter = painter,
             contentDescription = null,
-            tint = LocalContentColor.current
+            tint = LocalContentColor.current,
         )
-    }
+    },
 )
-

@@ -27,12 +27,13 @@ fun ListScope.Item(
     contentPadding: PaddingValues = contentPaddingValues,
     content: @Composable ListItemScope.() -> Unit,
 ) {
-    val instance = remember {
-        ListItemScopeInstance(
-            contentPaddingValues = contentPadding,
-            iconSize = iconSize
-        )
-    }
+    val instance =
+        remember {
+            ListItemScopeInstance(
+                contentPaddingValues = contentPadding,
+                iconSize = iconSize,
+            )
+        }
 
     val layoutDirection = LocalLayoutDirection.current
 
@@ -41,9 +42,10 @@ fun ListScope.Item(
     ) {
         Layout(
             content = { instance.content() },
-            modifier = modifier
-                .alpha(if (enabled) 1f else 0.5f)
-                .padding(instance.contentPaddingValues),
+            modifier =
+                modifier
+                    .alpha(if (enabled) 1f else 0.5f)
+                    .padding(instance.contentPaddingValues),
         ) { measurables, constraints ->
 
             val startMeasurable = measurables.firstOrNull { it.layoutId == ListItemSlot.Start }
@@ -68,10 +70,11 @@ fun ListScope.Item(
 
             val textMaxWidth =
                 constraints.maxWidth - startWidth - startSpacerWidth - endWidth - endSpacerWidth
-            val textConstraints = constraints.copy(
-                minWidth = 0,
-                maxWidth = max(0, textMaxWidth)
-            )
+            val textConstraints =
+                constraints.copy(
+                    minWidth = 0,
+                    maxWidth = max(0, textMaxWidth),
+                )
 
             val titlePlaceable = titleMeasurable?.measure(textConstraints)
             val descriptionPlaceable = descriptionMeasurable?.measure(textConstraints)
@@ -83,19 +86,20 @@ fun ListScope.Item(
 
             val textBlockHeight =
                 titleHeight +
-                        (if (descriptionPlaceable != null) descriptionHeight + 4.dp.roundToPx() else 0) +
-                        (if (supportingPlaceable != null) supportingHeight + 4.dp.roundToPx() else 0)
+                    (if (descriptionPlaceable != null) descriptionHeight + 4.dp.roundToPx() else 0) +
+                    (if (supportingPlaceable != null) supportingHeight + 4.dp.roundToPx() else 0)
 
-            val totalHeight = maxOf(
-                textBlockHeight,
-                startPlaceable?.height ?: 0,
-                endPlaceable?.height ?: 0
-            )
+            val totalHeight =
+                maxOf(
+                    textBlockHeight,
+                    startPlaceable?.height ?: 0,
+                    endPlaceable?.height ?: 0,
+                )
 
             layout(constraints.maxWidth, totalHeight) {
                 startPlaceable?.placeRelative(
                     x = 0,
-                    y = (totalHeight - startPlaceable.height) / 2
+                    y = (totalHeight - startPlaceable.height) / 2,
                 )
 
                 val textStartX = startWidth + startSpacerWidth
@@ -103,7 +107,7 @@ fun ListScope.Item(
 
                 titlePlaceable?.placeRelative(
                     x = textStartX,
-                    y = textVerticalPos
+                    y = textVerticalPos,
                 )
                 textVerticalPos += titleHeight
 
@@ -111,7 +115,7 @@ fun ListScope.Item(
                     textVerticalPos += 4.dp.roundToPx()
                     descriptionPlaceable.placeRelative(
                         x = textStartX,
-                        y = textVerticalPos
+                        y = textVerticalPos,
                     )
                     textVerticalPos += descriptionHeight
                 }
@@ -120,13 +124,13 @@ fun ListScope.Item(
                     textVerticalPos += 4.dp.roundToPx()
                     supportingPlaceable.placeRelative(
                         x = textStartX,
-                        y = textVerticalPos
+                        y = textVerticalPos,
                     )
                 }
 
                 endPlaceable?.placeRelative(
                     x = constraints.maxWidth - endWidth,
-                    y = (totalHeight - endPlaceable.height) / 2
+                    y = (totalHeight - endPlaceable.height) / 2,
                 )
             }
         }

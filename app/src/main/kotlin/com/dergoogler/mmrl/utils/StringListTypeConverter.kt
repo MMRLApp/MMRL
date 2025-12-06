@@ -11,12 +11,8 @@ class StringListTypeConverter {
     private val adapter: JsonAdapter<List<String>> = moshi.adapter(type)
 
     @TypeConverter
-    fun fromStringList(value: List<String>?): String {
-        return adapter.toJson(value)
-    }
+    fun fromStringList(value: List<String>?): String = adapter.toJson(value)
 
     @TypeConverter
-    fun toStringList(value: String?): List<String> {
-        return value?.let { adapter.fromJson(it) } ?: emptyList()
-    }
+    fun toStringList(value: String?): List<String> = value?.let { adapter.fromJson(it) } ?: emptyList()
 }

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ColorScheme
@@ -38,25 +37,28 @@ fun FilledTonalDoubleButton(
     enabledDropdown: Boolean = true,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     @DrawableRes dropdownIcon: Int = R.drawable.caret_down,
-    content: @Composable() (RowScope.() -> Unit),
+    content:
+        @Composable()
+        (RowScope.() -> Unit),
 ) {
     Row(
         modifier = rowModifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         val borderModifier = 2.5.dp
 
         FilledTonalButton(
             enabled = enabled,
             onClick = onClick,
-            shape = RoundedCornerShape(
-                topStart = 24.dp,
-                bottomStart = 24.dp,
-                topEnd = borderModifier,
-                bottomEnd = borderModifier
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = 24.dp,
+                    bottomStart = 24.dp,
+                    topEnd = borderModifier,
+                    bottomEnd = borderModifier,
+                ),
             modifier = modifier,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
         ) {
             content()
         }
@@ -66,22 +68,25 @@ fun FilledTonalDoubleButton(
         FilledTonalButton(
             enabled = enabledDropdown,
             onClick = onDropdownClick,
-            shape = RoundedCornerShape(
-                topStart = borderModifier,
-                bottomStart = borderModifier,
-                topEnd = 24.dp,
-                bottomEnd = 24.dp
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = borderModifier,
+                    bottomStart = borderModifier,
+                    topEnd = 24.dp,
+                    bottomEnd = 24.dp,
+                ),
             contentPadding = PaddingValues(0.dp),
-            modifier = Modifier
-                .width(dropdownButtonWidth)
-                .fillMaxHeight().then(dropdownBtnModifier),
+            modifier =
+                Modifier
+                    .width(dropdownButtonWidth)
+                    .fillMaxHeight()
+                    .then(dropdownBtnModifier),
         ) {
             Icon(
                 modifier = Modifier.size(20.dp),
                 painter = painterResource(id = dropdownIcon),
                 contentDescription = null,
-                tint = LocalContentColor.current
+                tint = LocalContentColor.current,
             )
         }
     }
@@ -99,7 +104,6 @@ val ColorScheme.defaultFilledTonalButtonColors: ButtonColors
                         .copy(alpha = FilledTonalButtonTokens.DisabledContainerOpacity),
                 disabledContentColor =
                     fromToken(FilledTonalButtonTokens.DisabledLabelTextColor)
-                        .copy(alpha = FilledTonalButtonTokens.DisabledLabelTextOpacity)
-            )
-                .also { defaultFilledTonalButtonColorsCached = it }
+                        .copy(alpha = FilledTonalButtonTokens.DisabledLabelTextOpacity),
+            ).also { defaultFilledTonalButtonColorsCached = it }
     }

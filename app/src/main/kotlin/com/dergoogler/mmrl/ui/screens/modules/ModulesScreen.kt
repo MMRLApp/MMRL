@@ -59,112 +59,116 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 
 @Destination<RootGraph>
 @Composable
-fun ModulesScreen(
-    viewModel: ModulesViewModel = hiltViewModel(),
-) = LocalScreenProvider {
-    val userPrefs = LocalUserPreferences.current
-    val context = LocalContext.current
+fun ModulesScreen(viewModel: ModulesViewModel = hiltViewModel()) =
+    LocalScreenProvider {
+        val userPrefs = LocalUserPreferences.current
+        val context = LocalContext.current
 
-    val list by viewModel.local.collectAsStateWithLifecycle()
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+        val list by viewModel.local.collectAsStateWithLifecycle()
+        val query by viewModel.query.collectAsStateWithLifecycle()
+        val state by viewModel.screenState.collectAsStateWithLifecycle()
+        val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    val pullToRefreshState = rememberPullToRefreshState()
+        val pullToRefreshState = rememberPullToRefreshState()
 
-    val isScrollingUp by viewModel.listState.isScrollingUp()
-    val showFab by remember {
-        derivedStateOf {
-            isScrollingUp && !viewModel.isSearch && viewModel.isProviderAlive
-        }
-    }
-
-    val download: (LocalModule, VersionItem, Boolean) -> Unit = { module, item, install ->
-        viewModel.downloader(context, module, item) {
-            if (install) {
-                InstallActivity.start(
-                    context = context,
-                    uri = it.toUri()
-                )
+        val isScrollingUp by viewModel.listState.isScrollingUp()
+        val showFab by remember {
+            derivedStateOf {
+                isScrollingUp && !viewModel.isSearch && viewModel.isProviderAlive
             }
         }
-    }
 
-    BackHandler(
-        enabled = viewModel.isSearch,
-        onBack = viewModel::closeSearch
-    )
+        val download: (LocalModule, VersionItem, Boolean) -> Unit = { module, item, install ->
+            viewModel.downloader(context, module, item) {
+                if (install) {
+                    InstallActivity.start(
+                        context = context,
+                        uri = it.toUri(),
+                    )
+                }
+            }
+        }
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                isSearch = viewModel.isSearch,
-                query = query,
-                onQueryChange = viewModel::search,
-                onOpenSearch = viewModel::openSearch,
-                onCloseSearch = viewModel::closeSearch,
-                setMenu = viewModel::setModulesMenu,
-                scrollBehavior = scrollBehavior
-            )
-        },
-        floatingActionButton = {
-            AnimatedVisibility(
-                visible = showFab,
-                enter = scaleIn(
-                    animationSpec = tween(100),
-                    initialScale = 0.8f
-                ),
-                exit = scaleOut(
-                    animationSpec = tween(100),
-                    targetScale = 0.8f
+        BackHandler(
+            enabled = viewModel.isSearch,
+            onBack = viewModel::closeSearch,
+        )
+
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    isSearch = viewModel.isSearch,
+                    query = query,
+                    onQueryChange = viewModel::search,
+                    onOpenSearch = viewModel::openSearch,
+                    onCloseSearch = viewModel::closeSearch,
+                    setMenu = viewModel::setModulesMenu,
+                    scrollBehavior = scrollBehavior,
                 )
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = showFab,
+                    enter =
+                        scaleIn(
+                            animationSpec = tween(100),
+                            initialScale = 0.8f,
+                        ),
+                    exit =
+                        scaleOut(
+                            animationSpec = tween(100),
+                            targetScale = 0.8f,
+                        ),
+                ) {
+                    FloatingButton()
+                }
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            if (isLoading) {
+                Loading()
+            }
+
+            if (list.isEmpty() && !isLoading) {
+                PageIndicator(
+                    icon = R.drawable.keyframes,
+                    text = if (viewModel.isSearch) R.string.search_empty else R.string.modules_empty,
+                )
+            }
+
+            PullToRefreshBox(
+                state = pullToRefreshState,
+                isRefreshing = state.isRefreshing,
+                onRefresh = viewModel::getLocalAll,
+                indicator = {
+                    Indicator(
+                        modifier =
+                            Modifier.align(Alignment.TopCenter).let {
+                                if (!userPrefs.enableBlur) {
+                                    it.padding(top = innerPadding.calculateTopPadding())
+                                } else {
+                                    it
+                                }
+                            },
+                        isRefreshing = state.isRefreshing,
+                        state = pullToRefreshState,
+                    )
+                },
             ) {
-                FloatingButton()
-            }
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        if (isLoading) {
-            Loading()
-        }
-
-        if (list.isEmpty() && !isLoading) {
-            PageIndicator(
-                icon = R.drawable.keyframes,
-                text = if (viewModel.isSearch) R.string.search_empty else R.string.modules_empty,
-            )
-        }
-
-        PullToRefreshBox(
-            state = pullToRefreshState,
-            isRefreshing = state.isRefreshing,
-            onRefresh = viewModel::getLocalAll,
-            indicator = {
-                Indicator(
-                    modifier = Modifier.align(Alignment.TopCenter).let {
-                        if (!userPrefs.enableBlur) {
-                            it.padding(top = innerPadding.calculateTopPadding())
-                        } else it
-                    },
-                    isRefreshing = state.isRefreshing,
-                    state = pullToRefreshState
+                this@Scaffold.ModulesList(
+                    innerPadding = innerPadding,
+                    list = list,
+                    state = viewModel.listState,
+                    viewModel = viewModel,
+                    onDownload = download,
+                    isProviderAlive = viewModel.isProviderAlive,
                 )
             }
-        ) {
-            this@Scaffold.ModulesList(
-                innerPadding = innerPadding,
-                list = list,
-                state = viewModel.listState,
-                viewModel = viewModel,
-                onDownload = download,
-                isProviderAlive = viewModel.isProviderAlive,
-            )
         }
     }
-}
 
 @Composable
 private fun TopBar(
@@ -205,19 +209,19 @@ private fun TopBar(
         actions = {
             if (!isSearch) {
                 IconButton(
-                    onClick = onOpenSearch
+                    onClick = onOpenSearch,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
 
             ModulesMenu(
-                setMenu = setMenu
+                setMenu = setMenu,
             )
-        }
+        },
     )
 }
 
@@ -234,7 +238,7 @@ private fun FloatingButton() {
 
             InstallActivity.start(
                 context = context,
-                uri = uri
+                uri = uri,
             )
         }
 
@@ -247,19 +251,20 @@ private fun FloatingButton() {
     }
 
     FloatingActionButton(
-        modifier = Modifier
-            .systemBarsPaddingEnd()
-            .padding(
-                bottom = paddingValues.calculateBottomPadding()
-            ),
+        modifier =
+            Modifier
+                .systemBarsPaddingEnd()
+                .padding(
+                    bottom = paddingValues.calculateBottomPadding(),
+                ),
         interactionSource = interactionSource,
         onClick = {},
         contentColor = MaterialTheme.colorScheme.onPrimary,
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
         Icon(
             painter = painterResource(id = R.drawable.package_import),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }

@@ -9,8 +9,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ProvideMenuShape(
     value: CornerBasedShape = RoundedCornerShape(8.dp),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) = MaterialTheme(
     shapes = MaterialTheme.shapes.copy(extraSmall = value),
-    content = content
+    content = content,
 )

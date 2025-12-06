@@ -9,6 +9,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface RepositoryEntryPoints {
     fun localRepository(): LocalRepository
+
     fun modulesRepository(): ModulesRepository
+
     fun userPreferencesRepository(): UserPreferencesRepository
 }

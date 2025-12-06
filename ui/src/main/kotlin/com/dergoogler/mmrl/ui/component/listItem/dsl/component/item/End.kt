@@ -22,10 +22,9 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlotScope
 @Composable
 fun ListItemScope.End(
     modifier: Modifier = Modifier,
-    content: @Composable ListItemSlotScope.() -> Unit
-) =
-    Slot(
-        modifier = modifier,
-        slot = ListItemSlot.End,
-        content = content
-    )
+    content: @Composable ListItemSlotScope.() -> Unit,
+) = Slot(
+    modifier = modifier,
+    slot = ListItemSlot.End,
+    content = content,
+)

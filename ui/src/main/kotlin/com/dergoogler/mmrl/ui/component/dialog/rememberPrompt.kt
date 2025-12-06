@@ -50,7 +50,10 @@ data class PromptData(
  *               including title, initial value, validation logic, and callbacks.
  * @param colorScheme The [ColorScheme] to be used for theming the dialog.
  */
-fun Context.prompt(promptData: PromptData, colorScheme: ColorScheme) {
+fun Context.prompt(
+    promptData: PromptData,
+    colorScheme: ColorScheme,
+) {
     (this as? Activity)?.addContentView(
         ComposeView(this).apply {
             setContent {
@@ -61,7 +64,6 @@ fun Context.prompt(promptData: PromptData, colorScheme: ColorScheme) {
 
                 if (showDialog) {
                     MaterialTheme(colorScheme = colorScheme) {
-
                         val onDone = {
                             showDialog = false
                             promptData.onConfirm(text)
@@ -84,18 +86,19 @@ fun Context.prompt(promptData: PromptData, colorScheme: ColorScheme) {
                             confirmButton = {
                                 TextButton(
                                     onClick = onDone,
-                                    enabled = !isError && text.isNotBlank()
+                                    enabled = !isError && text.isNotBlank(),
                                 ) {
                                     Text(text = stringResource(id = R.string.confirm))
                                 }
                             },
                             dismissButton = {
                                 TextButton(
-                                    onClick = onClose
+                                    onClick = onClose,
                                 ) {
                                     Text(text = stringResource(id = R.string.cancel))
                                 }
-                            }) { focusRequester ->
+                            },
+                        ) { focusRequester ->
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(16.dp),
                             ) {
@@ -120,14 +123,16 @@ fun Context.prompt(promptData: PromptData, colorScheme: ColorScheme) {
                                         }
                                     },
                                     isError = isError,
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Done
-                                    ),
-                                    keyboardActions = KeyboardActions {
-                                        if (text.isNotBlank()) onDone()
-                                    },
-                                    shape = RoundedCornerShape(15.dp)
+                                    keyboardOptions =
+                                        KeyboardOptions(
+                                            keyboardType = KeyboardType.Text,
+                                            imeAction = ImeAction.Done,
+                                        ),
+                                    keyboardActions =
+                                        KeyboardActions {
+                                            if (text.isNotBlank()) onDone()
+                                        },
+                                    shape = RoundedCornerShape(15.dp),
                                 )
                             }
                         }
@@ -136,22 +141,22 @@ fun Context.prompt(promptData: PromptData, colorScheme: ColorScheme) {
             }
         },
         ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-        )
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        ),
     )
 }
 
 @Composable
-fun rememberPrompt(
-    context: Context = LocalContext.current,
-): (PromptData) -> Unit {
+fun rememberPrompt(context: Context = LocalContext.current): (PromptData) -> Unit {
     val theme = MaterialTheme.colorScheme
 
-    val confirm: (PromptData) -> Unit = remember {
-        { prompt ->
-            context.prompt(prompt, theme)
+    val confirm: (PromptData) -> Unit =
+        remember {
+            { prompt ->
+                context.prompt(prompt, theme)
+            }
         }
-    }
 
     return confirm
 }

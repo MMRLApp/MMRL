@@ -2,8 +2,11 @@ package com.dergoogler.mmrl.platform.file.config
 
 import com.dergoogler.mmrl.ext.toDataClass
 
-class MutableConfigMap<V : Any?> : LinkedHashMap<String, V>(), MutableConfig<V> {
+class MutableConfigMap<V : Any?> :
+    LinkedHashMap<String, V>(),
+    MutableConfig<V> {
     override infix fun String.change(that: V): V? = put(this, that)
+
     override infix fun String.to(that: V): V? = change(that)
 
     /**
@@ -80,9 +83,7 @@ class MutableConfigMap<V : Any?> : LinkedHashMap<String, V>(), MutableConfig<V> 
      * @see toMutableConfig
      * @see toDataClass
      */
-    inline fun <reified T : Any> T.modify(
-        builder: MutableConfigMap<Any?>.(T) -> Unit,
-    ): T {
+    inline fun <reified T : Any> T.modify(builder: MutableConfigMap<Any?>.(T) -> Unit): T {
         val gg = T::class.toMutableConfig()
         gg.builder(this)
         return gg.toDataClass()

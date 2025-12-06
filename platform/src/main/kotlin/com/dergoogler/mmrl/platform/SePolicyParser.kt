@@ -10,14 +10,19 @@ typealias SeObject = List<String>
 
 // Parser result wrapper
 sealed class ParseResult<T> {
-    data class Success<T>(val value: T, val remaining: String) : ParseResult<T>()
-    data class Error<T>(val message: String) : ParseResult<T>()
+    data class Success<T>(
+        val value: T,
+        val remaining: String,
+    ) : ParseResult<T>()
+
+    data class Error<T>(
+        val message: String,
+    ) : ParseResult<T>()
 }
 
 // Utility functions for parsing
 object ParserUtils {
-    fun isSepolicyChar(c: Char): Boolean =
-        c.isLetterOrDigit() || c == '_' || c == '-'
+    fun isSepolicyChar(c: Char): Boolean = c.isLetterOrDigit() || c == '_' || c == '-'
 
     fun parseWhitespace(input: String): ParseResult<Unit> {
         val trimmed = input.dropWhile { it.isWhitespace() }
@@ -33,13 +38,15 @@ object ParserUtils {
         }
     }
 
-    fun parseTag(tag: String, input: String): ParseResult<String> {
-        return if (input.startsWith(tag)) {
+    fun parseTag(
+        tag: String,
+        input: String,
+    ): ParseResult<String> =
+        if (input.startsWith(tag)) {
             ParseResult.Success(tag, input.drop(tag.length))
         } else {
             ParseResult.Error("Expected tag: $tag")
         }
-    }
 
     fun parseBracketObjs(input: String): ParseResult<SeObject> {
         if (!input.startsWith("{")) {
@@ -59,20 +66,18 @@ object ParserUtils {
         return ParseResult.Success(words, remaining)
     }
 
-    fun parseSingleObj(input: String): ParseResult<SeObject> {
-        return when (val result = parseSingleWord(input)) {
+    fun parseSingleObj(input: String): ParseResult<SeObject> =
+        when (val result = parseSingleWord(input)) {
             is ParseResult.Success -> ParseResult.Success(listOf(result.value), result.remaining)
             is ParseResult.Error -> result
         } as ParseResult<SeObject>
-    }
 
-    fun parseStar(input: String): ParseResult<SeObject> {
-        return if (input.startsWith("*")) {
+    fun parseStar(input: String): ParseResult<SeObject> =
+        if (input.startsWith("*")) {
             ParseResult.Success(listOf("*"), input.drop(1))
         } else {
             ParseResult.Error("Expected *")
         }
-    }
 
     fun parseSeobj(input: String): ParseResult<SeObject> {
         val trimmed = parseWhitespace(input)
@@ -108,37 +113,44 @@ data class NormalPerm(
             var remaining = input.trim()
 
             // Parse operation
-            val opResult = listOf("allow", "deny", "auditallow", "dontaudit")
-                .firstNotNullOfOrNull { op ->
-                    if (remaining.startsWith(op)) {
-                        ParseResult.Success(op, remaining.drop(op.length))
-                    } else null
-                } ?: return ParseResult.Error("Expected operation")
+            val opResult =
+                listOf("allow", "deny", "auditallow", "dontaudit")
+                    .firstNotNullOfOrNull { op ->
+                        if (remaining.startsWith(op)) {
+                            ParseResult.Success(op, remaining.drop(op.length))
+                        } else {
+                            null
+                        }
+                    } ?: return ParseResult.Error("Expected operation")
 
-            remaining = ParserUtils.parseWhitespace(opResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(opResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse source
             val sourceResult = ParserUtils.parseSeobj(remaining)
             if (sourceResult !is ParseResult.Success) return ParseResult.Error("Failed to parse source")
-            remaining = ParserUtils.parseWhitespace(sourceResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(sourceResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse target
             val targetResult = ParserUtils.parseSeobj(remaining)
             if (targetResult !is ParseResult.Success) return ParseResult.Error("Failed to parse target")
-            remaining = ParserUtils.parseWhitespace(targetResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(targetResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse class
             val classResult = ParserUtils.parseSeobj(remaining)
             if (classResult !is ParseResult.Success) return ParseResult.Error("Failed to parse class")
-            remaining = ParserUtils.parseWhitespace(classResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(classResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse perm
             val permResult = ParserUtils.parseSeobj(remaining)
@@ -150,9 +162,9 @@ data class NormalPerm(
                     sourceResult.value,
                     targetResult.value,
                     classResult.value,
-                    permResult.value
+                    permResult.value,
                 ),
-                permResult.remaining
+                permResult.remaining,
             )
         }
     }
@@ -171,44 +183,52 @@ data class XPerm(
             var remaining = input.trim()
 
             // Parse operation
-            val opResult = listOf("allowxperm", "auditallowxperm", "dontauditxperm")
-                .firstNotNullOfOrNull { op ->
-                    if (remaining.startsWith(op)) {
-                        ParseResult.Success(op, remaining.drop(op.length))
-                    } else null
-                } ?: return ParseResult.Error("Expected xperm operation")
+            val opResult =
+                listOf("allowxperm", "auditallowxperm", "dontauditxperm")
+                    .firstNotNullOfOrNull { op ->
+                        if (remaining.startsWith(op)) {
+                            ParseResult.Success(op, remaining.drop(op.length))
+                        } else {
+                            null
+                        }
+                    } ?: return ParseResult.Error("Expected xperm operation")
 
-            remaining = ParserUtils.parseWhitespace(opResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(opResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse source
             val sourceResult = ParserUtils.parseSeobj(remaining)
             if (sourceResult !is ParseResult.Success) return ParseResult.Error("Failed to parse source")
-            remaining = ParserUtils.parseWhitespace(sourceResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(sourceResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse target
             val targetResult = ParserUtils.parseSeobj(remaining)
             if (targetResult !is ParseResult.Success) return ParseResult.Error("Failed to parse target")
-            remaining = ParserUtils.parseWhitespace(targetResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(targetResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse class
             val classResult = ParserUtils.parseSeobj(remaining)
             if (classResult !is ParseResult.Success) return ParseResult.Error("Failed to parse class")
-            remaining = ParserUtils.parseWhitespace(classResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(classResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse operation
             val operationResult = ParserUtils.parseSingleWord(remaining)
             if (operationResult !is ParseResult.Success) return ParseResult.Error("Failed to parse operation")
-            remaining = ParserUtils.parseWhitespace(operationResult.remaining).let {
-                if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
-            }
+            remaining =
+                ParserUtils.parseWhitespace(operationResult.remaining).let {
+                    if (it is ParseResult.Success) it.remaining else return ParseResult.Error("Parse error")
+                }
 
             // Parse perm set
             val permSetResult = ParserUtils.parseSingleWord(remaining)
@@ -221,9 +241,9 @@ data class XPerm(
                     targetResult.value,
                     classResult.value,
                     operationResult.value,
-                    permSetResult.value
+                    permSetResult.value,
                 ),
-                permSetResult.remaining
+                permSetResult.remaining,
             )
         }
     }
@@ -237,12 +257,15 @@ data class TypeState(
         fun parse(input: String): ParseResult<TypeState> {
             var remaining = input.trim()
 
-            val opResult = listOf("permissive", "enforce")
-                .firstNotNullOfOrNull { op ->
-                    if (remaining.startsWith(op)) {
-                        ParseResult.Success(op, remaining.drop(op.length))
-                    } else null
-                } ?: return ParseResult.Error("Expected type state operation")
+            val opResult =
+                listOf("permissive", "enforce")
+                    .firstNotNullOfOrNull { op ->
+                        if (remaining.startsWith(op)) {
+                            ParseResult.Success(op, remaining.drop(op.length))
+                        } else {
+                            null
+                        }
+                    } ?: return ParseResult.Error("Expected type state operation")
 
             remaining = remaining.dropWhile { it.isWhitespace() }
             if (remaining.isEmpty()) return ParseResult.Error("Expected type after operation")
@@ -252,7 +275,7 @@ data class TypeState(
 
             return ParseResult.Success(
                 TypeState(opResult.value, typeResult.value),
-                typeResult.remaining
+                typeResult.remaining,
             )
         }
     }
@@ -279,7 +302,7 @@ data class TypeDef(
             if (remaining.isEmpty()) {
                 return ParseResult.Success(
                     TypeDef(nameResult.value, listOf("domain")),
-                    remaining
+                    remaining,
                 )
             }
 
@@ -288,7 +311,7 @@ data class TypeDef(
 
             return ParseResult.Success(
                 TypeDef(nameResult.value, attrsResult.value),
-                attrsResult.remaining
+                attrsResult.remaining,
             )
         }
     }
@@ -302,12 +325,15 @@ data class TypeAttr(
         fun parse(input: String): ParseResult<TypeAttr> {
             var remaining = input.trim()
 
-            val opResult = listOf("typeattribute", "attradd")
-                .firstNotNullOfOrNull { op ->
-                    if (remaining.startsWith(op)) {
-                        ParseResult.Success(op, remaining.drop(op.length))
-                    } else null
-                } ?: return ParseResult.Error("Expected typeattribute operation")
+            val opResult =
+                listOf("typeattribute", "attradd")
+                    .firstNotNullOfOrNull { op ->
+                        if (remaining.startsWith(op)) {
+                            ParseResult.Success(op, remaining.drop(op.length))
+                        } else {
+                            null
+                        }
+                    } ?: return ParseResult.Error("Expected typeattribute operation")
 
             remaining = remaining.dropWhile { it.isWhitespace() }
 
@@ -320,7 +346,7 @@ data class TypeAttr(
 
             return ParseResult.Success(
                 TypeAttr(typeResult.value, attrResult.value),
-                attrResult.remaining
+                attrResult.remaining,
             )
         }
     }
@@ -343,7 +369,7 @@ data class Attr(
 
             return ParseResult.Success(
                 Attr(attrResult.value),
-                attrResult.remaining
+                attrResult.remaining,
             )
         }
     }
@@ -360,12 +386,15 @@ data class TypeTransition(
         fun parse(input: String): ParseResult<TypeTransition> {
             var remaining = input.trim()
 
-            val opResult = listOf("type_transition", "name_transition")
-                .firstNotNullOfOrNull { op ->
-                    if (remaining.startsWith(op)) {
-                        ParseResult.Success(op, remaining.drop(op.length))
-                    } else null
-                } ?: return ParseResult.Error("Expected transition operation")
+            val opResult =
+                listOf("type_transition", "name_transition")
+                    .firstNotNullOfOrNull { op ->
+                        if (remaining.startsWith(op)) {
+                            ParseResult.Success(op, remaining.drop(op.length))
+                        } else {
+                            null
+                        }
+                    } ?: return ParseResult.Error("Expected transition operation")
 
             remaining = remaining.dropWhile { it.isWhitespace() }
 
@@ -385,13 +414,18 @@ data class TypeTransition(
             if (defaultResult !is ParseResult.Success) return ParseResult.Error("Failed to parse default type")
             remaining = defaultResult.remaining.dropWhile { it.isWhitespace() }
 
-            val objectName = if (remaining.isNotEmpty()) {
-                val objectResult = ParserUtils.parseSingleWord(remaining)
-                if (objectResult is ParseResult.Success) {
-                    remaining = objectResult.remaining
-                    objectResult.value
-                } else null
-            } else null
+            val objectName =
+                if (remaining.isNotEmpty()) {
+                    val objectResult = ParserUtils.parseSingleWord(remaining)
+                    if (objectResult is ParseResult.Success) {
+                        remaining = objectResult.remaining
+                        objectResult.value
+                    } else {
+                        null
+                    }
+                } else {
+                    null
+                }
 
             return ParseResult.Success(
                 TypeTransition(
@@ -399,9 +433,9 @@ data class TypeTransition(
                     targetResult.value,
                     classResult.value,
                     defaultResult.value,
-                    objectName
+                    objectName,
                 ),
-                remaining
+                remaining,
             )
         }
     }
@@ -418,12 +452,15 @@ data class TypeChange(
         fun parse(input: String): ParseResult<TypeChange> {
             var remaining = input.trim()
 
-            val opResult = listOf("type_change", "type_member")
-                .firstNotNullOfOrNull { op ->
-                    if (remaining.startsWith(op)) {
-                        ParseResult.Success(op, remaining.drop(op.length))
-                    } else null
-                } ?: return ParseResult.Error("Expected type change operation")
+            val opResult =
+                listOf("type_change", "type_member")
+                    .firstNotNullOfOrNull { op ->
+                        if (remaining.startsWith(op)) {
+                            ParseResult.Success(op, remaining.drop(op.length))
+                        } else {
+                            null
+                        }
+                    } ?: return ParseResult.Error("Expected type change operation")
 
             remaining = remaining.dropWhile { it.isWhitespace() }
 
@@ -448,9 +485,9 @@ data class TypeChange(
                     sourceResult.value,
                     targetResult.value,
                     classResult.value,
-                    defaultResult.value
+                    defaultResult.value,
                 ),
-                defaultResult.remaining
+                defaultResult.remaining,
             )
         }
     }
@@ -483,7 +520,7 @@ data class GenFsCon(
 
             return ParseResult.Success(
                 GenFsCon(fsResult.value, pathResult.value, contextResult.value),
-                contextResult.remaining
+                contextResult.remaining,
             )
         }
     }
@@ -491,95 +528,158 @@ data class GenFsCon(
 
 // Main policy statement enum
 sealed class PolicyStatement {
-    data class NormalPermission(val perm: NormalPerm) : PolicyStatement()
-    data class XPermission(val perm: XPerm) : PolicyStatement()
-    data class TypeStateStmt(val state: TypeState) : PolicyStatement()
-    data class TypeDefStmt(val typeDef: TypeDef) : PolicyStatement()
-    data class TypeAttrStmt(val attr: TypeAttr) : PolicyStatement()
-    data class AttrStmt(val attr: Attr) : PolicyStatement()
-    data class TypeTransitionStmt(val transition: TypeTransition) : PolicyStatement()
-    data class TypeChangeStmt(val change: TypeChange) : PolicyStatement()
-    data class GenFsConStmt(val genfs: GenFsCon) : PolicyStatement()
+    data class NormalPermission(
+        val perm: NormalPerm,
+    ) : PolicyStatement()
+
+    data class XPermission(
+        val perm: XPerm,
+    ) : PolicyStatement()
+
+    data class TypeStateStmt(
+        val state: TypeState,
+    ) : PolicyStatement()
+
+    data class TypeDefStmt(
+        val typeDef: TypeDef,
+    ) : PolicyStatement()
+
+    data class TypeAttrStmt(
+        val attr: TypeAttr,
+    ) : PolicyStatement()
+
+    data class AttrStmt(
+        val attr: Attr,
+    ) : PolicyStatement()
+
+    data class TypeTransitionStmt(
+        val transition: TypeTransition,
+    ) : PolicyStatement()
+
+    data class TypeChangeStmt(
+        val change: TypeChange,
+    ) : PolicyStatement()
+
+    data class GenFsConStmt(
+        val genfs: GenFsCon,
+    ) : PolicyStatement()
 
     companion object {
         fun parse(input: String): ParseResult<PolicyStatement> {
             val trimmed = input.trim()
 
             // Try each parser in order
-            val parsers = listOf(
-                { s: String ->
-                    NormalPerm.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            NormalPermission(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    XPerm.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            XPermission(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    TypeState.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            TypeStateStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    TypeDef.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            TypeDefStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    TypeAttr.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            TypeAttrStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    Attr.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            AttrStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    TypeTransition.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            TypeTransitionStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    TypeChange.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            TypeChangeStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                },
-                { s: String ->
-                    GenFsCon.parse(s).let {
-                        if (it is ParseResult.Success) ParseResult.Success(
-                            GenFsConStmt(it.value),
-                            it.remaining
-                        ) else it as ParseResult<PolicyStatement>
-                    }
-                }
-            )
+            val parsers =
+                listOf(
+                    { s: String ->
+                        NormalPerm.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    NormalPermission(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        XPerm.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    XPermission(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        TypeState.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    TypeStateStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        TypeDef.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    TypeDefStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        TypeAttr.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    TypeAttrStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        Attr.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    AttrStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        TypeTransition.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    TypeTransitionStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        TypeChange.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    TypeChangeStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                    { s: String ->
+                        GenFsCon.parse(s).let {
+                            if (it is ParseResult.Success) {
+                                ParseResult.Success(
+                                    GenFsConStmt(it.value),
+                                    it.remaining,
+                                )
+                            } else {
+                                it as ParseResult<PolicyStatement>
+                            }
+                        }
+                    },
+                )
 
             for (parser in parsers) {
                 val result = parser(trimmed)
@@ -615,7 +715,10 @@ object PolicyCommands {
 // Policy object representation
 sealed class PolicyObject {
     object All : PolicyObject() // for "*"
-    data class One(val value: ByteArray) : PolicyObject() {
+
+    data class One(
+        val value: ByteArray,
+    ) : PolicyObject() {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
@@ -639,8 +742,6 @@ sealed class PolicyObject {
             s.toByteArray().copyInto(buf, 0, 0, s.length)
             return One(buf)
         }
-
-
     }
 }
 
@@ -660,7 +761,10 @@ data class AtomicStatement(
 // Main parser class
 class SePolicyParser {
     companion object {
-        fun parseSepolicy(input: String, strict: Boolean = false): Result<List<PolicyStatement>> {
+        fun parseSepolicy(
+            input: String,
+            strict: Boolean = false,
+        ): Result<List<PolicyStatement>> {
             val statements = mutableListOf<PolicyStatement>()
 
             for (line in input.split('\n', ';')) {
@@ -684,11 +788,12 @@ class SePolicyParser {
 
         fun checkRule(policy: String): Result<Unit> {
             val path = SuFile(policy)
-            val policyContent = if (path.exists()) {
-                path.readText()
-            } else {
-                policy
-            }
+            val policyContent =
+                if (path.exists()) {
+                    path.readText()
+                } else {
+                    policy
+                }
 
             return parseSepolicy(policyContent.trim(), true).map { }
         }
@@ -698,8 +803,8 @@ class SePolicyParser {
             return livePatch(input)
         }
 
-        fun livePatch(policy: String): Result<Unit> {
-            return parseSepolicy(policy.trim(), false).fold(
+        fun livePatch(policy: String): Result<Unit> =
+            parseSepolicy(policy.trim(), false).fold(
                 onSuccess = { statements ->
                     for (statement in statements) {
                         println(statement)
@@ -708,15 +813,14 @@ class SePolicyParser {
                     }
                     Result.success(Unit)
                 },
-                onFailure = { Result.failure(it) }
+                onFailure = { Result.failure(it) },
             )
-        }
     }
 }
 
 // Extension functions for easier conversion to atomic statements
-fun PolicyStatement.toAtomicStatements(): List<AtomicStatement> {
-    return when (this) {
+fun PolicyStatement.toAtomicStatements(): List<AtomicStatement> =
+    when (this) {
         is PolicyStatement.NormalPermission -> perm.toAtomicStatements()
         is PolicyStatement.XPermission -> perm.toAtomicStatements()
         is PolicyStatement.TypeStateStmt -> state.toAtomicStatements()
@@ -727,17 +831,17 @@ fun PolicyStatement.toAtomicStatements(): List<AtomicStatement> {
         is PolicyStatement.TypeChangeStmt -> change.toAtomicStatements()
         is PolicyStatement.GenFsConStmt -> genfs.toAtomicStatements()
     }
-}
 
 fun NormalPerm.toAtomicStatements(): List<AtomicStatement> {
     val result = mutableListOf<AtomicStatement>()
-    val subcmd = when (op) {
-        "allow" -> 1u
-        "deny" -> 2u
-        "auditallow" -> 3u
-        "dontaudit" -> 4u
-        else -> 0u
-    }
+    val subcmd =
+        when (op) {
+            "allow" -> 1u
+            "deny" -> 2u
+            "auditallow" -> 3u
+            "dontaudit" -> 4u
+            else -> 0u
+        }
 
     for (s in source) {
         for (t in target) {
@@ -753,8 +857,8 @@ fun NormalPerm.toAtomicStatements(): List<AtomicStatement> {
                             sepol4 = PolicyObject.fromString(p),
                             sepol5 = PolicyObject.None,
                             sepol6 = PolicyObject.None,
-                            sepol7 = PolicyObject.None
-                        )
+                            sepol7 = PolicyObject.None,
+                        ),
                     )
                 }
             }
@@ -765,12 +869,13 @@ fun NormalPerm.toAtomicStatements(): List<AtomicStatement> {
 
 fun XPerm.toAtomicStatements(): List<AtomicStatement> {
     val result = mutableListOf<AtomicStatement>()
-    val subcmd = when (op) {
-        "allowxperm" -> 1u
-        "auditallowxperm" -> 2u
-        "dontauditxperm" -> 3u
-        else -> 0u
-    }
+    val subcmd =
+        when (op) {
+            "allowxperm" -> 1u
+            "auditallowxperm" -> 2u
+            "dontauditxperm" -> 3u
+            else -> 0u
+        }
 
     for (s in source) {
         for (t in target) {
@@ -785,8 +890,8 @@ fun XPerm.toAtomicStatements(): List<AtomicStatement> {
                         sepol4 = PolicyObject.fromString(operation),
                         sepol5 = PolicyObject.fromString(permSet),
                         sepol6 = PolicyObject.None,
-                        sepol7 = PolicyObject.None
-                    )
+                        sepol7 = PolicyObject.None,
+                    ),
                 )
             }
         }
@@ -796,11 +901,12 @@ fun XPerm.toAtomicStatements(): List<AtomicStatement> {
 
 fun TypeState.toAtomicStatements(): List<AtomicStatement> {
     val result = mutableListOf<AtomicStatement>()
-    val subcmd = when (op) {
-        "permissive" -> 1u
-        "enforcing" -> 2u
-        else -> 0u
-    }
+    val subcmd =
+        when (op) {
+            "permissive" -> 1u
+            "enforcing" -> 2u
+            else -> 0u
+        }
 
     for (t in stype) {
         result.add(
@@ -813,8 +919,8 @@ fun TypeState.toAtomicStatements(): List<AtomicStatement> {
                 sepol4 = PolicyObject.None,
                 sepol5 = PolicyObject.None,
                 sepol6 = PolicyObject.None,
-                sepol7 = PolicyObject.None
-            )
+                sepol7 = PolicyObject.None,
+            ),
         )
     }
     return result
@@ -833,8 +939,8 @@ fun TypeDef.toAtomicStatements(): List<AtomicStatement> {
                 sepol4 = PolicyObject.None,
                 sepol5 = PolicyObject.None,
                 sepol6 = PolicyObject.None,
-                sepol7 = PolicyObject.None
-            )
+                sepol7 = PolicyObject.None,
+            ),
         )
     }
     return result
@@ -854,16 +960,16 @@ fun TypeAttr.toAtomicStatements(): List<AtomicStatement> {
                     sepol4 = PolicyObject.None,
                     sepol5 = PolicyObject.None,
                     sepol6 = PolicyObject.None,
-                    sepol7 = PolicyObject.None
-                )
+                    sepol7 = PolicyObject.None,
+                ),
             )
         }
     }
     return result
 }
 
-fun Attr.toAtomicStatements(): List<AtomicStatement> {
-    return listOf(
+fun Attr.toAtomicStatements(): List<AtomicStatement> =
+    listOf(
         AtomicStatement(
             cmd = PolicyCommands.CMD_ATTR,
             subcmd = 0u,
@@ -873,10 +979,9 @@ fun Attr.toAtomicStatements(): List<AtomicStatement> {
             sepol4 = PolicyObject.None,
             sepol5 = PolicyObject.None,
             sepol6 = PolicyObject.None,
-            sepol7 = PolicyObject.None
-        )
+            sepol7 = PolicyObject.None,
+        ),
     )
-}
 
 fun TypeTransition.toAtomicStatements(): List<AtomicStatement> {
     val obj = objectName?.let { PolicyObject.fromString(it) } ?: PolicyObject.None
@@ -890,17 +995,18 @@ fun TypeTransition.toAtomicStatements(): List<AtomicStatement> {
             sepol4 = PolicyObject.fromString(defaultType),
             sepol5 = obj,
             sepol6 = PolicyObject.None,
-            sepol7 = PolicyObject.None
-        )
+            sepol7 = PolicyObject.None,
+        ),
     )
 }
 
 fun TypeChange.toAtomicStatements(): List<AtomicStatement> {
-    val subcmd = when (op) {
-        "type_change" -> 1u
-        "type_member" -> 2u
-        else -> 0u
-    }
+    val subcmd =
+        when (op) {
+            "type_change" -> 1u
+            "type_member" -> 2u
+            else -> 0u
+        }
     return listOf(
         AtomicStatement(
             cmd = PolicyCommands.CMD_TYPE_CHANGE,
@@ -911,13 +1017,13 @@ fun TypeChange.toAtomicStatements(): List<AtomicStatement> {
             sepol4 = PolicyObject.fromString(defaultType),
             sepol5 = PolicyObject.None,
             sepol6 = PolicyObject.None,
-            sepol7 = PolicyObject.None
-        )
+            sepol7 = PolicyObject.None,
+        ),
     )
 }
 
-fun GenFsCon.toAtomicStatements(): List<AtomicStatement> {
-    return listOf(
+fun GenFsCon.toAtomicStatements(): List<AtomicStatement> =
+    listOf(
         AtomicStatement(
             cmd = PolicyCommands.CMD_GENFSCON,
             subcmd = 0u,
@@ -927,10 +1033,9 @@ fun GenFsCon.toAtomicStatements(): List<AtomicStatement> {
             sepol4 = PolicyObject.None,
             sepol5 = PolicyObject.None,
             sepol6 = PolicyObject.None,
-            sepol7 = PolicyObject.None
-        )
+            sepol7 = PolicyObject.None,
+        ),
     )
-}
 
 // FFI Policy structure for C interop
 data class FfiPolicy(
@@ -946,10 +1051,11 @@ data class FfiPolicy(
 ) {
     companion object {
         fun fromAtomicStatement(statement: AtomicStatement): FfiPolicy {
-            fun toCPtr(pol: PolicyObject): ByteArray? = when (pol) {
-                PolicyObject.None, PolicyObject.All -> null
-                is PolicyObject.One -> pol.value
-            }
+            fun toCPtr(pol: PolicyObject): ByteArray? =
+                when (pol) {
+                    PolicyObject.None, PolicyObject.All -> null
+                    is PolicyObject.One -> pol.value
+                }
 
             return FfiPolicy(
                 cmd = statement.cmd,
@@ -960,7 +1066,7 @@ data class FfiPolicy(
                 sepol4 = toCPtr(statement.sepol4),
                 sepol5 = toCPtr(statement.sepol5),
                 sepol6 = toCPtr(statement.sepol6),
-                sepol7 = toCPtr(statement.sepol7)
+                sepol7 = toCPtr(statement.sepol7),
             )
         }
     }

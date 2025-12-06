@@ -40,35 +40,37 @@ fun MenuChip(
             Icon(
                 imageVector = Icons.Filled.Done,
                 contentDescription = null,
-                modifier = Modifier.size(FilterChipDefaults.IconSize)
+                modifier = Modifier.size(FilterChipDefaults.IconSize),
             )
         }
     },
     shape = CircleShape,
-    colors = FilterChipDefaults.filterChipColors(
-        iconColor = MaterialTheme.colorScheme.secondary,
-        selectedContainerColor = MaterialTheme.colorScheme.secondary,
-        selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
-        selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondary,
-        selectedTrailingIconColor = MaterialTheme.colorScheme.onSecondary
-    ),
-    border = FilterChipDefaults.filterChipBorder(
-        enabled = enabled,
-        selected = selected,
-        borderColor = MaterialTheme.colorScheme.secondary,
-    )
+    colors =
+        FilterChipDefaults.filterChipColors(
+            iconColor = MaterialTheme.colorScheme.secondary,
+            selectedContainerColor = MaterialTheme.colorScheme.secondary,
+            selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
+            selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondary,
+            selectedTrailingIconColor = MaterialTheme.colorScheme.onSecondary,
+        ),
+    border =
+        FilterChipDefaults.filterChipBorder(
+            enabled = enabled,
+            selected = selected,
+            borderColor = MaterialTheme.colorScheme.secondary,
+        ),
 )
 
 @Composable
 private fun Point(
     size: Dp,
-    color: Color = LocalContentColor.current
+    color: Color = LocalContentColor.current,
 ) = Canvas(
-    modifier = Modifier.size(size)
+    modifier = Modifier.size(size),
 ) {
     drawCircle(
         color = color,
         radius = this.size.width / 2,
-        center = this.center
+        center = this.center,
     )
 }

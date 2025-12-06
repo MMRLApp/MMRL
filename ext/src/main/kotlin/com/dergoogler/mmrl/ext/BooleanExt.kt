@@ -91,7 +91,6 @@ fun Boolean?.isNullOrFalse(): Boolean {
     }
 
     return this == null || this == false
-
 }
 
 fun Boolean?.isNotNullOrFalse() = !isNullOrFalse()

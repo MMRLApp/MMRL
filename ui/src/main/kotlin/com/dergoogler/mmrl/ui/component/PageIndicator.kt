@@ -40,16 +40,19 @@ fun PageIndicator(
     modifier: Modifier = Modifier,
     minHeight: Dp? = null,
 ) = Column(
-    modifier = modifier
-            then (if (minHeight != null) {
-        Modifier
-            .defaultMinSize(minHeight = minHeight)
-            .fillMaxWidth()
-    } else {
-        Modifier.fillMaxSize()
-    }),
+    modifier =
+        modifier
+            then (
+                if (minHeight != null) {
+                    Modifier
+                        .defaultMinSize(minHeight = minHeight)
+                        .fillMaxWidth()
+                } else {
+                    Modifier.fillMaxSize()
+                }
+            ),
     horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.Center
+    verticalArrangement = Arrangement.Center,
 ) {
     icon()
     Spacer(modifier = Modifier.height(20.dp))
@@ -71,7 +74,7 @@ fun PageIndicator(
             painter = painterResource(id = icon),
             contentDescription = null,
             tint = PageIndicatorDefaults.iconColor,
-            modifier = Modifier.size(PageIndicatorDefaults.iconSize)
+            modifier = Modifier.size(PageIndicatorDefaults.iconSize),
         )
     },
     text = {
@@ -79,10 +82,10 @@ fun PageIndicator(
             text = text,
             modifier = Modifier.padding(horizontal = 20.dp),
             maxLines = 5,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
     },
-    minHeight = minHeight
+    minHeight = minHeight,
 )
 
 @Composable
@@ -95,7 +98,7 @@ fun PageIndicator(
     modifier = modifier,
     icon = icon,
     text = stringResource(id = text),
-    minHeight = minHeight
+    minHeight = minHeight,
 )
 
 @Composable
@@ -108,17 +111,17 @@ fun Loading(
         CircularProgressIndicator(
             modifier = Modifier.size(50.dp),
             strokeWidth = 5.dp,
-            strokeCap = StrokeCap.Round
+            strokeCap = StrokeCap.Round,
         )
     },
     text = {
         Text(
             text = stringResource(id = R.string.loading),
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.outline
+            color = MaterialTheme.colorScheme.outline,
         )
     },
-    minHeight = minHeight
+    minHeight = minHeight,
 )
 
 @Composable
@@ -128,7 +131,7 @@ fun Failed(
 ) = PageIndicator(
     icon = R.drawable.alert_triangle,
     text = message ?: stringResource(id = R.string.unknown_error),
-    minHeight = minHeight
+    minHeight = minHeight,
 )
 
 object PageIndicatorDefaults {
@@ -136,11 +139,12 @@ object PageIndicatorDefaults {
     val iconColor @Composable get() = MaterialTheme.colorScheme.outline.copy(0.5f)
 
     val textStyle
-        @Composable get() = TextStyle(
-            color = MaterialTheme.colorScheme.outline.copy(0.5f),
-            fontSize = 20.sp,
-            fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center
-        )
+        @Composable get() =
+            TextStyle(
+                color = MaterialTheme.colorScheme.outline.copy(0.5f),
+                fontSize = 20.sp,
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+            )
 }

@@ -30,7 +30,7 @@ fun ListScope.DeveloperSwitch(
         checked = userPrefs.developerMode && checked,
         onChange = onChange,
         enabled = userPrefs.developerMode && enabled,
-        content = content
+        content = content,
     )
 }
 
@@ -41,7 +41,7 @@ fun DeveloperScreen() {
     val userPreferences = LocalUserPreferences.current
 
     SettingsScaffold(
-        title = R.string.settings_developer
+        title = R.string.settings_developer,
     ) {
         Section {
             SwitchItem(
@@ -61,7 +61,7 @@ fun DeveloperScreen() {
         }
 
         Section(
-            divider = false
+            divider = false,
         ) {
             Item {
                 Title(stringResource(R.string.latest_commit_id))

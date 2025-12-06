@@ -43,26 +43,30 @@ import androidx.compose.ui.platform.LocalContext
 fun StatusBarStyle(
     darkMode: Boolean = isSystemInDarkTheme(),
     statusBarScrim: Color = Color.Transparent,
-    navigationBarScrim: Color = Color.Transparent
+    navigationBarScrim: Color = Color.Transparent,
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
 
     SideEffect {
         activity.enableEdgeToEdge(
-            statusBarStyle = androidx.activity.SystemBarStyle.auto(
-                statusBarScrim.toArgb(),
-                statusBarScrim.toArgb(),
-            ) { darkMode },
-            navigationBarStyle = when {
-                darkMode -> androidx.activity.SystemBarStyle.dark(
-                    navigationBarScrim.toArgb()
-                )
-                else -> androidx.activity.SystemBarStyle.light(
-                    navigationBarScrim.toArgb(),
-                    navigationBarScrim.toArgb(),
-                )
-            }
+            statusBarStyle =
+                androidx.activity.SystemBarStyle.auto(
+                    statusBarScrim.toArgb(),
+                    statusBarScrim.toArgb(),
+                ) { darkMode },
+            navigationBarStyle =
+                when {
+                    darkMode ->
+                        androidx.activity.SystemBarStyle.dark(
+                            navigationBarScrim.toArgb(),
+                        )
+                    else ->
+                        androidx.activity.SystemBarStyle.light(
+                            navigationBarScrim.toArgb(),
+                            navigationBarScrim.toArgb(),
+                        )
+                },
         )
     }
 }

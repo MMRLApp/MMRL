@@ -39,7 +39,11 @@ class RepositoryService : MMRLLifecycleService() {
         isActive = false
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         super.onStartCommand(intent, flags, startId)
 
         if (intent == null) {
@@ -52,7 +56,6 @@ class RepositoryService : MMRLLifecycleService() {
         val interval = intent.getLongExtra(INTERVAL_KEY, 60000)
 
         lifecycleScope.launch {
-
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 while (isActive) {
                     try {
@@ -76,18 +79,20 @@ class RepositoryService : MMRLLifecycleService() {
             var successCount = 0
             var failureCount = 0
 
-            repos.map { repo ->
-                async {
-                    try {
-                        modulesRepository.getRepo(repo.url.toRepo())
-                            .onSuccess { successCount++ }
-                            .onFailure { failureCount++ }
-                    } catch (e: Exception) {
-                        Timber.e(e)
-                        failureCount++
+            repos
+                .map { repo ->
+                    async {
+                        try {
+                            modulesRepository
+                                .getRepo(repo.url.toRepo())
+                                .onSuccess { successCount++ }
+                                .onFailure { failureCount++ }
+                        } catch (e: Exception) {
+                            Timber.e(e)
+                            failureCount++
+                        }
                     }
-                }
-            }.awaitAll()
+                }.awaitAll()
 
             val repositoriesUpdateMessage =
                 applicationContext.resources.getStringArray(R.array.repositories_update_message)
@@ -97,7 +102,7 @@ class RepositoryService : MMRLLifecycleService() {
             pushNotification(
                 icon = R.drawable.cloud,
                 title = applicationContext.getString(R.string.repo_update_service),
-                message = randomNotificationMessages.format(successCount, failureCount)
+                message = randomNotificationMessages.format(successCount, failureCount),
             )
         }
     }
@@ -106,7 +111,7 @@ class RepositoryService : MMRLLifecycleService() {
         pushNotification(
             icon = R.drawable.cloud,
             title = applicationContext.getString(R.string.repo_update_service_failed),
-            message = applicationContext.getString(R.string.repo_update_service_failed_desc)
+            message = applicationContext.getString(R.string.repo_update_service_failed_desc),
         )
     }
 
@@ -119,21 +124,20 @@ class RepositoryService : MMRLLifecycleService() {
             context: Context,
             interval: Long,
         ) {
-            val intent = Intent().apply {
-                component = ComponentName(
-                    context.packageName,
-                    RepositoryService::class.java.name
-                )
-                putExtra(INTERVAL_KEY, interval)
-            }
+            val intent =
+                Intent().apply {
+                    component =
+                        ComponentName(
+                            context.packageName,
+                            RepositoryService::class.java.name,
+                        )
+                    putExtra(INTERVAL_KEY, interval)
+                }
 
             context.startForegroundService(intent)
         }
 
-
-        fun stop(
-            context: Context,
-        ) {
+        fun stop(context: Context) {
             val intent = Intent(context, RepositoryService::class.java)
             context.stopService(intent)
         }

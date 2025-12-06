@@ -7,5 +7,4 @@ import androidx.compose.ui.unit.Dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("UnusedReceiverParameter")
-fun BottomSheetDefaults.expandedShape(size: Dp) =
-    RoundedCornerShape(topStart = size, topEnd = size)
+fun BottomSheetDefaults.expandedShape(size: Dp) = RoundedCornerShape(topStart = size, topEnd = size)

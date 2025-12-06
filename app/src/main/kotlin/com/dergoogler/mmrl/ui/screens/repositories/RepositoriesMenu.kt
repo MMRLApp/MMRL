@@ -31,25 +31,23 @@ import com.dergoogler.mmrl.ui.component.SegmentedButtonsDefaults
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 
 @Composable
-fun RepositoriesMenu(
-    setMenu: (RepositoriesMenu) -> Unit,
-) {
+fun RepositoriesMenu(setMenu: (RepositoriesMenu) -> Unit) {
     val userPreferences = LocalUserPreferences.current
     var open by rememberSaveable { mutableStateOf(false) }
 
     IconButton(
-        onClick = { open = true }
+        onClick = { open = true },
     ) {
         Icon(
             painter = painterResource(id = R.drawable.filter_outlined),
-            contentDescription = null
+            contentDescription = null,
         )
 
         if (open) {
             MenuBottomSheet(
                 onClose = { open = false },
                 menu = userPreferences.repositoriesMenu,
-                setMenu = setMenu
+                setMenu = setMenu,
             )
         }
     }
@@ -61,40 +59,43 @@ private fun MenuBottomSheet(
     menu: RepositoriesMenu,
     setMenu: (RepositoriesMenu) -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
-    val options = listOf(
-        Option.Name to R.string.menu_sort_option_name,
-        Option.UpdatedTime to R.string.menu_sort_option_updated
-    )
+    val options =
+        listOf(
+            Option.Name to R.string.menu_sort_option_name,
+            Option.UpdatedTime to R.string.menu_sort_option_updated,
+        )
 
     Text(
         text = stringResource(id = R.string.menu_advanced_menu),
         style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.align(Alignment.CenterHorizontally)
+        modifier = Modifier.align(Alignment.CenterHorizontally),
     )
 
     Column(
         modifier = Modifier.padding(all = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(id = R.string.menu_sort_mode),
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
 
         SegmentedButtons(
-            border = SegmentedButtonsDefaults.border(
-                color = MaterialTheme.colorScheme.secondary
-            )
+            border =
+                SegmentedButtonsDefaults.border(
+                    color = MaterialTheme.colorScheme.secondary,
+                ),
         ) {
             options.forEach { (option, label) ->
                 Segment(
                     selected = option == menu.option,
                     onClick = { setMenu(menu.copy(option = option)) },
-                    colors = SegmentedButtonsDefaults.buttonColor(
-                        selectedContainerColor = MaterialTheme.colorScheme.secondary,
-                        selectedContentColor = MaterialTheme.colorScheme.onSecondary
-                    ),
-                    icon = null
+                    colors =
+                        SegmentedButtonsDefaults.buttonColor(
+                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                            selectedContentColor = MaterialTheme.colorScheme.onSecondary,
+                        ),
+                    icon = null,
                 ) {
                     Text(text = stringResource(id = label))
                 }
@@ -102,35 +103,35 @@ private fun MenuBottomSheet(
         }
 
         FlowRow(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .wrapContentHeight(align = Alignment.Top),
+            modifier =
+                Modifier
+                    .fillMaxWidth(1f)
+                    .wrapContentHeight(align = Alignment.Top),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             MenuChip(
                 selected = menu.descending,
                 onClick = { setMenu(menu.copy(descending = !menu.descending)) },
-                label = { Text(text = stringResource(id = R.string.menu_descending)) }
+                label = { Text(text = stringResource(id = R.string.menu_descending)) },
             )
-
 
             MenuChip(
                 selected = menu.showModulesCount,
                 onClick = { setMenu(menu.copy(showModulesCount = !menu.showModulesCount)) },
-                label = { Text(text = stringResource(id = R.string.menu_show_modules_count)) }
+                label = { Text(text = stringResource(id = R.string.menu_show_modules_count)) },
             )
 
             MenuChip(
                 selected = menu.showCover,
                 onClick = { setMenu(menu.copy(showCover = !menu.showCover)) },
-                label = { Text(text = stringResource(id = R.string.menu_show_cover)) }
+                label = { Text(text = stringResource(id = R.string.menu_show_cover)) },
             )
 
             MenuChip(
                 selected = menu.showUpdatedTime,
                 onClick = { setMenu(menu.copy(showUpdatedTime = !menu.showUpdatedTime)) },
-                label = { Text(text = stringResource(id = R.string.menu_show_updated)) }
+                label = { Text(text = stringResource(id = R.string.menu_show_updated)) },
             )
         }
     }

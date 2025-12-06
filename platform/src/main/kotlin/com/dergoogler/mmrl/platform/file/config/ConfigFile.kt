@@ -43,7 +43,7 @@ enum class ConfigFileMergeStrategy {
      * and then duplicates are removed.
      * For other types, it behaves like [REPLACE].
      */
-    DEDUPLICATE
+    DEDUPLICATE,
 }
 
 /**
@@ -144,18 +144,23 @@ abstract class ConfigFile<T> : IConfig<T> {
          * @param T The generic type of the object.
          * @return The deserialized object, or null if parsing fails.
          */
-        fun <T> fromJson(json: String, type: Class<T>): T? {
-            return try {
-                Moshi.Builder().build().adapter(type).fromJson(json)
+        fun <T> fromJson(
+            json: String,
+            type: Class<T>,
+        ): T? =
+            try {
+                Moshi
+                    .Builder()
+                    .build()
+                    .adapter(type)
+                    .fromJson(json)
             } catch (_: IOException) {
                 // Log the exception if you have a logging framework
                 null
             }
-        }
 
-        fun MutableMap<String, Any?>.toJson(intents: Int = 2): String {
-            return moshi.adapter(Map::class.java).indent(" ".repeat(intents)).toJson(this)
-        }
+        fun MutableMap<String, Any?>.toJson(intents: Int = 2): String =
+            moshi.adapter(Map::class.java).indent(" ".repeat(intents)).toJson(this)
     }
 
     /**
@@ -164,23 +169,21 @@ abstract class ConfigFile<T> : IConfig<T> {
      * @param intents The number of spaces to use for indentation in the JSON output. Defaults to 2.
      * @return The JSON string representation of the configuration.
      */
-    fun toJson(intents: Int = 2): String {
-        return configAdapter.indent(" ".repeat(intents)).toJson(getConfig())
-    }
+    fun toJson(intents: Int = 2): String = configAdapter.indent(" ".repeat(intents)).toJson(getConfig())
 
     /**
      * Exposes the configuration for a specific module as a reactive [StateFlow].
      *
      * @return A [StateFlow] of the configuration instance.
      */
-    fun getConfigStateFlow(): StateFlow<T> {
-        return synchronized(configCache) {
-            configCache.getOrPut(getModuleId()) {
-                val initialConfig = loadConfigInternal()
-                MutableStateFlow(initialConfig)
-            }.asStateFlow()
+    fun getConfigStateFlow(): StateFlow<T> =
+        synchronized(configCache) {
+            configCache
+                .getOrPut(getModuleId()) {
+                    val initialConfig = loadConfigInternal()
+                    MutableStateFlow(initialConfig)
+                }.asStateFlow()
         }
-    }
 
     /**
      * Gets the current configuration snapshot for a specific module ID.
@@ -196,10 +199,11 @@ abstract class ConfigFile<T> : IConfig<T> {
         }
 
         return synchronized(configCache) {
-            val flow = configCache.getOrPut(id) {
-                val initialConfig = loadConfigInternal()
-                MutableStateFlow(initialConfig)
-            }
+            val flow =
+                configCache.getOrPut(id) {
+                    val initialConfig = loadConfigInternal()
+                    MutableStateFlow(initialConfig)
+                }
             flow.value
         }
     }
@@ -232,9 +236,7 @@ abstract class ConfigFile<T> : IConfig<T> {
      *                      as an argument and operates on a `MutableConfigMap<V>` receiver.
      *                      Example: `save<String> { currentConfig -> "some_key" change "new_value" }`
      */
-    suspend fun <V : Any?> save(
-        builderAction: MutableConfigMap<V>.(T) -> Unit,
-    ) {
+    suspend fun <V : Any?> save(builderAction: MutableConfigMap<V>.(T) -> Unit) {
         val id = getModuleId()
         val overrideConfigFile = getOverrideConfigFile(id)
         val configFile = getConfigFile(id)
@@ -251,8 +253,9 @@ abstract class ConfigFile<T> : IConfig<T> {
 
                 // Read existing override content (or empty if file doesn't exist)
                 val existingText = if (targetFile.exists()) targetFile.readText() else "{}"
-                val existingMap = mapAdapter.fromJson(existingText)?.toMutableMap()
-                    ?: mutableMapOf()
+                val existingMap =
+                    mapAdapter.fromJson(existingText)?.toMutableMap()
+                        ?: mutableMapOf()
 
                 // Merge updates into existing override data
                 existingMap.putAll(updates)
@@ -264,7 +267,7 @@ abstract class ConfigFile<T> : IConfig<T> {
 
                 // Write updated override file
                 targetFile.writeText(
-                    data = mapAdapter.indent("  ").toJson(existingMap)
+                    data = mapAdapter.indent("  ").toJson(existingMap),
                 )
 
                 // Load the new configuration and update cache
@@ -290,9 +293,12 @@ abstract class ConfigFile<T> : IConfig<T> {
             val configFile: SuFile = getConfigFile(id)
 
             val baseJson = if (configFile.exists()) configFile.readText() else "{}"
-            val overrideJson = if (overrideConfigFile?.exists() == true) {
-                overrideConfigFile.readText()
-            } else "{}"
+            val overrideJson =
+                if (overrideConfigFile?.exists() == true) {
+                    overrideConfigFile.readText()
+                } else {
+                    "{}"
+                }
 
             val baseMap = jsonToMap(baseJson).apply { set("__module__identifier__", id) }
             val overrideMap = jsonToMap(overrideJson).apply { set("__module__identifier__", id) }
@@ -303,10 +309,13 @@ abstract class ConfigFile<T> : IConfig<T> {
 
             val parsed = configAdapter.fromJson(jsonMergedMap) ?: getDefaultConfigFactory(id)
 
-            val value = if (forceNewInstance) {
-                // force a new reference
-                configAdapter.fromJson(configAdapter.toJson(parsed))
-            } else parsed
+            val value =
+                if (forceNewInstance) {
+                    // force a new reference
+                    configAdapter.fromJson(configAdapter.toJson(parsed))
+                } else {
+                    parsed
+                }
 
             if (value == null) {
                 Log.e(TAG, "Failed to parse configuration", Exception("Adapter returned null"))
@@ -354,26 +363,26 @@ abstract class ConfigFile<T> : IConfig<T> {
         val result = base.toMutableMap()
         for ((key, overrideValue) in other) {
             val baseValue = result[key]
-            result[key] = when {
-                baseValue is Map<*, *> && overrideValue is Map<*, *> -> {
-                    deepMerge(baseValue.asStringMap(), overrideValue.asStringMap())
-                }
-
-                baseValue is List<*> && overrideValue is List<*> -> {
-                    when (getMergeStrategy()) {
-                        ConfigFileMergeStrategy.REPLACE -> overrideValue
-                        ConfigFileMergeStrategy.APPEND -> baseValue + overrideValue
-                        ConfigFileMergeStrategy.DEDUPLICATE -> (baseValue + overrideValue).distinct()
+            result[key] =
+                when {
+                    baseValue is Map<*, *> && overrideValue is Map<*, *> -> {
+                        deepMerge(baseValue.asStringMap(), overrideValue.asStringMap())
                     }
-                }
 
-                overrideValue != null -> overrideValue
-                else -> baseValue
-            }
+                    baseValue is List<*> && overrideValue is List<*> -> {
+                        when (getMergeStrategy()) {
+                            ConfigFileMergeStrategy.REPLACE -> overrideValue
+                            ConfigFileMergeStrategy.APPEND -> baseValue + overrideValue
+                            ConfigFileMergeStrategy.DEDUPLICATE -> (baseValue + overrideValue).distinct()
+                        }
+                    }
+
+                    overrideValue != null -> overrideValue
+                    else -> baseValue
+                }
         }
         return result
     }
-
 
     private fun Any?.asStringMap(): Map<String, Any?> {
         val self = (this as? Map<*, *>)
@@ -382,9 +391,10 @@ abstract class ConfigFile<T> : IConfig<T> {
             return emptyMap()
         }
 
-        val m = self.mapNotNull { (key, value) ->
-            (key as? String)?.let { it to value }
-        }
+        val m =
+            self.mapNotNull { (key, value) ->
+                (key as? String)?.let { it to value }
+            }
 
         return m.toMap()
     }
@@ -392,6 +402,7 @@ abstract class ConfigFile<T> : IConfig<T> {
 
 interface MutableConfig<V> : MutableMap<String, V> {
     infix fun String.change(that: V): V?
+
     infix fun String.to(that: V): V?
 }
 

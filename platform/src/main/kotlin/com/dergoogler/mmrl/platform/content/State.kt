@@ -4,5 +4,5 @@ enum class State {
     ENABLE,
     REMOVE,
     DISABLE,
-    UPDATE
+    UPDATE,
 }

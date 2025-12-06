@@ -2,10 +2,12 @@ package com.dergoogler.mmrl.platform.ksu
 
 import android.system.Os
 
-data class KernelVersion(val major: Int, val patchLevel: Int, val subLevel: Int) {
-    override fun toString(): String {
-        return "$major.$patchLevel.$subLevel"
-    }
+data class KernelVersion(
+    val major: Int,
+    val patchLevel: Int,
+    val subLevel: Int,
+) {
+    override fun toString(): String = "$major.$patchLevel.$subLevel"
 
     fun isGKI(): Boolean {
         // kernel 6.x
@@ -25,12 +27,10 @@ data class KernelVersion(val major: Int, val patchLevel: Int, val subLevel: Int)
         fun parseVersion(version: String): KernelVersion {
             val find = "(\\d+)\\.(\\d+)\\.(\\d+)".toRegex().find(version)
             return if (find != null) {
-
-
                 KernelVersion(
                     find.groupValues[1].toInt(),
                     find.groupValues[2].toInt(),
-                    find.groupValues[3].toInt()
+                    find.groupValues[3].toInt(),
                 )
             } else {
                 KernelVersion(-1, -1, -1)
@@ -44,4 +44,3 @@ data class KernelVersion(val major: Int, val patchLevel: Int, val subLevel: Int)
         }
     }
 }
-

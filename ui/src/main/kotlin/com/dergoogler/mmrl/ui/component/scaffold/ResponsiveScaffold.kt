@@ -42,6 +42,6 @@ fun ResponsiveScaffold(
         },
         containerColor = containerColor,
         contentColor = contentColor,
-        content = content
+        content = content,
     )
 }

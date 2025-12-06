@@ -26,7 +26,7 @@ fun BlacklistScreen() {
 
     SettingsScaffold(
         modifier = ScaffoldDefaults.settingsScaffoldModifier,
-        title = R.string.settings_blacklist
+        title = R.string.settings_blacklist,
     ) {
         if (blacklist.isEmpty()) {
             PageIndicator(
@@ -35,11 +35,11 @@ fun BlacklistScreen() {
             )
         } else {
             LazyColumn(
-                modifier = Modifier.hazeSource(LocalHazeState.current)
+                modifier = Modifier.hazeSource(LocalHazeState.current),
             ) {
                 items(
                     items = blacklist,
-                    key = { it.id }
+                    key = { it.id },
                 ) { module ->
                     ModuleItem(module = module)
                 }

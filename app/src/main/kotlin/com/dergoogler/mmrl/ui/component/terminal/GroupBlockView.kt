@@ -30,22 +30,25 @@ fun GroupBlockView(group: GroupBlock) {
     Column {
         if (group.title != null) {
             Line(
-                modifier = Modifier
-                    .width(width)
-                    .clickable { expanded = !expanded },
-                index = group.startLine
+                modifier =
+                    Modifier
+                        .width(width)
+                        .clickable { expanded = !expanded },
+                index = group.startLine,
             ) {
                 val color = colorScheme.primary
-                val icon = remember(expanded) {
-                    if (expanded) R.drawable.caret_up_filled else R.drawable.caret_down_filled
-                }
+                val icon =
+                    remember(expanded) {
+                        if (expanded) R.drawable.caret_up_filled else R.drawable.caret_down_filled
+                    }
 
                 TextWithIcon(
                     icon = icon,
-                    style = TextWithIconDefaults.style.copy(
-                        textStyle = style.copy(color = color),
-                        iconTint = color
-                    ),
+                    style =
+                        TextWithIconDefaults.style.copy(
+                            textStyle = style.copy(color = color),
+                            iconTint = color,
+                        ),
                     text = group.title,
                 )
             }

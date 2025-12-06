@@ -14,10 +14,11 @@ data class FeaturedManager(
     val workingMode: WorkingMode,
 ) {
     @Composable
-    fun toRadioDialogItem() = RadioDialogItem(
-        title = name,
-        value = workingMode
-    )
+    fun toRadioDialogItem() =
+        RadioDialogItem(
+            title = name,
+            value = workingMode,
+        )
 
     companion object {
         @get:Composable
@@ -45,56 +46,48 @@ data class FeaturedManager(
             }
 
         val managers
-            get() = listOf(
-                FeaturedManager(
-                    nameAs = R.string.working_mode_magisk_title,
-                    icon = com.dergoogler.mmrl.ui.R.drawable.magisk_logo,
-                    workingMode = WorkingMode.MODE_MAGISK,
-                ),
-
-                FeaturedManager(
-                    nameAs = R.string.working_mode_kernelsu_title,
-                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
-                    workingMode = WorkingMode.MODE_KERNEL_SU,
-                ),
-
-                FeaturedManager(
-                    nameAs = "rsuntk/KernelSU",
-                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
-                    workingMode = WorkingMode.MODE_RKSU,
-                ),
-
-                FeaturedManager(
-                    nameAs = "5ec1cff/KernelSU",
-                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
-                    workingMode = WorkingMode.MODE_MKSU,
-                ),
-
-                FeaturedManager(
-                    nameAs = R.string.working_mode_kernelsu_next_title,
-                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_next_logo,
-                    workingMode = WorkingMode.MODE_KERNEL_SU_NEXT,
-                ),
-
-                FeaturedManager(
-                    nameAs = R.string.working_mode_apatch_title,
-                    icon = com.dergoogler.mmrl.ui.R.drawable.brand_android,
-                    workingMode = WorkingMode.MODE_APATCH
-                ),
-
-                FeaturedManager(
-                    nameAs = R.string.working_mode_sukisu_title,
-                    icon = com.dergoogler.mmrl.ui.R.drawable.sukisu_logo,
-                    workingMode = WorkingMode.MODE_SUKISU
-                ),
-
-                FeaturedManager(
-                    nameAs = R.string.setup_non_root_title,
-                    icon = R.drawable.shield_lock,
-                    workingMode = WorkingMode.MODE_NON_ROOT
-                ),
-            )
+            get() =
+                listOf(
+                    FeaturedManager(
+                        nameAs = R.string.working_mode_magisk_title,
+                        icon = com.dergoogler.mmrl.ui.R.drawable.magisk_logo,
+                        workingMode = WorkingMode.MODE_MAGISK,
+                    ),
+                    FeaturedManager(
+                        nameAs = R.string.working_mode_kernelsu_title,
+                        icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
+                        workingMode = WorkingMode.MODE_KERNEL_SU,
+                    ),
+                    FeaturedManager(
+                        nameAs = "rsuntk/KernelSU",
+                        icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
+                        workingMode = WorkingMode.MODE_RKSU,
+                    ),
+                    FeaturedManager(
+                        nameAs = "5ec1cff/KernelSU",
+                        icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
+                        workingMode = WorkingMode.MODE_MKSU,
+                    ),
+                    FeaturedManager(
+                        nameAs = R.string.working_mode_kernelsu_next_title,
+                        icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_next_logo,
+                        workingMode = WorkingMode.MODE_KERNEL_SU_NEXT,
+                    ),
+                    FeaturedManager(
+                        nameAs = R.string.working_mode_apatch_title,
+                        icon = com.dergoogler.mmrl.ui.R.drawable.brand_android,
+                        workingMode = WorkingMode.MODE_APATCH,
+                    ),
+                    FeaturedManager(
+                        nameAs = R.string.working_mode_sukisu_title,
+                        icon = com.dergoogler.mmrl.ui.R.drawable.sukisu_logo,
+                        workingMode = WorkingMode.MODE_SUKISU,
+                    ),
+                    FeaturedManager(
+                        nameAs = R.string.setup_non_root_title,
+                        icon = R.drawable.shield_lock,
+                        workingMode = WorkingMode.MODE_NON_ROOT,
+                    ),
+                )
     }
 }
-
-

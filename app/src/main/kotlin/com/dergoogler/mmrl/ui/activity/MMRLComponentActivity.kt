@@ -80,14 +80,16 @@ open class MMRLComponentActivity : ComponentActivity() {
             this.window.addFlags(windowFlags)
         }
 
-        val granted = if (BuildCompat.atLeastT) {
-            PermissionCompat.checkPermissions(
-                this,
-                requirePermissions
-            ).allGranted
-        } else {
-            true
-        }
+        val granted =
+            if (BuildCompat.atLeastT) {
+                PermissionCompat
+                    .checkPermissions(
+                        this,
+                        requirePermissions,
+                    ).allGranted
+            } else {
+                true
+            }
 
         if (!granted) {
             PermissionCompat.requestPermissions(this, requirePermissions) { state ->
@@ -96,22 +98,29 @@ open class MMRLComponentActivity : ComponentActivity() {
         }
     }
 
-    private fun startCrashActivity(thread: Thread, throwable: Throwable) {
-        val intent = Intent(this, CrashHandlerActivity::class.java).apply {
-            putExtra("message", throwable.message)
-            if (throwable is BrickException) {
-                putExtra("helpMessage", throwable.helpMessage)
+    private fun startCrashActivity(
+        thread: Thread,
+        throwable: Throwable,
+    ) {
+        val intent =
+            Intent(this, CrashHandlerActivity::class.java).apply {
+                putExtra("message", throwable.message)
+                if (throwable is BrickException) {
+                    putExtra("helpMessage", throwable.helpMessage)
+                }
+                putExtra("stacktrace", formatStackTrace(throwable))
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-            putExtra("stacktrace", formatStackTrace(throwable))
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
         startActivity(intent)
         finish()
 
         exitProcess(0)
     }
 
-    private fun formatStackTrace(throwable: Throwable, numberOfLines: Int = 88): String {
+    private fun formatStackTrace(
+        throwable: Throwable,
+        numberOfLines: Int = 88,
+    ): String {
         val stackTrace = throwable.stackTrace
         val stackTraceElements = stackTrace.joinToString("\n") { it.toString() }
 
@@ -143,11 +152,12 @@ open class MMRLComponentActivity : ComponentActivity() {
         val notificationManager =
             applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val channel = NotificationChannel(
-            channelName,
-            applicationContext.getString(channelTitle),
-            NotificationManager.IMPORTANCE_DEFAULT
-        )
+        val channel =
+            NotificationChannel(
+                channelName,
+                applicationContext.getString(channelTitle),
+                NotificationManager.IMPORTANCE_DEFAULT,
+            )
 
         channel.description = applicationContext.getString(channelDesc)
 
@@ -155,20 +165,23 @@ open class MMRLComponentActivity : ComponentActivity() {
     }
 
     inline fun <reified A : ComponentActivity> setActivityEnabled(enable: Boolean) {
-        val component = ComponentName(
-            this, A::class.java
-        )
+        val component =
+            ComponentName(
+                this,
+                A::class.java,
+            )
 
-        val state = if (enable) {
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-        } else {
-            PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-        }
+        val state =
+            if (enable) {
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            } else {
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            }
 
         packageManager.setComponentEnabledSetting(
             component,
             state,
-            PackageManager.DONT_KILL_APP
+            PackageManager.DONT_KILL_APP,
         )
     }
 }
@@ -180,18 +193,19 @@ fun BaseContent(
     content: @Composable () -> Unit,
 ) {
     val userPreferences by userPreferencesRepository.data.collectAsStateWithLifecycle(
-        initialValue = null
+        initialValue = null,
     )
 
     val navController = rememberNavController()
     val mainNavController = rememberNavController()
     val navigator = navController.rememberDestinationsNavigator()
 
-    val preferences = if (userPreferences == null) {
-        return
-    } else {
-        checkNotNull(userPreferences)
-    }
+    val preferences =
+        if (userPreferences == null) {
+            return
+        } else {
+            checkNotNull(userPreferences)
+        }
 
     val context = LocalContext.current
     val currentTheme = Colors.getColor(preferences.themeColor, preferences.isDarkMode())
@@ -201,23 +215,25 @@ fun BaseContent(
         darkMode = preferences.isDarkMode(),
         navController = navController,
         themeColor = preferences.themeColor,
-        providerValues = arrayOf(
-            LocalDestinationsNavigator provides navigator,
-            LocalActivity provides activity,
-            LocalSuperUserViewModel provides hiltViewModel<SuperUserViewModel>(activity),
-            LocalSettings provides hiltViewModel<SettingsViewModel>(activity),
-            LocalUserPreferences provides preferences,
-            dev.dergoogler.mmrl.compat.core.LocalUriHandler provides MMRLUriHandlerImpl(
-                context,
-                toolbarColor
+        providerValues =
+            arrayOf(
+                LocalDestinationsNavigator provides navigator,
+                LocalActivity provides activity,
+                LocalSuperUserViewModel provides hiltViewModel<SuperUserViewModel>(activity),
+                LocalSettings provides hiltViewModel<SettingsViewModel>(activity),
+                LocalUserPreferences provides preferences,
+                dev.dergoogler.mmrl.compat.core.LocalUriHandler provides
+                    MMRLUriHandlerImpl(
+                        context,
+                        toolbarColor,
+                    ),
+                LocalLifecycleScope provides activity.lifecycleScope,
+                LocalLifecycle provides activity.lifecycle,
+                LocalUriHandler provides MMRLUriHandlerImpl(context, toolbarColor),
+                LocalNavController provides navController,
+                LocalMainNavController provides mainNavController,
             ),
-            LocalLifecycleScope provides activity.lifecycleScope,
-            LocalLifecycle provides activity.lifecycle,
-            LocalUriHandler provides MMRLUriHandlerImpl(context, toolbarColor),
-            LocalNavController provides navController,
-            LocalMainNavController provides mainNavController
-        ),
-        content = content
+        content = content,
     )
 }
 
@@ -230,6 +246,6 @@ fun MMRLComponentActivity.setBaseContent(
     BaseContent(
         this,
         userPreferencesRepository,
-        content
+        content,
     )
 }

@@ -19,16 +19,16 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.Layout
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.isContainer
@@ -87,66 +87,75 @@ fun Card(
     val isHovered by interactionSource.collectIsHoveredAsState()
     val absoluteElevation = LocalAbsoluteTonalElevation.current + tonalElevation
 
-    val clickableModifier = if (onClick != null || onLongClick != null) {
-        Modifier
-            .combinedClickable(
-                enabled = enabled,
-                onClick = onClick ?: {},
-                onLongClick = onLongClick,
-                interactionSource = interactionSource,
-                indication = ripple()
-            )
-            .hoverable(interactionSource)
-    } else Modifier
+    val clickableModifier =
+        if (onClick != null || onLongClick != null) {
+            Modifier
+                .combinedClickable(
+                    enabled = enabled,
+                    onClick = onClick ?: {},
+                    onLongClick = onLongClick,
+                    interactionSource = interactionSource,
+                    indication = ripple(),
+                ).hoverable(interactionSource)
+        } else {
+            Modifier
+        }
 
-    val hoveredBorder = if (isHovered) {
-        BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary)
-    } else border
+    val hoveredBorder =
+        if (isHovered) {
+            BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary)
+        } else {
+            border
+        }
 
     CompositionLocalProvider(
         LocalContentColor provides contentColor,
-        LocalAbsoluteTonalElevation provides absoluteElevation
+        LocalAbsoluteTonalElevation provides absoluteElevation,
     ) {
         Layout(
-            modifier = Modifier
-                .padding(outsideContentPadding)
-                .card(
-                    shape = shape,
-                    backgroundColor = MaterialTheme.colorScheme.applyTonalElevation(
-                        color,
-                        absoluteElevation
-                    ),
-                    border = hoveredBorder,
-                    shadowElevation = with(LocalDensity.current) { shadowElevation.toPx() }
-                )
-                .applyAlpha(enabled)
-                .semantics(mergeDescendants = false) {
-                    @Suppress("DEPRECATION")
-                    isContainer = true
-                }
-                .then(clickableModifier)
-                .pointerInput(Unit) {}
-                .then(modifier),
-            content = { instance.content() }
+            modifier =
+                Modifier
+                    .padding(outsideContentPadding)
+                    .card(
+                        shape = shape,
+                        backgroundColor =
+                            MaterialTheme.colorScheme.applyTonalElevation(
+                                color,
+                                absoluteElevation,
+                            ),
+                        border = hoveredBorder,
+                        shadowElevation = with(LocalDensity.current) { shadowElevation.toPx() },
+                    ).applyAlpha(enabled)
+                    .semantics(mergeDescendants = false) {
+                        @Suppress("DEPRECATION")
+                        isContainer = true
+                    }.then(clickableModifier)
+                    .pointerInput(Unit) {}
+                    .then(modifier),
+            content = { instance.content() },
         ) { measurables, constraints ->
-            val relativeMeasurable = measurables.firstOrNull {
-                (it.layoutId as? CardLayoutId)?.slot == CardSlot.Relative
-            }
-            val absoluteMeasurables = measurables.filter {
-                (it.layoutId as? CardLayoutId)?.slot == CardSlot.Absolute
-            }
+            val relativeMeasurable =
+                measurables.firstOrNull {
+                    (it.layoutId as? CardLayoutId)?.slot == CardSlot.Relative
+                }
+            val absoluteMeasurables =
+                measurables.filter {
+                    (it.layoutId as? CardLayoutId)?.slot == CardSlot.Absolute
+                }
 
             val relativePlaceable = relativeMeasurable?.measure(constraints)
             val absolutePlaceables = absoluteMeasurables.map { it to it.measure(constraints) }
 
-            val width = maxOf(
-                relativePlaceable?.width ?: 0,
-                absolutePlaceables.maxOfOrNull { it.second.width } ?: 0
-            )
-            val height = maxOf(
-                relativePlaceable?.height ?: 0,
-                absolutePlaceables.maxOfOrNull { it.second.height } ?: 0
-            )
+            val width =
+                maxOf(
+                    relativePlaceable?.width ?: 0,
+                    absolutePlaceables.maxOfOrNull { it.second.width } ?: 0,
+                )
+            val height =
+                maxOf(
+                    relativePlaceable?.height ?: 0,
+                    absolutePlaceables.maxOfOrNull { it.second.height } ?: 0,
+                )
 
             layout(width, height) {
                 relativePlaceable?.placeRelative(0, 0)
@@ -158,11 +167,12 @@ fun Card(
                     val childSize = IntSize(placeable.width, placeable.height)
                     val parentSize = IntSize(width, height)
 
-                    val position = alignment.align(
-                        size = childSize,
-                        space = parentSize,
-                        layoutDirection = layoutDirection
-                    )
+                    val position =
+                        alignment.align(
+                            size = childSize,
+                            space = parentSize,
+                            layoutDirection = layoutDirection,
+                        )
 
                     placeable.place(position.x, position.y)
                 }
@@ -182,10 +192,11 @@ fun Modifier.card(
             Modifier.graphicsLayer(
                 shadowElevation = shadowElevation,
                 shape = shape,
-                clip = false
+                clip = false,
             )
-        } else Modifier
-    )
-    .then(if (border != null) Modifier.border(border, shape) else Modifier)
+        } else {
+            Modifier
+        },
+    ).then(if (border != null) Modifier.border(border, shape) else Modifier)
     .background(color = backgroundColor, shape = shape)
     .clip(shape)

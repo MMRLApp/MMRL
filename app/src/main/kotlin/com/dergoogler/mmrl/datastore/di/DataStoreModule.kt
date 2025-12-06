@@ -1,10 +1,10 @@
 package com.dergoogler.mmrl.datastore.di
 
-import com.dergoogler.mmrl.datastore.provider.DataStoreProvider
-import com.dergoogler.mmrl.datastore.UserPreferencesSerializer
-import com.dergoogler.mmrl.datastore.model.UserPreferences
 import android.content.Context
 import androidx.datastore.core.DataStore
+import com.dergoogler.mmrl.datastore.UserPreferencesSerializer
+import com.dergoogler.mmrl.datastore.model.UserPreferences
+import com.dergoogler.mmrl.datastore.provider.DataStoreProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +20,5 @@ object DataStoreModule {
     fun providesUserPreferencesDataStore(
         @ApplicationContext context: Context,
         userPreferencesSerializer: UserPreferencesSerializer,
-    ): DataStore<UserPreferences> =
-        DataStoreProvider().providesUserPreferencesDataStore(context, userPreferencesSerializer)
+    ): DataStore<UserPreferences> = DataStoreProvider().providesUserPreferencesDataStore(context, userPreferencesSerializer)
 }

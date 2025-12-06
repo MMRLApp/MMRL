@@ -16,23 +16,25 @@ data class ModuleManager(
     val ksunext: ModuleManagerSolution? = null,
     val apatch: ModuleManagerSolution? = null,
 ) {
-    operator fun get(platform: Platform) = with(platform) {
-        when {
-            isMagisk -> magisk
-            isKernelSU -> kernelsu
-            isKernelSuNext -> ksunext
-            isAPatch -> apatch
-            else -> ModuleManagerSolution()
+    operator fun get(platform: Platform) =
+        with(platform) {
+            when {
+                isMagisk -> magisk
+                isKernelSU -> kernelsu
+                isKernelSuNext -> ksunext
+                isAPatch -> apatch
+                else -> ModuleManagerSolution()
+            }
         }
-    }
 
     val all: List<ModuleManagerSolution>
-        get() = listOfNotNull(
-            magisk,
-            kernelsu,
-            ksunext,
-            apatch,
-        )
+        get() =
+            listOfNotNull(
+                magisk,
+                kernelsu,
+                ksunext,
+                apatch,
+            )
 }
 
 @Serializable
@@ -54,32 +56,31 @@ data class ModuleManagerSolution(
         }
     }
 
-    private fun isNotSupportedRootVersion(
-        version: Int,
-    ) = min != null && version < min || min == -1
+    private fun isNotSupportedRootVersion(version: Int) = min != null && version < min || min == -1
 
     private fun isNotSupportedDevice() =
-        devices.isNotNullOrEmpty() && !devices.map { it.lowercase() }
-            .contains(Build.MODEL.lowercase())
+        devices.isNotNullOrEmpty() &&
+            !devices
+                .map { it.lowercase() }
+                .contains(Build.MODEL.lowercase())
 
     @SuppressLint("ComposableNaming")
     @Composable
-    fun isNotSupportedDevice(
-        block: @Composable () -> Unit,
-    ) {
+    fun isNotSupportedDevice(block: @Composable () -> Unit) {
         if (isNotSupportedDevice()) {
             block()
         }
     }
 
-    private fun isNotSupportedArch() = arch.isNotNullOrEmpty() && !arch.map { it.lowercase() }
-        .contains(Build.SUPPORTED_ABIS[0].lowercase())
+    private fun isNotSupportedArch() =
+        arch.isNotNullOrEmpty() &&
+            !arch
+                .map { it.lowercase() }
+                .contains(Build.SUPPORTED_ABIS[0].lowercase())
 
     @SuppressLint("ComposableNaming")
     @Composable
-    fun isNotSupportedArch(
-        block: @Composable () -> Unit,
-    ) {
+    fun isNotSupportedArch(block: @Composable () -> Unit) {
         if (isNotSupportedArch()) {
             block()
         }

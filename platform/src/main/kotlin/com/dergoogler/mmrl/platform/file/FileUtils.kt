@@ -20,7 +20,6 @@ import java.lang.reflect.Method
 import java.nio.file.OpenOption
 import java.nio.file.StandardOpenOption
 
-
 @SuppressLint("DiscouragedPrivateApi")
 internal object FileUtils {
     const val MODE_READ_ONLY: Int = ParcelFileDescriptor.MODE_READ_ONLY
@@ -115,18 +114,25 @@ internal object FileUtils {
     @RequiresApi(api = 28)
     @Throws(ErrnoException::class)
     fun splice(
-        fdIn: FileDescriptor?, offIn: Int64Ref?,
-        fdOut: FileDescriptor?, offOut: Int64Ref?,
-        len: Long, flags: Int,
+        fdIn: FileDescriptor?,
+        offIn: Int64Ref?,
+        fdOut: FileDescriptor?,
+        offOut: Int64Ref?,
+        len: Long,
+        flags: Int,
     ): Long {
         try {
             if (splice == null) {
-                splice = Os::class.java.getMethod(
-                    "splice",
-                    FileDescriptor::class.java, Int64Ref::class.java,
-                    FileDescriptor::class.java, Int64Ref::class.java,
-                    Long::class.javaPrimitiveType, Int::class.javaPrimitiveType
-                )
+                splice =
+                    Os::class.java.getMethod(
+                        "splice",
+                        FileDescriptor::class.java,
+                        Int64Ref::class.java,
+                        FileDescriptor::class.java,
+                        Int64Ref::class.java,
+                        Long::class.javaPrimitiveType,
+                        Int::class.javaPrimitiveType,
+                    )
             }
             return splice!!.invoke(null, fdIn, offIn, fdOut, offOut, len, flags) as Long
         } catch (e: InvocationTargetException) {
@@ -139,8 +145,10 @@ internal object FileUtils {
     @Suppress("deprecation")
     @Throws(ErrnoException::class)
     fun sendfile(
-        outFd: FileDescriptor?, inFd: FileDescriptor?,
-        inOffset: MutableLong?, byteCount: Long,
+        outFd: FileDescriptor?,
+        inFd: FileDescriptor?,
+        inOffset: MutableLong?,
+        byteCount: Long,
     ): Long {
         if (Build.VERSION.SDK_INT >= 28) {
             val off = if (inOffset == null) null else Int64Ref(inOffset.value)
@@ -153,11 +161,14 @@ internal object FileUtils {
                     os = Class.forName("libcore.io.Libcore").getField("os")[null]
                 }
                 if (sendfile == null) {
-                    sendfile = os!!.javaClass.getMethod(
-                        "sendfile",
-                        FileDescriptor::class.java, FileDescriptor::class.java,
-                        MutableLong::class.java, Long::class.javaPrimitiveType
-                    )
+                    sendfile =
+                        os!!.javaClass.getMethod(
+                            "sendfile",
+                            FileDescriptor::class.java,
+                            FileDescriptor::class.java,
+                            MutableLong::class.java,
+                            Long::class.javaPrimitiveType,
+                        )
                 }
                 return sendfile!!.invoke(os, outFd, inFd, inOffset, byteCount) as Long
             } catch (e: InvocationTargetException) {
@@ -188,7 +199,7 @@ internal object FileUtils {
                     setFd =
                         FileDescriptor::class.java.getDeclaredMethod(
                             "setInt$",
-                            Int::class.javaPrimitiveType
+                            Int::class.javaPrimitiveType,
                         )
                 } catch (ignored: NoSuchMethodException) {
                 }

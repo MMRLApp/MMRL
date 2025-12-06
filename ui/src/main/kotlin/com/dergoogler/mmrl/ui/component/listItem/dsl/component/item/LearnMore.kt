@@ -32,18 +32,20 @@ fun ListItemScope.LearnMore(
     enabled: Boolean = LocalListItemEnabled.current,
     onLearnMore: () -> Unit,
 ) {
-    val style = MaterialTheme.typography.bodyMedium.copy(
-        color = MaterialTheme.colorScheme.primary
-    )
+    val style =
+        MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.primary,
+        )
 
     ProvideTextStyle(style) {
         Slot(ListItemSlot.Supporting) {
             Text(
-                modifier = Modifier.clickable(
-                    enabled = enabled,
-                    onClick = onLearnMore
-                ),
-                text = stringResource(text)
+                modifier =
+                    Modifier.clickable(
+                        enabled = enabled,
+                        onClick = onLearnMore,
+                    ),
+                text = stringResource(text),
             )
         }
     }

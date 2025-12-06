@@ -36,7 +36,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class ModulesFilter {
-    ALL, AUTHOR, CATEGORY, NAME
+    ALL,
+    AUTHOR,
+    CATEGORY,
+    NAME,
 }
 
 @Destination<RootGraph>
@@ -57,30 +60,36 @@ fun TypedModulesScreen(
 
     val filterQuery = remember { query }
 
-    val filteredModules = remember(modules, filterQuery, type, searchQuery) {
-        modules.filter { (_, m) ->
-            val typeMatches = when (type) {
-                ModulesFilter.ALL -> true
-                ModulesFilter.AUTHOR -> m.author.equals(filterQuery, ignoreCase = true)
-                ModulesFilter.CATEGORY -> m.categories?.any {
-                    it.equals(
-                        filterQuery,
-                        ignoreCase = true
-                    )
-                } ?: false
+    val filteredModules =
+        remember(modules, filterQuery, type, searchQuery) {
+            modules.filter { (_, m) ->
+                val typeMatches =
+                    when (type) {
+                        ModulesFilter.ALL -> true
+                        ModulesFilter.AUTHOR -> m.author.equals(filterQuery, ignoreCase = true)
+                        ModulesFilter.CATEGORY ->
+                            m.categories?.any {
+                                it.equals(
+                                    filterQuery,
+                                    ignoreCase = true,
+                                )
+                            } ?: false
 
-                ModulesFilter.NAME -> m.name.equals(filterQuery, ignoreCase = true)
+                        ModulesFilter.NAME -> m.name.equals(filterQuery, ignoreCase = true)
+                    }
+
+                val searchMatches =
+                    if (searchQuery.isBlank()) {
+                        true
+                    } else {
+                        m.name.contains(searchQuery, ignoreCase = true) ||
+                            m.author.contains(searchQuery, ignoreCase = true) ||
+                            (m.categories?.any { it.contains(searchQuery, ignoreCase = true) } ?: false)
+                    }
+
+                typeMatches && searchMatches
             }
-
-            val searchMatches = if (searchQuery.isBlank()) true else {
-                m.name.contains(searchQuery, ignoreCase = true) ||
-                        m.author.contains(searchQuery, ignoreCase = true) ||
-                        (m.categories?.any { it.contains(searchQuery, ignoreCase = true) } ?: false)
-            }
-
-            typeMatches && searchMatches
         }
-    }
 
     val openSearch = fun() {
         isSearch = true
@@ -91,7 +100,9 @@ fun TypedModulesScreen(
         searchQuery = ""
     }
 
-    val search = fun(data: String) { searchQuery = data }
+    val search = fun(data: String) {
+        searchQuery = data
+    }
 
     val setRepositoryMenu = fun(value: RepositoryMenu) {
         scope.launch {
@@ -115,7 +126,7 @@ fun TypedModulesScreen(
                 setMenu = setRepositoryMenu,
             )
         },
-        contentWindowInsets = WindowInsets.none
+        contentWindowInsets = WindowInsets.none,
     ) { innerPadding ->
         if (filteredModules.isEmpty()) {
             PageIndicator(
@@ -166,31 +177,31 @@ private fun TopBar(
             if (title.isNotNullOrBlank()) {
                 ToolbarTitle(
                     title = title,
-                    subtitle = repo.name
+                    subtitle = repo.name,
                 )
 
                 return@BlurSearchToolbar
             }
 
             ToolbarTitle(
-                title = repo.name
+                title = repo.name,
             )
         },
         actions = {
             if (!isSearch) {
                 IconButton(
-                    onClick = onOpenSearch
+                    onClick = onOpenSearch,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
 
             RepositoryMenu(
-                setMenu = setMenu
+                setMenu = setMenu,
             )
-        }
+        },
     )
 }

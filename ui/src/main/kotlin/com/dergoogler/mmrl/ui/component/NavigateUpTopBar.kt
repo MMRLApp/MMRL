@@ -43,7 +43,7 @@ fun NavigateUpTopBar(
     colors = colors,
     scrollBehavior = scrollBehavior,
     enable = enable,
-    bottomBorder = bottomBorder
+    bottomBorder = bottomBorder,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +69,7 @@ fun NavigateUpTopBar(
     colors = colors,
     scrollBehavior = scrollBehavior,
     enable = enable,
-    bottomBorder = bottomBorder
+    bottomBorder = bottomBorder,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +96,7 @@ fun NavigateUpTopBar(
     colors = colors,
     scrollBehavior = scrollBehavior,
     enable = enable,
-    bottomBorder = bottomBorder
+    bottomBorder = bottomBorder,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -117,11 +117,11 @@ fun NavigateUpTopBar(
     navigationIcon = {
         enable.takeTrue {
             IconButton(
-                onClick = { if (it) onBack() }
+                onClick = { if (it) onBack() },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.arrow_left),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
@@ -130,5 +130,5 @@ fun NavigateUpTopBar(
     windowInsets = windowInsets,
     colors = colors,
     scrollBehavior = scrollBehavior,
-    bottomBorder = bottomBorder
+    bottomBorder = bottomBorder,
 )

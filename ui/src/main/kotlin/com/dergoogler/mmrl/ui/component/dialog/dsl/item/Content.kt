@@ -19,18 +19,19 @@ fun DialogContainerScope.Content(
     contentPadding: PaddingValues = this.contentPadding.content,
     contentAlignment: Alignment = Alignment.CenterStart,
     propagateMinConstraints: Boolean = false,
-    content: @Composable BoxScope.() -> Unit
+    content: @Composable BoxScope.() -> Unit,
 ) = ProvideContentColorTextStyle(
     contentColor = style.textContentColor,
     textStyle = MaterialTheme.typography.bodyMedium,
 ) {
     Box(
-        modifier = Modifier
-            .layoutId(DialogContainerSlot.CONTENT)
-            .padding(contentPadding)
-            .then(modifier),
+        modifier =
+            Modifier
+                .layoutId(DialogContainerSlot.CONTENT)
+                .padding(contentPadding)
+                .then(modifier),
         contentAlignment = contentAlignment,
         propagateMinConstraints = propagateMinConstraints,
-        content = content
+        content = content,
     )
 }

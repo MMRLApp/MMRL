@@ -26,7 +26,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.ui.R
 
-@Deprecated("Use ToolbarTitle instead", replaceWith = ReplaceWith("com.dergoogler.mmrl.ui.component.toolbar.ToolbarTitle(text = text, modifier = modifier)"))
+@Deprecated(
+    "Use ToolbarTitle instead",
+    replaceWith = ReplaceWith("com.dergoogler.mmrl.ui.component.toolbar.ToolbarTitle(text = text, modifier = modifier)"),
+)
 @Composable
 fun TopAppBarTitle(
     text: String,
@@ -34,18 +37,21 @@ fun TopAppBarTitle(
 ) = Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.Start,
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
 ) {
     Text(
         text = text,
         style = MaterialTheme.typography.titleLarge,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        color = LocalContentColor.current
+        color = LocalContentColor.current,
     )
 }
 
-@Deprecated("Use ToolbarIcon instead", replaceWith = ReplaceWith("com.dergoogler.mmrl.ui.component.toolbar.ToolbarIcon(icon = icon, modifier = modifier)"))
+@Deprecated(
+    "Use ToolbarIcon instead",
+    replaceWith = ReplaceWith("com.dergoogler.mmrl.ui.component.toolbar.ToolbarIcon(icon = icon, modifier = modifier)"),
+)
 @Composable
 fun TopAppBarIcon(
     modifier: Modifier = Modifier,
@@ -54,13 +60,13 @@ fun TopAppBarIcon(
 ) = Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.Start,
-    verticalAlignment = Alignment.CenterVertically
+    verticalAlignment = Alignment.CenterVertically,
 ) {
     Icon(
         modifier = Modifier.size(30.dp),
         painter = painterResource(id = icon),
         contentDescription = null,
-        tint = tint
+        tint = tint,
     )
 }
 
@@ -77,14 +83,14 @@ fun TopAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) = androidx.compose.material3.TopAppBar(
     title = title,
-    modifier = Modifier
-        .clip(
-            RoundedCornerShape(
-                bottomStart = 20.dp,
-                bottomEnd = 20.dp
-            )
-        )
-        .then(modifier),
+    modifier =
+        Modifier
+            .clip(
+                RoundedCornerShape(
+                    bottomStart = 20.dp,
+                    bottomEnd = 20.dp,
+                ),
+            ).then(modifier),
     navigationIcon = navigationIcon,
     actions = actions,
     colors = colors,
@@ -106,14 +112,14 @@ fun CenterAlignedTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) = androidx.compose.material3.CenterAlignedTopAppBar(
     title = title,
-    modifier = Modifier
-        .clip(
-            RoundedCornerShape(
-                bottomStart = 20.dp,
-                bottomEnd = 20.dp
-            )
-        )
-        .then(modifier),
+    modifier =
+        Modifier
+            .clip(
+                RoundedCornerShape(
+                    bottomStart = 20.dp,
+                    bottomEnd = 20.dp,
+                ),
+            ).then(modifier),
     navigationIcon = navigationIcon,
     actions = actions,
     colors = colors,

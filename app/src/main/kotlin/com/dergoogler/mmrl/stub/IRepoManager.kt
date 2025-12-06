@@ -7,16 +7,15 @@ import retrofit2.create
 import retrofit2.http.GET
 
 interface IRepoManager {
-
     @get:GET("json/modules.json")
     val modules: Call<ModulesJson>
 
     companion object {
-        fun build(repoUrl: String): IRepoManager {
-            return NetworkUtils.createRetrofit()
+        fun build(repoUrl: String): IRepoManager =
+            NetworkUtils
+                .createRetrofit()
                 .baseUrl(repoUrl)
                 .build()
                 .create()
-        }
     }
 }

@@ -17,7 +17,6 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
-
 @AndroidEntryPoint
 open class MMRLLifecycleService : LifecycleService() {
     @Inject
@@ -46,17 +45,19 @@ open class MMRLLifecycleService : LifecycleService() {
         getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     private fun baseNotificationBuilder() =
-        NotificationCompat.Builder(this, channelId)
+        NotificationCompat
+            .Builder(this, channelId)
             .setSmallIcon(R.drawable.launcher_outline)
 
     protected fun setForeground() {
-        val notification = baseNotificationBuilder()
-            .setContentTitle(baseContext.getString(title))
-            .setSilent(true)
-            .setOngoing(true)
-            .setGroup(groupKey)
-            .setGroupSummary(true)
-            .build()
+        val notification =
+            baseNotificationBuilder()
+                .setContentTitle(baseContext.getString(title))
+                .setSilent(true)
+                .setOngoing(true)
+                .setGroup(groupKey)
+                .setGroupSummary(true)
+                .build()
 
         startForeground(notificationId, notification)
     }
@@ -70,18 +71,18 @@ open class MMRLLifecycleService : LifecycleService() {
     ) {
         if (baseContext.isAppForeground) return
 
-        val notification = baseNotificationBuilder().apply {
-            setContentTitle(title)
-            setContentText(message)
-            setSmallIcon(icon)
-            setContentIntent(pendingIntent)
-            setAutoCancel(true)
-            priority = NotificationCompat.PRIORITY_HIGH
-            setDefaults(NotificationCompat.DEFAULT_ALL)
-        }.build()
+        val notification =
+            baseNotificationBuilder()
+                .apply {
+                    setContentTitle(title)
+                    setContentText(message)
+                    setSmallIcon(icon)
+                    setContentIntent(pendingIntent)
+                    setAutoCancel(true)
+                    priority = NotificationCompat.PRIORITY_HIGH
+                    setDefaults(NotificationCompat.DEFAULT_ALL)
+                }.build()
 
         notificationManager.notify(id, notification)
     }
-
-
 }

@@ -46,25 +46,29 @@ fun ListButtonItem(
     val layoutDirection = LocalLayoutDirection.current
     val start by remember {
         derivedStateOf {
-            if (!iconToRight) contentPaddingValues.calculateStartPadding(
-                layoutDirection
-            ) else contentPaddingValues.calculateEndPadding(layoutDirection)
+            if (!iconToRight) {
+                contentPaddingValues.calculateStartPadding(
+                    layoutDirection,
+                )
+            } else {
+                contentPaddingValues.calculateEndPadding(layoutDirection)
+            }
         }
     }
 
     Row(
-        modifier = modifier
-            .alpha(alpha = if (enabled) 1f else 0.5f)
-            .combinedClickable(
-                enabled = enabled,
-                onClick = onClick,
-                onLongClick = onLongClick,
-                interactionSource = interactionSource,
-                indication = ripple()
-            )
-            .padding(contentPaddingValues)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .alpha(alpha = if (enabled) 1f else 0.5f)
+                .combinedClickable(
+                    enabled = enabled,
+                    onClick = onClick,
+                    onLongClick = onLongClick,
+                    interactionSource = interactionSource,
+                    indication = ripple(),
+                ).padding(contentPaddingValues)
+                .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (!iconToRight) {
             icon?.let {
@@ -72,7 +76,7 @@ fun ListButtonItem(
                     modifier = Modifier.size(itemTextStyle.iconSize),
                     painter = painterResource(id = icon),
                     contentDescription = null,
-                    tint = LocalContentColor.current
+                    tint = LocalContentColor.current,
                 )
 
                 Spacer(modifier = Modifier.width(start))
@@ -84,7 +88,7 @@ fun ListButtonItem(
             title = title,
             desc = desc,
             itemTextStyle = itemTextStyle,
-            base = base
+            base = base,
         )
 
         if (iconToRight) {
@@ -94,7 +98,7 @@ fun ListButtonItem(
                     modifier = Modifier.size(itemTextStyle.iconSize),
                     painter = painterResource(id = icon),
                     contentDescription = null,
-                    tint = LocalContentColor.current
+                    tint = LocalContentColor.current,
                 )
             }
         }

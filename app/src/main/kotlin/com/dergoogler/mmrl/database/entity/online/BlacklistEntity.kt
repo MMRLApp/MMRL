@@ -14,19 +14,20 @@ data class BlacklistEntity(
     @Json(name = "source") val blSource: String,
     @Json(name = "notes") val blNotes: String? = null,
     @TypeConverters @Json(name = "antifeatures")
-    val blAntiFeatures: List<String>? = null
+    val blAntiFeatures: List<String>? = null,
 ) {
     constructor(original: Blacklist) : this(
         blId = original.id,
         blSource = original.source,
         blNotes = original.notes,
-        blAntiFeatures = original.antifeatures
+        blAntiFeatures = original.antifeatures,
     )
 
-    fun toBlacklist() = Blacklist(
-        id = blId,
-        source = blSource,
-        notes = blNotes,
-        antifeatures = blAntiFeatures
-    )
+    fun toBlacklist() =
+        Blacklist(
+            id = blId,
+            source = blSource,
+            notes = blNotes,
+            antifeatures = blAntiFeatures,
+        )
 }

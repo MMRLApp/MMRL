@@ -2,17 +2,13 @@ package com.dergoogler.mmrl.ui.activity
 
 import android.util.Log
 import android.view.WindowManager
-import androidx.activity.viewModels
-import com.dergoogler.mmrl.ext.nullply
 import com.dergoogler.mmrl.ext.tmpDir
 import com.dergoogler.mmrl.viewmodel.TerminalViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlin.getValue
-import kotlin.reflect.KClass
 
 abstract class TerminalActivity : MMRLComponentActivity() {
-
     protected open var terminalJob: Job? = null
     override val windowFlags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 

@@ -10,8 +10,10 @@ class ShellBroadcastReceiver(
     private val console: SnapshotStateList<String>,
     private val logs: MutableList<String>,
 ) : BroadcastReceiver() {
-    override fun onReceive(ctx: Context?, intent: Intent?) {
-
+    override fun onReceive(
+        ctx: Context?,
+        intent: Intent?,
+    ) {
         if (intent == null) return
 
         when {
@@ -40,6 +42,8 @@ class ShellBroadcastReceiver(
         }
     }
 
-    private fun action(action: Actions, intent: Intent?) =
-        intent != null && intent.action == "${context.packageName}.${action.name}"
+    private fun action(
+        action: Actions,
+        intent: Intent?,
+    ) = intent != null && intent.action == "${context.packageName}.${action.name}"
 }

@@ -52,15 +52,16 @@ fun IconText(
         suffix = (alignment == Alignment.End) nullable " [icon=ugh]",
         bbEnabled = false,
         disabledTags = BBCodeTag.disableAllExcept(BBCodeTag.ICON, BBCodeTag.IMAGE),
-        iconContent = resId nullvoke {
-            {
-                Icon(
-                    painter = painterResource(id = this),
-                    contentDescription = null,
-                    tint = tint,
-                )
-            }
-        },
+        iconContent =
+            resId nullvoke {
+                {
+                    Icon(
+                        painter = painterResource(id = this),
+                        contentDescription = null,
+                        tint = tint,
+                    )
+                }
+            },
         onLinkClick = onLinkClick,
         style = style,
         onTextLayout = onTextLayout,
@@ -76,6 +77,6 @@ fun IconText(
         fontWeight = fontWeight,
         fontStyle = fontStyle,
         fontSize = fontSize,
-        color = color
+        color = color,
     )
 }

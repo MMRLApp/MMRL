@@ -28,16 +28,15 @@ fun TerminalScreen() {
         ) {
             SwitchItem(
                 checked = userPreferences.terminalTextWrap,
-                onChange = viewModel::setTerminalTextWrap
+                onChange = viewModel::setTerminalTextWrap,
             ) {
                 Title(R.string.settings_text_wrap)
                 Description(R.string.settings_text_wrap_desc)
-
             }
 
             SwitchItem(
                 checked = userPreferences.showTerminalLineNumbers,
-                onChange = viewModel::setShowTerminalLineNumbers
+                onChange = viewModel::setShowTerminalLineNumbers,
             ) {
                 Title(R.string.settings_terminal_line_numbers)
                 Description(R.string.settings_terminal_line_numbers_desc)
@@ -46,7 +45,7 @@ fun TerminalScreen() {
 
         Section(
             title = stringResource(id = R.string.settings_behavior),
-            divider = false
+            divider = false,
         ) {
             SwitchItem(
                 checked = userPreferences.clearInstallTerminal,
@@ -59,12 +58,11 @@ fun TerminalScreen() {
             SwitchItem(
                 checked = userPreferences.deleteZipFile,
                 onChange = viewModel::setDeleteZipFile,
-                enabled = userPreferences.workingMode.isRoot
+                enabled = userPreferences.workingMode.isRoot,
             ) {
                 Title(R.string.settings_delete_zip)
                 Description(R.string.settings_delete_zip_desc)
             }
-
 
             SwitchItem(
                 checked = userPreferences.allowCancelInstall,

@@ -33,132 +33,140 @@ data class RepositoriesScreenState(
 )
 
 @HiltViewModel
-class RepositoriesViewModel @Inject constructor(
-    localRepository: LocalRepository,
-    modulesRepository: ModulesRepository,
-    userPreferencesRepository: UserPreferencesRepository,
-    application: Application,
-) : MMRLViewModel(
-    application = application,
-    localRepository = localRepository,
-    modulesRepository = modulesRepository,
-    userPreferencesRepository = userPreferencesRepository
-) {
-    private val reposFlow = MutableStateFlow(listOf<RepoState>())
-    val repos get() = reposFlow.asStateFlow()
+class RepositoriesViewModel
+    @Inject
+    constructor(
+        localRepository: LocalRepository,
+        modulesRepository: ModulesRepository,
+        userPreferencesRepository: UserPreferencesRepository,
+        application: Application,
+    ) : MMRLViewModel(
+            application = application,
+            localRepository = localRepository,
+            modulesRepository = modulesRepository,
+            userPreferencesRepository = userPreferencesRepository,
+        ) {
+        private val reposFlow = MutableStateFlow(listOf<RepoState>())
+        val repos get() = reposFlow.asStateFlow()
 
-    val listState: LazyListState = LazyListState()
+        val listState: LazyListState = LazyListState()
 
-    private val repositoriesMenu
-        get() = userPreferencesRepository.data
-            .map { it.repositoriesMenu }
+        private val repositoriesMenu
+            get() =
+                userPreferencesRepository.data
+                    .map { it.repositoriesMenu }
 
-    var isLoading by mutableStateOf(true)
-        private set
-    private var progressFlow = MutableStateFlow(false)
-    val progress get() = progressFlow.asStateFlow()
+        var isLoading by mutableStateOf(true)
+            private set
+        private var progressFlow = MutableStateFlow(false)
+        val progress get() = progressFlow.asStateFlow()
 
-    private inline fun <T> T.refreshing(callback: T.() -> Unit) {
-        progressFlow.update { true }
-        callback()
-        progressFlow.update { false }
-    }
-
-    init {
-        Timber.d("CustomRepositoriesViewModel init")
-        dataObserver()
-    }
-
-    private fun dataObserver() {
-
-        combine(
-            localRepository.getRepoAllAsFlow(),
-            repositoriesMenu
-        ) { list, menu ->
-            reposFlow.value = list.map {
-                RepoState(it)
-            }.sortedWith(
-                comparator(menu.option, menu.descending)
-            )
-
-            isLoading = false
-
-        }.launchIn(viewModelScope)
-    }
-
-    private fun comparator(
-        option: Option,
-        descending: Boolean,
-    ): Comparator<RepoState> = if (descending) {
-        when (option) {
-            Option.Name -> compareByDescending { it.name.lowercase() }
-            Option.UpdatedTime -> compareBy { it.timestamp }
-            Option.Size -> compareByDescending { it.size }
+        private inline fun <T> T.refreshing(callback: T.() -> Unit) {
+            progressFlow.update { true }
+            callback()
+            progressFlow.update { false }
         }
 
-    } else {
-        when (option) {
-            Option.Name -> compareBy { it.name.lowercase() }
-            Option.UpdatedTime -> compareByDescending { it.timestamp }
-            Option.Size -> compareBy { it.size }
+        init {
+            Timber.d("CustomRepositoriesViewModel init")
+            dataObserver()
         }
-    }
 
-    fun setRepositoriesMenu(value: RepositoriesMenu) {
-        viewModelScope.launch {
-            userPreferencesRepository.setRepositoriesMenu(value)
+        private fun dataObserver() {
+            combine(
+                localRepository.getRepoAllAsFlow(),
+                repositoriesMenu,
+            ) { list, menu ->
+                reposFlow.value =
+                    list
+                        .map {
+                            RepoState(it)
+                        }.sortedWith(
+                            comparator(menu.option, menu.descending),
+                        )
+
+                isLoading = false
+            }.launchIn(viewModelScope)
         }
-    }
 
-    val screenState: StateFlow<ModulesScreenState> = localRepository.getLocalAllAsFlow()
-        .combine(progress) { items, isRefreshing ->
-            ModulesScreenState(items = items, isRefreshing = isRefreshing)
+        private fun comparator(
+            option: Option,
+            descending: Boolean,
+        ): Comparator<RepoState> =
+            if (descending) {
+                when (option) {
+                    Option.Name -> compareByDescending { it.name.lowercase() }
+                    Option.UpdatedTime -> compareBy { it.timestamp }
+                    Option.Size -> compareByDescending { it.size }
+                }
+            } else {
+                when (option) {
+                    Option.Name -> compareBy { it.name.lowercase() }
+                    Option.UpdatedTime -> compareByDescending { it.timestamp }
+                    Option.Size -> compareBy { it.size }
+                }
+            }
+
+        fun setRepositoriesMenu(value: RepositoriesMenu) {
+            viewModelScope.launch {
+                userPreferencesRepository.setRepositoriesMenu(value)
+            }
         }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = ModulesScreenState()
-        )
 
-    fun insert(
-        url: String,
-        onSuccess: (() -> Unit)? = null,
-        onFailure: (Throwable) -> Unit,
-    ) = viewModelScope.launch {
-        refreshing {
-            modulesRepository.getRepo(url.toRepo()).apply {
-                onFailure(onFailure)
-                onSuccess?.let {
-                    onSuccess {
-                        it()
+        val screenState: StateFlow<ModulesScreenState> =
+            localRepository
+                .getLocalAllAsFlow()
+                .combine(progress) { items, isRefreshing ->
+                    ModulesScreenState(items = items, isRefreshing = isRefreshing)
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5000),
+                    initialValue = ModulesScreenState(),
+                )
+
+        fun insert(
+            url: String,
+            onSuccess: (() -> Unit)? = null,
+            onFailure: (Throwable) -> Unit,
+        ) = viewModelScope.launch {
+            refreshing {
+                modulesRepository.getRepo(url.toRepo()).apply {
+                    onFailure(onFailure)
+                    onSuccess?.let {
+                        onSuccess {
+                            it()
+                        }
                     }
                 }
             }
         }
-    }
 
-    fun update(repo: RepoState) = viewModelScope.launch {
-        localRepository.insertRepo(repo.toRepo())
-    }
+        fun update(repo: RepoState) =
+            viewModelScope.launch {
+                localRepository.insertRepo(repo.toRepo())
+            }
 
-    fun delete(repo: RepoState) = viewModelScope.launch {
-        localRepository.deleteRepo(repo.toRepo())
-        localRepository.deleteOnlineByUrl(repo.url)
-    }
+        fun delete(repo: RepoState) =
+            viewModelScope.launch {
+                localRepository.deleteRepo(repo.toRepo())
+                localRepository.deleteOnlineByUrl(repo.url)
+            }
 
-    fun getUpdate(
-        repo: RepoState,
-        onFailure: (Throwable) -> Unit,
-    ) = viewModelScope.launch {
-        refreshing {
-            modulesRepository.getRepo(repo.toRepo())
-                .onFailure(onFailure)
+        fun getUpdate(
+            repo: RepoState,
+            onFailure: (Throwable) -> Unit,
+        ) = viewModelScope.launch {
+            refreshing {
+                modulesRepository
+                    .getRepo(repo.toRepo())
+                    .onFailure(onFailure)
+            }
         }
-    }
 
-    fun getRepoAll() = viewModelScope.launch {
-        refreshing {
-            modulesRepository.getRepoAll(onlyEnable = false)
-        }
+        fun getRepoAll() =
+            viewModelScope.launch {
+                refreshing {
+                    modulesRepository.getRepoAll(onlyEnable = false)
+                }
+            }
     }
-}

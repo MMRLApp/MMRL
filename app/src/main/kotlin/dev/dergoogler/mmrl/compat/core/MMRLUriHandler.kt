@@ -32,13 +32,17 @@ class MMRLUriHandlerImpl(
         onError: ((Exception) -> Unit)?,
     ) {
         try {
-            val colorSchemeParams = CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(color.toArgb())
-                .build()
+            val colorSchemeParams =
+                CustomTabColorSchemeParams
+                    .Builder()
+                    .setToolbarColor(color.toArgb())
+                    .build()
 
-            val customTabsIntent = CustomTabsIntent.Builder()
-                .setDefaultColorSchemeParams(colorSchemeParams)
-                .build()
+            val customTabsIntent =
+                CustomTabsIntent
+                    .Builder()
+                    .setDefaultColorSchemeParams(colorSchemeParams)
+                    .build()
 
             customTabsIntent.apply {
                 if (onSuccess != null) {
@@ -65,11 +69,12 @@ class MMRLUriHandlerImpl(
             onError = {
                 Timber.e(it, "Unable to open $uri")
                 Toast.makeText(context, "Unable to open $uri", Toast.LENGTH_SHORT).show()
-            }
+            },
         )
     }
 }
 
-val LocalUriHandler = staticCompositionLocalOf<MMRLUriHandler> {
-    error("CompositionLocal MMRLUriHandlerImpl not present")
-}
+val LocalUriHandler =
+    staticCompositionLocalOf<MMRLUriHandler> {
+        error("CompositionLocal MMRLUriHandlerImpl not present")
+    }

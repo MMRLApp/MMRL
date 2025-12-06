@@ -38,10 +38,13 @@ internal fun BaseListContent(
     val baseParameters = remember { BaseParameters() }.apply(base)
 
     Column(
-        modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = title, style = itemTextStyle.titleTextStyle, color = itemTextStyle.titleTextColor
+            text = title,
+            style = itemTextStyle.titleTextStyle,
+            color = itemTextStyle.titleTextColor,
         )
         desc?.let {
             it()
@@ -50,7 +53,7 @@ internal fun BaseListContent(
             Row(
                 modifier = Modifier.padding(top = 5.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(2.dp)
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 it.forEach { label ->
                     label()
@@ -74,23 +77,25 @@ internal fun BaseListContent(
         modifier = modifier,
         title = title,
         base = base,
-        desc = desc.thenComposeInvoke<String, ColumnScope> { s ->
-            Text(
-                text = s,
-                style = itemTextStyle.descTextStyle,
-                color = itemTextStyle.descTextColor
-            )
-            baseParameters.learnMore.nullable {
+        desc =
+            desc.thenComposeInvoke<String, ColumnScope> { s ->
                 Text(
-                    modifier = Modifier.clickable(
-                        onClick = it
-                    ),
-                    text = stringResource(baseParameters.learnMoreText),
+                    text = s,
                     style = itemTextStyle.descTextStyle,
-                    color = MaterialTheme.colorScheme.primary
+                    color = itemTextStyle.descTextColor,
                 )
-            }
-        },
+                baseParameters.learnMore.nullable {
+                    Text(
+                        modifier =
+                            Modifier.clickable(
+                                onClick = it,
+                            ),
+                        text = stringResource(baseParameters.learnMoreText),
+                        style = itemTextStyle.descTextStyle,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            },
         itemTextStyle = itemTextStyle,
     )
 }

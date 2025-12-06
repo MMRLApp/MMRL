@@ -17,9 +17,10 @@ data class ModuleManagerEntity(
         apatch = original?.apatch,
     )
 
-    fun toManager() = ModuleManager(
-        magisk = magisk,
-        kernelsu = kernelsu,
-        apatch = apatch,
-    )
+    fun toManager() =
+        ModuleManager(
+            magisk = magisk,
+            kernelsu = kernelsu,
+            apatch = apatch,
+        )
 }

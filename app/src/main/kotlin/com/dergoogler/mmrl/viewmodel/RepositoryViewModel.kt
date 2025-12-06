@@ -31,177 +31,184 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @HiltViewModel(assistedFactory = RepositoryViewModel.Factory::class)
-class RepositoryViewModel @AssistedInject constructor(
-    @Assisted val repo: Repo,
-    application: Application,
-    localRepository: LocalRepository,
-    modulesRepository: ModulesRepository,
-    userPreferencesRepository: UserPreferencesRepository,
-) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
-    private val repositoryMenu
-        get() = userPreferencesRepository.data
-            .map { it.repositoryMenu }
+class RepositoryViewModel
+    @AssistedInject
+    constructor(
+        @Assisted val repo: Repo,
+        application: Application,
+        localRepository: LocalRepository,
+        modulesRepository: ModulesRepository,
+        userPreferencesRepository: UserPreferencesRepository,
+    ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+        private val repositoryMenu
+            get() =
+                userPreferencesRepository.data
+                    .map { it.repositoryMenu }
 
-    var isSearch by mutableStateOf(false)
-        private set
-    private val keyFlow = MutableStateFlow("")
-    val query get() = keyFlow.asStateFlow()
+        var isSearch by mutableStateOf(false)
+            private set
+        private val keyFlow = MutableStateFlow("")
+        val query get() = keyFlow.asStateFlow()
 
-    val listState: LazyListState = LazyListState()
+        val listState: LazyListState = LazyListState()
 
-    private val cacheFlow = MutableStateFlow(listOf<Pair<OnlineState, OnlineModule>>())
-    private val onlineFlow = MutableStateFlow(listOf<Pair<OnlineState, OnlineModule>>())
-    val online get() = onlineFlow.asStateFlow()
+        private val cacheFlow = MutableStateFlow(listOf<Pair<OnlineState, OnlineModule>>())
+        private val onlineFlow = MutableStateFlow(listOf<Pair<OnlineState, OnlineModule>>())
+        val online get() = onlineFlow.asStateFlow()
 
-    var isLoading by mutableStateOf(true)
-        private set
+        var isLoading by mutableStateOf(true)
+            private set
 
-    init {
-        Timber.d("RepositoryViewModel init")
-        dataObserver()
-        keyObserver()
-    }
-
-    private fun dataObserver() {
-        val onlineModules = if (repo.url.isNotBlank()) {
-            localRepository.getOnlineAllByUrlAsFlow(repo.url)
-        } else {
-            localRepository.getOnlineAllAsFlow()
+        init {
+            Timber.d("RepositoryViewModel init")
+            dataObserver()
+            keyObserver()
         }
 
-        combine(
-            onlineModules,
-            repositoryMenu
-        ) { list, menu ->
-            cacheFlow.value = list.map {
-                val local = localRepository.getLocalByIdOrNull(it.id)
-                val versionsList = it.versions.toMutableList()
-
-                if (local != null) {
-                    UpdateJson.loadToVersionItem(local.updateJson)?.let { es ->
-                        // no need to define here a repo name since we only need to for the last updated
-                        versionsList.add(0, es)
-                    }
-                }
-
-                it.copy(versions = versionsList).createState(
-                    local = local,
-                    hasUpdatableTag = localRepository.hasUpdatableTag(it.id)
-                ) to it.copy(versions = versionsList)
-            }.sortedWith(
-                comparator(menu.option, menu.descending)
-            ).let { v ->
-                val a = if (menu.pinInstalled) {
-                    v.sortedByDescending { it.first.installed }
+        private fun dataObserver() {
+            val onlineModules =
+                if (repo.url.isNotBlank()) {
+                    localRepository.getOnlineAllByUrlAsFlow(repo.url)
                 } else {
-                    v
+                    localRepository.getOnlineAllAsFlow()
                 }
 
-                if (menu.pinUpdatable) {
-                    a.sortedByDescending { it.first.updatable }
-                } else {
-                    a
-                }
-            }
+            combine(
+                onlineModules,
+                repositoryMenu,
+            ) { list, menu ->
+                cacheFlow.value =
+                    list
+                        .map {
+                            val local = localRepository.getLocalByIdOrNull(it.id)
+                            val versionsList = it.versions.toMutableList()
 
-            isLoading = false
+                            if (local != null) {
+                                UpdateJson.loadToVersionItem(local.updateJson)?.let { es ->
+                                    // no need to define here a repo name since we only need to for the last updated
+                                    versionsList.add(0, es)
+                                }
+                            }
 
-        }.launchIn(viewModelScope)
-    }
+                            it.copy(versions = versionsList).createState(
+                                local = local,
+                                hasUpdatableTag = localRepository.hasUpdatableTag(it.id),
+                            ) to it.copy(versions = versionsList)
+                        }.sortedWith(
+                            comparator(menu.option, menu.descending),
+                        ).let { v ->
+                            val a =
+                                if (menu.pinInstalled) {
+                                    v.sortedByDescending { it.first.installed }
+                                } else {
+                                    v
+                                }
 
-    private fun keyObserver() {
-        combine(
-            keyFlow,
-            cacheFlow
-        ) { key, source ->
-            val newKey = when {
-                key.startsWith("id:", ignoreCase = true) -> key.removePrefix("id:")
-                key.startsWith("name:", ignoreCase = true) -> key.removePrefix("name:")
-                key.startsWith("author:", ignoreCase = true) -> key.removePrefix("author:")
-                key.startsWith("category:", ignoreCase = true) -> key.removePrefix("category:")
-                else -> key
-            }.trim()
+                            if (menu.pinUpdatable) {
+                                a.sortedByDescending { it.first.updatable }
+                            } else {
+                                a
+                            }
+                        }
 
-            onlineFlow.value = source.filter { (_, m) ->
-                if (key.isNotBlank() || newKey.isNotBlank()) {
+                isLoading = false
+            }.launchIn(viewModelScope)
+        }
+
+        private fun keyObserver() {
+            combine(
+                keyFlow,
+                cacheFlow,
+            ) { key, source ->
+                val newKey =
                     when {
-                        key.startsWith("id:", ignoreCase = true) ->
-                            m.id.equals(newKey, ignoreCase = true)
+                        key.startsWith("id:", ignoreCase = true) -> key.removePrefix("id:")
+                        key.startsWith("name:", ignoreCase = true) -> key.removePrefix("name:")
+                        key.startsWith("author:", ignoreCase = true) -> key.removePrefix("author:")
+                        key.startsWith("category:", ignoreCase = true) -> key.removePrefix("category:")
+                        else -> key
+                    }.trim()
 
-                        key.startsWith("name:", ignoreCase = true) ->
-                            m.name.equals(newKey, ignoreCase = true)
+                onlineFlow.value =
+                    source.filter { (_, m) ->
+                        if (key.isNotBlank() || newKey.isNotBlank()) {
+                            when {
+                                key.startsWith("id:", ignoreCase = true) ->
+                                    m.id.equals(newKey, ignoreCase = true)
 
-                        key.startsWith("author:", ignoreCase = true) ->
-                            m.author.equals(newKey, ignoreCase = true)
+                                key.startsWith("name:", ignoreCase = true) ->
+                                    m.name.equals(newKey, ignoreCase = true)
 
-                        key.startsWith("category:", ignoreCase = true) ->
-                            m.categories?.any {
-                                it.equals(
-                                    newKey,
-                                    ignoreCase = true
-                                )
-                            } ?: false
+                                key.startsWith("author:", ignoreCase = true) ->
+                                    m.author.equals(newKey, ignoreCase = true)
 
-                        else ->
-                            m.name.contains(key, ignoreCase = true) ||
-                                    m.author.contains(key, ignoreCase = true) ||
-                                    m.description?.contains(key, ignoreCase = true) == true
+                                key.startsWith("category:", ignoreCase = true) ->
+                                    m.categories?.any {
+                                        it.equals(
+                                            newKey,
+                                            ignoreCase = true,
+                                        )
+                                    } ?: false
+
+                                else ->
+                                    m.name.contains(key, ignoreCase = true) ||
+                                        m.author.contains(key, ignoreCase = true) ||
+                                        m.description?.contains(key, ignoreCase = true) == true
+                            }
+                        } else {
+                            true
+                        }
                     }
-                } else {
-                    true
+            }.launchIn(viewModelScope)
+        }
+
+        private fun comparator(
+            option: Option,
+            descending: Boolean,
+        ): Comparator<Pair<OnlineState, OnlineModule>> =
+            if (descending) {
+                when (option) {
+                    Option.Name -> compareByDescending { it.second.name.lowercase() }
+                    Option.UpdatedTime -> compareBy { it.first.lastUpdated }
+                    Option.Size -> compareByDescending { 0 }
+                }
+            } else {
+                when (option) {
+                    Option.Name -> compareBy { it.second.name.lowercase() }
+                    Option.UpdatedTime -> compareByDescending { it.first.lastUpdated }
+                    Option.Size -> compareBy { 0 }
                 }
             }
-        }.launchIn(viewModelScope)
-    }
 
-    private fun comparator(
-        option: Option,
-        descending: Boolean,
-    ): Comparator<Pair<OnlineState, OnlineModule>> = if (descending) {
-        when (option) {
-            Option.Name -> compareByDescending { it.second.name.lowercase() }
-            Option.UpdatedTime -> compareBy { it.first.lastUpdated }
-            Option.Size -> compareByDescending { 0 }
+        fun search(key: String) {
+            keyFlow.value = key
         }
 
-    } else {
-        when (option) {
-            Option.Name -> compareBy { it.second.name.lowercase() }
-            Option.UpdatedTime -> compareByDescending { it.first.lastUpdated }
-            Option.Size -> compareBy { 0 }
+        fun openSearch() {
+            isSearch = true
         }
-    }
 
-    fun search(key: String) {
-        keyFlow.value = key
-    }
-
-    fun openSearch() {
-        isSearch = true
-    }
-
-    fun closeSearch() {
-        isSearch = false
-        keyFlow.value = ""
-    }
-
-    fun setRepositoryMenu(value: RepositoryMenu) {
-        viewModelScope.launch {
-            userPreferencesRepository.setRepositoryMenu(value)
+        fun closeSearch() {
+            isSearch = false
+            keyFlow.value = ""
         }
-    }
 
-    @AssistedFactory
-    interface Factory {
-        fun create(repo: Repo): RepositoryViewModel
-    }
-
-    companion object {
-        @Composable
-        fun build(repo: Repo): RepositoryViewModel {
-            return hiltViewModel<RepositoryViewModel, Factory> { factory ->
-                factory.create(repo)
+        fun setRepositoryMenu(value: RepositoryMenu) {
+            viewModelScope.launch {
+                userPreferencesRepository.setRepositoryMenu(value)
             }
         }
+
+        @AssistedFactory
+        interface Factory {
+            fun create(repo: Repo): RepositoryViewModel
+        }
+
+        companion object {
+            @Composable
+            fun build(repo: Repo): RepositoryViewModel =
+                hiltViewModel<RepositoryViewModel, Factory> { factory ->
+                    factory.create(repo)
+                }
+        }
     }
-}

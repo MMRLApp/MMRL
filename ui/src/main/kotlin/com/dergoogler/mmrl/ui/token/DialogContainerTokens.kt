@@ -2,7 +2,7 @@ package com.dergoogler.mmrl.ui.token
 
 import androidx.compose.ui.unit.dp
 
-object DialogContainerTokens  {
+object DialogContainerTokens {
     val ActionFocusLabelTextColor = ColorSchemeKeyTokens.Primary
     val ActionHoverLabelTextColor = ColorSchemeKeyTokens.Primary
     val ActionLabelTextColor = ColorSchemeKeyTokens.Primary

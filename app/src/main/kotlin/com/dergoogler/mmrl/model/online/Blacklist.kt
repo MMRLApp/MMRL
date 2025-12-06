@@ -23,15 +23,19 @@ data class Blacklist(
     val isValid = id.isNotNullOrBlank() && source.isNotNullOrBlank()
 
     companion object {
-        val EMPTY = Blacklist(
-            id = "",
-            source = "",
-            notes = null,
-            antifeatures = null,
-        )
+        val EMPTY =
+            Blacklist(
+                id = "",
+                source = "",
+                notes = null,
+                antifeatures = null,
+            )
 
         @Composable
-        inline fun <R> hasBlacklist(blacklist: Blacklist?, block: (Blacklist) -> R): R? {
+        inline fun <R> hasBlacklist(
+            blacklist: Blacklist?,
+            block: (Blacklist) -> R,
+        ): R? {
             val blacklisted by isBlacklisted(blacklist)
 
             return if (blacklisted) {
@@ -40,7 +44,6 @@ data class Blacklist(
                 null
             }
         }
-
 
         @Composable
         fun isBlacklisted(blacklist: Blacklist?): State<Boolean> {
@@ -53,17 +56,24 @@ data class Blacklist(
         }
 
         @OptIn(ExperimentalContracts::class)
-        fun isBlacklisted(enabled: Boolean, blacklist: Blacklist?): Boolean {
+        fun isBlacklisted(
+            enabled: Boolean,
+            blacklist: Blacklist?,
+        ): Boolean {
             contract {
                 returns(true) implies (blacklist != null)
             }
 
             return enabled &&
-                    blacklist != null &&
-                    !(blacklist.antifeatures != null && blacklist.antifeatures.size == 1 && blacklist.antifeatures.contains(
-                        "NoSourceSince"
-                    )) &&
-                    blacklist.isValid
+                blacklist != null &&
+                !(
+                    blacklist.antifeatures != null &&
+                        blacklist.antifeatures.size == 1 &&
+                        blacklist.antifeatures.contains(
+                            "NoSourceSince",
+                        )
+                ) &&
+                blacklist.isValid
         }
     }
 }

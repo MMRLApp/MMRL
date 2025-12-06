@@ -40,41 +40,46 @@ fun Long.toFormattedDate(formatter: DateTimeFormatter? = null): String {
     return formatDate(localDateTime, formatter)
 }
 
-private fun formatDate(localDateTime: LocalDateTime, formatter: DateTimeFormatter?): String {
-    return if (formatter != null) {
+private fun formatDate(
+    localDateTime: LocalDateTime,
+    formatter: DateTimeFormatter?,
+): String =
+    if (formatter != null) {
         localDateTime.toJavaLocalDateTime().format(formatter)
     } else {
-        val month = localDateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
+        val month =
+            localDateTime.month.name
+                .lowercase()
+                .replaceFirstChar { it.uppercase() }
         val day = localDateTime.dayOfMonth
         val year = localDateTime.year
         "$month $day, $year"
     }
-}
 
-fun Float.toFormattedDateSafely(pattern: String? = null): String {
-    return try {
+fun Float.toFormattedDateSafely(pattern: String? = null): String =
+    try {
         val formatter = pattern?.let { DateTimeFormatter.ofPattern(it) }
         this.toFormattedDate(formatter)
     } catch (e: IllegalArgumentException) {
         this.toFormattedDate()
     }
-}
 
-fun Long.toFormattedDateSafely(pattern: String? = null): String {
-    return try {
+fun Long.toFormattedDateSafely(pattern: String? = null): String =
+    try {
         val formatter = pattern?.let { DateTimeFormatter.ofPattern(it) }
         this.toFormattedDate(formatter)
     } catch (e: IllegalArgumentException) {
         "Invalid date format pattern"
     }
-}
 
 private fun formatDate(localDateTime: LocalDateTime): String {
-    val month = localDateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
+    val month =
+        localDateTime.month.name
+            .lowercase()
+            .replaceFirstChar { it.uppercase() }
     val day = localDateTime.dayOfMonth
     val year = localDateTime.year
     return "$month $day, $year"
 }
 
-fun LocalDateTime.Companion.now() =
-    Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+fun LocalDateTime.Companion.now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())

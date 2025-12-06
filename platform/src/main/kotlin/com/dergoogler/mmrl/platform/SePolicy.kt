@@ -45,7 +45,10 @@ object SePolicy {
         }
     }
 
-    fun setSePolicy(pkg: String, rules: String): Boolean {
+    fun setSePolicy(
+        pkg: String,
+        rules: String,
+    ): Boolean {
         return try {
             if (!isSepolicyValid(rules)) {
                 Log.e(TAG, "Invalid sepolicy rules for $pkg")
@@ -71,7 +74,7 @@ object SePolicy {
                 },
                 onFailure = { error ->
                     Log.w(TAG, "Parse warning for $pkg: ${error.message}")
-                }
+                },
             )
 
             val sepolicyDir = SuFile("/data/adb/ksu/profile/selinux")
@@ -86,7 +89,6 @@ object SePolicy {
 
             Log.i(TAG, "Set sepolicy for $pkg: ${if (success) "SUCCESS" else "FAILED"}")
             success
-
         } catch (e: IOException) {
             Log.e(TAG, "Failed to write sepolicy for $pkg: ${e.message}")
             false
@@ -96,7 +98,10 @@ object SePolicy {
         }
     }
 
-    private fun applyPolicyRules(pkg: String, rules: String): Boolean {
+    private fun applyPolicyRules(
+        pkg: String,
+        rules: String,
+    ): Boolean {
         return try {
             val parseResult = SePolicyParser.parseSepolicy(rules, strict = false)
             parseResult.fold(
@@ -110,14 +115,14 @@ object SePolicy {
 
                     Log.i(
                         TAG,
-                        "Successfully applied ${atomicStatements.size} atomic policy statements for $pkg"
+                        "Successfully applied ${atomicStatements.size} atomic policy statements for $pkg",
                     )
                     true
                 },
                 onFailure = { error ->
                     Log.e(TAG, "Failed to parse policy for application: ${error.message}")
                     false
-                }
+                },
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to apply policy rules for $pkg: ${e.message}")

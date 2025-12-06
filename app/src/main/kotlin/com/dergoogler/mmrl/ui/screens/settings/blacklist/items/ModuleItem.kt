@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.model.online.Blacklist
-import com.dergoogler.mmrl.ui.component.AntiFeaturesItem
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.MarkdownText
 import com.dergoogler.mmrl.ui.component.NavigationBarsSpacer
@@ -32,42 +31,42 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 
 @Composable
-fun ListScope.ModuleItem(
-    module: Blacklist,
-) {
+fun ListScope.ModuleItem(module: Blacklist) {
     var open by remember { mutableStateOf(false) }
     if (open) {
         BlacklistBottomSheet(
             module = module,
-            onClose = { open = false })
+            onClose = { open = false },
+        )
     }
 
     ButtonItem(
-        onClick = { open = true }
+        onClick = { open = true },
     ) {
         Title(module.id)
         Description(module.source)
     }
 }
 
-
 @Composable
 fun BlacklistBottomSheet(
-    module: Blacklist, onClose: () -> Unit,
+    module: Blacklist,
+    onClose: () -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
     val browser = LocalUriHandler.current
 
     Column(
         modifier = Modifier.padding(bottom = 18.dp),
     ) {
-
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Text(
-                style = MaterialTheme.typography.titleLarge, text = module.id
+                style = MaterialTheme.typography.titleLarge,
+                text = module.id,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -77,18 +76,19 @@ fun BlacklistBottomSheet(
                     Surface(
                         color = MaterialTheme.colorScheme.surface,
                         tonalElevation = 1.dp,
-                        shape = RoundedCornerShape(20.dp)
+                        shape = RoundedCornerShape(20.dp),
                     ) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
                         ) {
                             Text(
                                 text = stringResource(R.string.additional_notes),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(bottom = 4.dp)
+                                modifier = Modifier.padding(bottom = 4.dp),
                             )
                             MarkdownText(
                                 text = it,
@@ -102,22 +102,16 @@ fun BlacklistBottomSheet(
             }
         }
 
-
-//        module.antifeatures?.let {
-//            if (it.isNotEmpty()) {
-//                AntiFeaturesItem(antifeatures = it)
-//            }
-//        }
-
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
             onClick = {
                 browser.openUri(module.source)
-            }
+            },
         ) {
             Text(stringResource(R.string.open_source))
         }

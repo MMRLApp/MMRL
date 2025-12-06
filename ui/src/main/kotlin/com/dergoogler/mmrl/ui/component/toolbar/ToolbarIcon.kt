@@ -28,18 +28,19 @@ fun ToolbarIcon(
             modifier = Modifier.size(30.dp),
             painter = painterResource(id = icon),
             contentDescription = null,
-            tint = tint
+            tint = tint,
         )
     },
-    subtitle = subtitle.nullable {
-        {
-            Text(
-                text = it,
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = LocalContentColor.current.copy(alpha = 0.75f)
-            )
-        }
-    }
+    subtitle =
+        subtitle.nullable {
+            {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = LocalContentColor.current.copy(alpha = 0.75f),
+                )
+            }
+        },
 )

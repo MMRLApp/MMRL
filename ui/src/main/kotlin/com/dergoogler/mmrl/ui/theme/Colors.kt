@@ -33,11 +33,13 @@ sealed class Colors(
     val darkColorScheme: ColorScheme,
 ) {
     @RequiresApi(Build.VERSION_CODES.S)
-    class Dynamic(context: Context) : Colors(
-        id = id,
-        lightColorScheme = dynamicLightColorScheme(context),
-        darkColorScheme = dynamicDarkColorScheme(context)
-    ) {
+    class Dynamic(
+        context: Context,
+    ) : Colors(
+            id = id,
+            lightColorScheme = dynamicLightColorScheme(context),
+            darkColorScheme = dynamicDarkColorScheme(context),
+        ) {
         companion object {
             @Suppress("ConstPropertyName")
             const val id = -1
@@ -47,78 +49,79 @@ sealed class Colors(
     data object Pourville : Colors(
         id = 0,
         lightColorScheme = PourvilleLightScheme,
-        darkColorScheme = PourvilleDarkScheme
+        darkColorScheme = PourvilleDarkScheme,
     )
 
     data object SoleilLevant : Colors(
         id = 1,
         lightColorScheme = SoleilLevantLightScheme,
-        darkColorScheme = SoleilLevantDarkScheme
+        darkColorScheme = SoleilLevantDarkScheme,
     )
 
     data object Jeufosse : Colors(
         id = 2,
         lightColorScheme = JeufosseLightScheme,
-        darkColorScheme = JeufosseDarkScheme
+        darkColorScheme = JeufosseDarkScheme,
     )
 
     data object PoppyField : Colors(
         id = 3,
         lightColorScheme = PoppyFieldLightScheme,
-        darkColorScheme = PoppyFieldDarkScheme
+        darkColorScheme = PoppyFieldDarkScheme,
     )
 
     data object AlmondBlossom : Colors(
         id = 4,
         lightColorScheme = AlmondBlossomLightScheme,
-        darkColorScheme = AlmondBlossomDarkScheme
+        darkColorScheme = AlmondBlossomDarkScheme,
     )
 
     data object PlainAuvers : Colors(
         id = 5,
         lightColorScheme = PlainAuversLightScheme,
-        darkColorScheme = PlainAuversDarkScheme
+        darkColorScheme = PlainAuversDarkScheme,
     )
 
     data object WildRoses : Colors(
         id = 6,
         lightColorScheme = WildRosesLightScheme,
-        darkColorScheme = WildRosesDarkScheme
+        darkColorScheme = WildRosesDarkScheme,
     )
 
     data object MMRLBase : Colors(
         id = 7,
         lightColorScheme = MMRLBaseLightScheme,
-        darkColorScheme = MMRLBaseDarkScheme
+        darkColorScheme = MMRLBaseDarkScheme,
     )
 
     companion object {
         private val mColors
-            get() = listOf(
-                Pourville,
-                SoleilLevant,
-                Jeufosse,
-                PoppyField,
-                AlmondBlossom,
-                PlainAuvers,
-                WildRoses,
-                MMRLBase
-            )
+            get() =
+                listOf(
+                    Pourville,
+                    SoleilLevant,
+                    Jeufosse,
+                    PoppyField,
+                    AlmondBlossom,
+                    PlainAuvers,
+                    WildRoses,
+                    MMRLBase,
+                )
 
-        fun getColorIds(): List<Int> {
-            return mColors.map { it.id }
-        }
+        fun getColorIds(): List<Int> = mColors.map { it.id }
 
         @JvmStatic
-        fun Context.getThemeColor(id: Int): Colors {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && id == Dynamic.id) {
+        fun Context.getThemeColor(id: Int): Colors =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && id == Dynamic.id) {
                 Dynamic(this)
             } else {
                 mColors[id]
             }
-        }
 
-        fun Context.getColorScheme(id: Int, darkMode: Boolean): ColorScheme {
+        fun Context.getColorScheme(
+            id: Int,
+            darkMode: Boolean,
+        ): ColorScheme {
             val color = getThemeColor(id)
             return when {
                 darkMode -> color.darkColorScheme
@@ -133,7 +136,10 @@ sealed class Colors(
         }
 
         @Composable
-        fun getColor(id: Int, darkMode: Boolean = isSystemInDarkTheme()): ColorScheme {
+        fun getColor(
+            id: Int,
+            darkMode: Boolean = isSystemInDarkTheme(),
+        ): ColorScheme {
             val color = getColor(id)
             return when {
                 darkMode -> color.darkColorScheme
@@ -143,11 +149,10 @@ sealed class Colors(
     }
 }
 
-fun Color.darken(by: Float = 0.3f): Color {
-    return copy(
+fun Color.darken(by: Float = 0.3f): Color =
+    copy(
         red = red * by,
         green = green * by,
         blue = blue * by,
-        alpha = alpha
+        alpha = alpha,
     )
-}

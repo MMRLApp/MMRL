@@ -54,62 +54,69 @@ fun BlurSearchToolbar(
     fade = fade,
     fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
     fadeDistance = fadeDistance,
-    navigationIcon = if (onClose != null && isSearch) {
-        {
-            IconButton(
-                onClick = onClose
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.arrow_left),
-                    contentDescription = null
+    navigationIcon =
+        if (onClose != null && isSearch) {
+            {
+                IconButton(
+                    onClick = onClose,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.arrow_left),
+                        contentDescription = null,
+                    )
+                }
+            }
+        } else {
+            navigationIcon
+        },
+    title =
+        if (isSearch) {
+            {
+                val focusRequester = remember { FocusRequester() }
+                val keyboardController = LocalSoftwareKeyboardController.current
+
+                LaunchedEffect(focusRequester) {
+                    if (autoFocus) {
+                        focusRequester.requestFocus()
+                    }
+                    keyboardController?.show()
+                }
+
+                OutlinedTextField(
+                    modifier = Modifier.focusRequester(focusRequester),
+                    value = query,
+                    onValueChange = onQueryChange,
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Search,
+                        ),
+                    keyboardActions =
+                        KeyboardActions {
+                            defaultKeyboardAction(ImeAction.Search)
+                        },
+                    shape = RoundedCornerShape(15.dp),
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Transparent,
+                            unfocusedBorderColor = Color.Transparent,
+                        ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.search),
+                            contentDescription = null,
+                        )
+                    },
+                    placeholder = {
+                        Text(text = stringResource(id = R.string.search_placeholder))
+                    },
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.bodyLarge,
                 )
             }
-        }
-    } else navigationIcon,
-    title = if (isSearch) {
-        {
-            val focusRequester = remember { FocusRequester() }
-            val keyboardController = LocalSoftwareKeyboardController.current
-
-            LaunchedEffect(focusRequester) {
-                if (autoFocus) {
-                    focusRequester.requestFocus()
-                }
-                keyboardController?.show()
+        } else {
+            {
+                title()
             }
-
-            OutlinedTextField(
-                modifier = Modifier.focusRequester(focusRequester),
-                value = query,
-                onValueChange = onQueryChange,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Search
-                ),
-                keyboardActions = KeyboardActions {
-                    defaultKeyboardAction(ImeAction.Search)
-                },
-                shape = RoundedCornerShape(15.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.Transparent,
-                    unfocusedBorderColor = Color.Transparent
-                ),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.search),
-                        contentDescription = null
-                    )
-                },
-                placeholder = {
-                    Text(text = stringResource(id = R.string.search_placeholder))
-                },
-                singleLine = true,
-                textStyle = MaterialTheme.typography.bodyLarge
-            )
-        }
-    } else {
-        {
-            title()
-        }
-    }
+        },
 )

@@ -1,13 +1,11 @@
 package com.dergoogler.mmrl.ui.screens.moduleView.sections
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.ifNotEmpty
 import com.dergoogler.mmrl.ext.ifNotNullOrBlank
@@ -38,15 +36,16 @@ internal fun Information0() {
     val requires = LocalRequireModules.current
 
     List(
-        contentPadding = listItemContentPaddingValues
+        contentPadding = listItemContentPaddingValues,
     ) {
         CollapseItem(
             meta = { icon, rotation ->
                 Title(R.string.view_module_module_support)
                 Icon(
                     slot = ListItemSlot.End,
-                    modifier = Modifier
-                        .graphicsLayer(rotationZ = rotation),
+                    modifier =
+                        Modifier
+                            .graphicsLayer(rotationZ = rotation),
                     painter = painterResource(id = icon),
                 )
             },
@@ -56,7 +55,7 @@ internal fun Information0() {
                     contentPadding = subListItemContentPaddingValues,
                     onClick = {
                         browser.openUri(it)
-                    }
+                    },
                 ) {
                     Icon(painter = painterResource(id = R.drawable.currency_dollar))
                     Title(R.string.view_module_donate)
@@ -68,7 +67,7 @@ internal fun Information0() {
                 contentPadding = subListItemContentPaddingValues,
                 onClick = {
                     browser.openUri(module.track.source)
-                }
+                },
             ) {
                 Icon(painter = painterResource(id = R.drawable.brand_git))
                 Title(R.string.view_module_source)
@@ -79,7 +78,7 @@ internal fun Information0() {
                     contentPadding = subListItemContentPaddingValues,
                     onClick = {
                         browser.openUri(it)
-                    }
+                    },
                 ) {
                     Icon(painter = painterResource(id = R.drawable.world_www))
                     Title(R.string.view_module_homepage)
@@ -91,7 +90,7 @@ internal fun Information0() {
                     contentPadding = subListItemContentPaddingValues,
                     onClick = {
                         browser.openUri(it)
-                    }
+                    },
                 ) {
                     Icon(painter = painterResource(id = R.drawable.heart_handshake))
                     Title(R.string.view_module_support)
@@ -105,23 +104,25 @@ internal fun Information0() {
                     Title(R.string.view_module_permissions)
                     Icon(
                         slot = ListItemSlot.End,
-                        modifier = Modifier
-                            .graphicsLayer(rotationZ = rotation),
+                        modifier =
+                            Modifier
+                                .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
                     Labels {
                         LabelItem(
-                            text = stringResource(
-                                R.string.view_module_section_count,
-                                it.size
-                            )
+                            text =
+                                stringResource(
+                                    R.string.view_module_section_count,
+                                    it.size,
+                                ),
                         )
                     }
                 },
             ) {
                 PermissionItem(
                     contentPadding = subListItemContentPaddingValues,
-                    permissions = it
+                    permissions = it,
                 )
             }
         }
@@ -132,23 +133,25 @@ internal fun Information0() {
                     Title(R.string.view_module_antifeatures)
                     Icon(
                         slot = ListItemSlot.End,
-                        modifier = Modifier
-                            .graphicsLayer(rotationZ = rotation),
+                        modifier =
+                            Modifier
+                                .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
                     Labels {
                         LabelItem(
-                            text = stringResource(
-                                R.string.view_module_section_count,
-                                it.size
-                            )
+                            text =
+                                stringResource(
+                                    R.string.view_module_section_count,
+                                    it.size,
+                                ),
                         )
                     }
                 },
             ) {
                 AntiFeaturesItem(
                     contentPadding = subListItemContentPaddingValues,
-                    antifeatures = it
+                    antifeatures = it,
                 )
             }
         }
@@ -159,34 +162,26 @@ internal fun Information0() {
                     Title(R.string.view_module_dependencies)
                     Icon(
                         slot = ListItemSlot.End,
-                        modifier = Modifier
-                            .graphicsLayer(rotationZ = rotation),
+                        modifier =
+                            Modifier
+                                .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
                     Labels {
                         LabelItem(
-                            text = stringResource(
-                                R.string.view_module_section_count,
-                                requiredIds.size
-                            )
+                            text =
+                                stringResource(
+                                    R.string.view_module_section_count,
+                                    requiredIds.size,
+                                ),
                         )
                     }
                 },
             ) {
                 requiredIds.forEach { onlineModule ->
-                    // val parts = requiredId.split("@")
-
-                    // val id = parts[0]
-                    // val version = (parts.getOrElse(1) { "-1" }).toInt()
-
                     ButtonItem(
                         contentPadding = subListItemContentPaddingValues,
-                        onClick = {
-                            //                                navController.navigateSingleTopTo(
-//                                    ModuleViewModel.putModule(onlineModule, moduleArgs.url),
-//                                    launchSingleTop = false
-//                                )
-                        }
+                        onClick = {},
                     ) {
                         Title(onlineModule.name)
                         Description(onlineModule.versionCode.toString())
@@ -203,5 +198,4 @@ internal fun Information0() {
             OtherSourcesItem(viewModel.otherSources)
         }
     }
-
 }

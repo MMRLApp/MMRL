@@ -34,9 +34,7 @@ import com.dergoogler.mmrl.ui.remember.isLkmMode
 import com.dergoogler.mmrl.ui.remember.versionCode
 
 @Composable
-internal fun RootItem(
-    developerMode: Boolean = false,
-) {
+internal fun RootItem(developerMode: Boolean = false) {
     val userPreferences = LocalUserPreferences.current
 
     val manager =
@@ -47,115 +45,128 @@ internal fun RootItem(
     ) {
         developerMode.takeTrue {
             Surface(
-                shape = RoundedCornerShape(
-                    topEnd = 20.dp,
-                    bottomStart = 15.dp,
-                    bottomEnd = 0.dp
-                ),
+                shape =
+                    RoundedCornerShape(
+                        topEnd = 20.dp,
+                        bottomStart = 15.dp,
+                        bottomEnd = 0.dp,
+                    ),
                 color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .absolute(Alignment.TopEnd)
+                modifier =
+                    Modifier
+                        .absolute(Alignment.TopEnd),
             ) {
                 Text(
                     text = "USER!DEV",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                 )
             }
         }
 
         Row(
-            modifier = Modifier
-                .relative()
-                .padding(20.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .relative()
+                    .padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 modifier = Modifier.size(45.dp),
-                painter = painterResource(
-                    id = getManagerLogo(isAlive, manager)
-                ),
+                painter =
+                    painterResource(
+                        id = getManagerLogo(isAlive, manager),
+                    ),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
 
             Spacer(modifier = Modifier.width(16.dp))
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 TextRow(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
-                    leadingContent = (developerMode && platform.isKernelSuOrNext) nullable {
-                        LabelItem(
-                            text = when (isLkmMode) {
-                                null -> "LTS"
-                                true -> "LKM"
-                                else -> "GKI"
-                            }
-                        )
-                    },
-                ) {
-                    Text(
-                        text = if (isAlive) {
-                            stringResource(
-                                id = R.string.settings_root_access,
-                                stringResource(id = R.string.settings_root_granted)
-                            )
-                        } else {
-                            stringResource(
-                                id = R.string.settings_root_access,
-                                stringResource(id = R.string.settings_root_none)
+                    leadingContent =
+                        (developerMode && platform.isKernelSuOrNext) nullable {
+                            LabelItem(
+                                text =
+                                    when (isLkmMode) {
+                                        null -> "LTS"
+                                        true -> "LKM"
+                                        else -> "GKI"
+                                    },
                             )
                         },
+                ) {
+                    Text(
+                        text =
+                            if (isAlive) {
+                                stringResource(
+                                    id = R.string.settings_root_access,
+                                    stringResource(id = R.string.settings_root_granted),
+                                )
+                            } else {
+                                stringResource(
+                                    id = R.string.settings_root_access,
+                                    stringResource(id = R.string.settings_root_none),
+                                )
+                            },
                         style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 }
 
                 Text(
-                    text = if (isAlive) {
-                        stringResource(
-                            id = R.string.settings_root_provider, manager.name
-                        )
-                    } else {
-                        stringResource(
-                            id = R.string.settings_root_provider,
-                            stringResource(id = R.string.settings_root_not_available)
-                        )
-                    },
+                    text =
+                        if (isAlive) {
+                            stringResource(
+                                id = R.string.settings_root_provider,
+                                manager.name,
+                            )
+                        } else {
+                            stringResource(
+                                id = R.string.settings_root_provider,
+                                stringResource(id = R.string.settings_root_not_available),
+                            )
+                        },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
 
                 Text(
-                    text = if (isAlive) {
-                        stringResource(
-                            id = R.string.settings_root_version,
-                            versionCode
-                        )
-                    } else {
-                        stringResource(
-                            id = R.string.settings_root_version,
-                            stringResource(id = R.string.settings_root_none)
-                        )
-                    },
+                    text =
+                        if (isAlive) {
+                            stringResource(
+                                id = R.string.settings_root_version,
+                                versionCode,
+                            )
+                        } else {
+                            stringResource(
+                                id = R.string.settings_root_version,
+                                stringResource(id = R.string.settings_root_none),
+                            )
+                        },
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             }
         }
     }
 }
 
-private fun getManagerLogo(isAlive: Boolean, manager: FeaturedManager?): Int {
+private fun getManagerLogo(
+    isAlive: Boolean,
+    manager: FeaturedManager?,
+): Int {
     if (!isAlive) {
         return R.drawable.alert_circle_filled
     }
-
 
     if (manager == null) {
         return R.drawable.circle_check_filled
