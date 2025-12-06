@@ -18,8 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -134,17 +132,15 @@ internal fun Header() {
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         local.isValid {
-            val ops by remember(
+            val ops = remember(
                 userPreferences.useShellForModuleStateChange,
                 it,
                 it.state,
             ) {
-                derivedStateOf {
-                    viewModel.createModuleOps(
-                        userPreferences.useShellForModuleStateChange,
-                        it,
-                    )
-                }
+                viewModel.createModuleOps(
+                    userPreferences.useShellForModuleStateChange,
+                    it,
+                )
             }
 
             OutlinedButton(

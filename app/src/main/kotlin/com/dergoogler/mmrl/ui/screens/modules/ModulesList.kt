@@ -18,8 +18,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -120,42 +118,34 @@ private fun ModuleItem(
     val module = LocalModule.current
     val userPreferences = LocalUserPreferences.current
 
-    val ops by remember(userPreferences.useShellForModuleStateChange, module.state) {
-        derivedStateOf {
-            viewModel.createModuleOps(
-                userPreferences.useShellForModuleStateChange,
-                module,
-            )
-        }
+    val ops = remember(userPreferences.useShellForModuleStateChange, module.state) {
+        viewModel.createModuleOps(
+            userPreferences.useShellForModuleStateChange,
+            module,
+        )
     }
 
-    val blacklist by remember(module.id) {
-        derivedStateOf {
-            viewModel.getBlacklist(module.id.toString())
-        }
+    val blacklist = remember(module.id) {
+        viewModel.getBlacklist(module.id.toString())
     }
 
-    val isModuleSwitchChecked by remember(module.state) {
-        derivedStateOf { module.state == State.ENABLE }
+    val isModuleSwitchChecked = remember(module.state) {
+        module.state == State.ENABLE
     }
 
-    val isModuleEnabled by remember(module.state, isProviderAlive, viewModel.platform) {
-        derivedStateOf {
-            val enabled =
-                with(viewModel.platform) {
-                    when {
-                        isKernelSuNext || isKernelSU || isAPatch -> isProviderAlive && module.state != State.UPDATE
-                        else -> isProviderAlive
-                    }
+    val isModuleEnabled = remember(module.state, isProviderAlive, viewModel.platform) {
+        val enabled =
+            with(viewModel.platform) {
+                when {
+                    isKernelSuNext || isKernelSU || isAPatch -> isProviderAlive && module.state != State.UPDATE
+                    else -> isProviderAlive
                 }
-            enabled && module.state != State.REMOVE
-        }
+            }
+        enabled && module.state != State.REMOVE
     }
 
-    val isActionEnabled by remember(isProviderAlive, module.state) {
-        derivedStateOf {
-            isProviderAlive && module.state != State.REMOVE && module.state != State.DISABLE
-        }
+    val isActionEnabled = remember(isProviderAlive, module.state) {
+        isProviderAlive && module.state != State.REMOVE && module.state != State.DISABLE
     }
 
     val isBlacklisted by Blacklist.isBlacklisted(blacklist)
@@ -221,8 +211,8 @@ private fun ModuleItem(
         },
         trailingButton = {
             item?.let { itm ->
-                val hasUpdate by remember(itm, module.versionCode) {
-                    derivedStateOf { itm.versionCode > module.versionCode }
+                val hasUpdate = remember(itm, module.versionCode) {
+                    itm.versionCode > module.versionCode
                 }
 
                 UpdateButton(
@@ -233,18 +223,16 @@ private fun ModuleItem(
                 Spacer(modifier = Modifier.width(12.dp))
             }
 
-            val isRemoveOrRestoreEnabled by remember(
+            val isRemoveOrRestoreEnabled = remember(
                 userPreferences.useShellForModuleStateChange,
                 module.state,
                 isProviderAlive,
             ) {
-                derivedStateOf {
-                    isProviderAlive &&
-                        (
-                            !(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) ||
-                                module.state != State.REMOVE
-                        )
-                }
+                isProviderAlive &&
+                    (
+                        !(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) ||
+                            module.state != State.REMOVE
+                    )
             }
 
             RemoveOrRestore(
