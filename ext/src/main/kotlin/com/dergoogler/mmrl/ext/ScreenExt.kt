@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -21,6 +22,10 @@ data class ScreenWidth(
  * This function uses WindowMetrics API (API 30+) or display metrics to get accurate screen width
  * measurements that are not affected by custom DPI settings. This is more reliable than using
  * configuration.screenWidthDp directly, especially on devices with high DPI settings.
+ * 
+ * Note: This function requires an Activity context for accurate measurements. In non-Activity
+ * contexts (e.g., Compose Previews), it falls back to configuration.screenWidthDp which may
+ * be less accurate with custom DPI settings.
  * 
  * @return ScreenWidth data class with boolean flags for small/medium/large classifications
  */
@@ -42,14 +47,15 @@ fun currentScreenWidth(): ScreenWidth {
             with(density) { widthPixels.toDp() }
         } else {
             // Fallback for API 26-29: use display metrics
-            @Suppress("DEPRECATION")
-            val displayMetrics = DisplayMetrics()
+            // Remember the DisplayMetrics instance to avoid recreating on recomposition
+            val displayMetrics = remember { DisplayMetrics() }
             @Suppress("DEPRECATION")
             activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
             with(density) { displayMetrics.widthPixels.toDp() }
         }
     } else {
         // Fallback to configuration-based width when not in an Activity context
+        // This occurs in Compose Previews or other non-Activity contexts
         // Note: This may be less accurate with custom DPI settings
         configuration.screenWidthDp.dp
     }
