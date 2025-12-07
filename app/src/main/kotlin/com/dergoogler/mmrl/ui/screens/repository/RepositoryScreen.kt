@@ -94,7 +94,7 @@ fun RepositoryScreen(repo: Repo) =
         val hazeState = LocalHazeState.current
 
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-        
+
         // Use rememberSaveable to persist scroll position across navigation
         val listState = rememberSaveableLazyListState(key = "repository_${repo.url}")
 
@@ -105,6 +105,11 @@ fun RepositoryScreen(repo: Repo) =
 
         val modules = remember(list) { list.map { it.second } }
         val topCategories = remember(modules) { TopCategory.fromModuleList(modules) }
+        val metaModules = remember(modules) {
+            modules.filter {
+                it.permissions?.contains("kernelsu.permission.METAMODULE") == true
+            }
+        }
 
         var coverHeight by remember { mutableIntStateOf(0) }
         var cardHeight by remember { mutableIntStateOf(0) }
@@ -169,11 +174,15 @@ fun RepositoryScreen(repo: Repo) =
                                             .fadingEdge(
                                                 brush =
                                                     Brush.verticalGradient(
-                                                        colors = listOf(Color.Transparent, Color.Black),
+                                                        colors = listOf(
+                                                            Color.Transparent,
+                                                            Color.Black
+                                                        ),
                                                         startY = Float.POSITIVE_INFINITY,
                                                         endY = 0f,
                                                     ),
-                                            ).onGloballyPositioned { coordinates ->
+                                            )
+                                            .onGloballyPositioned { coordinates ->
                                                 coverHeight = coordinates.size.height
                                             },
                                     url = repo.cover ?: "ERROR ME",
@@ -212,7 +221,8 @@ fun RepositoryScreen(repo: Repo) =
                                                                 ),
                                                         ),
                                                     RoundedCornerShape(20.dp),
-                                                ).border(
+                                                )
+                                                .border(
                                                     Dp.Hairline,
                                                     MaterialTheme.colorScheme.outlineVariant,
                                                     RoundedCornerShape(20.dp),
@@ -239,11 +249,11 @@ fun RepositoryScreen(repo: Repo) =
                                             BBCodeText(
                                                 text =
                                                     (
-                                                        repo.description
-                                                            ?: stringResource(R.string.view_module_no_description)
-                                                    ).stripLinks(
-                                                        "<URL>",
-                                                    ),
+                                                            repo.description
+                                                                ?: stringResource(R.string.view_module_no_description)
+                                                            ).stripLinks(
+                                                            "<URL>",
+                                                        ),
                                                 style = MaterialTheme.typography.bodyMedium,
                                                 textAlign = TextAlign.Center,
                                                 color = MaterialTheme.colorScheme.outlineVariant,
@@ -296,6 +306,27 @@ fun RepositoryScreen(repo: Repo) =
                                     )
                                 },
                             )
+                        }
+
+                        if (!metaModules.isEmpty() && viewModel.platform.isKernelSuVariant) {
+                            item {
+                                val title = stringResource(R.string.meta_modules)
+
+                                TopPicks(
+                                    label = title,
+                                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
+                                    list = metaModules,
+                                    onMoreClick = {
+                                        navigator.navigate(
+                                            TypedModulesScreenDestination(
+                                                type = ModulesFilter.ALL,
+                                                title = title,
+                                                repo = repo,
+                                            ),
+                                        )
+                                    },
+                                )
+                            }
                         }
 
                         items(

@@ -1,5 +1,6 @@
 package com.dergoogler.mmrl.ui.screens.repository
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
+import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.ui.component.listItem.dsl.List
 import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
@@ -29,6 +31,7 @@ import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 @Composable
 fun TopPicks(
     label: String,
+    @DrawableRes icon: Int? = null,
     onMoreClick: () -> Unit,
     list: List<OnlineModule>,
 ) {
@@ -46,6 +49,12 @@ fun TopPicks(
         ButtonItem(
             onClick = onMoreClick,
         ) {
+            icon.nullable {
+                Icon(
+                    slot = ListItemSlot.Start,
+                    painter = painterResource(it),
+                )
+            }
             Title(label)
             Icon(
                 slot = ListItemSlot.End,

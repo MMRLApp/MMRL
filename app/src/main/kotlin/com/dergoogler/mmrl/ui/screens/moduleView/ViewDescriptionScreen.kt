@@ -1,6 +1,7 @@
 package com.dergoogler.mmrl.ui.screens.moduleView
 
 import android.annotation.SuppressLint
+import android.view.View
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -124,30 +125,34 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                         handlers =
                                             listOf(
                                                 "/internal/" to
-                                                    internalPathHandler(
-                                                        options,
-                                                        Insets(
-                                                            top =
-                                                                with(density) {
-                                                                    val pad = innerPadding.calculateTopPadding()
-                                                                    val px = with(density) { pad.toPx() }.toInt()
-                                                                    (px / this.density).toInt()
-                                                                },
-                                                            bottom =
-                                                                with(density) {
-                                                                    val pad =
-                                                                        bottomBarPaddingValues.calculateBottomPadding()
-                                                                    val px = with(density) { pad.toPx() }.toInt()
-                                                                    (px / this.density).toInt()
-                                                                },
-                                                            left = 0,
-                                                            right = 0,
+                                                        internalPathHandler(
+                                                            options,
+                                                            Insets(
+                                                                top =
+                                                                    with(density) {
+                                                                        val pad =
+                                                                            innerPadding.calculateTopPadding()
+                                                                        val px =
+                                                                            with(density) { pad.toPx() }.toInt()
+                                                                        (px / this.density).toInt()
+                                                                    },
+                                                                bottom =
+                                                                    with(density) {
+                                                                        val pad =
+                                                                            bottomBarPaddingValues.calculateBottomPadding()
+                                                                        val px =
+                                                                            with(density) { pad.toPx() }.toInt()
+                                                                        (px / this.density).toInt()
+                                                                    },
+                                                                left = 0,
+                                                                right = 0,
+                                                            ),
                                                         ),
-                                                    ),
                                             ),
                                     )
 
                                 WebUIView(options).apply {
+                                    setLayerType(View.LAYER_TYPE_SOFTWARE, null)
                                     webViewClient = WXClient(options, assetsLoader)
                                 }
                             },
@@ -155,7 +160,7 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                 // Remove the interface if it already exists to prevent crashes
                                 // when the screen is reopened (e.g., after navigating back)
                                 webView.removeJavascriptInterface(MarkdownInterface.INTERFACE_NAME)
-                                
+
                                 webView.addJavascriptInterface<MarkdownInterface>(
                                     arrayOf(readme),
                                     arrayOf(String::class.java),

@@ -19,6 +19,7 @@ sealed class PlatformType(
     open val MINIMAL_SUPPORTED_SU_COMPAT: Int = -1
     open val MINIMAL_SUPPORTED_KERNEL_LKM: Int = -1
     open val MINIMAL_SUPPORTED_KERNEL: Int = -1
+    open val MINIMAL_SUPPORTED_METAMODULES_KERNEL: Int = -1
 
     // KernelSU Next
     open val MINIMAL_SUPPORTED_HOOK_MODE = -1
