@@ -193,7 +193,6 @@ dependencies {
 
     implementation(libs.kotlin.stdlib)
 
-    implementation(libs.hiddenApiBypass)
     // implementation(libs.timber)
     implementation(libs.arbor.jvm)
     implementation(libs.arbor.android)
@@ -205,7 +204,6 @@ dependencies {
     implementation(libs.libsu.service)
     implementation(libs.libsu.io)
 
-    implementation(libs.rikka.refine.runtime)
     implementation(libs.rikka.shizuku.api)
     implementation(libs.rikka.shizuku.provider)
 

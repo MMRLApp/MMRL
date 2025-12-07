@@ -24,7 +24,6 @@ androidxRoom = "2.7.2"
 browser = "1.8.0"
 coilCompose = "2.7.0"
 composeMarkdown = "0.5.4"
-hiddenApiRefine = "4.4.0"
 hilt = "2.51.1"
 kotlin = "2.0.0"
 kotlinReflect = "1.9.24"
@@ -115,9 +114,6 @@ multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-mark
 process-phoenix = { module = "com.jakewharton:process-phoenix", version.ref = "processPhoenix" }
 protobuf-kotlin-lite = { group = "com.google.protobuf", name = "protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
-rikka-refine-annotation = { module = "dev.rikka.tools.refine:annotation", version.ref = "hiddenApiRefine" }
-rikka-refine-compiler = { module = "dev.rikka.tools.refine:annotation-processor", version.ref = "hiddenApiRefine" }
-rikka-refine-runtime = { module = "dev.rikka.tools.refine:runtime", version.ref = "hiddenApiRefine" }
 rikka-shizuku-api = { module = "dev.rikka.shizuku:api", version.ref = "shizuku" }
 rikka-shizuku-provider = { module = "dev.rikka.shizuku:provider", version.ref = "shizuku" }
 semver = { module = "io.github.z4kn4fein:semver", version.ref = "semver" }
@@ -133,7 +129,6 @@ square-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin-codeg
 dev-rikka-rikkax-parcelablelist = { module = "dev.rikka.rikkax.parcelablelist:parcelablelist", version.ref = "parcelablelist" }
 
 markwon-core = "io.noties.markwon:core:4.6.2"
-hiddenApiBypass = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
 timber = "com.jakewharton.timber:timber:5.0.1"
 
 # Dependencies of the included build-logic
@@ -161,7 +156,6 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-rikka-refine = { id = "dev.rikka.tools.refine", version.ref = "hiddenApiRefine" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 

@@ -19,8 +19,6 @@ class App : Application() {
         super.onCreate()
         app = this
 
-        PlatformManager.setHiddenApiExemptions()
-
         NotificationUtils.init(this)
         NetworkUtils.setCacheDir(cacheDir)
     }

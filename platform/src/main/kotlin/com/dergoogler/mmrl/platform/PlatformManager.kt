@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
-import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.io.FileDescriptor
 import kotlin.coroutines.resumeWithException
 
@@ -521,37 +520,6 @@ object PlatformManager {
             } else {
                 fallback
             }
-        }
-
-    /**
-     * Sets Hidden API exemptions using [HiddenApiBypass.addHiddenApiExemptions].
-     *
-     * This function attempts to bypass Android's restrictions on accessing non-SDK interfaces (hidden APIs)
-     * by adding the specified signature prefixes to an exemption list. This is primarily useful on
-     * Android P (API level 28) and above, where these restrictions are enforced more strictly.
-     *
-     * On SDK versions below P, this function does nothing and returns `true` as exemptions are not needed.
-     *
-     * @param signaturePrefixes A vararg array of strings, where each string is a prefix of a hidden API
-     *                          signature to be exempted. For example, "Landroid/app/ActivityThread;"
-     *                          would exempt all members of the `ActivityThread` class. If no prefixes
-     *                          are provided (i.e., an empty array or `arrayOf("")`), it might attempt
-     *                          to exempt all hidden APIs, depending on the `HiddenApiBypass` library's
-     *                          behavior.
-     * @return `true` if the exemptions were successfully added (or not needed for the current SDK version),
-     *         `false` otherwise (e.g., if `HiddenApiBypass.addHiddenApiExemptions` returns `false`).
-     * @see HiddenApiBypass.addHiddenApiExemptions
-     */
-    fun setHiddenApiExemptions(vararg signaturePrefixes: String = arrayOf("")): Boolean =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Log.d(
-                TAG,
-                "Setting Hidden API exemptions with prefixes: ${signaturePrefixes.joinToString()}",
-            )
-            HiddenApiBypass.addHiddenApiExemptions(*signaturePrefixes)
-        } else {
-            Log.d(TAG, "Hidden API exemptions not needed on SDK < P.")
-            true
         }
 
     fun <T : IBinder> T.proxyBy(service: IServiceManager): IBinder =
