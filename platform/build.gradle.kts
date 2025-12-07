@@ -1,3 +1,5 @@
+import java.security.SecureRandom
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -6,6 +8,9 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
 }
+
+val ksuLibName = "mmrl-kernelsu"
+val ksuLibNameSpoofed = generateRandomName(10, 20)
 
 android {
     namespace = "com.dergoogler.mmrl.platform"
@@ -23,7 +28,11 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments += listOf("-DANDROID_STL=c++_static", "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
+                arguments += listOf(
+                    "-DANDROID_STL=c++_static",
+                    "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
+                    "-DKSU_LIB_NAME=$ksuLibNameSpoofed"
+                )
             }
         }
         val aidlDir = file("src/main/aidl")
@@ -55,9 +64,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+        all {
+            buildConfigField("String", "KSU_LIB_NAME", "\"$ksuLibNameSpoofed\"")
+        }
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
         aidl = true
     }
@@ -86,4 +100,16 @@ dependencies {
     implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
+}
+
+fun generateRandomName(
+    minLength: Int = 5,
+    maxLength: Int = 12,
+): String {
+    val chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    val random = SecureRandom()
+    val length = random.nextInt(maxLength - minLength + 1) + minLength
+    return (1..length)
+        .map { chars[random.nextInt(chars.length)] }
+        .joinToString("")
 }
