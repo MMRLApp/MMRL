@@ -77,8 +77,13 @@ class HiddenUserManager(
         enabledOnly: Boolean,
     ): IntArray =
         try {
-            userManager.getProfileIds(userId, enabledOnly)
-        } catch (e: RemoteException) {
+            userManager::class.java
+                .getMethod(
+                    "getProfileIds",
+                    Int::class.javaPrimitiveType,
+                    Boolean::class.javaPrimitiveType,
+                ).invoke(userManager, userId, enabledOnly) as IntArray
+        } catch (e: Exception) {
             Log.w("HiddenUserManager", "Error getting profile ids.", e)
             IntArray(0)
         }
@@ -96,11 +101,19 @@ class HiddenUserManager(
         userId: Int,
         enabledOnly: Boolean,
     ): List<UserHandle> {
-        val userIds: IntArray = userManager.getProfileIds(userId, enabledOnly)
+        val userIds: IntArray = getProfileIds(userId, enabledOnly)
         return convertUserIdsToUserHandles(userIds)
     }
 
-    fun getUserInfo(userId: Int): UserInfo = userManager.getUserInfo(userId)
+    fun getUserInfo(userId: Int): UserInfo =
+        try {
+            userManager::class.java
+                .getMethod("getUserInfo", Int::class.javaPrimitiveType)
+                .invoke(userManager, userId) as UserInfo
+        } catch (e: Exception) {
+            Log.e("HiddenUserManager", "Error getting user info for userId: $userId", e)
+            throw e
+        }
 
     fun getUserId(uid: Int): Int = uid / PER_USER_RANGE
 
