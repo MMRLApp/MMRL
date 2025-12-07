@@ -123,8 +123,6 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                     webView.loadUrl("about:blank")
                                     webView.destroy()
                                 }
-                                webViewRef = null
-                                hasLoadedUrl = false
                             }
                         }
                         
@@ -171,7 +169,7 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                 }
                             },
                             update = { webView ->
-                                if (!hasLoadedUrl && readme.isNotEmpty()) {
+                                if (!hasLoadedUrl) {
                                     // Remove the interface if it already exists to prevent crashes
                                     // when the screen is reopened (e.g., after navigating back)
                                     webView.removeJavascriptInterface(MarkdownInterface.INTERFACE_NAME)
