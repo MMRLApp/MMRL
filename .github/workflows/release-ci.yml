@@ -1,6 +1,7 @@
 name: Release CI
 
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       send_telegram:
@@ -121,6 +122,7 @@ jobs:
           track: ${{ github.event.inputs.playstore_track }}
           status: completed
           inAppUpdatePriority: 5
+
 
 
 
