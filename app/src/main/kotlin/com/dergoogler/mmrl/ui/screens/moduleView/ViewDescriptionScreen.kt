@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -110,6 +111,23 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                     exit = fadeOut(),
                 ) {
                     this@Scaffold.ResponsiveContent {
+                        var webViewRef by remember { mutableStateOf<WebUIView?>(null) }
+                        var hasLoadedUrl by remember { mutableStateOf(false) }
+                        
+                        DisposableEffect(Unit) {
+                            onDispose {
+                                // Properly clean up the WebView when leaving composition
+                                webViewRef?.let { webView ->
+                                    webView.removeJavascriptInterface(MarkdownInterface.INTERFACE_NAME)
+                                    webView.stopLoading()
+                                    webView.loadUrl("about:blank")
+                                    webView.destroy()
+                                }
+                                webViewRef = null
+                                hasLoadedUrl = false
+                            }
+                        }
+                        
                         AndroidView(
                             factory = { context ->
                                 val options =
@@ -149,19 +167,23 @@ fun ViewDescriptionScreen(readmeUrl: String) =
 
                                 WebUIView(options).apply {
                                     webViewClient = WXClient(options, assetsLoader)
+                                    webViewRef = this
                                 }
                             },
                             update = { webView ->
-                                // Remove the interface if it already exists to prevent crashes
-                                // when the screen is reopened (e.g., after navigating back)
-                                webView.removeJavascriptInterface(MarkdownInterface.INTERFACE_NAME)
-                                
-                                webView.addJavascriptInterface<MarkdownInterface>(
-                                    arrayOf(readme),
-                                    arrayOf(String::class.java),
-                                )
+                                if (!hasLoadedUrl && readme.isNotEmpty()) {
+                                    // Remove the interface if it already exists to prevent crashes
+                                    // when the screen is reopened (e.g., after navigating back)
+                                    webView.removeJavascriptInterface(MarkdownInterface.INTERFACE_NAME)
+                                    
+                                    webView.addJavascriptInterface<MarkdownInterface>(
+                                        arrayOf(readme),
+                                        arrayOf(String::class.java),
+                                    )
 
-                                webView.loadUrl(launchUrl)
+                                    webView.loadUrl(launchUrl)
+                                    hasLoadedUrl = true
+                                }
                             },
                         )
                     }
