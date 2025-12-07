@@ -93,7 +93,7 @@ class SuperUserViewModel
                 .launchIn(viewModelScope)
         }
 
-        private val comparator =
+    private val comparator get() =
             compareBy<AppInfo> {
                 when {
                     it.profile != null && it.profile.allowSu -> 0
