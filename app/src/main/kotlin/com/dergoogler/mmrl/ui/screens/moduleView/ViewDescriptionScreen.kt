@@ -100,7 +100,7 @@ fun ViewDescriptionScreen(readmeUrl: String) = LocalScreenProvider {
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                MarkdownWebView(readme, userPrefs, innerPadding, bottomBarPaddingValues)
+                MarkdownWebView(readme, innerPadding)
             }
         }
     }
