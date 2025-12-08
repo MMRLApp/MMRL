@@ -415,7 +415,7 @@
     <string name="menu_show_category">Mostrar categoría</string>
     <string name="settings_enable_blur">Habilitar desenfoque</string>
     <string name="settings_enable_blur_desc">Habilitar efecto de desenfoque en componentes</string>
-    <string name="settings_hide_bottom_bar_labels">Ocultar etiquetas en barra inferior</string>
+    <string name="settings_hide_bottom_bar_labels">Ocultar etiquetas en la barra inferior</string>
     <string name="failed_to_update_app_profile">Error al actualizar el perfil de la aplicación %s</string>
     <string name="failed_to_update_sepolicy">Error al actualizar reglas SELinux de %s</string>
     <string name="su_not_allowed">Error al otorgar acceso de superusuario a %s</string>
@@ -444,4 +444,5 @@
     <string name="profile_namespace_individual">Individual</string>
     <string name="empty">Vacío</string>
     <string name="settings_disable_su">Desabilitar compatibilidad con su</string>
+    <string name="meta_modules">Metamódulos</string>
 </resources>
