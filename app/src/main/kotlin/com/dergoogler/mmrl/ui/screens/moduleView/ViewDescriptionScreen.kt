@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dergoogler.mmrl.R
+import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.app.Event.Companion.isFailed
 import com.dergoogler.mmrl.app.Event.Companion.isLoading
 import com.dergoogler.mmrl.app.Event.Companion.isSucceeded
@@ -187,7 +188,6 @@ private fun MarkdownWebView(
             (webView.parent as? ViewGroup)?.removeView(webView)
             webView.apply {
                 stopLoading()
-                webViewClient = null
                 removeAllViews()
                 destroy()
             }
