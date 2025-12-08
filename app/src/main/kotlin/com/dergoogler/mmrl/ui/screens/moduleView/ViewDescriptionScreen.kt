@@ -127,39 +127,57 @@ private fun TopBar(
 @Composable
 private fun MarkdownWebView(
     readme: String,
-    userPrefs: LocalUserPreferences,
-    innerPadding: androidx.compose.foundation.layout.PaddingValues,
-    bottomBarPaddingValues: androidx.compose.foundation.layout.PaddingValues
+    innerPadding: androidx.compose.foundation.layout.PaddingValues
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
-
+    val userPrefs = LocalUserPreferences.current
+    val bottomBarPaddingValues = LocalMainScreenInnerPaddings.current
+    
     val webView = remember {
-        WebUIView(
-            WebUIOptions(
-                context = context,
-                isDarkMode = userPrefs.isDarkMode(),
-                colorScheme = userPrefs.colorScheme(context)
-            )
-        ).apply {
-            setLayerType(View.LAYER_TYPE_HARDWARE, null)
-            webViewClient = WXClient(
-                options = WebUIOptions(context, userPrefs.isDarkMode(), userPrefs.colorScheme(context)),
-                loader = wxAssetLoader(
-                    listOf(
-                        "/internal/" to internalPathHandler(
-                            options = WebUIOptions(context, userPrefs.isDarkMode(), userPrefs.colorScheme(context)),
-                            insets = Insets(
-                                top = with(density) { innerPadding.calculateTopPadding().toPx().toInt() },
-                                bottom = with(density) { bottomBarPaddingValues.calculateBottomPadding().toPx().toInt() },
-                                left = 0,
-                                right = 0
-                            )
-                        )
-                    )
-                )
-            )
-        }
+       val options =
+                                    WebUIOptions(
+                                        context = context,
+                                        isDarkMode = userPrefs.isDarkMode(),
+                                        colorScheme = userPrefs.colorScheme(context),
+                                    )
+
+                                val assetsLoader =
+                                    wxAssetLoader(
+                                        handlers =
+                                            listOf(
+                                                "/internal/" to
+                                                        internalPathHandler(
+                                                            options,
+                                                            Insets(
+                                                                top =
+                                                                    with(density) {
+                                                                        val pad =
+                                                                            innerPadding.calculateTopPadding()
+                                                                        val px =
+                                                                            with(density) { pad.toPx() }.toInt()
+                                                                        (px / this.density).toInt()
+                                                                    },
+                                                                bottom =
+                                                                    with(density) {
+                                                                        val pad =
+                                                                            bottomBarPaddingValues.calculateBottomPadding()
+                                                                        val px =
+                                                                            with(density) { pad.toPx() }.toInt()
+                                                                        (px / this.density).toInt()
+                                                                    },
+                                                                left = 0,
+                                                                right = 0,
+                                                            ),
+                                                        ),
+                                            ),
+                                    )
+
+                                WebUIView(options).apply {
+                                    setBackgroundColor(0)
+                                    //setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+                                    webViewClient = WXClient(options, assetsLoader)
+                                }
     }
 
     DisposableEffect(webView) {
@@ -176,5 +194,5 @@ private fun MarkdownWebView(
         }
     }
 
-    AndroidView(factory = { webView }, modifier = Modifier.fillMaxSize())
+    AndroidView(factory = { webView })
 }
