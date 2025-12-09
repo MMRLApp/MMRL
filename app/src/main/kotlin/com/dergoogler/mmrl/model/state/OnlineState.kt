@@ -32,7 +32,7 @@ data class OnlineState(
                 installed = installed,
                 updatable = updatable,
                 hasLicense = license.orEmpty().isNotBlank(),
-                lastUpdated = versions.lastOrNull()?.timestamp ?: 0f,
+                lastUpdated = versions.firstOrNull()?.timestamp ?: 0f,
             )
         }
 
