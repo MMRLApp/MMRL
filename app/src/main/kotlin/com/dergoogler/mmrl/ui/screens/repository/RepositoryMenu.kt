@@ -199,6 +199,13 @@ private fun MenuBottomSheet(
                 onClick = { setMenu(menu.copy(showUpdatedTime = !menu.showUpdatedTime)) },
                 label = { Text(text = stringResource(id = R.string.menu_show_updated)) },
             )
+
+            MenuChip(
+                enabled = menu.showUpdatedTime,
+                selected = menu.showStars,
+                onClick = { setMenu(menu.copy(showStars = !menu.showStars)) },
+                label = { Text(text = stringResource(id = R.string.menu_show_stars)) },
+            )
         }
     }
 }

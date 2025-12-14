@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.Placeholder
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
 import androidx.core.graphics.toColorInt
 import com.dergoogler.mmrl.ext.nullable
+import com.dergoogler.mmrl.ui.component.ProvideContentColorTextStyle
 import java.util.Stack
 
 /**
@@ -149,13 +151,15 @@ fun BBCodeText(
 
     var layoutResult: TextLayoutResult? by remember { mutableStateOf(null) }
 
-    val (bbText, inline) = text.toStyleMarkup(disabledTags, iconContent, imageContent)
+    val (bbText, inline) = text.toStyleMarkup(style, color, disabledTags, iconContent, imageContent)
 
     val string =
         buildAnnotatedString {
             if (prefix != null) {
                 val (prefix, prefixInlineContent) =
                     prefix.toStyleMarkup(
+                        textStyle = style,
+                        color = color,
                         iconContent = iconContent,
                         imageContent = imageContent,
                     )
@@ -174,6 +178,8 @@ fun BBCodeText(
             if (suffix != null) {
                 val (suffix, suffixInlineContent) =
                     suffix.toStyleMarkup(
+                        textStyle = style,
+                        color = color,
                         iconContent = iconContent,
                         imageContent = imageContent,
                     )
@@ -249,6 +255,8 @@ private data class StyleState(
 
 @Composable
 private fun String.toStyleMarkup(
+    textStyle: TextStyle,
+    color: Color,
     disabledTags: Set<BBCodeTag> = emptySet(),
     iconContent: (@Composable (String) -> Unit)? = null,
     imageContent: (@Composable (String) -> Unit)? = null,
@@ -308,16 +316,24 @@ private fun String.toStyleMarkup(
                         val iconId = "inlineIcon_${iconCounter++}"
                         appendInlineContent(iconId, "[$value]")
 
+                        val density = LocalDensity.current
+                        val iconSize = with(density) { (textStyle.fontSize.toDp() * 1.0f).toSp() }
+
                         inlineContent[iconId] =
                             InlineTextContent(
                                 Placeholder(
-                                    width = LocalTextStyle.current.fontSize,
-                                    height = LocalTextStyle.current.fontSize,
+                                    width = iconSize,
+                                    height = iconSize,
                                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
                                 ),
                             ) {
                                 runCatching {
-                                    iconContent(value)
+                                    ProvideContentColorTextStyle(
+                                        contentColor = color,
+                                        textStyle = textStyle,
+                                    ) {
+                                        iconContent(value)
+                                    }
                                 }
                             }
                     }

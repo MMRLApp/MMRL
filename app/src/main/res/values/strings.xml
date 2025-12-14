@@ -238,6 +238,7 @@
     <string name="menu_pin_action">Pin Action</string>
     <string name="menu_pin_webui">Pin WebUI</string>
     <string name="menu_show_updated">Show Updated Time</string>
+    <string name="menu_show_stars">Show Stars</string>
     <string name="menu_show_antifeatures">Show Anti-Features</string>
     <string name="menu_show_category">Show Category</string>
     <string name="menu_export_modules_as_text">Export Modules as Text</string>

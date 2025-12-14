@@ -20,4 +20,5 @@ data class RepositoryMenu
         @ProtoNumber(10) val showAntiFeatures: Boolean = true,
         @ProtoNumber(11) val repoListMode: RepoListMode = RepoListMode.Detailed,
         @ProtoNumber(12) val showCategory: Boolean = true,
+        @ProtoNumber(13) val showStars: Boolean = true,
     )
