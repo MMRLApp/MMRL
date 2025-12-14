@@ -92,18 +92,37 @@ fun LabelItem(
             }
         }
 
+    val decoratedTextContent: @Composable (() -> Unit) = {
+        Box(
+            modifier =
+                Modifier.iconSize(
+                    density = density,
+                    textStyle = style.textStyle,
+                    scaling = TextWIthIconIconScaling,
+                ),
+        ) {
+            ProvideContentColorTextStyle(
+                textStyle = style.textStyle,
+                contentColor = style.contentColor,
+            ) {
+                text()
+            }
+        }
+    }
+
     TextRow(
         modifier =
             Modifier
                 .background(
                     color = style.containerColor,
                     shape = style.shape,
-                ).padding(horizontal = 4.dp)
+                )
+                .padding(horizontal = 4.dp)
                 .then(modifier),
         contentPadding = PaddingValues(start = 2.dp, end = 2.dp),
         horizontalArrangement = Arrangement.Center,
         leadingContent = decoratedIconContent,
-        content = text,
+        content = decoratedTextContent,
     )
 }
 
@@ -143,8 +162,7 @@ fun LabelItem(
                     when {
                         upperCase -> text.toUpperCase(Locale.current)
                         else -> text
-                    },
-                style = style.textStyle.copy(color = style.contentColor),
+                    }
             )
         },
         icon =

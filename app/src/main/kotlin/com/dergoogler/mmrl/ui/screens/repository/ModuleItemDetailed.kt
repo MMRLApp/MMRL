@@ -41,6 +41,7 @@ enum class LabelType {
     ANTIFEATURES,
     CATEGORY,
     UPDATABLE,
+    STARS
 }
 
 @Composable
@@ -185,6 +186,18 @@ fun ModuleItemDetailed(
                 ) {
                     labelsToShow.forEach { labelType ->
                         when (labelType) {
+                            LabelType.STARS ->
+                                module.stars.nullable {
+                                    LabelItem(
+                                        icon = R.drawable.star,
+                                        text = it.toString(),
+                                        style =
+                                            LabelItemDefaults.style.copy(
+                                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                            ),
+                                    )
+                                }
                             LabelType.CATEGORY ->
                                 module.categories
                                     ?.firstOrNull()

@@ -60,5 +60,7 @@ dependencies {
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
 
+    implementation(libs.kotlinx.datetime)
+
     implementation(kotlin("reflect"))
 }
