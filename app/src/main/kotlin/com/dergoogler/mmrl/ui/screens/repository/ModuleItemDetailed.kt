@@ -68,6 +68,7 @@ fun ModuleItemDetailed(
     if (showInstalledLabel) labelsToShow.addIfNotThere(LabelType.INSTALLED)
     if (showAntifeaturesLabel) labelsToShow.addIfNotThere(LabelType.ANTIFEATURES)
     if (showCategoryLabel) labelsToShow.addIfNotThere(LabelType.CATEGORY)
+    if (module.stars != null) labelsToShow.addIfNotThere(LabelType.STARS)
     if (state.updatable) labelsToShow.addIfNotThere(LabelType.UPDATABLE)
 
     val hasLabel = labelsToShow.isNotEmpty()

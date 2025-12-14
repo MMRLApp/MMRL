@@ -32,6 +32,7 @@ data class OnlineModuleEntity(
     val devices: List<String>? = null,
     val arch: List<String>? = null,
     val permissions: List<String>? = null,
+    val stars: Int? = null,
     @Embedded val manager: ModuleManagerEntity? = null,
     @Embedded val root: ModuleRootEntity? = null,
     @Embedded val note: ModuleNoteEntity? = null,
@@ -74,6 +75,7 @@ data class OnlineModuleEntity(
         devices = original.devices,
         arch = original.arch,
         blacklist = BlacklistEntity(blacklist),
+        stars = original.stars
     )
 
     fun toModule(versions: List<VersionItem> = emptyList()) =
@@ -109,5 +111,6 @@ data class OnlineModuleEntity(
             devices = devices,
             arch = arch,
             blacklist = blacklist?.toBlacklist(),
+            stars = stars
         )
 }

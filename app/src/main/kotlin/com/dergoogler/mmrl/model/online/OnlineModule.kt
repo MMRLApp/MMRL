@@ -11,11 +11,12 @@ import com.dergoogler.mmrl.utils.Utils
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 @JsonClass(generateAdapter = true)
 data class OnlineModule(
-    @Json(ignore = true) val repoUrl: String = "",
+    @param:Json(ignore = true) val repoUrl: String = "",
     val id: String,
     val name: String,
     val version: String,
