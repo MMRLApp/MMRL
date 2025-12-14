@@ -9,9 +9,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-val ksuLibName = "mmrl-kernelsu"
-val ksuLibNameSpoofed = generateRandomName(10, 20)
-
 android {
     namespace = "com.dergoogler.mmrl.platform"
     compileSdk = 36
@@ -31,7 +28,6 @@ android {
                 arguments += listOf(
                     "-DANDROID_STL=c++_static",
                     "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                    "-DKSU_LIB_NAME=$ksuLibNameSpoofed"
                 )
             }
         }
@@ -63,10 +59,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-
-        all {
-            buildConfigField("String", "KSU_LIB_NAME", "\"$ksuLibNameSpoofed\"")
         }
     }
 

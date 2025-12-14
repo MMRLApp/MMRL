@@ -24,7 +24,7 @@ add_library(mmrl-file-manager SHARED
 target_link_libraries(mmrl-file-manager ${log-lib})
 target_link_options(mmrl-file-manager PRIVATE "-Wl,-z,max-page-size=${MMRL_PAGE_SIZE}")
 
-add_library(${KSU_LIB_NAME} SHARED
+add_library(mmrl-kernelsu SHARED
         kernelsu/ksu.cpp
         kernelsu/ksun.cpp
         kernelsu/sukisu.cpp
@@ -32,5 +32,5 @@ add_library(${KSU_LIB_NAME} SHARED
         include/kernelsu/ksu.hpp
         include/logging.hpp
 )
-target_link_libraries(${KSU_LIB_NAME} ${log-lib})
-target_link_options(${KSU_LIB_NAME} PRIVATE "-Wl,-z,max-page-size=${MMRL_PAGE_SIZE}")
+target_link_libraries(mmrl-kernelsu ${log-lib})
+target_link_options(mmrl-kernelsu PRIVATE "-Wl,-z,max-page-size=${MMRL_PAGE_SIZE}")

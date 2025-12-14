@@ -3,7 +3,6 @@
 package com.dergoogler.mmrl.platform.ksu
 
 import com.dergoogler.mmrl.platform.AtomicStatement
-import com.dergoogler.mmrl.platform.BuildConfig
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.platform.PlatformType
 
@@ -33,7 +32,7 @@ object KsuNative {
     const val ROOT_GID = 0
 
     init {
-        System.loadLibrary(BuildConfig.KSU_LIB_NAME)
+        System.loadLibrary("mmrl-kernelsu")
     }
 
     external fun grantRoot(): Boolean
