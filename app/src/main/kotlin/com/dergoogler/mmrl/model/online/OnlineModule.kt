@@ -23,6 +23,7 @@ data class OnlineModule(
     val author: String,
     val description: String? = null,
     val track: TrackJson,
+    val stars: Int? = null,
     val versions: List<VersionItem>,
     val maxApi: Int? = null,
     val minApi: Int? = null,
