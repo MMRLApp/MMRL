@@ -445,4 +445,5 @@
     <string name="empty">Vacío</string>
     <string name="settings_disable_su">Desabilitar compatibilidad con su</string>
     <string name="meta_modules">Metamódulos</string>
+    <string name="menu_show_stars">Mostrar estrellas</string>
 </resources>
