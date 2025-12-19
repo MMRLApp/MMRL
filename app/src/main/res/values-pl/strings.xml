@@ -446,4 +446,5 @@
     <string name="settings_disable_su">Wyłącz kompatybilność su</string>
     <string name="settings_disable_su_desc">Tymczasowo wyłącz możliwość uzyskania uprawnień roota przez dowolną aplikację za pomocą polecenia ⁠su (istniejące procesy roota nie zostaną naruszone).</string>
     <string name="meta_modules">Moduły meta</string>
+    <string name="menu_show_stars">Pokaż gwiazdki</string>
 </resources>
