@@ -5,7 +5,7 @@
 ![Google Play Release](https://img.shields.io/endpoint?url=https%3A%2F%2Fplay.cuzi.workers.dev%2Fplay%3Fi%3Dcom.dergoogler.mmrl%26l%3DInstalls%26m%3D%24shortinstalls&label=Google%20Play&color=red)
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/MMRLApp/MMRL/total?label=GitHub%20Downloads)
 
-A app for managing, sharing, and exploring Magisk modules across repositories.
+An app for managing, sharing, and exploring Magisk modules across repositories.
 
 ## Features
 
