@@ -2,7 +2,7 @@
 <resources>
     <!-- Kurulum -->
     <string name="setup_mode">Çalışma Modu</string>
-    <string name="setup_non_root_title">Root Olmayan</string>
+    <string name="setup_non_root_title">Root Yetkisi Olmadan</string>
     <string name="setup_non_root_desc">Root iznine gerek yok, sadece indirme modülü fonksiyonu mevcut.</string>
     <string name="working_mode_magisk_title">Magisk</string>
     <string name="working_mode_kernelsu_title">KernelSU</string>
@@ -208,7 +208,7 @@
     <string name="repo_options_update">Güncelle</string>
     <string name="repo_options_delete">Sil</string>
     <string name="repo_options_support">Destek</string>
-    <string name="repo_options_submission">Gönderim</string>
+    <string name="repo_options_submission">İstek modül gönder</string>
     <string name="repo_options_website">Web Sitesi</string>
     <string name="repo_options_donate">Bağış Yap</string>
     <string name="repo_delete_dialog_desc">%s\'i silmek istediğinizden emin misiniz?</string>
@@ -413,9 +413,9 @@
     <string name="view_module_permissions">İzinler</string>
     <string name="settings_always_show_update_alert">Her zaman Güncelleme Bildirimini Göster</string>
     <string name="update_available">Güncelleme var!</string>
-    <string name="settings_terminal">Komut satırı</string>
+    <string name="settings_terminal">Komut Satırı</string>
     <string name="settings_behavior">Davranış</string>
-    <string name="settings_terminal_desc">Uç birmi kendi tercihlerine göre uyarla</string>
+    <string name="settings_terminal_desc">Konut satırını kendi tercihlerine göre uyarla</string>
     <string name="hook_mode">Kanca Modu</string>
     <string name="kpm_support">KPM Desteği</string>
     <string name="yes">Evet</string>
@@ -471,4 +471,5 @@
     <string name="settings_disable_su">Su uyumluluğunu devre dışı bırak</string>
     <string name="settings_disable_su_desc">Herhangi bir uygulamanın ⁠su komutuyla kök ayrıcalıkları elde etme yeteneğini geçici olarak devre dışı bırakın (Mevcut kök işlemleri etkilenmeyecektir).</string>
     <string name="meta_modules">Meta Modülleri</string>
+    <string name="menu_show_stars">Yıldızları Göster</string>
 </resources>
