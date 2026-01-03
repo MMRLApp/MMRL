@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_app_theme_desc">Cambia la combinación de colores y el modo nocturno.</string>
+    <string name="settings_app_theme_desc">Cambie la combinación de colores y el modo nocturno.</string>
     <string name="module_version_author">%1$s por %2$s</string>
     <string name="module_remove">Quitar</string>
     <string name="module_restore">Restaurar</string>
@@ -87,7 +87,7 @@
     <string name="install_logs_saved">Registros guardados</string>
     <string name="install_logs_save_failed">Error al guardar: %s</string>
     <string name="module_update">Actualizar</string>
-    <string name="setup_non_root_desc">No requiere permisos Root, sólo está disponible la función de descarga del módulo.</string>
+    <string name="setup_non_root_desc">No requerir permiso root, sólo estará disponible la función de descarga de módulos.</string>
     <string name="settings_resources">Recursos</string>
     <string name="view_module_donate_desc">¡Muestre algo de amor por el desarrollador de este módulo donándole un café! ☕</string>
     <string name="settings_text_wrap_desc">Habilita el ajuste de texto dentro de la terminal de instalación</string>
@@ -113,7 +113,7 @@
     <string name="manager_version">Versión del administrador</string>
     <string name="fingerprint">Huella digital</string>
     <string name="new_version_available">La nueva versión[italic]%s[/italic]está disponible, toque para actualizar.</string>
-    <string name="hidden">Oculto</string>
+    <string name="hidden">Oculta</string>
     <string name="pre_release">Prelanzamiento</string>
     <string name="repo_options">Opciones</string>
     <string name="repo_options_support">Soporte</string>
@@ -184,11 +184,11 @@
     <string name="settings_blacklist_desc">Módulos enumerados que pueden ser de código cerrado o peligrosos</string>
     <string name="settings_date_pattern">Patrón de fecha</string>
     <string name="settings_repo_update_interval">Intervalo de actualización de repositorios</string>
-    <string name="settings_repo_update_interval_desc">Seleccione el intervalo de tiempo para actualizar los repositorios</string>
+    <string name="settings_repo_update_interval_desc">Seleccionar el intervalo de tiempo para actualizar los repositorios</string>
     <string name="settings_check_app_updates">Comprobar actualizaciones de la aplicación</string>
-    <string name="settings_check_app_updates_desc">Comprueba automáticamente si hay actualizaciones de la aplicación cada vez que la abres</string>
-    <string name="settings_hide_fingerprint_desc">No importa si es real o falso</string>
-    <string name="settings_check_modules_update_desc">Habilita la comprobación de actualizaciones para los módulos instalados</string>
+    <string name="settings_check_app_updates_desc">Comprobar automáticamente si hay actualizaciones de la aplicación cada vez que la abre</string>
+    <string name="settings_hide_fingerprint_desc">No importa si es real o falsa</string>
+    <string name="settings_check_modules_update_desc">Habilitar la comprobación de actualizaciones para los módulos instalados</string>
     <string name="settings_check_modules_update_interval">Intervalo de comprobación de actualizaciones de módulos</string>
     <string name="settings_check_modules_update_interval_desc">Seleccione el intervalo de tiempo para verificar los módulos instalados</string>
     <string name="settings_developer_mode">Modo de desarrollador</string>
@@ -198,7 +198,7 @@
     <string name="settings_clear_install_terminal_desc">Limpia la terminal de instalación al instalar más de un módulo</string>
     <string name="settings_shell_module_state_change">Usar Shell para los estados</string>
     <string name="settings_modules">Módulos</string>
-    <string name="settings_modules_desc">Cambiar el comportamiento de los controladores de los módulos o mucho más sobre los módulos</string>
+    <string name="settings_modules_desc">Cambie el comportamiento de los controladores de los módulos y mucho más sobre los módulos</string>
     <string name="settings_modules_handlers">Manipuladores</string>
     <string name="settings_modules_installer">Instalador</string>
     <string name="selinux_status_enforcing">Obediente</string>
@@ -284,9 +284,9 @@
     <string name="install_screen_cancel_text">¿Está seguro que desea cancelar la instalación?</string>
     <string name="invalid_ip">¡Este no es un dominio local válido!</string>
     <string name="working_mode_apatch_desc">Aplicar parches al kernel y sistema Android. Una nueva solución de root basada en el kernel con soporte para módulos similares a Magisk y la inyección de funciones en el kernel (requiere inline-hook y syscall-table-hook). Derivado y modificado de KernelSU.</string>
-    <string name="working_mode_kernelsu_next_desc">Aplicar parches al kernel y sistema Android. Una nueva solución de root basada en el kernel con soporte para módulos similares a Magisk y la inyección de funciones en el kernel (requiere inline-hook y syscall-table-hook). Derivado y modificado de KernelSU.Una solución de root avanzada basada en el kernel con soporte Magic Mount, control mejorado sobre aplicaciones de espacio de usuario y privilegios de root personalizables.</string>
+    <string name="working_mode_kernelsu_next_desc">Una solución de root avanzada basada en kernel con soporte para Magic Mount con control mejorado sobre las aplicaciones del espacio de usuario y privilegios de root personalizables.</string>
     <string name="blacklisted_desc">Este módulo ha sido puesto en lista negra por MMRL. La instalación está desactivada para garantizar su seguridad. Si todavía desea instalar este módulo, puede desactivar las alertas de lista negra en la configuración yendo a [bold]Ajustes → Seguridad → Alertas de lista negra[/bold].</string>
-    <string name="working_mode_magisk_desc">Una suite de herramientas para la personalización de Android, que ofrece acceso root, soporte de módulos, modificación de imagen de booteo y ejecución de código a nivel de proceso con Zygisk.</string>
+    <string name="working_mode_magisk_desc">Una suite de herramientas para la personalización de Android que ofrece acceso root, soporte de módulos, modificación de imagen de booteo y ejecución de código a nivel de proceso con Zygisk.</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
     <string name="working_mode_shizuku_desc">Una solución basada en permisos que autoriza a las aplicaciones a ejecutar comandos a nivel de sistema sin acceso root completo. Requiere la autorización de Sui o Shizuku, lo que permite privilegios elevados para operaciones específicas mientras mantiene la integridad del sistema.</string>
     <string name="allow_cancel_action">Permitir cancelar acción</string>
@@ -408,7 +408,7 @@
     <string name="latest_commit_id">ID del último commit</string>
     <string name="settings_set_spoofed_wxp_desc">Establezca un nombre de paquete personalizado para WebUI X portable.</string>
     <string name="settings_set_spoofed_wxp">Paquete portable de WebUI X</string>
-    <string name="settings_disable_su_desc">Deshabilita temporalmente la capacidad de cualquier aplicación para obtener privilegios de root a través del comando su (los procesos root existentes no se verán afectados).</string>
+    <string name="settings_disable_su_desc">Deshabilitar temporalmente la capacidad de cualquier aplicación para obtener privilegios de root a través del comando su (los procesos root existentes no se verán afectados).</string>
     <string name="page_superuser">Superusuario</string>
     <string name="menu_pin_has_root">Fijar con root</string>
     <string name="menu_show_system_apps">Mostrar apps del sistema</string>
