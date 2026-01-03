@@ -49,7 +49,7 @@
     <string name="notification_name_download">Servicio de descargas</string>
     <string name="unknown_error">Error desconocido</string>
     <string name="view_module_last_updated">Última actualización</string>
-    <string name="view_module_version_dialog_desc">¿Desea instalar o descargar esta versión del módulo\?</string>
+    <string name="view_module_version_dialog_desc">¿Desea instalar o descargar esta versión del módulo?</string>
     <string name="view_module_homepage">Página de inicio</string>
     <string name="view_module_source">Código fuente</string>
     <string name="view_module_support">Soporte</string>
@@ -284,7 +284,7 @@
     <string name="install_screen_cancel_text">¿Está seguro que desea cancelar la instalación?</string>
     <string name="invalid_ip">¡Este no es un dominio local válido!</string>
     <string name="working_mode_apatch_desc">Aplicar parches al kernel y sistema Android. Una nueva solución de root basada en el kernel con soporte para módulos similares a Magisk y la inyección de funciones en el kernel (requiere inline-hook y syscall-table-hook). Derivado y modificado de KernelSU.</string>
-    <string name="working_mode_kernelsu_next_desc">Una solución de root avanzada basada en el kernel con soporte Magic Mount, control mejorado sobre aplicaciones de espacio de usuario y privilegios de root personalizables.</string>
+    <string name="working_mode_kernelsu_next_desc">Aplicar parches al kernel y sistema Android. Una nueva solución de root basada en el kernel con soporte para módulos similares a Magisk y la inyección de funciones en el kernel (requiere inline-hook y syscall-table-hook). Derivado y modificado de KernelSU.Una solución de root avanzada basada en el kernel con soporte Magic Mount, control mejorado sobre aplicaciones de espacio de usuario y privilegios de root personalizables.</string>
     <string name="blacklisted_desc">Este módulo ha sido puesto en lista negra por MMRL. La instalación está desactivada para garantizar su seguridad. Si todavía desea instalar este módulo, puede desactivar las alertas de lista negra en la configuración yendo a [bold]Ajustes → Seguridad → Alertas de lista negra[/bold].</string>
     <string name="working_mode_magisk_desc">Una suite de herramientas para la personalización de Android, que ofrece acceso root, soporte de módulos, modificación de imagen de booteo y ejecución de código a nivel de proceso con Zygisk.</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
