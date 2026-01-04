@@ -444,4 +444,5 @@
     <string name="empty">خالی</string>
     <string name="settings_disable_su">غیرفعال کردن سازگاری su</string>
     <string name="settings_disable_su_desc">غیرفعال کردن موقت توانایی هر برنامه برای کسب امتیازات ریشه از طریق دستور su (فرآیندهای ریشه موجود تحت تأثیر قرار نمی‌گیرند).</string>
+    <string name="menu_show_stars">نمایش ستاره‌ها</string>
 </resources>

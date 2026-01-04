@@ -470,4 +470,5 @@
     <string name="settings_disable_su">禁用 su 兼容性</string>
     <string name="settings_disable_su_desc">暂时禁用任何应用程序通过 su 命令获取 root 权限的功能（现有 root 进程不会受到影响）。</string>
     <string name="meta_modules">元模块</string>
+    <string name="menu_show_stars">显示 Stars</string>
 </resources>
