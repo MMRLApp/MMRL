@@ -1,2 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="service_is_not_available">! Dịch vụ hiện không khả dụng</string>
+    <string name="unable_to_gather_module_info_of_file">! Không thể lấy thông tin mô-đun của tệp: %1$s</string>
+    <string name="copying_zip_to_temp_directory">- Đang sao chép tệp zip vào thư mục tạm thời</string>
+    <string name="copying_failed">! Sao chép thất bại</string>
+    <string name="module_not_found">[color=red]! Không tìm thấy mô-đun.[/color]</string>
+    <string name="this_module_don_t_have_an_action">! Module này không có hành động nào.</string>
+    <string name="module_is_disabled_or_removed_unable_to_execute_action">! Module đã bị vô hiệu hóa hoặc bị gỡ bỏ. Không thể thực thi hành động.</string>
+    <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! Không thể cài đặt mô-đun trong danh sách đen. Cài đặt → Bảo mật → Cảnh báo danh sách đen</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s không phải là tệp mô-đun. Các mô-đun Magisk phải là tệp .zip. Đang bỏ qua…</string>
+    <string name="installation_aborted_due_to_an_error">! Quá trình cài đặt đã bị hủy do có lỗi xảy ra</string>
+    <string name="install_view_path">- Đường dẫn: %1$s</string>
+    <string name="install_view_module_info">::group::Thông tin mô-đun</string>
+    <string name="unable_to_gather_module_info">! Không thể thu thập thông tin mô-đun</string>
+    <string name="install_view_installing">- Đang cài đặt [color=primary]%1$s[/color]</string>
+    <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Thực thi thất bại. Hãy thử sử dụng Shell để thực thi Tác vụ, Cài đặt → Mô-đun → Sử dụng Shell cho Tác vụ Mô-đun.</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! Không thể tìm thấy đường dẫn cho uri: %1$s[/color]</string>
+    <string name="removed_updated_folder">- Đã xóa thư mục đã cập nhật</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! Thất bại khi xóa thư mục cập nhật[/color]</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! Không hỗ trợ các nền tảng chưa root[/color]</string>
+    <string name="module_manager_is_null">! Trình quản lý mô-đun trống</string>
+    <string name="file_manager_is_null">! Trình quản lý tệp tin trống</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- Đang chờ PlatformManager khởi tạo…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! Khởi tạo Nền tảng thất bại[/color]</string>
+    <string name="platform_initialized">[bold]- Nền tảng đã được khởi tạo[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]! Khởi tạo nền tảng thất bại. Không thể tiếp tục quá trình cài đặt.[/color]</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! Nền tảng không hoạt động. Không thể tiếp tục quá trình cài đặt.[/color]</string>
+    <string name="deleted_zip_file">- Đã xóa tệp ZIP: %s</string>
+</resources>

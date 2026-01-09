@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="hours">
+        <item quantity="other">%1$d giờ</item>
+    </plurals>
+    <plurals name="search_results">
+        <item quantity="other">Đã tìm thấy [color=surface_tint]%1$s kết quả[/color] phù hợp với tìm kiếm của bạn</item>
+    </plurals>
+    <plurals name="module_count_explore_repo">
+        <item quantity="other">Đã lưu trữ %1$s mô-đun</item>
+    </plurals>
 </resources>
