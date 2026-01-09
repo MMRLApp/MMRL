@@ -19,7 +19,7 @@
     <string name="module_service_started">خدمت ماژول آغاز شد</string>
     <string name="are_you_sure_you_want_to_exit">آیا مطمئن هستید که می‌خواهید خارج شوید؟</string>
     <string name="exit">خروج</string>
-    <string name="says">%1$s:</string>
+    <string name="says">%1$sمیگوید</string>
     <string name="setup_non_root_title">بدون دسترسی ریشه</string>
     <string name="setup_non_root_desc">نیازی به دسترسی ریشه ندارد، تنها عملکرد بارگیری ماژول در دسترس است.</string>
     <string name="working_mode_magisk_title">مجیسک</string>
@@ -171,12 +171,12 @@
     <string name="settings_hide_fingerprint">پنهان کردن اثر انگشت در خانه</string>
     <string name="settings_hide_fingerprint_desc">مهم نیست که واقعی باشد یا جعلی</string>
     <string name="settings_check_modules_update">بررسی به‌روزرسانی‌های ماژول</string>
-    <string name="settings_check_modules_update_desc">بررسی به‌روزرسانی برای ماژول‌های نصب‌شده را فعال می‌کند</string>
+    <string name="settings_check_modules_update_desc">بررسی روزرسانی برای ماژول‌های نصب‌شده را فعال می‌کند</string>
     <string name="settings_check_modules_update_interval">بازه بررسی به‌روزرسانی ماژول</string>
     <string name="settings_check_modules_update_interval_desc">بازه زمانی برای بررسی ماژول‌های نصب‌شده خود را انتخاب کنید</string>
     <string name="settings_include_preleases">دارای پیش‌نشرها</string>
     <string name="settings_developer_mode">حالت برنامه نویس</string>
-    <string name="settings_developer_mode_desc">نمایش [color=primary]شناسه‌های[/color] ماژول‌ها و موارد دیگر</string>
+    <string name="settings_developer_mode_desc">[color=primary]شناسه‌های[/color] مازول ها و چیز های دیگر را نمایش میدهد</string>
     <string name="settings_clear_install_terminal">پاک کردن پایانه نصب</string>
     <string name="settings_clear_install_terminal_desc">پاک کردن پایانه نصب هنگام نصب بیش از یک ماژول</string>
     <string name="settings_shell_module_state_change">به‌کارگیری پوسته برای حالت‌ها</string>
@@ -292,7 +292,7 @@
     <string name="settings_use_generic_action_desc">بیشتر ارائه‌دهندگان روت از دستور کنش CLI پشتیبانی نمی‌کنند. در عوض، می‌توانید از یک اسکریپت عمومی استفاده کنید</string>
     <string name="learn_more">بیشتر بدانید</string>
     <string name="sponsors">حامیان</string>
-    <string name="blacklisted">فهرست سیاه</string>
+    <string name="blacklisted">جزو فهرست سیاه</string>
     <string name="blacklisted_desc">این ماژول توسط MMRL در فهرست سیاه قرار گرفته است. نصب آن برای اطمینان از امنیت شما غیرفعال شده است. اگر همچنان می‌خواهید این ماژول را نصب کنید، می‌توانید هشدارهای فهرست سیاه را در تنظیمات با رفتن به [bold]تنظیمات → امنیت → هشدارهای فهرست سیاه[/bold] غیرفعال کنید.</string>
     <string name="settings_blacklist_alerts">هشدارهای فهرست سیاه</string>
     <string name="settings_blacklist_alerts_desc">نمایش هشدار برای ماژول‌های محلی و کاوش، و همچنین جلوگیری از نصب هرگونه ماژول در فهرست سیاه</string>
@@ -372,7 +372,7 @@
     <string name="page_superuser">ابر کاربر</string>
     <string name="menu_pin_has_root">سنجاق دسترسی ریشه</string>
     <string name="menu_show_system_apps">نمایش برنامه‌های سیستمی</string>
-    <string name="view_module_install_confirm_desc">آیا مطمئن هستید که می‌خواهید [color=surface_tint]%1$s[/color] را نصب کنید؟</string>
+    <string name="view_module_install_confirm_desc">آیا مطمئن هستید که می‌خواهید[color=surface_tint]%1$s[/color]را نصب کنید؟</string>
     <string name="view_module_install_confirm_desc_deps">آیا مطمئن هستید که می‌خواهید [color=surface_tint]%1$s[/color] را نصب کنید؟ این ماژول همچنین نیاز به موارد زیر دارد:</string>
     <string name="menu_show_category">نمایش دسته‌بندی</string>
     <string name="page_repos">مخزن‌ها</string>
@@ -405,7 +405,7 @@
     <string name="no">خیر</string>
     <string name="count_with_plus">%1$d+</string>
     <string name="available_modules">ماژول‌های در دسترس</string>
-    <string name="explore_repos_discover_text">ماژول‌ها را از [bold]%1$d[/bold] مخزن مورد اعتماد کشف و نصب کنید، که شامل بیش از [bold]%2$d[/bold] ماژول برای دستگاه شما است.</string>
+    <string name="explore_repos_discover_text">ماژول‌ها را از [bold]%1$d[/bold] منابع مورد اعتماد کشف و نصب کنید، که شامل بیش از [bold]%2$d[/bold] ماژول برای دستگاه شما است.</string>
     <string name="module_repositories">مخزن‌های ماژول</string>
     <string name="latest_commit_id">آخرین شناسه پیاده‌سازی</string>
     <string name="build_tools_version">نگارش ابزارهای ساخت</string>
@@ -414,7 +414,7 @@
     <string name="settings_set_spoofed_wxp_desc">تنظیم نام بسته قابل حمل رابط وب ایکس سفارشی.</string>
     <string name="settings_enable_blur">فعال کردن تاری</string>
     <string name="settings_enable_blur_desc">فعال کردن اثر تاری در اجزا</string>
-    <string name="settings_hide_bottom_bar_labels">پنهان کردن برچسب‌های نوار پایین</string>
+    <string name="settings_hide_bottom_bar_labels">پنهان کردن مسخصه های نوار پایین</string>
     <string name="failed_to_update_app_profile">به‌روزرسانی نمایه برنامه برای %s شکست خورد</string>
     <string name="failed_to_update_sepolicy">به‌روزرسانی قوانین SELinux برای %s شکست خورد</string>
     <string name="su_not_allowed">نمی‌توان دسترسی ابر کاربر را به %s داد</string>
@@ -445,4 +445,5 @@
     <string name="settings_disable_su">غیرفعال کردن سازگاری su</string>
     <string name="settings_disable_su_desc">غیرفعال کردن موقت توانایی هر برنامه برای کسب امتیازات ریشه از طریق دستور su (فرآیندهای ریشه موجود تحت تأثیر قرار نمی‌گیرند).</string>
     <string name="menu_show_stars">نمایش ستاره‌ها</string>
+    <string name="meta_modules">ماژول های متا</string>
 </resources>
