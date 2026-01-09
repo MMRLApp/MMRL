@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel">Huỷ bỏ</string>
+    <string name="loading">Đang tải…</string>
+    <string name="unknown_error">Lỗi Không Xác Định</string>
+    <string name="search_placeholder">Tìm kiếm…</string>
+    <string name="learn_more">Tìm hiểu thêm</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="select_a_option">Chọn một tùy chọn</string>
 </resources>

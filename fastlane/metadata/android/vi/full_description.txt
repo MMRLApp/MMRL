@@ -1,0 +1,32 @@
+MMRL là một ứng dụng Android giúp bạn quản lý kho mô-đun của riêng mình.
+
+Tính năng:
+- Quản lý kho lưu trữ mô-đun của bạn
+- Hỗ trợ nhiều kho lưu trữ cùng lúc
+- Hỗ trợ Magisk và KernelSU
+- Giao diện Jetpack Compose & Material Design 3
+
+https://github.com/DerGoogler/MMRL
+
+<i>Magisk Module Repo Loader</i> (MMRL) cho phép bạn tải các kho Magisk tùy chỉnh thông qua một giao diện đơn giản. <a href="https://github.com/Magisk-Modules-Alt-Repo">Magisk Modules Alternative Repository</a> đã được cấu hình sẵn, các kho lưu trữ tùy chỉnh có thể được thêm vào.
+
+<b>Những trình quản lý root nào hỗ trợ MMRL?</b>
+
+* Magisk
+* KernelSU
+* APatch
+
+<b>MMRL cung cấp những tính năng gì?</b>
+
+* Giao diện thân thiện với người dùng
+* Trang mô-đun có thể cấu hình (ModConf)
+* Tùy chỉnh tất cả các đường dẫn (chẳng hạn như "/data/adb/modules", nếu trình root của bạn sử dụng đường dẫn khác)
+* Môi trường thử nghiệm ModConf
+* Xem các mô-đun đã cài đặt và có thể cập nhật
+* Thêm ảnh bìa, ảnh chụp màn hình, xác minh, các thành phần phụ thuộc và nhiều hơn thế nữa (dựa trên repo)
+* Chức năng tìm kiếm tiện lợi
+* Hỗ trợ thêm tối đa 5 kho lưu trữ
+
+Ứng dụng này yêu cầu quyền truy cập root, nó sẽ không hoạt động nếu không có quyền này!
+
+Lưu ý: Bạn sẽ cần MMRL-CLI để cài đặt các mô-đun khác
