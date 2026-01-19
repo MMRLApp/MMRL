@@ -149,9 +149,13 @@ fun MainScreen() {
                         }
                     },
                 ) {
-                    CurrentNavHost(
-                        Modifier.padding(paddingValues),
-                    )
+                    CompositionLocalProvider(
+                        LocalMainScreenInnerPaddings provides paddingValues,
+                    ) {
+                        CurrentNavHost(
+                            Modifier.padding(paddingValues),
+                        )
+                    }
                 }
             }
 
