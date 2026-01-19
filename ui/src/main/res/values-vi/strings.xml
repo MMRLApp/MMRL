@@ -2,7 +2,7 @@
 <resources>
     <string name="cancel">Huỷ bỏ</string>
     <string name="loading">Đang tải…</string>
-    <string name="unknown_error">Lỗi Không Xác Định</string>
+    <string name="unknown_error">Lỗi không xác định</string>
     <string name="search_placeholder">Tìm kiếm…</string>
     <string name="learn_more">Tìm hiểu thêm</string>
     <string name="confirm">Xác nhận</string>

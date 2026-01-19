@@ -9,7 +9,7 @@
     <string name="license_osi_approved">OSI đã được phê duyệt</string>
     <string name="license_fsf_libre">FSF Tự do</string>
     <string name="page_repository">Kho</string>
-    <string name="page_settings">Thiết đặt</string>
+    <string name="page_settings">Cài đặt</string>
     <string name="repository_empty">Kho lưu trữ trống</string>
     <string name="module_installed">Đã cài đặt</string>
     <string name="page_modules">Mô-đun</string>
@@ -35,18 +35,18 @@
     <string name="module_version_author">%1$s bởi %2$s</string>
     <string name="view_module_added">Đã thêm lúc: %s</string>
     <string name="view_module_view_track">Hiển thị theo dõi</string>
-    <string name="settings_about">Về</string>
+    <string name="settings_about">Giới thiệu</string>
     <string name="settings_root_access">Quyền truy cập Root: %s</string>
     <string name="settings_root_provider">Nhà cung cấp: %s</string>
     <string name="settings_root_granted">Cấp quyền</string>
     <string name="settings_root_not_available">Không có sẵn</string>
     <string name="settings_root_none">Không có</string>
     <string name="settings_non_root_desc">Chức năng bị hạn chế</string>
-    <string name="settings_app_theme">Chủ đề Ứng dụng</string>
+    <string name="settings_app_theme">Chủ đề ứng dụng</string>
     <string name="settings_delete_zip">Xóa tệp Zip</string>
     <string name="settings_delete_zip_desc">Xóa zip của mô-đun sau khi cài đặt thành công, việc này sẽ được thực thi bởi Superuser</string>
     <string name="settings_doh">DNS qua HTTPS</string>
-    <string name="app_theme_palette">Bảng màu Chủ đề</string>
+    <string name="app_theme_palette">Bảng màu chủ đề</string>
     <string name="app_theme_dark_theme">Chủ đề Tối</string>
     <string name="app_theme_dark_theme_auto">Tự động</string>
     <string name="app_theme_dark_theme_light">Sáng</string>
@@ -115,9 +115,9 @@
     <string name="new_version_available">Đã có phiên bản mới [italic]%s[/italic], bấm vào để nâng cấp.</string>
     <string name="unsafe_url_redirecting">URL không an toàn: %1$s. Đang chuyển hướng…</string>
     <string name="view_module_module_id">ID mô-đun</string>
-    <string name="home_support_content">MMRL là, và sẽ luôn luôn là, miễn phí, và mã nguồn mở. Tuy nhiên bạn có thể cho tôi thấy rằng bạn quan tâm bằng cách quyên góp.</string>
+    <string name="home_support_content">MMRL đã, đang và sẽ luôn luôn miễn phí và nguồn mở. Tuy nhiên, bạn cũng có thể cho tôi thấy rằng bạn quan tâm bằng cách quyên góp.</string>
     <string name="menu_show_verified">Hiển thị Đã xác minh</string>
-    <string name="install_screen_reboot_title">khởi động lại</string>
+    <string name="install_screen_reboot_title">Khởi động lại?</string>
     <string name="install_screen_reboot_text">Bạn có chắc chắn muốn khởi động lại thiết bị của mình không?</string>
     <string name="install_screen_reboot_confirm">Xác nhận</string>
     <string name="page_home">Trang chủ</string>
@@ -241,8 +241,8 @@
     <string name="settings_security_allow_advanced_kernelsu_api">Cho phép API KernelSU nâng cao</string>
     <string name="contributors">Người đóng góp</string>
     <string name="sponsors">Nhà tài trợ</string>
-    <string name="have_been_total_sponsored">Tổng cộng đã được tài trợ %1$s</string>
-    <string name="contributions">%1$d lượt đóng góp</string>
+    <string name="have_been_total_sponsored">Tổng cộng %1$s đã được tài trợ</string>
+    <string name="contributions">%1$d đóng góp</string>
     <string name="settings_hide_fingerprint">Ẩn dấu vân tay trên trang chủ</string>
     <string name="fingerprint">Dấu vân tay</string>
     <string name="view_module_install_confirm_desc_deps">Bạn có chắc chắn muốn cài đặt [color=surface_tint]%1$s[/color]? Mô-đun này cũng yêu cầu:</string>
@@ -298,7 +298,7 @@
     <string name="explore_repositories">Khám phá các kho lưu trữ</string>
     <string name="about_this_repository">Về kho lưu trữ này</string>
     <string name="team">Đội ngũ</string>
-    <string name="in_total">Tổng cộng %1$s</string>
+    <string name="in_total">Tổng %1$s</string>
     <string name="repository_service_started">Dịch vụ kho lưu trữ đã bắt đầu</string>
     <string name="module_service_started">Dịch vụ mô-đun đã bắt đầu</string>
     <string name="provider_service_started">Dịch vụ nhà cung cấp đã bắt đầu</string>
@@ -355,7 +355,7 @@
     <string name="build_tools_version">Phiên bản Build Tools</string>
     <string name="settings_set_spoofed_wxp">Gói WebUI X Portable</string>
     <string name="settings_set_spoofed_wxp_desc">Đặt tên gói WebUI X Portable giả mạo tùy chỉnh.</string>
-    <string name="settings_enable_blur">Bật hiệu ứng làm mờ</string>
+    <string name="settings_enable_blur">Bật làm mờ</string>
     <string name="settings_enable_blur_desc">Bật hiệu ứng làm mờ trong các thành phần</string>
     <string name="settings_hide_bottom_bar_labels">Ẩn nhãn thanh dưới cùng</string>
     <string name="failed_to_update_app_profile">Cập nhật Hồ sơ ứng dụng thất bại cho %s</string>
@@ -405,7 +405,7 @@
     <string name="menu_sort_repolistmode_compact">Thu gọn</string>
     <string name="view_module_features_system_properties">Thuộc tính hệ thống</string>
     <string name="view_module_antifeatures">Tính năng gây tranh cãi</string>
-    <string name="view_module_features_apks">APKs</string>
+    <string name="view_module_features_apks">Các APK</string>
     <string name="view_module_features_webui">WebUI</string>
     <string name="view_module_features_post_fs_data_sub">Chạy mã sớm sau khi khởi động (hệ thống khởi động một phần).</string>
     <string name="view_module_features_bootcompleted_sub">Thực thi tập lệnh sau khi hoàn tất khởi động</string>
@@ -421,7 +421,7 @@
     <string name="settings_auto_update_repos">Tự động cập nhật kho lưu trữ</string>
     <string name="settings_repo_update_interval">Khoảng thời gian cập nhật kho lưu trữ</string>
     <string name="settings_check_modules_update_interval">Khoảng thời gian kiểm tra cập nhật mô-đun</string>
-    <string name="settings_include_preleases">Bao gồm các bản phát hành thử nghiệm</string>
+    <string name="settings_include_preleases">Bao gồm bản thử nghiệm</string>
     <string name="settings_umount_modules_default_desc">Giá trị mặc định chung cho mục \"Umount mô-đun\" trong Hồ sơ ứng dụng. Nếu được bật, nó sẽ loại bỏ mọi sửa đổi từ mô-đun đối với hệ thống cho các ứng dụng chưa được thiết lập hồ sơ riêng.</string>
     <string name="settings_umount_modules_default">Umount mô-đun</string>
     <string name="view_module_features_eruda_sub">Mô-đun này có công tắc bật/tắt bảng điều khiển nhà phát triển.</string>
