@@ -433,7 +433,7 @@
     <string name="settings_set_spoofed_wxp">WebUI X Портативный пакет</string>
     <string name="settings_set_spoofed_wxp_desc">Задайте пользовательское поддельное имя портативного пакета WebUI X.</string>
     <string name="page_superuser">Суперпользователь</string>
-    <string name="menu_pin_has_root">Пароль Root</string>
+    <string name="menu_pin_has_root">Закрепить имеющие Root</string>
     <string name="menu_show_system_apps">Показать системные приложения</string>
     <string name="menu_show_category">Показать категорию</string>
     <string name="settings_enable_blur">Включить размытик</string>
@@ -466,4 +466,8 @@
     <string name="empty">Пусто</string>
     <string name="settings_disable_su">Отключить совместимость с su</string>
     <string name="settings_disable_su_desc">Временно отключить возможность любому приложению получать права суперпользователя с помощью команды su (существующие процессы root не будут затронуты).</string>
+    <string name="meta_modules">Мета-модули</string>
+    <string name="menu_show_stars">Показать звёзды</string>
+    <string name="profile_custom">Свой вариант</string>
+    <string name="profile_namespace_inherited">Унаследовано</string>
 </resources>
