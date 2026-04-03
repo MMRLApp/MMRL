@@ -62,3 +62,7 @@
 -keep class com.dergoogler.mmrl.webui.util.WebUIOptions
 -keep class com.dergoogler.mmrl.webui.interfaces.**
 -keep class * extends com.dergoogler.mmrl.webui.interfaces.WXInterface
+
+-keep class **JsonAdapter { *; }
+-keep @com.squareup.moshi.JsonClass class * { *; }
+-keepnames class * { @com.squareup.moshi.JsonClass *; }
