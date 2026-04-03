@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.ifNotNullOrBlank
 import com.dergoogler.mmrl.ext.takeTrue
+import com.dergoogler.mmrl.model.local.isValid
 import com.dergoogler.mmrl.model.online.isValid
-import com.dergoogler.mmrl.platform.content.isValid
 import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
 import com.dergoogler.mmrl.ui.component.listItem.dsl.List
 import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot

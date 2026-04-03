@@ -13,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.app.Event
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
+import com.dergoogler.mmrl.manager.RootManagerRepository
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.repository.LocalRepository
@@ -36,10 +37,17 @@ open class TerminalViewModel
 @Inject
 constructor(
     application: Application,
+    rootManagerRepository: RootManagerRepository,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+) : MMRLViewModel(
+    application,
+    rootManagerRepository,
+    localRepository,
+    modulesRepository,
+    userPreferencesRepository
+) {
     protected val logs = mutableListOf<String>()
 
     protected var emulator: TerminalEmulator? = null

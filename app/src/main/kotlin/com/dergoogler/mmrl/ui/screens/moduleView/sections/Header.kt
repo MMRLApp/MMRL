@@ -32,6 +32,8 @@ import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.model.local.State
+import com.dergoogler.mmrl.model.local.isEmpty
+import com.dergoogler.mmrl.model.local.isValid
 import com.dergoogler.mmrl.model.online.isBlacklisted
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.isEmpty
 import com.dergoogler.mmrl.platform.content.isValid
@@ -147,7 +149,7 @@ internal fun Header() {
             OutlinedButton(
                 enabled =
                     viewModel.isProviderAlive &&
-                        (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
+                        (!userPreferences.useShellForModuleStateChange || it.state != State.REMOVE),
                 modifier =
                     Modifier
                         .fillMaxWidth()

@@ -11,12 +11,11 @@ import androidx.compose.ui.platform.LocalContext
 import com.dergoogler.mmrl.datastore.model.Option
 import com.dergoogler.mmrl.datastore.providable.LocalUserPreferences
 import com.dergoogler.mmrl.model.json.UpdateJson
+import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.local.ModuleAnalytics
+import com.dergoogler.mmrl.model.local.hasAction
+import com.dergoogler.mmrl.model.local.hasWebUI
 import com.dergoogler.mmrl.model.online.VersionItem
-import com.dergoogler.mmrl.platform.content.LocalModule
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasWebUI
-import com.dergoogler.mmrl.platform.model.ModId
 import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
@@ -107,7 +106,7 @@ fun rememberLocalModules(query: String = ""): State<List<LocalModule>> {
 }
 
 @Composable
-fun rememberLocalModule(id: ModId): State<LocalModule?> {
+fun rememberLocalModule(id: String): State<LocalModule?> {
     val modules by rememberLocalModules()
     return remember(modules, id) {
         derivedStateOf {
@@ -129,13 +128,13 @@ fun rememberUpdatableModuleCount(): State<Int> {
         localRepository.getLocalAllAsFlow().collect { modules ->
             val updatableModules =
                 modules.filter {
-                    localRepository.hasUpdatableTag(it.id.toString())
+                    localRepository.hasUpdatableTag(it.id)
                 }
 
             var count = 0
 
             for (module in updatableModules) {
-                val id = module.id.toString()
+                val id = module.id
 
                 val updateVersionItem =
                     if (module.updateJson.isNotBlank()) {

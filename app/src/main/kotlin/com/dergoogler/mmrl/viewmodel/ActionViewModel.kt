@@ -7,10 +7,11 @@ import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.app.Event
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
+import com.dergoogler.mmrl.manager.RootManagerRepository
+import com.dergoogler.mmrl.model.local.State
+import com.dergoogler.mmrl.model.local.hasAction
 import com.dergoogler.mmrl.model.terminal.ScriptError
 import com.dergoogler.mmrl.platform.PlatformManager
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
-import com.dergoogler.mmrl.platform.content.State
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
@@ -30,10 +31,17 @@ class ActionViewModel
 @Inject
 constructor(
     application: Application,
+    rootManagerRepository: RootManagerRepository,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-) : TerminalViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+) : TerminalViewModel(
+    application,
+    rootManagerRepository,
+    localRepository,
+    modulesRepository,
+    userPreferencesRepository
+) {
     val logfile get() = "Action_${LocalDateTime.now()}.log"
 
     init {

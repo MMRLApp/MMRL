@@ -4,8 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.dergoogler.mmrl.model.local.LocalModule
-import com.dergoogler.mmrl.model.local.State
-import com.dergoogler.mmrl.platform.model.ModId
+import com.dergoogler.mmrl.model.local.propertiesStream
 
 @Entity(tableName = "localModules")
 @TypeConverters
@@ -22,7 +21,7 @@ data class LocalModuleEntity(
     val lastUpdated: Long,
 ) {
     constructor(original: LocalModule) : this(
-        id = original.id.id,
+        id = original.id,
         name = original.name,
         version = original.version,
         versionCode = original.versionCode,
@@ -34,19 +33,24 @@ data class LocalModuleEntity(
         lastUpdated = original.lastUpdated,
     )
 
-    fun toModule() =
-        LocalModule(
-            id = ModId(id),
-            name = name,
-            version = version,
-            versionCode = versionCode,
-            author = author,
-            description = description,
-            updateJson = updateJson,
-            state = State.valueOf(state),
-            size = size,
-            lastUpdated = lastUpdated,
+    fun toModule(): LocalModule {
+        val props = mapOf(
+            "name" to name,
+            "version" to version,
+            "versionCode" to versionCode,
+            "author" to author,
+            "description" to description,
+            "updateJson" to updateJson,
+            "state" to state,
+            "size" to size,
+            "lastUpdated" to lastUpdated,
+        ).propertiesStream
+
+        return LocalModule(
+            id = id,
+            propsSource = props
         )
+    }
 }
 
 @Entity(tableName = "localModules_updatable")

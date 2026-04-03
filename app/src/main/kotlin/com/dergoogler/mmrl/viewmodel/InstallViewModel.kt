@@ -13,6 +13,7 @@ import com.dergoogler.mmrl.datastore.UserPreferencesRepository
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.tmpDir
 import com.dergoogler.mmrl.ext.toFormattedDateSafely
+import com.dergoogler.mmrl.manager.RootManagerRepository
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.platform.PlatformManager
@@ -39,10 +40,17 @@ class InstallViewModel
 @Inject
 constructor(
     application: Application,
+    rootManagerRepository: RootManagerRepository,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-) : TerminalViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+) : TerminalViewModel(
+    application,
+    rootManagerRepository,
+    localRepository,
+    modulesRepository,
+    userPreferencesRepository
+) {
     val logfile get() = "Install_${LocalDateTime.now()}.log"
 
     init {
@@ -184,12 +192,12 @@ constructor(
             val path = context.getPathForUri(uri)
 
             if (path != null) {
-                val moduleInfoFromPath = PlatformManager.moduleManager.getModuleInfo(path)
+                val moduleInfoFromPath = rootManagerRepository.getModuleInfoFromZip(path)
                 if (moduleInfoFromPath != null) {
-                    withContext<Unit>(Dispatchers.Main) {
+                    withContext(Dispatchers.Main) {
                         moduleInfoFromPath.let { mod ->
                             devLog(R.string.install_view_module_info)
-                            devLog("ID: ${mod.id.id}")
+                            devLog("ID: ${mod.id}")
                             devLog("Name: ${mod.name}")
                             devLog("Version: ${mod.version}")
                             devLog("Version Code: ${mod.versionCode}")
@@ -222,7 +230,7 @@ constructor(
                     return@withContext false
                 }
 
-            val moduleInfoFromTmp = PlatformManager.moduleManager.getModuleInfo(tmpFile.path)
+            val moduleInfoFromTmp = rootManagerRepository.getModuleInfoFromZip(tmpFile.path)
             if (moduleInfoFromTmp == null) {
                 withContext(Dispatchers.Main) {
                     event = Event.FAILED

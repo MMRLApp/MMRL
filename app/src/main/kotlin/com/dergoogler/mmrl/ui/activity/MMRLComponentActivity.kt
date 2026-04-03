@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,10 +23,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.dergoogler.mmrl.Platform
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.compat.PermissionCompat
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
+import com.dergoogler.mmrl.datastore.model.UserPreferences
+import com.dergoogler.mmrl.datastore.model.WorkingMode
+import com.dergoogler.mmrl.datastore.model.WorkingMode.FIRST_SETUP
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_APATCH
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_KERNEL_SU
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_KERNEL_SU_NEXT
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_MAGISK
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_MKSU
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_NON_ROOT
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_RKSU
+import com.dergoogler.mmrl.datastore.model.WorkingMode.MODE_SUKISU
 import com.dergoogler.mmrl.ext.compose.providable.LocalActivity
+import com.dergoogler.mmrl.manager.MagiskManager
+import com.dergoogler.mmrl.manager.RootManagerRepository
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
@@ -46,9 +61,39 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.dergoogler.mmrl.compat.BuildCompat
 import dev.dergoogler.mmrl.compat.core.BrickException
 import dev.dergoogler.mmrl.compat.core.MMRLUriHandlerImpl
+import dev.mmrlx.nio.SuFile
+import dev.mmrlx.nio.SuFile.InitCallback
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.system.exitProcess
+
+fun WorkingMode.toNewPlatform() =
+    when (this) {
+        MODE_MAGISK -> Platform.Magisk
+        MODE_KERNEL_SU -> Platform.KernelSU
+        MODE_KERNEL_SU_NEXT -> Platform.KsuNext
+        MODE_APATCH -> Platform.APatch
+        MODE_SUKISU -> Platform.SukiSU
+        MODE_RKSU -> Platform.RKSU
+        MODE_MKSU -> Platform.MKSU
+        MODE_NON_ROOT -> Platform.NonRoot
+        FIRST_SETUP -> Platform.NonRoot
+    }
+
+fun UserPreferences.selectPlatform() = when (workingMode.toNewPlatform()) {
+    Platform.Magisk -> MagiskManager()
+    Platform.KernelSU -> MagiskManager()
+    Platform.KsuNext -> MagiskManager()
+    Platform.APatch -> MagiskManager()
+    Platform.SukiSU -> MagiskManager()
+    Platform.RKSU -> MagiskManager()
+    Platform.MKSU -> MagiskManager()
+    Platform.NonRoot -> MagiskManager()
+    Platform.Unknown -> MagiskManager()
+    else -> MagiskManager()
+}
 
 @AndroidEntryPoint
 open class MMRLComponentActivity : ComponentActivity() {
@@ -61,6 +106,9 @@ open class MMRLComponentActivity : ComponentActivity() {
     @Inject
     lateinit var modulesRepository: ModulesRepository
 
+    @Inject
+    lateinit var rootManager: RootManagerRepository
+
     open val requirePermissions = listOf<String>()
     var permissionsGranted = true
 
@@ -70,8 +118,24 @@ open class MMRLComponentActivity : ComponentActivity() {
     open val windowFlags: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SuFile.init(this, object : InitCallback {
+            override fun onReady() {
+                Log.d(TAG, "SuFile Server ready")
+                lifecycleScope.launch {
+                    val prefs = userPreferencesRepository.data.first()
+                    rootManager.manager = prefs.selectPlatform()
+                }
+            }
+
+            override fun onError(t: Throwable?) {
+                Log.e(TAG, "SuFile Service failed", t)
+            }
+        })
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
 
         Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
             throwable.printStackTrace()
@@ -187,6 +251,10 @@ open class MMRLComponentActivity : ComponentActivity() {
             PackageManager.DONT_KILL_APP,
         )
     }
+
+    companion object {
+        private const val TAG = "MMRLComponentActivity"
+    }
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -229,10 +297,10 @@ fun BaseContent(
                 LocalSettings provides hiltViewModel<SettingsViewModel>(activity),
                 LocalUserPreferences provides preferences,
                 dev.dergoogler.mmrl.compat.core.LocalUriHandler provides
-                    MMRLUriHandlerImpl(
-                        context,
-                        toolbarColor,
-                    ),
+                        MMRLUriHandlerImpl(
+                            context,
+                            toolbarColor,
+                        ),
                 LocalLifecycleScope provides activity.lifecycleScope,
                 LocalLifecycle provides activity.lifecycle,
                 LocalUriHandler provides MMRLUriHandlerImpl(context, toolbarColor),

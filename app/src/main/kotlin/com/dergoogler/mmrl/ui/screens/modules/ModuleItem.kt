@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
@@ -43,22 +42,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.isPackageInstalled
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.rememberTrue
 import com.dergoogler.mmrl.model.local.State
+import com.dergoogler.mmrl.model.local.hasModConf
+import com.dergoogler.mmrl.model.local.hasWebUI
 import com.dergoogler.mmrl.model.local.versionDisplay
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.config
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasModConf
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasWebUI
-import com.dergoogler.mmrl.platform.file.SuFile
 import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
-import com.dergoogler.mmrl.platform.model.ModId.Companion.moduleDir
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.LabelItemDefaults
-import com.dergoogler.mmrl.ui.component.LocalCover
 import com.dergoogler.mmrl.ui.component.card.Card
 import com.dergoogler.mmrl.ui.component.card.CardScope
 import com.dergoogler.mmrl.ui.component.card.component.Absolute
@@ -155,28 +149,28 @@ fun ModuleItem(
         LiteColumn(
             modifier = Modifier.relative(),
         ) {
-            module.config.cover.nullable(menu.showCover) {
-                val file = SuFile(module.id.moduleDir, it)
-
-                file.exists {
-                    LocalCover(
-                        modifier =
-                            Modifier.fadingEdge(
-                                brush =
-                                    Brush.verticalGradient(
-                                        colors =
-                                            listOf(
-                                                Color.Transparent,
-                                                Color.Black,
-                                            ),
-                                        startY = Float.POSITIVE_INFINITY,
-                                        endY = 0f,
-                                    ),
-                            ),
-                        inputStream = it.newInputStream(),
-                    )
-                }
-            }
+//            module.config.cover.nullable(menu.showCover) {
+//                val file = SuFile(module.moduleDir, it)
+//
+//                file.exists {
+//                    LocalCover(
+//                        modifier =
+//                            Modifier.fadingEdge(
+//                                brush =
+//                                    Brush.verticalGradient(
+//                                        colors =
+//                                            listOf(
+//                                                Color.Transparent,
+//                                                Color.Black,
+//                                            ),
+//                                        startY = Float.POSITIVE_INFINITY,
+//                                        endY = 0f,
+//                                    ),
+//                            ),
+//                        inputStream = it.newInputStream(),
+//                    )
+//                }
+//            }
 
             LiteRow(
                 modifier = Modifier.padding(all = 16.dp),
@@ -191,7 +185,7 @@ fun ModuleItem(
                 ) {
                     val name =
                         remember {
-                            module.config.name ?: module.name
+                            /*module.config.name ?: */module.name
                         }
 
                     val prefix = fun(): String? {
@@ -253,12 +247,12 @@ fun ModuleItem(
                 switch?.invoke()
             }
 
-            val bbEnabled =
-                remember(module) {
-                    module.config.description != null
-                }
+//            val bbEnabled =
+//                remember(module) {
+//                    module.config.description != null
+//                }
 
-            val desc = remember(module) { module.config.description ?: module.description }
+            val desc = remember(module) { /*module.config.description ?:*/ module.description }
 
             BBCodeText(
                 modifier =
@@ -266,7 +260,7 @@ fun ModuleItem(
                         .alpha(alpha = alpha)
                         .padding(horizontal = 16.dp),
                 text = desc,
-                bbEnabled = bbEnabled,
+//                bbEnabled = bbEnabled,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis,
@@ -284,7 +278,7 @@ fun ModuleItem(
             ) {
                 userPreferences.developerMode.rememberTrue {
                     LabelItem(
-                        text = module.id.id,
+                        text = module.id,
                         upperCase = false,
                     )
                 }

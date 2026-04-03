@@ -35,9 +35,10 @@ import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.rememberTrue
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.local.State
+import com.dergoogler.mmrl.model.local.hasAction
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.model.online.VersionItem
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
+import com.dergoogler.mmrl.platform.model.ModId.Companion.toModId
 import com.dergoogler.mmrl.ui.activity.terminal.action.ActionActivity
 import com.dergoogler.mmrl.ui.component.VersionItemBottomSheet
 import com.dergoogler.mmrl.ui.component.scaffold.ScaffoldScope
@@ -81,7 +82,7 @@ fun ScaffoldScope.ModulesList(
         ) {
             items(
                 items = list,
-                key = { it.id.id },
+                key = { it.id },
                 contentType = { "module_item" },
             ) { module ->
                 CompositionLocalProvider(
@@ -203,7 +204,7 @@ private fun ModuleItem(
                             {
                                 ActionActivity.start(
                                     context = context,
-                                    modId = module.id,
+                                    modId = module.id.toModId(),
                                 )
                             }
                         },

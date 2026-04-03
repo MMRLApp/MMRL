@@ -49,6 +49,7 @@ import com.dergoogler.mmrl.ext.managerVersion
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.takeTrue
+import com.dergoogler.mmrl.model.local.ModuleAnalytics
 import com.dergoogler.mmrl.model.online.Changelog
 import com.dergoogler.mmrl.network.runRequest
 import com.dergoogler.mmrl.platform.PlatformManager
@@ -102,7 +103,7 @@ fun HomeScreen() =
         val userPreferences = LocalUserPreferences.current
         val browser = LocalUriHandler.current
 
-        val analytics by rememberLocalAnalytics()
+        val analytics: ModuleAnalytics? = null//by rememberLocalAnalytics()
 
         var openRebootSheet by remember { mutableStateOf(false) }
         if (openRebootSheet) {
@@ -181,14 +182,14 @@ fun HomeScreen() =
                             AnimatedVisibility(
                                 visible =
                                     userPreferences.developerMode { devAlwaysShowUpdateAlert } ||
-                                        (
-                                            if (latest.preRelease) {
-                                                userPreferences.checkAppUpdatesPreReleases &&
-                                                    latest.versionCode > context.managerVersion.second
-                                            } else {
-                                                latest.versionCode > context.managerVersion.second
-                                            }
-                                        ),
+                                            (
+                                                    if (latest.preRelease) {
+                                                        userPreferences.checkAppUpdatesPreReleases &&
+                                                                latest.versionCode > context.managerVersion.second
+                                                    } else {
+                                                        latest.versionCode > context.managerVersion.second
+                                                    }
+                                                    ),
                                 enter = fadeIn() + expandVertically(),
                                 exit = shrinkVertically() + fadeOut(),
                             ) {

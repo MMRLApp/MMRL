@@ -26,8 +26,8 @@ import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.repoId
 import com.dergoogler.mmrl.ext.shareText
 import com.dergoogler.mmrl.model.local.BulkModule
+import com.dergoogler.mmrl.model.local.isValid
 import com.dergoogler.mmrl.model.online.isValid
-import com.dergoogler.mmrl.platform.content.isValid
 import com.dergoogler.mmrl.ui.component.toolbar.BlurToolbar
 import com.dergoogler.mmrl.ui.providable.LocalBulkInstall
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator

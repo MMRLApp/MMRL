@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
+import com.dergoogler.mmrl.manager.RootManagerRepository
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.platform.PlatformManager
@@ -22,6 +23,7 @@ open class MMRLViewModel
     @Inject
     constructor(
         application: Application,
+        val rootManagerRepository: RootManagerRepository,
         val localRepository: LocalRepository,
         val modulesRepository: ModulesRepository,
         val userPreferencesRepository: UserPreferencesRepository,

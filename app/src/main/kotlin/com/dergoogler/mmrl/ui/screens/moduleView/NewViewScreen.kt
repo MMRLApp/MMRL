@@ -208,7 +208,7 @@ fun NewViewScreen(
         LocalSnackbarHost provides snackbarHostState,
         LocalOnlineModule provides module,
         LocalVersionItem provides (lastVersionItem ?: VersionItem.EMPTY),
-        LocalModule provides (local ?: com.dergoogler.mmrl.platform.content.LocalModule.EMPTY),
+        LocalModule provides (local ?: com.dergoogler.mmrl.model.local.LocalModule.EMPTY),
         LocalRepo provides repo,
         LocalModuleViewModel provides viewModel,
         LocalModuleViewDownloader provides download,

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
+import com.dergoogler.mmrl.manager.RootManagerRepository
 import com.dergoogler.mmrl.model.json.UpdateJson
 import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.repository.LocalRepository
@@ -17,55 +18,63 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel
-    @Inject
-    constructor(
-        application: Application,
-        localRepository: LocalRepository,
-        modulesRepository: ModulesRepository,
-        userPreferencesRepository: UserPreferencesRepository,
-    ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
-        private val _updatableModuleCount = MutableStateFlow(0)
-        val updatableModuleCount: StateFlow<Int> = _updatableModuleCount
+@Inject
+constructor(
+    application: Application,
+    rootManagerRepository: RootManagerRepository,
+    localRepository: LocalRepository,
+    modulesRepository: ModulesRepository,
+    userPreferencesRepository: UserPreferencesRepository,
+) : MMRLViewModel(
+    application,
+    rootManagerRepository,
+    localRepository,
+    modulesRepository,
+    userPreferencesRepository
+) {
+    private val _updatableModuleCount = MutableStateFlow(0)
+    val updatableModuleCount: StateFlow<Int> = _updatableModuleCount
 
-        val versionItemCache = mutableStateMapOf<String, VersionItem?>()
+    val versionItemCache = mutableStateMapOf<String, VersionItem?>()
 
-        init {
-            refreshUpdatableModules()
-        }
+    init {
+        refreshUpdatableModules()
+    }
 
-        fun refreshUpdatableModules() {
-            viewModelScope.launch {
-                val modules = localRepository.getLocalAllAsFlow().first()
+    fun refreshUpdatableModules() {
+        viewModelScope.launch {
+            val modules = localRepository.getLocalAllAsFlow().first()
 
-                val updatableModules =
-                    modules.filter {
-                        localRepository.hasUpdatableTag(it.id.toString())
-                    }
-
-                var count = 0
-
-                for (module in updatableModules) {
-                    val id = module.id.toString()
-
-                    val updateVersionItem =
-                        if (module.updateJson.isNotBlank()) {
-                            UpdateJson.loadToVersionItem(module.updateJson)
-                        } else {
-                            localRepository.getVersionById(id).firstOrNull()
-                        }
-
-                    val installedVersionCode = module.versionCode
-                    val updateVersionCode = updateVersionItem?.versionCode ?: -1
-
-                    if (updateVersionCode > installedVersionCode) {
-                        count++
-                        versionItemCache[id] = updateVersionItem
-                    } else {
-                        versionItemCache[id] = null
-                    }
+            val updatableModules =
+                modules.filter {
+                    localRepository.hasUpdatableTag(it.id)
                 }
 
-                _updatableModuleCount.value = count
+            var count = 0
+
+            for (module in updatableModules) {
+                val id = module.id
+
+                val updateVersionItem =
+                    if (module.updateJson?.isNotBlank() == true) {
+                        // TODO: get rid of !!
+                        UpdateJson.loadToVersionItem(module.updateJson!!)
+                    } else {
+                        localRepository.getVersionById(id).firstOrNull()
+                    }
+
+                val installedVersionCode = module.versionCode
+                val updateVersionCode = updateVersionItem?.versionCode ?: -1
+
+                if (updateVersionCode > installedVersionCode) {
+                    count++
+                    versionItemCache[id] = updateVersionItem
+                } else {
+                    versionItemCache[id] = null
+                }
             }
+
+            _updatableModuleCount.value = count
         }
     }
+}

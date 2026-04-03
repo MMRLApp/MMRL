@@ -10,16 +10,15 @@ import androidx.compose.runtime.Composable
 import com.dergoogler.mmrl.App
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.datastore.model.UserPreferences
-import com.dergoogler.mmrl.datastore.model.WebUIEngine
 import com.dergoogler.mmrl.ext.findActivity
 import com.dergoogler.mmrl.ext.toFormattedDateSafely
 import com.dergoogler.mmrl.modconf.helper.ModConfLauncher
 import com.dergoogler.mmrl.model.local.LocalModule
+import com.dergoogler.mmrl.model.local.hasModConf
+import com.dergoogler.mmrl.model.local.hasWebUI
 import com.dergoogler.mmrl.platform.PlatformManager
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasModConf
-import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasWebUI
 import com.dergoogler.mmrl.platform.ksu.KsuNative
-import com.dergoogler.mmrl.platform.model.toModuleConfig
+import com.dergoogler.mmrl.platform.model.ModId.Companion.toModId
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.webui.helper.WebUILauncher
 import com.topjohnwu.superuser.NoShellException
@@ -68,7 +67,7 @@ fun UserPreferences.webUILauncher(
     module: LocalModule,
 ): () -> Unit {
     val modId = module.id
-    val config = modId.toModuleConfig()
+//    val config = module.toModuleConfig()
 
     val activity =
         context.findActivity() as? ComponentActivity ?: run {
@@ -113,7 +112,7 @@ fun UserPreferences.webUILauncher(
 
             modconfLauncher.launch(
                 context = context,
-                modId = modId,
+                modId = modId.toModId(),
                 platform = workingMode.toPlatform(),
             )
         }
@@ -131,28 +130,28 @@ fun UserPreferences.webUILauncher(
                 return@rememberLauncherForActivityResult
             }
 
-            val effectiveEngine =
-                when (webuiEngine) {
-                    WebUIEngine.PREFER_MODULE ->
-                        config.getWebuiEngine(context)?.let {
-                            when (it) {
-                                "wx" -> WebUIEngine.WX
-                                "ksu" -> WebUIEngine.KSU
-                                else -> {
-                                    Toast.makeText(context, "Unknown WebUI engine", Toast.LENGTH_SHORT).show()
-                                    return@rememberLauncherForActivityResult
-                                }
-                            }
-                        } ?: WebUIEngine.WX
-
-                    else -> webuiEngine
-                }
-
-            when (effectiveEngine) {
-                WebUIEngine.WX -> webuiLauncher.launchWX(context, modId, workingMode.toPlatform())
-                WebUIEngine.KSU -> webuiLauncher.launchLegacy(context, modId, workingMode.toPlatform())
-                else -> Toast.makeText(context, "Unsupported WebUI engine", Toast.LENGTH_SHORT).show()
-            }
+//            val effectiveEngine =
+//                when (webuiEngine) {
+//                    WebUIEngine.PREFER_MODULE ->
+//                        config.getWebuiEngine(context)?.let {
+//                            when (it) {
+//                                "wx" -> WebUIEngine.WX
+//                                "ksu" -> WebUIEngine.KSU
+//                                else -> {
+//                                    Toast.makeText(context, "Unknown WebUI engine", Toast.LENGTH_SHORT).show()
+//                                    return@rememberLauncherForActivityResult
+//                                }
+//                            }
+//                        } ?: WebUIEngine.WX
+//
+//                    else -> webuiEngine
+//                }
+//
+//            when (effectiveEngine) {
+//                WebUIEngine.WX -> webuiLauncher.launchWX(context, modId, workingMode.toPlatform())
+//                WebUIEngine.KSU -> webuiLauncher.launchLegacy(context, modId, workingMode.toPlatform())
+//                else -> Toast.makeText(context, "Unsupported WebUI engine", Toast.LENGTH_SHORT).show()
+//            }
         }
 
     return {
