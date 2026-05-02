@@ -448,7 +448,7 @@
     <string name="profile_custom_desc">创建您自己的配置文件，其中包含灵活的选项、规则、权限、安全上下文等。</string>
     <string name="profile_edit_custom">编辑自定义资料</string>
     <string name="profile_edit_custom_desc">修改你的自定义资料的设置。</string>
-    <string name="profile">App Profile</string>
+    <string name="profile">App简介</string>
     <string name="allow_root_access">启用 Root 权限</string>
     <string name="allow_root_access_desc">授予 root 权限后，此应用可以对您的设备进行高级控制，包括系统文件和设置。</string>
     <string name="profile_name">资料名称</string>
