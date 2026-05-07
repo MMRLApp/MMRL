@@ -39,18 +39,19 @@ fun ListItem(
     }
 
     Row(
-        modifier = modifier
-            .alpha(alpha = if (enabled) 1f else 0.5f)
-            .padding(contentPaddingValues)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        modifier =
+            modifier
+                .alpha(alpha = if (enabled) 1f else 0.5f)
+                .padding(contentPaddingValues)
+                .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         icon?.let {
             Icon(
                 modifier = Modifier.size(itemTextStyle.iconSize),
                 painter = painterResource(id = icon),
                 contentDescription = null,
-                tint = LocalContentColor.current
+                tint = LocalContentColor.current,
             )
 
             Spacer(modifier = Modifier.width(start))
@@ -60,7 +61,7 @@ fun ListItem(
             title = title,
             desc = desc,
             itemTextStyle = itemTextStyle,
-            base = base
+            base = base,
         )
     }
 }

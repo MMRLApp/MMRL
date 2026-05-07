@@ -16,7 +16,7 @@ fun ToolbarEventIcon(
     if (!enabled) {
         return ToolbarIcon(
             modifier = modifier,
-            icon = nonEventIcon
+            icon = nonEventIcon,
         )
     }
 
@@ -26,12 +26,12 @@ fun ToolbarEventIcon(
         ToolbarIcon(
             modifier = modifier,
             icon = event.icon,
-            subtitle = event.getTitle()
+            subtitle = event.getTitle(),
         )
     } else {
         ToolbarIcon(
             modifier = modifier,
-            icon = nonEventIcon
+            icon = nonEventIcon,
         )
     }
 }

@@ -46,16 +46,16 @@ fun ScreenshotsPreviewScreen(
     index: Int,
     urls: List<String>,
 ) {
-    val pagerState = rememberPagerState(
-        initialPage = index,
-        pageCount = { urls.size }
-    )
+    val pagerState =
+        rememberPagerState(
+            initialPage = index,
+            pageCount = { urls.size },
+        )
 
     val insetsController = rememberInsetsController()
     var isVisible by remember {
         mutableStateOf(false)
     }
-
 
     DisposableEffect(Unit) {
         insetsController ?: return@DisposableEffect onDispose {}
@@ -82,21 +82,23 @@ fun ScreenshotsPreviewScreen(
             AnimatedVisibility(
                 visible = isVisible,
                 enter = fadeIn(),
-                exit = fadeOut()
+                exit = fadeOut(),
             ) {
                 NavigateUpTopBar(
                     title = "",
-                    colors = TopAppBarDefaults.topAppBarColors().copy(
-                        containerColor = Color.Transparent
-                    )
+                    colors =
+                        TopAppBarDefaults.topAppBarColors().copy(
+                            containerColor = Color.Transparent,
+                        ),
                 )
             }
-        }
+        },
     ) {
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .fillMaxSize(),
         ) { page ->
             Screenshot(
                 url = urls[page],
@@ -117,28 +119,31 @@ fun ScreenshotsPreviewScreen(
                                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                         }
                     }
-                }
+                },
             )
         }
     }
 }
 
 @Composable
-fun Screenshot(url: String, onTap: (position: Offset) -> Unit) {
+fun Screenshot(
+    url: String,
+    onTap: (position: Offset) -> Unit,
+) {
     val zoomState = rememberZoomState()
 
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         AsyncImage(
             model = url,
-            modifier = Modifier
-                .zoomable(
-                    zoomState = zoomState,
-                    onTap = onTap
-                )
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .zoomable(
+                        zoomState = zoomState,
+                        onTap = onTap,
+                    ).fillMaxWidth(),
             onSuccess = { state ->
                 zoomState.setContentSize(state.painter.intrinsicSize)
             },

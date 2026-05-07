@@ -35,15 +35,16 @@ fun Console(
     state: LazyListState,
     showLineNumbers: Boolean = true,
     breakList: Boolean = false,
-    style: TextStyle = MaterialTheme.typography.bodySmall.copy(
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontFamily = FontFamily.Monospace
-    ),
+    style: TextStyle =
+        MaterialTheme.typography.bodySmall.copy(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontFamily = FontFamily.Monospace,
+        ),
     textLine: @Composable (String) -> Unit = {
         BBCodeText(
             text = it,
             style = style,
-            color = style.color
+            color = style.color,
         )
     },
 ) {
@@ -56,33 +57,37 @@ fun Console(
     SelectionContainer {
         LazyColumn(
             state = state,
-            modifier = modifier.let {
-                if (breakList) it else it.horizontalScroll(rememberScrollState())
-            }
+            modifier =
+                modifier.let {
+                    if (breakList) it else it.horizontalScroll(rememberScrollState())
+                },
         ) {
             itemsIndexed(list) { index, item ->
                 val interactionSource = remember { MutableInteractionSource() }
                 val isHovered by interactionSource.collectIsHoveredAsState()
 
                 Row(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp, vertical = 2.dp)
-                        .background(
-                            if (isHovered) {
-                                MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.34f)
-                            } else Color.Transparent
-                        )
-                        .hoverable(interactionSource = interactionSource),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp, vertical = 2.dp)
+                            .background(
+                                if (isHovered) {
+                                    MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.34f)
+                                } else {
+                                    Color.Transparent
+                                },
+                            ).hoverable(interactionSource = interactionSource),
                 ) {
                     DisableSelection {
                         if (showLineNumbers) {
                             Text(
                                 text = "${index + 1}".padStart(4),
-                                modifier = Modifier
-                                    .padding(end = 8.dp)
-                                    .width(40.dp),
+                                modifier =
+                                    Modifier
+                                        .padding(end = 8.dp)
+                                        .width(40.dp),
                                 color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f),
-                                style = style
+                                style = style,
                             )
                         }
                     }

@@ -1,7 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.protobuf)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
@@ -9,12 +7,16 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.datastore"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
 
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    publishing {
+        singleVariant("release")
     }
 
     buildTypes {
@@ -36,10 +38,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 }
 
 dependencies {
@@ -50,7 +48,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.core)
     implementation(libs.kotlinx.serialization.protobuf)
-    implementation(libs.protobuf.kotlin.lite)
     implementation(libs.androidx.foundation)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.hilt.navigation.compose)

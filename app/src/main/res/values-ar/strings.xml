@@ -3,7 +3,7 @@
     <!-- Setup -->
     <string name="setup_mode">وضع العمل</string>
     <string name="setup_non_root_title">بدون روت</string>
-    <string name="setup_non_root_desc">لا يتطلب أذونات الروت، فقط وظيفة تنزيل الإضافة متاحة</string>
+    <string name="setup_non_root_desc">لا يتطلب أذونات الروت، فقط وظيفة تنزيل الإضافة متاحة.</string>
     <!-- Install -->
     <string name="install_screen_title">التثبيت</string>
     <string name="install_flashing">تثبيت</string>
@@ -172,7 +172,7 @@
     <string name="notification_name_download">خدمة التنزيل</string>
     <!-- Search -->
     <string name="search_empty">القائمة فارغة</string>
-    <string name="search_placeholder">بحث…</string>
+    <string name="search_placeholder">البحث…</string>
     <!-- Other -->
     <string name="unknown_error">خطأ غير معروف</string>
     <string name="help">مساعدة</string>
@@ -274,4 +274,9 @@
     <string name="settings_developer_desc">ادوات تصحيح الأخطاء للمطورين</string>
     <string name="settings_webui_remote_url">رابط واجهة الويب</string>
     <string name="settings_webui_remote_url_desc">لتسهيل تصحيح الأخطاء قم بتوفير رابط محلي مثل http://localhost. ألقي نظرة على الإشعار أعلاه.</string>
+    <string name="learn_more">معرفة المزيد</string>
+    <string name="working_mode_sukisu_title">SukiSU Ultra</string>
+    <string name="says">%1$s يقول</string>
+    <string name="title_or_icon_not_found">لم يتم العثور على العنوان أو الأيقونة</string>
+    <string name="icon_not_found">الأيقونة غير موجودة</string>
 </resources>

@@ -26,6 +26,5 @@ fun OutlinedCard(
     onLongClick = onLongClick,
     interactionSource = interactionSource,
     absolute = absolute,
-    relative = relative
+    relative = relative,
 )
-

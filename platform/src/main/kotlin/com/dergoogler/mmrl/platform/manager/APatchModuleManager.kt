@@ -10,21 +10,31 @@ import com.dergoogler.mmrl.platform.model.ModId.Companion.removeFile
 import com.dergoogler.mmrl.platform.stub.IModuleOpsCallback
 import com.dergoogler.mmrl.platform.util.Shell.submit
 
-open class APatchModuleManager() : BaseModuleManager() {
+open class APatchModuleManager : BaseModuleManager() {
     override fun getManagerName(): String = "APatch"
 
     override fun getVersion(): String = mVersion
 
     override fun getVersionCode(): Int = mVersionCode
 
-    override fun getModuleCompatibility() = ModuleCompatibility(
-        hasMagicMount = SuFile("/data/adb/.bind_mount_enable").exists() && (versionCode >= 11011 && !SuFile(
-            "/data/adb/.overlay_enable"
-        ).exists()),
-        canRestoreModules = false
-    )
+    override fun getModuleCompatibility() =
+        ModuleCompatibility(
+            hasMagicMount =
+                SuFile("/data/adb/.bind_mount_enable").exists() &&
+                    (
+                        versionCode >= 11011 &&
+                            !SuFile(
+                                "/data/adb/.overlay_enable",
+                            ).exists()
+                    ),
+            canRestoreModules = false,
+        )
 
-    override fun enable(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun enable(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) callback.onFailure(id, null)
 
@@ -48,7 +58,11 @@ open class APatchModuleManager() : BaseModuleManager() {
         }
     }
 
-    override fun disable(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun disable(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) return callback.onFailure(id, null)
 
@@ -72,7 +86,11 @@ open class APatchModuleManager() : BaseModuleManager() {
         }
     }
 
-    override fun remove(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun remove(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) return callback.onFailure(id, null)
 
@@ -97,20 +115,27 @@ open class APatchModuleManager() : BaseModuleManager() {
     }
 
     override fun getInstallCommand(path: String): String = "apd module install \"$path\""
+
     override fun getActionCommand(id: ModId): String = "apd module action ${id.id}"
 
-    override fun getActionEnvironment(): List<String> = listOf(
-        "export ASH_STANDALONE=1",
-        "export APATCH=true",
-        "export APATCH_VER=${version}",
-        "export APATCH_VER_CODE=${versionCode}",
-    )
+    override fun getActionEnvironment(): List<String> =
+        listOf(
+            "export ASH_STANDALONE=1",
+            "export APATCH=true",
+            "export APATCH_VER=$version",
+            "export APATCH_VER_CODE=$versionCode",
+        )
 
     // KernelSU only
     override fun isSafeMode(): Boolean = false
+
     override fun isLkmMode(): NullableBoolean = NullableBoolean(null)
+
     override fun setSuEnabled(enabled: Boolean): Boolean = true
+
     override fun isSuEnabled(): Boolean = true
+
     override fun getSuperUserCount(): Int = -1
+
     override fun uidShouldUmount(uid: Int): Boolean = false
 }

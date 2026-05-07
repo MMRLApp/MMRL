@@ -17,17 +17,19 @@ fun ListItemScope.Slot(
     disallow: List<Any> = emptyList(),
     content: @Composable ListItemSlotScope.() -> Unit,
 ) = Box(
-    modifier = Modifier
-        .layoutSlot(slot, disallow)
-        .then(modifier),
+    modifier =
+        Modifier
+            .layoutSlot(slot, disallow)
+            .then(modifier),
 ) {
-    val instance = remember {
-        ListItemSlotScopeInstance(
-            boxScope = this,
-            contentPaddingValues = this@Slot.contentPaddingValues,
-            iconSize = this@Slot.iconSize
-        )
-    }
+    val instance =
+        remember {
+            ListItemSlotScopeInstance(
+                boxScope = this,
+                contentPaddingValues = this@Slot.contentPaddingValues,
+                iconSize = this@Slot.iconSize,
+            )
+        }
 
     instance.content()
 }
@@ -37,9 +39,10 @@ fun ListItemScope.FromSlot(
     slot: Any,
     content: @Composable ListItemScope.() -> Unit,
 ) = SubcomposeLayout { constraints ->
-    val measurables = subcompose(slot) {
-        content()
-    }
+    val measurables =
+        subcompose(slot) {
+            content()
+        }
 
     val measurable = measurables.firstOrNull { it.layoutId == slot }
 

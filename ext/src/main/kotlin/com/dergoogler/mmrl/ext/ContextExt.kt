@@ -12,37 +12,45 @@ import androidx.core.content.pm.PackageInfoCompat
 import kotlinx.datetime.LocalDateTime
 import java.io.File
 
-
 val Context.tmpDir
-    get() = cacheDir.resolve("tmp")
-        .apply {
-            if (!exists()) mkdirs()
-        }
+    get() =
+        cacheDir
+            .resolve("tmp")
+            .apply {
+                if (!exists()) mkdirs()
+            }
 
-fun Context.shareText(text: String, type: String = "text/plain") {
-    ShareCompat.IntentBuilder(this)
+fun Context.shareText(
+    text: String,
+    type: String = "text/plain",
+) {
+    ShareCompat
+        .IntentBuilder(this)
         .setType(type)
         .setText(text)
         .startChooser()
 }
 
-fun Context.shareFile(file: File, type: String = "text/plain") {
-    ShareCompat.IntentBuilder(this)
+fun Context.shareFile(
+    file: File,
+    type: String = "text/plain",
+) {
+    ShareCompat
+        .IntentBuilder(this)
         .setType(type)
         .addStream(getUriForFile(file))
         .startChooser()
 }
 
-fun Context.getUriForFile(file: File): Uri {
-    return FileProvider.getUriForFile(
+fun Context.getUriForFile(file: File): Uri =
+    FileProvider.getUriForFile(
         this,
-        "${packageName}.provider", file
+        "$packageName.provider",
+        file,
     )
-}
 
-fun Context.isPackageInstalled(target: String): Boolean {
-    return packageManager.getInstalledApplications(0).find { info -> info.packageName == target } != null
-}
+fun Context.isPackageInstalled(target: String): Boolean =
+    packageManager.getInstalledApplications(0).find { info -> info.packageName == target } != null
 
 val Context.managerVersion
     get(): Pair<String, Long> {
@@ -59,7 +67,9 @@ val Context.managerVersion
 val Context.logDir get() = cacheDir.resolve("log")
 
 fun Context.deleteLog(name: String) {
-    logDir.listFiles().orEmpty()
+    logDir
+        .listFiles()
+        .orEmpty()
         .forEach {
             if (it.name.startsWith(name) && it.extension == "log") {
                 it.delete()
@@ -67,18 +77,21 @@ fun Context.deleteLog(name: String) {
         }
 }
 
-fun Context.createLog(name: String) = logDir
-    .resolve("${name}_${LocalDateTime.now()}.log")
-    .apply {
-        parentFile?.apply { if (!exists()) mkdirs() }
-        createNewFile()
-    }
+fun Context.createLog(name: String) =
+    logDir
+        .resolve("${name}_${LocalDateTime.now()}.log")
+        .apply {
+            parentFile?.apply { if (!exists()) mkdirs() }
+            createNewFile()
+        }
 
-fun Context.getLogPath(name: String) = logDir
-    .listFiles().orEmpty()
-    .find {
-        it.name.startsWith(name) && it.extension == "log"
-    } ?: createLog(name)
+fun Context.getLogPath(name: String) =
+    logDir
+        .listFiles()
+        .orEmpty()
+        .find {
+            it.name.startsWith(name) && it.extension == "log"
+        } ?: createLog(name)
 
 fun Context.findActivity(): Activity? {
     var context = this

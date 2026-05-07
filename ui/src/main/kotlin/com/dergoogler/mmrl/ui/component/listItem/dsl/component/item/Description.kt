@@ -25,13 +25,17 @@ fun ListItemScope.Description(
     styleTransform: (@Composable (TextStyle) -> TextStyle)? = null,
     content: @Composable ListItemSlotScope.() -> Unit,
 ) {
-    val baseTextStyle = MaterialTheme.typography.bodyMedium.copy(
-        color = MaterialTheme.colorScheme.outline
-    )
+    val baseTextStyle =
+        MaterialTheme.typography.bodyMedium.copy(
+            color = MaterialTheme.colorScheme.outline,
+        )
 
-    val finalTextStyle = if (styleTransform != null) {
-        styleTransform(baseTextStyle)
-    } else baseTextStyle
+    val finalTextStyle =
+        if (styleTransform != null) {
+            styleTransform(baseTextStyle)
+        } else {
+            baseTextStyle
+        }
 
     Slot(
         slot = ListItemSlot.Description,
@@ -39,10 +43,9 @@ fun ListItemScope.Description(
             ProvideTextStyle(finalTextStyle) {
                 content()
             }
-        }
+        },
     )
 }
-
 
 /**
  * A description for the list item.
@@ -59,7 +62,6 @@ fun ListItemScope.Description(
     }
 }
 
-
 /**
  * A description for the list item.
  *
@@ -70,7 +72,6 @@ fun ListItemScope.Description(
     @StringRes id: Int,
     styleTransform: (@Composable (TextStyle) -> TextStyle)? = null,
 ) = this.Description(stringResource(id), styleTransform)
-
 
 /**
  * A description for the list item.
@@ -84,4 +85,3 @@ fun ListItemScope.Description(
     vararg formatArgs: Any,
     styleTransform: (@Composable (TextStyle) -> TextStyle)? = null,
 ) = this.Description(stringResource(id, *formatArgs), styleTransform)
-

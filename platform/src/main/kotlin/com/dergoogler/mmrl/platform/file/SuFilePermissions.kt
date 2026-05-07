@@ -1,6 +1,8 @@
 package com.dergoogler.mmrl.platform.file
 
-enum class SuFilePermissions(val value: Int) {
+enum class SuFilePermissions(
+    val value: Int,
+) {
     /**
      * `0o400 (256) - r-- for owner`
      */
@@ -74,11 +76,10 @@ enum class SuFilePermissions(val value: Int) {
     /**
      * `0o444 (292) - r--r--r--`
      */
-    PERMISSION_444(0b100100100);
+    PERMISSION_444(0b100100100),
+    ;
 
     companion object {
-        fun combine(vararg permissions: SuFilePermissions): Int {
-            return permissions.fold(0) { acc, perm -> acc or perm.value }
-        }
+        fun combine(vararg permissions: SuFilePermissions): Int = permissions.fold(0) { acc, perm -> acc or perm.value }
     }
 }

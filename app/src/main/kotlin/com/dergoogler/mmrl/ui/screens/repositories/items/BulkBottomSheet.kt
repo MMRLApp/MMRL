@@ -29,16 +29,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.model.local.BulkModule
-import com.dergoogler.mmrl.ui.component.BottomSheet
-import com.dergoogler.mmrl.ui.component.LabelItem
-import com.dergoogler.mmrl.ui.component.PageIndicator
-import com.dergoogler.mmrl.viewmodel.BulkInstallViewModel
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.ignoreParentPadding
 import com.dergoogler.mmrl.ext.nullable
+import com.dergoogler.mmrl.model.local.BulkModule
 import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
+import com.dergoogler.mmrl.ui.component.BottomSheet
+import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.LabelItemDefaults
+import com.dergoogler.mmrl.ui.component.PageIndicator
+import com.dergoogler.mmrl.viewmodel.BulkInstallViewModel
 
 @Composable
 fun BulkBottomSheet(
@@ -50,15 +50,16 @@ fun BulkBottomSheet(
     Text(
         modifier = Modifier.padding(16.dp),
         style = MaterialTheme.typography.titleLarge,
-        text = stringResource(R.string.bulk_module_install)
+        text = stringResource(R.string.bulk_module_install),
     )
 
-    val topBottomFade = Brush.verticalGradient(
-        0f to Color.Transparent,
-        0.03f to Color.Red,
-        0.97f to Color.Red,
-        1f to Color.Transparent
-    )
+    val topBottomFade =
+        Brush.verticalGradient(
+            0f to Color.Transparent,
+            0.03f to Color.Red,
+            0.97f to Color.Red,
+            1f to Color.Transparent,
+        )
 
     if (modules.isEmpty()) {
         PageIndicator(
@@ -68,21 +69,22 @@ fun BulkBottomSheet(
         )
     } else {
         LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .animateContentSize()
-                .fadingEdge(topBottomFade),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .animateContentSize()
+                    .fadingEdge(topBottomFade),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(
                 items = modules,
-                key = { it.id }
+                key = { it.id },
             ) { module ->
                 BulkModuleItem(
                     modifier = Modifier.animateItem(),
                     module = module,
-                    removeBulkModule = bulkInstallViewModel::removeBulkModule
+                    removeBulkModule = bulkInstallViewModel::removeBulkModule,
                 )
 
                 val progress = bulkInstallViewModel.getProgress(module.versionItem)
@@ -90,11 +92,12 @@ fun BulkBottomSheet(
                     LinearProgressIndicator(
                         progress = { progress },
                         strokeCap = StrokeCap.Round,
-                        modifier = Modifier
-                            .height(2.dp)
-                            .padding(horizontal = 20.dp)
-                            .ignoreParentPadding(vertical = 2.dp)
-                            .fillMaxWidth()
+                        modifier =
+                            Modifier
+                                .height(2.dp)
+                                .padding(horizontal = 20.dp)
+                                .ignoreParentPadding(vertical = 2.dp)
+                                .fillMaxWidth(),
                     )
                 }
             }
@@ -103,17 +106,17 @@ fun BulkBottomSheet(
 
     Button(
         enabled = modules.isNotEmpty(),
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
         onClick = {
             onDownload(modules, true)
-        }
+        },
     ) {
         Text(stringResource(id = R.string.module_install))
     }
 }
-
 
 @Composable
 fun BulkModuleItem(
@@ -125,34 +128,36 @@ fun BulkModuleItem(
         modifier = modifier,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 1.dp,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
     ) {
         Row(
-            modifier = Modifier
-                .padding(all = 16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .padding(all = 16.dp)
+                    .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = module.name,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
 
                     module.versionItem.size.nullable {
                         LabelItem(
                             text = it.toFormattedFileSize(),
-                            style = LabelItemDefaults.style.copy(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError
-                            )
+                            style =
+                                LabelItemDefaults.style.copy(
+                                    containerColor = MaterialTheme.colorScheme.error,
+                                    contentColor = MaterialTheme.colorScheme.onError,
+                                ),
                         )
                     }
                 }
@@ -160,7 +165,7 @@ fun BulkModuleItem(
                 Text(
                     text = module.versionItem.versionDisplay,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
 
@@ -168,12 +173,12 @@ fun BulkModuleItem(
                 onClick = {
                     removeBulkModule(module)
                 },
-                contentPadding = PaddingValues(horizontal = 12.dp)
+                contentPadding = PaddingValues(horizontal = 12.dp),
             ) {
                 Icon(
                     modifier = Modifier.size(20.dp),
                     painter = painterResource(id = R.drawable.trash),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }

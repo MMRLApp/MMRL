@@ -34,13 +34,14 @@ fun TextFieldDialog(
     style: DialogContainerStyle = DialogContainerDefaults.style,
     properties: DialogProperties = DialogProperties(usePlatformDefaultWidth = false),
     launchKeyboard: Boolean = true,
-    content: @Composable (FocusRequester) -> Unit
+    content: @Composable (FocusRequester) -> Unit,
 ) = DialogContainer(
     onDismissRequest = onDismissRequest,
-    modifier = modifier
-        .wrapContentHeight()
-        .requiredWidth(TextFieldDefaults.MinWidth + 40.dp),
-    properties = properties
+    modifier =
+        modifier
+            .wrapContentHeight()
+            .requiredWidth(TextFieldDefaults.MinWidth + 40.dp),
+    properties = properties,
 ) {
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -54,7 +55,7 @@ fun TextFieldDialog(
 
     title.nullable {
         Title(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             icon.nullable {
                 CompositionLocalProvider(LocalContentColor provides style.iconContentColor) {
@@ -67,7 +68,7 @@ fun TextFieldDialog(
     }
 
     Content(
-        modifier = Modifier.weight(1f, fill = false)
+        modifier = Modifier.weight(1f, fill = false),
     ) {
         content(focusRequester)
     }

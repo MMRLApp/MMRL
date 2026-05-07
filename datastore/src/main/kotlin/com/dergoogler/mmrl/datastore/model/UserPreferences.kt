@@ -74,12 +74,16 @@ data class UserPreferences(
     @ProtoNumber(41) val enableBlur: Boolean = true,
     @ProtoNumber(42) val hideBottomBarLabels: Boolean = false,
     @ProtoNumber(43) val superUserMenu: SuperUserMenu = SuperUserMenu(),
+    @ProtoNumber(44) val repositoryServiceEnabled: Boolean = false,
+    @ProtoNumber(45) val moduleServiceEnabled: Boolean = false,
+    @ProtoNumber(46) val providerServiceEnabled: Boolean = false,
 ) {
-    fun isDarkMode() = when (darkMode) {
-        DarkMode.AlwaysOff -> false
-        DarkMode.AlwaysOn -> true
-        DarkMode.FollowSystem -> isSystemInDarkTheme()
-    }
+    fun isDarkMode() =
+        when (darkMode) {
+            DarkMode.AlwaysOff -> false
+            DarkMode.AlwaysOn -> true
+            DarkMode.FollowSystem -> isSystemInDarkTheme()
+        }
 
     fun colorScheme(context: Context) = context.getColorScheme(themeColor, isDarkMode())
 
@@ -89,14 +93,13 @@ data class UserPreferences(
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun encodeTo(output: OutputStream) = output.write(
-        ProtoBuf.encodeToByteArray(this)
-    )
+    fun encodeTo(output: OutputStream) =
+        output.write(
+            ProtoBuf.encodeToByteArray(this),
+        )
 
     @OptIn(ExperimentalContracts::class)
-    fun developerMode(
-        also: UserPreferences.() -> Boolean,
-    ): Boolean {
+    fun developerMode(also: UserPreferences.() -> Boolean): Boolean {
         contract {
             callsInPlace(also, InvocationKind.AT_MOST_ONCE)
         }
@@ -105,12 +108,12 @@ data class UserPreferences(
     }
 
     companion object {
-        val PUBLIC_DOWNLOADS: File = Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DOWNLOADS
-        )
+        val PUBLIC_DOWNLOADS: File =
+            Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS,
+            )
 
         @OptIn(ExperimentalSerializationApi::class)
-        fun decodeFrom(input: InputStream): UserPreferences =
-            ProtoBuf.decodeFromByteArray(input.readBytes())
+        fun decodeFrom(input: InputStream): UserPreferences = ProtoBuf.decodeFromByteArray(input.readBytes())
     }
 }

@@ -8,7 +8,10 @@ import com.dergoogler.mmrl.ui.activity.terminal.Terminal
 class Card : Command {
     override val name: String = "card"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
             currentCard = CardBlock()
         }
@@ -18,7 +21,10 @@ class Card : Command {
 class EndCard : Command {
     override val name: String = "endcard"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
             currentCard?.let {
                 console += it

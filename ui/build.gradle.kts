@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
@@ -8,7 +7,11 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.ui"
-    compileSdk = 35
+    compileSdk = 36
+
+    publishing {
+        singleVariant("release")
+    }
 
     defaultConfig {
         minSdk = 26
@@ -35,10 +38,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-
-    kotlinOptions {
-        jvmTarget = "21"
-    }
 }
 
 dependencies {
@@ -49,6 +48,7 @@ dependencies {
     implementation(libs.square.retrofit.moshi)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.annotation)
+    implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.browser)
     implementation(libs.coil.compose)

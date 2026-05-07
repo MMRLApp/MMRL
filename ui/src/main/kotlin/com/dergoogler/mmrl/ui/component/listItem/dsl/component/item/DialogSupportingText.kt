@@ -9,12 +9,11 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlotScope
 import com.dergoogler.mmrl.ui.component.text.BBCodeText
 
 @Composable
-fun ListItemScope.DialogSupportingText(
-    content: @Composable ListItemSlotScope.() -> Unit,
-) = Slot(
-    slot = DialogItemSlot.SupportingText,
-    content = content
-)
+fun ListItemScope.DialogSupportingText(content: @Composable ListItemSlotScope.() -> Unit) =
+    Slot(
+        slot = DialogItemSlot.SupportingText,
+        content = content,
+    )
 
 @Composable
 fun ListItemScope.DialogSupportingText(text: String) {

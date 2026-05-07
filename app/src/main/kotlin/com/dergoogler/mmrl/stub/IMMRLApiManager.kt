@@ -27,11 +27,11 @@ interface IMMRLApiManager {
     val contributors: Call<List<Contributor>>
 
     companion object {
-        fun build(): IMMRLApiManager {
-            return NetworkUtils.createRetrofit()
+        fun build(): IMMRLApiManager =
+            NetworkUtils
+                .createRetrofit()
                 .baseUrl("https://mmrl.dev/")
                 .build()
                 .create()
-        }
     }
 }

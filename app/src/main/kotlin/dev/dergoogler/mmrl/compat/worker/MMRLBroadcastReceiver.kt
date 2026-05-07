@@ -26,7 +26,10 @@ open class MMRLBroadcastReceiver : BroadcastReceiver() {
     @Inject
     lateinit var localRepository: LocalRepository
 
-    override fun onReceive(context: Context, intent: Intent) {
+    override fun onReceive(
+        context: Context,
+        intent: Intent,
+    ) {
         synchronized(lock) {
             CoroutineScope(Dispatchers.Main).launch {
                 if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
@@ -39,8 +42,10 @@ open class MMRLBroadcastReceiver : BroadcastReceiver() {
     /**
      * Called when the device is booted. Called inside of a `CoroutineScope`
      */
-    open suspend fun onBooted(context: Context, intent: Intent) {}
-
+    open suspend fun onBooted(
+        context: Context,
+        intent: Intent,
+    ) {}
 
     companion object {
         val lock = Any()
@@ -58,33 +63,38 @@ open class MMRLBroadcastReceiver : BroadcastReceiver() {
             if (enabled) {
                 Timber.d("Starting work task: $workName")
 
-                val updateRequest = PeriodicWorkRequest.Builder(
-                    workerClass,
-                    repeatInterval.toLong(),
-                    repeatIntervalUnit
-                )
-                    .setConstraints(
-                        Constraints.Builder()
-                            .setRequiredNetworkType(NetworkType.CONNECTED)
-                            .setRequiresBatteryNotLow(true)
-                            .setRequiresDeviceIdle(false)
-                            .setRequiresCharging(false)
-                            .build()
-                    )
-                    .build()
+                val updateRequest =
+                    PeriodicWorkRequest
+                        .Builder(
+                            workerClass,
+                            repeatInterval.toLong(),
+                            repeatIntervalUnit,
+                        ).setConstraints(
+                            Constraints
+                                .Builder()
+                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                .setRequiresBatteryNotLow(true)
+                                .setRequiresDeviceIdle(false)
+                                .setRequiresCharging(false)
+                                .build(),
+                        ).build()
 
                 workManager.enqueueUniquePeriodicWork(
                     workName,
                     existingPeriodicWorkPolicy,
-                    updateRequest
+                    updateRequest,
                 )
             } else {
                 workManager.cancelUniqueWork(workName)
             }
         }
 
-        fun cancelWorkTask(context: Context, workName: String) {
-            WorkManager.getInstance(context)
+        fun cancelWorkTask(
+            context: Context,
+            workName: String,
+        ) {
+            WorkManager
+                .getInstance(context)
                 .cancelUniqueWork(workName)
         }
     }

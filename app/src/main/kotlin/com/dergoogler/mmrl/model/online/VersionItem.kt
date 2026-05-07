@@ -1,7 +1,5 @@
 package com.dergoogler.mmrl.model.online
 
-import com.dergoogler.mmrl.ext.isNotNullOrBlank
-import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.utils.Utils
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -25,7 +23,6 @@ data class VersionItem(
     val hasSize = size != null
 
     val isEmpty get() = this == EMPTY
-
 
     companion object {
         val EMPTY = VersionItem(timestamp = 0f, version = "", versionCode = 0, zipUrl = "")

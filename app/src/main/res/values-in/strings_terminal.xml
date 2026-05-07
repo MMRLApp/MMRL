@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="service_is_not_available">! Layanan tidak tersedia</string>
-    <string name="unable_to_gather_module_info_of_file">! Tidak dapat mengumpulkan info modul file: %1$s</string>
-    <string name="installation_aborted_due_to_an_error">! Instalasi dibatalkan karena kesalahan</string>
-    <string name="install_view_path">- Jalur: %1$s</string>
+    <string name="unable_to_gather_module_info_of_file">! Tidak dapat mengumpulkan info berkas modul: %1$s</string>
+    <string name="installation_aborted_due_to_an_error">! Pemasangan dibatalkan karena kesalahan</string>
+    <string name="install_view_path">- Lokasi: %1$s</string>
     <string name="copying_zip_to_temp_directory">- Menyalin zip ke direktori temp</string>
     <string name="install_view_module_info">::group::Info modul</string>
     <string name="copying_failed">! Penyalinan gagal</string>
     <string name="unable_to_gather_module_info">! Tidak dapat mengumpulkan info modul</string>
-    <string name="install_view_installing">- Menginstal %1$s</string>
-    <string name="module_not_found">! Modul tidak ditemukan.</string>
-    <string name="this_module_don_t_have_an_action">! Modul ini tidak memiliki tindakan.</string>
-    <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Eksekusi gagal. Coba gunakan Shell untuk eksekusi Action, Pengaturan → Modul → Gunakan Shell untuk Aksi Modul.</string>
-    <string name="module_is_disabled_or_removed_unable_to_execute_action">! Modul dinonaktifkan atau dihapus. Tidak dapat menjalankan tindakan.</string>
-    <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! Tidak dapat memasang modul yang masuk dalam daftar hitam. Pengaturan → Keamanan → Peringatan Daftar Hitam</string>
-    <string name="unable_to_find_path_for_uri">! Tidak dapat menemukan path untuk uri: %1$s</string>
-    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s bukanlah file modul. Modul Magisk harus berupa file .zip.</string>
-    <string name="failed_to_remove_updated_folder">! Gagal menghapus folder yang diperbarui</string>
+    <string name="install_view_installing">- Memasang [color=primary]%1$s[/color]</string>
+    <string name="module_not_found">[color=red]! Modul tidak ditemukan.[/color]</string>
+    <string name="this_module_don_t_have_an_action">! Modul ini tidak memiliki aksi.</string>
+    <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Eksekusi gagal. Coba gunakan Shell untuk eksekusi Aksi, Setelan → Modul → Gunakan Shell untuk Aksi Modul.</string>
+    <string name="module_is_disabled_or_removed_unable_to_execute_action">! Modul dinonaktifkan atau dihapus. Tidak dapat menjalankan aksi.</string>
+    <string name="cannot_install_blacklisted_modules_settings_security_blacklist_alerts">! Tidak dapat memasang modul yang masuk dalam daftar hitam. Setelan → Keamanan → Peringatan Daftar Hitam</string>
+    <string name="unable_to_find_path_for_uri">[color=red]! Tidak dapat menemukan lokasi untuk URI: %1$s[/color]</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s bukan berkas modul. Modul Magisk harus berupa berkas .zip. Melewati…</string>
+    <string name="failed_to_remove_updated_folder">[color=red]! Gagal menghapus folder yang diperbarui[/color]</string>
     <string name="removed_updated_folder">- Menghapus folder yang diperbarui</string>
-    <string name="non_root_platform_is_not_supported">! Perangkat yang tidak di-root tidak didukung</string>
-    <string name="module_manager_is_null">! Manajer modul adalah null</string>
-    <string name="file_manager_is_null">! File manager adalah null</string>
+    <string name="non_root_platform_is_not_supported">[color=error]! Platform tanpa root tidak didukung[/color]</string>
+    <string name="module_manager_is_null">! Manajer modul tidak tersedia</string>
+    <string name="file_manager_is_null">! File manager tidak tersedia</string>
+    <string name="waiting_for_platformmanager_to_initialize">[bold]- Menunggu PlatformManager untuk diinisialisasi…[/bold]</string>
+    <string name="failed_to_initialize_platform">[color=red]! Gagal menginisialisasi Platform[/color]</string>
+    <string name="platform_initialized">[bold]- Platform diinisialisasi[/bold]</string>
+    <string name="platform_initialization_failed_cannot_install">[color=red]Inisialisasi platform gagal. Pemasangan tidak dapat dilanjutkan.[/color]</string>
+    <string name="platform_not_alive_cannot_install">[color=red]! Platform tidak aktif. Pemasangan tidak dapat dilanjutkan.[/color]</string>
+    <string name="deleted_zip_file">- Berkas ZIP dihapus: %s</string>
 </resources>

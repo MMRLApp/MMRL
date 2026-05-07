@@ -8,10 +8,12 @@ import androidx.compose.runtime.remember
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.platform.PlatformManager.moduleManager
 import com.dergoogler.mmrl.platform.content.NullableBoolean
-import com.dergoogler.mmrl.platform.stub.IServiceManager
 
 @Composable
-fun <T> PlatformManager.remember(fallback: T, block: PlatformManager.() -> T): State<T> {
+fun <T> PlatformManager.remember(
+    fallback: T,
+    block: PlatformManager.() -> T,
+): State<T> {
     return produceState(initialValue = fallback, fallback, mServiceOrNull, isAliveFlow) {
         if (isAlive) {
             value = block()

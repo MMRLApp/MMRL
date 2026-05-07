@@ -14,8 +14,8 @@ import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDes
 import com.ramcosta.composedestinations.generated.destinations.SuperUserScreenDestination
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
-//@NavHostGraph
-//annotation class MainGraph
+// @NavHostGraph
+// annotation class MainGraph
 
 enum class MainDestination(
     val direction: DirectionDestinationSpec,
@@ -31,7 +31,7 @@ enum class MainDestination(
         icon = R.drawable.home,
         iconFilled = R.drawable.home_filled,
         requiresRoot = false,
-        requiresKernel = false
+        requiresKernel = false,
     ),
 
     SuperUser(
@@ -40,7 +40,7 @@ enum class MainDestination(
         icon = R.drawable.user,
         iconFilled = R.drawable.user_filled,
         requiresRoot = true,
-        requiresKernel = true
+        requiresKernel = true,
     ),
 
     Repository(
@@ -49,7 +49,7 @@ enum class MainDestination(
         icon = R.drawable.cloud,
         iconFilled = R.drawable.cloud_filled,
         requiresRoot = false,
-        requiresKernel = false
+        requiresKernel = false,
     ),
 
     Modules(
@@ -58,7 +58,7 @@ enum class MainDestination(
         icon = R.drawable.keyframes,
         iconFilled = R.drawable.keyframes_filled,
         requiresRoot = true,
-        requiresKernel = false
+        requiresKernel = false,
     ),
 
     Settings(
@@ -67,7 +67,7 @@ enum class MainDestination(
         icon = R.drawable.settings,
         iconFilled = R.drawable.settings_filled,
         requiresRoot = false,
-        requiresKernel = false
+        requiresKernel = false,
     ),
 }
 

@@ -4,5 +4,5 @@ data class ShellResult(
     val isSuccess: Boolean,
     val out: List<String>,
     val err: List<String>,
-    val exitCode: Int
+    val exitCode: Int,
 )

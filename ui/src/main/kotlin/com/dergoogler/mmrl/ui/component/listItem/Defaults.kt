@@ -41,14 +41,15 @@ class ListItemTextStyle(
         descTextStyle: TextStyle = this.descTextStyle,
         iconSize: Dp = this.iconSize,
         textSwitchPadding: Dp = this.textSwitchPadding,
-    ): ListItemTextStyle = ListItemTextStyle(
-        titleTextColor,
-        descTextColor,
-        titleTextStyle,
-        descTextStyle,
-        iconSize,
-        textSwitchPadding,
-    )
+    ): ListItemTextStyle =
+        ListItemTextStyle(
+            titleTextColor,
+            descTextColor,
+            titleTextStyle,
+            descTextStyle,
+            iconSize,
+            textSwitchPadding,
+        )
 
     override fun hashCode(): Int {
         var result = titleTextColor.hashCode()
@@ -69,18 +70,20 @@ data class ListItemModifiers(
 
 object ListItemDefaults {
     val itemStyle
-        @Composable get() = ListItemTextStyle(
-            titleTextColor = LocalContentColor.current,
-            descTextColor = MaterialTheme.colorScheme.outline,
-            titleTextStyle = MaterialTheme.typography.bodyLarge,
-            descTextStyle = MaterialTheme.typography.bodyMedium,
-            iconSize = 24.dp,
-            textSwitchPadding = 16.dp
-        )
+        @Composable get() =
+            ListItemTextStyle(
+                titleTextColor = LocalContentColor.current,
+                descTextColor = MaterialTheme.colorScheme.outline,
+                titleTextStyle = MaterialTheme.typography.bodyLarge,
+                descTextStyle = MaterialTheme.typography.bodyMedium,
+                iconSize = 24.dp,
+                textSwitchPadding = 16.dp,
+            )
 
-    val modifiers get() = ListItemModifiers(
-        title = Modifier,
-        desc = Modifier,
-        icon = Modifier
-    )
+    val modifiers get() =
+        ListItemModifiers(
+            title = Modifier,
+            desc = Modifier,
+            icon = Modifier,
+        )
 }

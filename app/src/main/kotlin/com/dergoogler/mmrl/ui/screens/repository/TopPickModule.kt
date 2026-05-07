@@ -51,22 +51,23 @@ fun TopPickModule(
         onClick = {
             navigator.navigate(NewViewScreenDestination(repo, module))
         },
-        modifier = modifier
-            .fillMaxWidth()
-            .border(
-                width = Dp.Hairline,
-                color = MaterialTheme.colorScheme.outlineVariant,
-                shape = RoundedCornerShape(20.dp)
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .border(
+                    width = Dp.Hairline,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = RoundedCornerShape(20.dp),
+                ),
         enabled = enabled,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
     ) {
-
         Row(
-            modifier = Modifier
-                .padding(all = 16.dp)
-                .relative(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .padding(all = 16.dp)
+                    .relative(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Logo(
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -87,29 +88,29 @@ fun TopPickModule(
                             contentDescription = null,
                         )
                     }
-                }
+                },
             )
 
             Spacer(modifier = Modifier.width(10.dp))
 
-
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    val style = MaterialTheme.typography.titleSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                    val style =
+                        MaterialTheme.typography.titleSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                        )
 
                     Text(
                         text = module.name,
                         style = style,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
 
                     if (isVerified) {
@@ -117,7 +118,7 @@ fun TopPickModule(
                             modifier = Modifier.iconSize(LocalDensity.current, style, 1.0f),
                             painter = painterResource(id = R.drawable.rosette_discount_check),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.surfaceTint
+                            tint = MaterialTheme.colorScheme.surfaceTint,
                         )
                     }
                 }
@@ -128,13 +129,13 @@ fun TopPickModule(
                     text = module.author,
                     style = MaterialTheme.typography.bodyMedium.copy(),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     maxLines = 1,
                     text = module.versionDisplay,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
         }

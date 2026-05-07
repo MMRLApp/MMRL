@@ -18,7 +18,6 @@ import com.dergoogler.mmrl.platform.model.ModId.Companion.uninstallFile
 import com.dergoogler.mmrl.platform.model.ModId.Companion.updateFile
 import com.dergoogler.mmrl.platform.model.ModId.Companion.webrootDir
 import com.dergoogler.mmrl.platform.model.toModuleConfig
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import kotlin.contracts.ExperimentalContracts
@@ -40,18 +39,19 @@ data class LocalModule(
     val lastUpdated: Long,
 ) : Parcelable {
     companion object {
-        val EMPTY = LocalModule(
-            id = ModId.EMPTY,
-            name = "",
-            version = "",
-            versionCode = 0,
-            author = "",
-            description = "",
-            updateJson = "",
-            state = State.DISABLE,
-            size = -1L,
-            lastUpdated = -1L,
-        )
+        val EMPTY =
+            LocalModule(
+                id = ModId.EMPTY,
+                name = "",
+                version = "",
+                versionCode = 0,
+                author = "",
+                description = "",
+                updateJson = "",
+                state = State.DISABLE,
+                size = -1L,
+                lastUpdated = -1L,
+            )
 
         val LocalModule.config get() = id.toModuleConfig()
         val LocalModule.hasWebUI get() = id.webrootDir.let { it.exists() && it.isDirectory() }

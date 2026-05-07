@@ -48,15 +48,15 @@
     <string name="repository_empty">La repository è vuota</string>
     <string name="view_module_update_notify">Notifica</string>
     <string name="view_module_type">Tipo: %s</string>
-    <string name="settings_app_theme">Tema App</string>
+    <string name="settings_app_theme">Tema dell\'app</string>
     <string name="settings_download_path">Percorso per i Download</string>
     <string name="settings_delete_zip">Elimina File Zip</string>
     <string name="settings_doh">DNS over HTTPS</string>
     <string name="settings_doh_desc">Soluzione alternativa Avvelenamento DNS in alcune nazioni</string>
-    <string name="app_theme_palette">Tavolozza dei Temi</string>
-    <string name="app_theme_dark_theme">Tema scuro</string>
+    <string name="app_theme_palette">Tavolozza dei temi</string>
+    <string name="app_theme_dark_theme">Tema Scuro</string>
     <string name="app_theme_dark_theme_auto">Automatico</string>
-    <string name="app_theme_dark_theme_light">Chiaro</string>
+    <string name="app_theme_dark_theme_light">Luce</string>
     <string name="app_theme_dark_theme_dark">Scuro</string>
     <string name="repo_modules">%d moduli</string>
     <string name="repo_update_at">Aggiornato il : %s</string>
@@ -81,7 +81,7 @@
     <string name="message_download_success">Download riuscito</string>
     <string name="message_loading">Caricamento…</string>
     <string name="search_empty">Elenco vuoto</string>
-    <string name="search_placeholder">Cerca…</string>
+    <string name="search_placeholder">Ricerca…</string>
     <string name="unknown_error">Errore Sconosciuto</string>
     <string name="settings_non_root_desc">La funzionalità è limitata</string>
     <string name="settings_delete_zip_desc">Elimina lo zip del modulo una volta completata l\'installazione, questa operazione verrà eseguita da Superuser</string>
@@ -158,4 +158,7 @@
     <string name="view_module_module_support">Supporto Modulo</string>
     <string name="view_module_install_confirm_desc_deps">Vuoi davvero installare [color=surface_tint]%1$s[/color]? Questo modulo richiede anche:</string>
     <string name="module_reinstall">Reinstalla</string>
+    <string name="empty">Vuoto</string>
+    <string name="learn_more">Saperne di più</string>
+    <string name="settings_developer_mode">Modalità sviluppatore</string>
 </resources>

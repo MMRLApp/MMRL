@@ -58,42 +58,46 @@ internal fun BaseCard(
     val isHovered by interactionSource.collectIsHoveredAsState()
     val modifierParameters = remember { ModifierScopeImpl(modifierScope) }.composeApply(modifier)
 
-    val surfaceModifier = when {
-        onClick.isNotNull() or onLongClick.isNotNull() -> modifierParameters.surface
-            .hoverable(interactionSource = interactionSource)
+    val surfaceModifier =
+        when {
+            onClick.isNotNull() or onLongClick.isNotNull() ->
+                modifierParameters.surface
+                    .hoverable(interactionSource = interactionSource)
 
-        else -> modifierParameters.surface
-    }
+            else -> modifierParameters.surface
+        }
 
-    val hoveredSurfaceModifier = if (isHovered) {
-        Modifier.border(
-            width = 1.5.dp,
-            color = MaterialTheme.colorScheme.primary,
-            shape = cardStyle.shape
-        )
-    } else {
-        Modifier
-    }
-
-    val boxModifier = if (onClick.isNotNull()) {
-        modifierParameters.box
-            .combinedClickable(
-                enabled = enabled,
-                onClick = onClick,
-                onLongClick = onLongClick,
-                interactionSource = interactionSource,
-                indication = ripple()
+    val hoveredSurfaceModifier =
+        if (isHovered) {
+            Modifier.border(
+                width = 1.5.dp,
+                color = MaterialTheme.colorScheme.primary,
+                shape = cardStyle.shape,
             )
-    } else {
-        modifierParameters.box
-    }
+        } else {
+            Modifier
+        }
 
+    val boxModifier =
+        if (onClick.isNotNull()) {
+            modifierParameters.box
+                .combinedClickable(
+                    enabled = enabled,
+                    onClick = onClick,
+                    onLongClick = onLongClick,
+                    interactionSource = interactionSource,
+                    indication = ripple(),
+                )
+        } else {
+            modifierParameters.box
+        }
 
     Surface(
-        modifier = surfaceModifier
-            .applyAlpha(enabled)
-            .systemBarsPaddingEnd()
-            .then(hoveredSurfaceModifier),
+        modifier =
+            surfaceModifier
+                .applyAlpha(enabled)
+                .systemBarsPaddingEnd()
+                .then(hoveredSurfaceModifier),
         shape = style.shape,
         color = style.containerColor,
         contentColor = style.contentColor,
@@ -101,10 +105,10 @@ internal fun BaseCard(
     ) {
         Box(
             modifier = boxModifier,
-            contentAlignment = style.boxContentAlignment
+            contentAlignment = style.boxContentAlignment,
         ) {
             Column(
-                modifier = modifierParameters.column
+                modifier = modifierParameters.column,
             ) {
                 relative()
             }
@@ -145,14 +149,15 @@ class CardStyle internal constructor(
         shape: RoundedCornerShape = this.shape,
         boxContentAlignment: Alignment = this.boxContentAlignment,
         columnVerticalArrangement: Arrangement.Vertical = this.columnVerticalArrangement,
-    ): CardStyle = CardStyle(
-        contentColor,
-        containerColor,
-        tonalElevation,
-        shape,
-        boxContentAlignment,
-        columnVerticalArrangement
-    )
+    ): CardStyle =
+        CardStyle(
+            contentColor,
+            containerColor,
+            tonalElevation,
+            shape,
+            boxContentAlignment,
+            columnVerticalArrangement,
+        )
 
     override fun hashCode(): Int {
         var result = contentColor.hashCode()
@@ -165,47 +170,52 @@ class CardStyle internal constructor(
     }
 }
 
-
 object CardDefaults {
     val cardModifier
-        get(): ModifierScope = ModifierScopeImpl(
-            surface = Modifier
-                .fillMaxWidth(),
-            box = Modifier
-                .fillMaxWidth(),
-            column = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
+        get(): ModifierScope =
+            ModifierScopeImpl(
+                surface =
+                    Modifier
+                        .fillMaxWidth(),
+                box =
+                    Modifier
+                        .fillMaxWidth(),
+                column =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+            )
 
     val cardStyle: CardStyle
-        @Composable get() = CardStyle(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            tonalElevation = 1.dp,
-            shape = RoundedCornerShape(20.dp),
-            boxContentAlignment = Alignment.TopStart,
-            columnVerticalArrangement = Arrangement.Top
-        )
+        @Composable get() =
+            CardStyle(
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                tonalElevation = 1.dp,
+                shape = RoundedCornerShape(20.dp),
+                boxContentAlignment = Alignment.TopStart,
+                columnVerticalArrangement = Arrangement.Top,
+            )
 
     val outlinedCardStyle: CardStyle
-        @Composable get() = cardStyle.copy(
-            containerColor = Color.Unspecified,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
+        @Composable get() =
+            cardStyle.copy(
+                containerColor = Color.Unspecified,
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
 
     val outlinedCardModifier
-        @Composable get(): ModifierScope = cardModifier.copy(
-            surface = Modifier
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = cardStyle.shape
-                )
-        )
+        @Composable get(): ModifierScope =
+            cardModifier.copy(
+                surface =
+                    Modifier
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outline,
+                            shape = cardStyle.shape,
+                        ),
+            )
 }
-
 
 internal var defaultCardColorsCached: CardColors? = null
 val ColorScheme.defaultCardColors: CardColors
@@ -221,6 +231,5 @@ val ColorScheme.defaultCardColors: CardColors
                 disabledContentColor =
                     contentColorFor(fromToken(FilledCardTokens.ContainerColor))
                         .copy(FilledCardTokens.DisabledContainerOpacity),
-            )
-                .also { defaultCardColorsCached = it }
+            ).also { defaultCardColorsCached = it }
     }

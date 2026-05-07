@@ -13,6 +13,7 @@ import com.dergoogler.mmrl.utils.createRootShell
 
 interface Command {
     val name: String
+
     fun run(
         action: ActionCommand,
         terminal: Terminal,
@@ -38,6 +39,7 @@ class Terminal {
     val shell by mutableStateOf(createRootShell())
     var currentGroup: GroupBlock? = null
     var currentCard: CardBlock? = null
+
     // var lineNumbersEnabled: Boolean by mutableStateOf(true)
     var lineNumber = 1
     var lineAdded: Boolean by mutableStateOf(true)
@@ -65,7 +67,9 @@ class Terminal {
             this.replace("""\\n""".toRegex(), "\n").replace(Regex("\r\n|\r|\n"), "\n")
 }
 
-class ActionCommand private constructor(val command: String) {
+class ActionCommand private constructor(
+    val command: String,
+) {
     val properties = mutableMapOf<String, String>()
     var data: String = ""
 
@@ -74,7 +78,10 @@ class ActionCommand private constructor(val command: String) {
         return value as? T
     }
 
-    inline fun <reified T> getProp(key: String, def: T): T {
+    inline fun <reified T> getProp(
+        key: String,
+        def: T,
+    ): T {
         val value = properties[key]
         return if (value is T) {
             value
@@ -86,21 +93,26 @@ class ActionCommand private constructor(val command: String) {
     companion object {
         private const val COMMAND_KEY = "::"
 
-        private val escapeDataMappings = listOf(
-            EscapeMapping("\r", "%0D"),
-            EscapeMapping("\n", "%0A"),
-            EscapeMapping("%", "%25")
-        )
+        private val escapeDataMappings =
+            listOf(
+                EscapeMapping("\r", "%0D"),
+                EscapeMapping("\n", "%0A"),
+                EscapeMapping("%", "%25"),
+            )
 
-        private val escapePropertyMappings = listOf(
-            EscapeMapping("\r", "%0D"),
-            EscapeMapping("\n", "%0A"),
-            EscapeMapping(":", "%3A"),
-            EscapeMapping(",", "%2C"),
-            EscapeMapping("%", "%25")
-        )
+        private val escapePropertyMappings =
+            listOf(
+                EscapeMapping("\r", "%0D"),
+                EscapeMapping("\n", "%0A"),
+                EscapeMapping(":", "%3A"),
+                EscapeMapping(",", "%2C"),
+                EscapeMapping("%", "%25"),
+            )
 
-        fun tryParseV2(message: String?, registeredCommands: List<Command>): ParsedCommand? {
+        fun tryParseV2(
+            message: String?,
+            registeredCommands: List<Command>,
+        ): ParsedCommand? {
             if (message.isNullOrBlank()) return null
 
             try {
@@ -145,7 +157,7 @@ class ActionCommand private constructor(val command: String) {
             val parsed = tryParseV2(message, registeredCommands) ?: return false
             parsed.command.run(
                 action = parsed.action,
-                terminal = terminal
+                terminal = terminal,
             )
             return true
         }
@@ -166,6 +178,9 @@ class ActionCommand private constructor(val command: String) {
             return unescaped
         }
 
-        private data class EscapeMapping(val token: String, val replacement: String)
+        private data class EscapeMapping(
+            val token: String,
+            val replacement: String,
+        )
     }
 }

@@ -14,7 +14,6 @@ class ScreenshotsPreviewActivity : MMRLComponentActivity() {
         Timber.d("ScreenshotsPreviewActivity onCreate")
         super.onCreate(savedInstanceState)
 
-
         val urls: ArrayList<String>? = intent.getStringArrayListExtra("urls")
         val index: Int = intent.getIntExtra("index", 0)
 
@@ -35,17 +34,26 @@ class ScreenshotsPreviewActivity : MMRLComponentActivity() {
     }
 
     companion object {
-        fun start(context: Context, url: List<String>, index: Int) {
-            val intent = Intent(context, ScreenshotsPreviewActivity::class.java)
-                .apply {
-                    putExtra("index", index)
-                    putStringArrayListExtra("urls", ArrayList(url))
-                }
+        fun start(
+            context: Context,
+            url: List<String>,
+            index: Int,
+        ) {
+            val intent =
+                Intent(context, ScreenshotsPreviewActivity::class.java)
+                    .apply {
+                        putExtra("index", index)
+                        putStringArrayListExtra("urls", ArrayList(url))
+                    }
 
             context.startActivity(intent)
         }
 
-        fun start(context: Context, url: String, index: Int) {
+        fun start(
+            context: Context,
+            url: String,
+            index: Int,
+        ) {
             start(context, listOf(url), index)
         }
     }

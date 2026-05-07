@@ -75,123 +75,131 @@ private val priorities = listOf("VERBOSE", "DEBUG", "INFO", "WARN", "ERROR")
 
 object LogColors {
     @Composable
-    fun priorityContainer(priority: Int) = when (priority) {
-        Log.VERBOSE -> Color(0xFFD6D6D6)
-        Log.DEBUG -> Color(0xFF305D78)
-        Log.INFO -> Color(0xFF6A8759)
-        Log.WARN -> Color(0xFFBBB529)
-        Log.ERROR -> Color(0xFFCF5B56)
-        Log.ASSERT -> Color(0xFF8B3C3C)
-        else -> MaterialTheme.colorScheme.primary
-    }
+    fun priorityContainer(priority: Int) =
+        when (priority) {
+            Log.VERBOSE -> Color(0xFFD6D6D6)
+            Log.DEBUG -> Color(0xFF305D78)
+            Log.INFO -> Color(0xFF6A8759)
+            Log.WARN -> Color(0xFFBBB529)
+            Log.ERROR -> Color(0xFFCF5B56)
+            Log.ASSERT -> Color(0xFF8B3C3C)
+            else -> MaterialTheme.colorScheme.primary
+        }
 
     @Composable
-    fun priorityContent(priority: Int) = when (priority) {
-        Log.VERBOSE -> Color(0xFF000000)
-        Log.DEBUG -> Color(0xFFBBBBBB)
-        Log.INFO -> Color(0xFFE9F5E6)
-        Log.WARN -> Color(0xFF000000)
-        Log.ERROR -> Color(0xFF000000)
-        Log.ASSERT -> Color(0xFFFFFFFF)
-        else -> MaterialTheme.colorScheme.onPrimary
-    }
+    fun priorityContent(priority: Int) =
+        when (priority) {
+            Log.VERBOSE -> Color(0xFF000000)
+            Log.DEBUG -> Color(0xFFBBBBBB)
+            Log.INFO -> Color(0xFFE9F5E6)
+            Log.WARN -> Color(0xFF000000)
+            Log.ERROR -> Color(0xFF000000)
+            Log.ASSERT -> Color(0xFFFFFFFF)
+            else -> MaterialTheme.colorScheme.onPrimary
+        }
 
     @Composable
-    fun message(priority: Int) = when (priority) {
-        Log.VERBOSE -> Color(0xFFBBBBBB)
-        Log.DEBUG -> Color(0xFF299999)
-        Log.INFO -> Color(0xFFABC023)
-        Log.WARN -> Color(0xFFBBB529)
-        Log.ERROR -> Color(0xFFFF6B68)
-        Log.ASSERT -> Color(0xFFFF6B68)
-        else -> LocalContentColor.current
-    }
+    fun message(priority: Int) =
+        when (priority) {
+            Log.VERBOSE -> Color(0xFFBBBBBB)
+            Log.DEBUG -> Color(0xFF299999)
+            Log.INFO -> Color(0xFFABC023)
+            Log.WARN -> Color(0xFFBBB529)
+            Log.ERROR -> Color(0xFFFF6B68)
+            Log.ASSERT -> Color(0xFFFF6B68)
+            else -> LocalContentColor.current
+        }
 }
 
 @Destination<RootGraph>
 @Composable
-fun LogScreen() = LocalScreenProvider {
-    val context = LocalContext.current
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val state = rememberLazyListState()
-    var priority by remember { mutableStateOf("DEBUG") }
+fun LogScreen() =
+    LocalScreenProvider {
+        val context = LocalContext.current
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val state = rememberLazyListState()
+        var priority by remember { mutableStateOf("DEBUG") }
 
-    val paddingValues = LocalMainScreenInnerPaddings.current
-    val activity = LocalActivity.current as MMRLComponentActivity
+        val paddingValues = LocalMainScreenInnerPaddings.current
+        val activity = LocalActivity.current as MMRLComponentActivity
 
-    val console by remember {
-        derivedStateOf {
-            LogcatService.console.filter {
-                it.priority >= priorities.indexOf(priority) + 2
-            }.asReversed()
+        val console by remember {
+            derivedStateOf {
+                LogcatService.console
+                    .filter {
+                        it.priority >= priorities.indexOf(priority) + 2
+                    }.asReversed()
+            }
         }
-    }
 
-    with(activity) {
-        DisposableEffect(lifecycleScope) {
-            lifecycleScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    LogcatService.isActive
-                        .collect { isActive ->
-                            if (!isActive) {
-                                LogcatService.start(context)
+        with(activity) {
+            DisposableEffect(lifecycleScope) {
+                lifecycleScope.launch {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        LogcatService.isActive
+                            .collect { isActive ->
+                                if (!isActive) {
+                                    LogcatService.start(context)
+                                }
                             }
-                        }
-                }
-            }
-
-            onDispose {
-                LogcatService.stop(context)
-            }
-        }
-    }
-
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                priority = priority,
-                onPriority = { priority = it },
-                scrollBehavior = scrollBehavior
-            )
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            LazyColumn(
-                modifier = Modifier.hazeSource(LocalHazeState.current),
-                state = state,
-                reverseLayout = true,
-                contentPadding = PaddingValues(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding()
-                )
-            ) {
-                items(console) { value ->
-                    Column {
-                        LogItem(value)
-                        HorizontalDivider(
-                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
-                        )
                     }
                 }
-            }
 
-            VerticalFastScrollbar(
-                state = state,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = paddingValues.calculateBottomPadding()
-                    )
-            )
+                onDispose {
+                    LogcatService.stop(context)
+                }
+            }
+        }
+
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    priority = priority,
+                    onPriority = { priority = it },
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxSize(),
+            ) {
+                LazyColumn(
+                    modifier = Modifier.hazeSource(LocalHazeState.current),
+                    state = state,
+                    reverseLayout = true,
+                    contentPadding =
+                        PaddingValues(
+                            top = innerPadding.calculateTopPadding(),
+                            bottom = paddingValues.calculateBottomPadding(),
+                        ),
+                ) {
+                    items(console) { value ->
+                        Column {
+                            LogItem(value)
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
+                            )
+                        }
+                    }
+                }
+
+                VerticalFastScrollbar(
+                    state = state,
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(
+                                top = innerPadding.calculateTopPadding(),
+                                bottom = paddingValues.calculateBottomPadding(),
+                            ),
+                )
+            }
         }
     }
-}
 
 @Composable
 private fun TopBar(
@@ -204,94 +212,99 @@ private fun TopBar(
     actions = {
         val context = LocalContext.current
         IconButton(
-            onClick = { Logcat.shareLogs(context) }
+            onClick = { Logcat.shareLogs(context) },
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.share),
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
         var prioritySelect by remember { mutableStateOf(false) }
         IconButton(
-            onClick = { prioritySelect = true }
+            onClick = { prioritySelect = true },
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.sort_outline),
-                contentDescription = null
+                contentDescription = null,
             )
 
             PrioritySelect(
                 expanded = prioritySelect,
                 selected = priority,
                 onClose = { prioritySelect = false },
-                onClick = onPriority
+                onClick = onPriority,
             )
         }
     },
-    scrollBehavior = scrollBehavior
+    scrollBehavior = scrollBehavior,
 )
 
 @Composable
-private fun LogItem(
-    value: LogText,
-) = Row(
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(IntrinsicSize.Max),
-    verticalAlignment = Alignment.CenterVertically
-) {
-    Box(
-        modifier = Modifier
-            .background(
-                color = LogColors.priorityContainer(value.priority)
+private fun LogItem(value: LogText) =
+    Row(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Max),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .background(
+                        color = LogColors.priorityContainer(value.priority),
+                    ).fillMaxHeight()
+                    .padding(horizontal = 4.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = value.priority.toTextPriority(),
+                style =
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                textAlign = TextAlign.Center,
+                color = LogColors.priorityContent(value.priority),
             )
-            .fillMaxHeight()
-            .padding(horizontal = 4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = value.priority.toTextPriority(),
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold
-            ),
-            textAlign = TextAlign.Center,
-            color = LogColors.priorityContent(value.priority)
-        )
+        }
+
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(all = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(
+                text = value.tag,
+                style =
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontFamily = FontFamily.Monospace,
+                    ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+
+            Text(
+                text = value.message,
+                style =
+                    MaterialTheme.typography.bodySmall.copy(
+                        fontFamily = FontFamily.Monospace,
+                    ),
+                color = LogColors.message(value.priority),
+            )
+
+            Text(
+                text = "${value.time} ${value.process}",
+                style =
+                    MaterialTheme.typography.bodySmall.copy(
+                        fontFamily = FontFamily.Serif,
+                    ),
+                color = MaterialTheme.colorScheme.outline,
+            )
+        }
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(all = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Text(
-            text = value.tag,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontFamily = FontFamily.Monospace
-            ),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Text(
-            text = value.message,
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily.Monospace
-            ),
-            color = LogColors.message(value.priority)
-        )
-
-        Text(
-            text = "${value.time} ${value.process}",
-            style = MaterialTheme.typography.bodySmall.copy(
-                fontFamily = FontFamily.Serif
-            ),
-            color = MaterialTheme.colorScheme.outline
-        )
-    }
-}
 
 @Composable
 private fun PrioritySelect(
@@ -303,23 +316,24 @@ private fun PrioritySelect(
     expanded = expanded,
     onDismissRequest = onClose,
     offset = DpOffset(0.dp, 5.dp),
-    shape = RoundedCornerShape(15.dp)
+    shape = RoundedCornerShape(15.dp),
 ) {
     priorities.forEach {
         DropdownMenuItem(
-            modifier = Modifier
-                .background(
-                    if (it == selected) {
-                        MaterialTheme.colorScheme.secondaryContainer
-                    } else {
-                        Color.Unspecified
-                    }
-                ),
+            modifier =
+                Modifier
+                    .background(
+                        if (it == selected) {
+                            MaterialTheme.colorScheme.secondaryContainer
+                        } else {
+                            Color.Unspecified
+                        },
+                    ),
             text = { Text(text = it) },
             onClick = {
                 if (it != selected) onClick(it)
                 onClose()
-            }
+            },
         )
     }
 }

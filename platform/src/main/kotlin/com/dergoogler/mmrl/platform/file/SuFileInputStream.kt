@@ -2,30 +2,48 @@
 
 package com.dergoogler.mmrl.platform.file
 
-import com.dergoogler.mmrl.platform.file.SuFile.Companion.toSuFile
+import android.os.ParcelFileDescriptor
+import android.system.OsConstants.O_RDONLY
+import android.util.Log
 import java.io.File
-import java.io.InputStream
+import java.io.FileInputStream
+import java.io.IOException
 
 /**
- * An [InputStream] for reading data from a [SuFile].
+ * An implementation of [FileInputStream] designed to read files with superuser (root) privileges.
  *
- * This class provides a way to read files that require superuser (root) privileges,
- * by wrapping the stream obtained from [SuFile.newInputStream]. It offers constructors
- * that accept a file path, a [SuFile] object, or a standard [java.io.File] object,
- * making it a flexible replacement for [java.io.FileInputStream] when root access is needed.
+ * This class facilitates reading from protected system files by utilizing a [ParcelFileDescriptor]
+ * obtained through a root-level pipe. It allows standard stream-based operations on files
+ * that are normally inaccessible to the application process.
  *
  * @see SuFile
- * @see java.io.InputStream
+ * @see FileInputStream
  */
-class SuFileInputStream : InputStream {
-    private var fis: InputStream
+class SuFileInputStream : FileInputStream {
+    private var _pfd: ParcelFileDescriptor
 
-    constructor(path: String) : this(path.toSuFile())
-    constructor(file: SuFile) {
-        fis = file.newInputStream()
+    @Throws(IOException::class)
+    constructor(file: SuFile, flags: Int, mode: Int) : this(FileUtils.openReadPipe(file, flags, mode))
+
+    @Throws(IOException::class)
+    constructor(file: SuFile) : this(file, O_RDONLY, 0)
+
+    @Throws(IOException::class)
+    constructor(file: File) : this(SuFile(file))
+
+    @Throws(IOException::class)
+    constructor(path: String) : this(SuFile(path))
+
+    private constructor(pfd: ParcelFileDescriptor) : super(pfd.fileDescriptor) {
+        this._pfd = pfd
     }
 
-    constructor(file: File) : this(file.path.toSuFile())
-
-    override fun read(): Int = fis.read()
+    override fun close() {
+        try {
+            super.close()
+        } catch (e: Exception) {
+            Log.e("SuFileInputStream", "Error closing input stream", e)
+            _pfd.close()
+        }
+    }
 }

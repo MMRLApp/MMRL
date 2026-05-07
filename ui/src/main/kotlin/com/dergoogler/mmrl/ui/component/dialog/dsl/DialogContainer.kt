@@ -25,57 +25,60 @@ fun DialogContainer(
     contentPadding: DialogContentPadding = DialogContainerDefaults.contentPadding,
     content: @Composable DialogContainerScope.() -> Unit,
 ) {
-    val instance = remember {
-        DialogContainerScopeInstance(style, contentPadding)
-    }
+    val instance =
+        remember {
+            DialogContainerScopeInstance(style, contentPadding)
+        }
 
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = properties
+        properties = properties,
     ) {
         Layout(
-            modifier = modifier
-                .border(
-                    style.borderWidth,
-                    style.containerOutline,
-                    style.shape
-                )
-                .card(
-                    shape = style.shape,
-                    border = null,
-                    backgroundColor = MaterialTheme.colorScheme.applyTonalElevation(
-                        style.containerColor,
-                        style.tonalElevation
-                    ),
-                    shadowElevation = with(LocalDensity.current) { style.tonalElevation.toPx() }
-                )
-                .semantics(mergeDescendants = false) {
-                    isTraversalGroup = true
-                }
-                .pointerInput(Unit) {},
+            modifier =
+                modifier
+                    .border(
+                        style.borderWidth,
+                        style.containerOutline,
+                        style.shape,
+                    ).card(
+                        shape = style.shape,
+                        border = null,
+                        backgroundColor =
+                            MaterialTheme.colorScheme.applyTonalElevation(
+                                style.containerColor,
+                                style.tonalElevation,
+                            ),
+                        shadowElevation = with(LocalDensity.current) { style.tonalElevation.toPx() },
+                    ).semantics(mergeDescendants = false) {
+                        isTraversalGroup = true
+                    }.pointerInput(Unit) {},
             content = {
                 instance.content()
-            }
+            },
         ) { measurables, constraints ->
             val titleMeasurable = measurables.find { it.layoutId == DialogContainerSlot.TITLE }
             val contentMeasurable = measurables.find { it.layoutId == DialogContainerSlot.CONTENT }
             val buttonsMeasurable = measurables.find { it.layoutId == DialogContainerSlot.BUTTONS }
 
-            val titlePlaceable = titleMeasurable?.measure(
-                constraints.copy(minHeight = 0)
-            )
+            val titlePlaceable =
+                titleMeasurable?.measure(
+                    constraints.copy(minHeight = 0),
+                )
             val titleHeight = titlePlaceable?.height ?: 0
 
-            val buttonsPlaceable = buttonsMeasurable?.measure(
-                constraints.copy(minHeight = 0)
-            )
+            val buttonsPlaceable =
+                buttonsMeasurable?.measure(
+                    constraints.copy(minHeight = 0),
+                )
             val buttonsHeight = buttonsPlaceable?.height ?: 0
 
             val remainingHeight = constraints.maxHeight - titleHeight - buttonsHeight
-            val contentConstraints = constraints.copy(
-                minHeight = 0,
-                maxHeight = if (remainingHeight > 0) remainingHeight else constraints.maxHeight
-            )
+            val contentConstraints =
+                constraints.copy(
+                    minHeight = 0,
+                    maxHeight = if (remainingHeight > 0) remainingHeight else constraints.maxHeight,
+                )
 
             val contentPlaceable = contentMeasurable?.measure(contentConstraints)
             val contentHeight = contentPlaceable?.height ?: 0

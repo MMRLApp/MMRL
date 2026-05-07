@@ -9,7 +9,7 @@ import androidx.compose.ui.layout.layoutId
 
 enum class CardSlot {
     Relative,
-    Absolute
+    Absolute,
 }
 
 @Immutable
@@ -30,6 +30,7 @@ interface CardScope {
      * @param alignment the alignment of this item in the card.
      */
     fun Modifier.absolute(alignment: Alignment = Alignment.TopStart): Modifier
+
     /**
      * Places the layout element in the relative slot of the [Card]
      * - The relative slot is placed after the main content of the card.
@@ -39,8 +40,7 @@ interface CardScope {
 }
 
 internal class CardScopeInstance : CardScope {
-    override fun Modifier.absolute(alignment: Alignment) =
-        layoutId(CardLayoutId(slot = CardSlot.Absolute, alignment = alignment))
+    override fun Modifier.absolute(alignment: Alignment) = layoutId(CardLayoutId(slot = CardSlot.Absolute, alignment = alignment))
 
     override fun Modifier.relative() = layoutId(CardLayoutId(slot = CardSlot.Relative))
 }
@@ -48,6 +48,5 @@ internal class CardScopeInstance : CardScope {
 internal class CardAbsoluteScopeInstance(
     private val cardScope: CardScope,
     private val boxScope: BoxScope,
-) : CardScope by cardScope, BoxScope by boxScope
-
-
+) : CardScope by cardScope,
+    BoxScope by boxScope

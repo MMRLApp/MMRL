@@ -152,7 +152,7 @@
     <string name="settings_hide_fingerprint">フィンガープリントを隠す</string>
     <string name="settings_hide_fingerprint_desc">本物か偽物かは関係ありません。</string>
     <string name="settings_check_modules_update">モジュールの更新を確認する</string>
-    <string name="settings_check_modules_update_desc">インストールされているモジュールの更新を自動で確認します。</string>
+    <string name="settings_check_modules_update_desc">インストールされているモジュールの更新の確認を有効化します</string>
     <string name="settings_check_modules_update_interval">モジュールの更新を確認する間隔</string>
     <string name="settings_check_modules_update_interval_desc">インストールされたモジュールを自動で確認する間隔を設定します。</string>
     <string name="settings_include_preleases">プレリリースを含める</string>
@@ -438,7 +438,7 @@
     <string name="menu_show_category">カテゴリーを表示</string>
     <string name="settings_enable_blur">ぼかしを有効化する</string>
     <string name="settings_enable_blur_desc">コンポーネントのぼかし効果を有効化します。</string>
-    <string name="settings_hide_bottom_bar_labels">ボトムバーラベルを非表示にする</string>
+    <string name="settings_hide_bottom_bar_labels">ボトムバーのラベルを非表示にする</string>
     <string name="failed_to_update_app_profile">%s のアプリプロファイルを更新できませんでした</string>
     <string name="failed_to_update_sepolicy">%s の SELinux ルールの変更に失敗しました</string>
     <string name="su_not_allowed">%s にスーパーユーザーのアクセスを許可できませんでした</string>
@@ -469,4 +469,6 @@
     <string name="settings_disable_su_desc">⁠su コマンドを使用してアプリが root 権限を取得する機能を一時的に無効化します (既存の root プロセスは影響を受けません)。</string>
     <string name="menu_pin_has_root">root ありをピン留め</string>
     <string name="settings_umount_modules_default_desc">アプリプロファイルの「モジュールのアンマウント」のグローバルデフォルト値です。有効化すると、プロファイルが設定されていないアプリのシステムへのすべてのモジュール変更が削除されます。</string>
+    <string name="meta_modules">メタモジュール</string>
+    <string name="menu_show_stars">スターを表示する</string>
 </resources>

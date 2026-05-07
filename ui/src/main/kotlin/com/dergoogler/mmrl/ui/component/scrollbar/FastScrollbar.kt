@@ -45,14 +45,15 @@ fun VerticalFastScrollbar(
     colors: ScrollbarColors = ScrollbarDefaults.colors(),
     thumb: @Composable () -> Unit = {
         ScrollbarDefaults.Thumb(
-            color = colors.thumbColor(
-                canScrollForward = state.canScrollForward,
-                isScrollInProgress = state.isScrollInProgress,
-                interactionSource = interactionSource
-            ),
+            color =
+                colors.thumbColor(
+                    canScrollForward = state.canScrollForward,
+                    isScrollInProgress = state.isScrollInProgress,
+                    interactionSource = interactionSource,
+                ),
             orientation = Orientation.Vertical,
         )
-    }
+    },
 ) {
     val scrollbarState = state.scrollbarState()
     val reverseLayout by remember(state) {
@@ -62,17 +63,18 @@ fun VerticalFastScrollbar(
     }
 
     state.FastScrollbar(
-        modifier = Modifier
-            .fillMaxHeight()
-            .padding(contentPadding)
-            .then(modifier),
+        modifier =
+            Modifier
+                .fillMaxHeight()
+                .padding(contentPadding)
+                .then(modifier),
         state = scrollbarState,
         orientation = Orientation.Vertical,
         onThumbMoved = state.rememberDraggableScroller(),
         reverseLayout = reverseLayout,
         colors = colors,
         thumb = thumb,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
     )
 }
 
@@ -85,20 +87,21 @@ private fun ScrollableState.FastScrollbar(
     modifier: Modifier,
     colors: ScrollbarColors,
     thumb: @Composable () -> Unit,
-    interactionSource: MutableInteractionSource
+    interactionSource: MutableInteractionSource,
 ) = Scrollbar(
     modifier = modifier,
     orientation = orientation,
     interactionSource = interactionSource,
     state = state,
     thumb = thumb,
-    backgroundColor = colors.trackColor(
-        canScrollForward = canScrollForward,
-        isScrollInProgress = isScrollInProgress,
-        interactionSource = interactionSource
-    ),
+    backgroundColor =
+        colors.trackColor(
+            canScrollForward = canScrollForward,
+            isScrollInProgress = isScrollInProgress,
+            interactionSource = interactionSource,
+        ),
     onThumbMoved = onThumbMoved,
-    reverseLayout = reverseLayout
+    reverseLayout = reverseLayout,
 )
 
 @Immutable
@@ -106,7 +109,7 @@ class ScrollbarColors internal constructor(
     private val contentColor: Color,
     private val activeContentColor: Color,
     private val containerColor: Color,
-    private val activeContainerColor: Color
+    private val activeContainerColor: Color,
 ) {
     @Composable
     private fun scrollbarColor(
@@ -123,22 +126,24 @@ class ScrollbarColors internal constructor(
         val active = canScrollForward && (pressed || hovered || dragged || isScrollInProgress)
 
         val color by animateColorAsState(
-            targetValue = when (state) {
-                ThumbState.Active -> color1
-                ThumbState.Inactive -> color2
-                ThumbState.Dormant -> color2.copy(0f)
-            },
+            targetValue =
+                when (state) {
+                    ThumbState.Active -> color1
+                    ThumbState.Inactive -> color2
+                    ThumbState.Dormant -> color2.copy(0f)
+                },
             animationSpec = SpringSpec(stiffness = Spring.StiffnessLow),
-            label = "scrollbarColor"
+            label = "scrollbarColor",
         )
         LaunchedEffect(active) {
             when (active) {
                 true -> state = ThumbState.Active
-                false -> if (state == ThumbState.Active) {
-                    state = ThumbState.Inactive
-                    delay(SCROLLBAR_INACTIVE_TO_DORMANT_TIME_IN_MS)
-                    state = ThumbState.Dormant
-                }
+                false ->
+                    if (state == ThumbState.Active) {
+                        state = ThumbState.Inactive
+                        delay(SCROLLBAR_INACTIVE_TO_DORMANT_TIME_IN_MS)
+                        state = ThumbState.Dormant
+                    }
             }
         }
 
@@ -149,27 +154,29 @@ class ScrollbarColors internal constructor(
     fun thumbColor(
         canScrollForward: Boolean,
         isScrollInProgress: Boolean,
-        interactionSource: InteractionSource
-    ): Color = scrollbarColor(
-        color1 = activeContentColor,
-        color2 = contentColor,
-        canScrollForward = canScrollForward,
-        isScrollInProgress = isScrollInProgress,
-        interactionSource = interactionSource
-    )
+        interactionSource: InteractionSource,
+    ): Color =
+        scrollbarColor(
+            color1 = activeContentColor,
+            color2 = contentColor,
+            canScrollForward = canScrollForward,
+            isScrollInProgress = isScrollInProgress,
+            interactionSource = interactionSource,
+        )
 
     @Composable
     fun trackColor(
         canScrollForward: Boolean,
         isScrollInProgress: Boolean,
-        interactionSource: InteractionSource
-    ): Color = scrollbarColor(
-        color1 = activeContainerColor,
-        color2 = containerColor,
-        canScrollForward = canScrollForward,
-        isScrollInProgress = isScrollInProgress,
-        interactionSource = interactionSource
-    )
+        interactionSource: InteractionSource,
+    ): Color =
+        scrollbarColor(
+            color1 = activeContainerColor,
+            color2 = containerColor,
+            canScrollForward = canScrollForward,
+            isScrollInProgress = isScrollInProgress,
+            interactionSource = interactionSource,
+        )
 
     @Suppress("RedundantIf")
     override fun equals(other: Any?): Boolean {
@@ -195,8 +202,11 @@ class ScrollbarColors internal constructor(
 
     companion object {
         private const val SCROLLBAR_INACTIVE_TO_DORMANT_TIME_IN_MS = 2_000L
+
         private enum class ThumbState {
-            Active, Inactive, Dormant
+            Active,
+            Inactive,
+            Dormant,
         }
     }
 }
@@ -207,12 +217,12 @@ object ScrollbarDefaults {
         contentColor: Color = MaterialTheme.colorScheme.primary,
         scrolledContentColor: Color = contentColor,
         containerColor: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(10.dp),
-        scrolledContainerColor: Color = containerColor
+        scrolledContainerColor: Color = containerColor,
     ) = ScrollbarColors(
         contentColor,
         scrolledContentColor,
         containerColor,
-        scrolledContainerColor
+        scrolledContainerColor,
     )
 
     @Composable
@@ -220,18 +230,18 @@ object ScrollbarDefaults {
         color: Color,
         orientation: Orientation,
         size: Dp = 8.dp,
-        shape: RoundedCornerShape = RoundedCornerShape(topStartPercent = 50, bottomStartPercent = 50)
+        shape: RoundedCornerShape = RoundedCornerShape(topStartPercent = 50, bottomStartPercent = 50),
     ) = Box(
-        modifier = Modifier
-            .run {
-                when (orientation) {
-                    Orientation.Vertical -> width(size).fillMaxHeight()
-                    Orientation.Horizontal -> height(size).fillMaxWidth()
-                }
-            }
-            .background(
-                color = color,
-                shape = shape
-            )
+        modifier =
+            Modifier
+                .run {
+                    when (orientation) {
+                        Orientation.Vertical -> width(size).fillMaxHeight()
+                        Orientation.Horizontal -> height(size).fillMaxWidth()
+                    }
+                }.background(
+                    color = color,
+                    shape = shape,
+                ),
     )
 }

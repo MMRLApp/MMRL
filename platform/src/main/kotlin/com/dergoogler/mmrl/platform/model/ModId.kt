@@ -45,7 +45,10 @@ data class ModId(
         return id == other.id
     }
 
-    fun equals(other: String?, ignoreCase: Boolean = false): Boolean {
+    fun equals(
+        other: String?,
+        ignoreCase: Boolean = false,
+    ): Boolean {
         if (!ignoreCase) {
             return id == other
         }
@@ -53,10 +56,7 @@ data class ModId(
         return (id as java.lang.String).equalsIgnoreCase(other)
     }
 
-
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
+    override fun hashCode(): Int = id.hashCode()
 
     companion object {
         const val INTENT_MOD_ID_AS_PARCELABLE = "MOD_ID_AS_PARCELABLE"
@@ -64,9 +64,7 @@ data class ModId(
         const val INTENT_ID = "id"
         const val INTENT_BASE_DIR = "BASE_DIR"
 
-        fun String.toModId(baseDir: String = ADB_DIR): ModId {
-            return ModId(this, baseDir)
-        }
+        fun String.toModId(baseDir: String = ADB_DIR): ModId = ModId(this, baseDir)
 
         val EMPTY = ModId("")
 
@@ -165,15 +163,16 @@ data class ModId(
          */
         @get:Keep
         val ModId.serviceFiles
-            get() = listOf(
-                actionFile,
-                serviceFile,
-                postFsDataFile,
-                postMountFile,
-                webrootDir,
-                bootCompletedFile,
-                sepolicyFile
-            )
+            get() =
+                listOf(
+                    actionFile,
+                    serviceFile,
+                    postFsDataFile,
+                    postMountFile,
+                    webrootDir,
+                    bootCompletedFile,
+                    sepolicyFile,
+                )
 
         /**
          * A list of all essential files associated with this Magisk module.
@@ -182,16 +181,17 @@ data class ModId(
          */
         @get:Keep
         val ModId.files
-            get() = listOf(
-                *serviceFiles.toTypedArray(),
-                uninstallFile,
-                systemPropFile,
-                systemDir,
-                propFile,
-                disableFile,
-                removeFile,
-                updateFile
-            )
+            get() =
+                listOf(
+                    *serviceFiles.toTypedArray(),
+                    uninstallFile,
+                    systemPropFile,
+                    systemDir,
+                    propFile,
+                    disableFile,
+                    removeFile,
+                    updateFile,
+                )
 
         val ModId.adbDir get() = SuFile(baseDir)
         val ModId.configDir get() = SuFile(adbDir, HIDDEN_CONFIG_DIR)

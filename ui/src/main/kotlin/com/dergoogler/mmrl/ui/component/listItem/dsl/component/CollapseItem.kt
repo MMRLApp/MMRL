@@ -35,7 +35,8 @@ fun ListScope.CollapseItem(
 
     val rotation by animateFloatAsState(
         targetValue = if (isExpanded) 360f else 0f,
-        animationSpec = tween(durationMillis = 300), label = "coll"
+        animationSpec = tween(durationMillis = 300),
+        label = "coll",
     )
 
     val onClick: () -> Unit = {
@@ -45,18 +46,18 @@ fun ListScope.CollapseItem(
     val icon = if (isExpanded) R.drawable.chevron_up else R.drawable.chevron_down
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-            .alpha(alpha = if (enabled) 1f else 0.5f)
-            .clickable(
-                enabled = enabled,
-                onClick = onClick,
-                role = Role.Button,
-                interactionSource = interactionSource,
-                indication = ripple()
-            )
-            .then(modifier)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+                .alpha(alpha = if (enabled) 1f else 0.5f)
+                .clickable(
+                    enabled = enabled,
+                    onClick = onClick,
+                    role = Role.Button,
+                    interactionSource = interactionSource,
+                    indication = ripple(),
+                ).then(modifier),
     ) {
         this@CollapseItem.Item {
             meta(icon, rotation)

@@ -27,113 +27,122 @@ import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
-class BulkInstallViewModel @Inject constructor(
-    application: Application,
-    localRepository: LocalRepository,
-    modulesRepository: ModulesRepository,
-    userPreferencesRepository: UserPreferencesRepository,
-) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
-    private val bulkModulesFlow = MutableStateFlow(listOf<BulkModule>())
-    val bulkModules get() = bulkModulesFlow.asStateFlow()
+class BulkInstallViewModel
+    @Inject
+    constructor(
+        application: Application,
+        localRepository: LocalRepository,
+        modulesRepository: ModulesRepository,
+        userPreferencesRepository: UserPreferencesRepository,
+    ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+        private val bulkModulesFlow = MutableStateFlow(listOf<BulkModule>())
+        val bulkModules get() = bulkModulesFlow.asStateFlow()
 
-    fun addBulkModule(
-        module: BulkModule,
-        onSuccess: () -> Unit,
-        onFailure: (error: String) -> Unit,
-    ) {
-        val currentModules = bulkModulesFlow.value
-        if (currentModules.contains(module)) {
-            onFailure(context.getString(R.string.bulk_install_module_already_added))
-        } else {
-            bulkModulesFlow.value = currentModules + module
-            onSuccess()
-        }
-    }
-
-    fun removeBulkModule(module: BulkModule) {
-        bulkModulesFlow.value -= module
-    }
-
-    fun clearBulkModules() {
-        bulkModulesFlow.value = listOf()
-    }
-
-    fun downloadMultiple(
-        items: List<BulkModule>,
-        onAllSuccess: (List<Uri>) -> Unit,
-        onFailure: (Throwable) -> Unit,
-    ) {
-        viewModelScope.launch {
-            val downloadPath = File(userPreferencesRepository.data.first().downloadPath)
-
-            val downloadedFiles = mutableListOf<Uri>()
-            val exceptions = mutableListOf<Throwable>()
-
-            items.forEach {
-                val item = it.versionItem
-
-                val filename = Utils.getFilename(
-                    name = it.name,
-                    version = item.version,
-                    versionCode = item.versionCode,
-                    extension = "zip"
-                )
-
-                val task = DownloadService.TaskItem(
-                    key = item.hashCode(),
-                    url = item.zipUrl,
-                    filename = filename,
-                    title = it.name,
-                    desc = item.versionDisplay
-                )
-
-                val downloadDeferred = CompletableDeferred<Uri>()
-                val listener = object : DownloadService.IDownloadListener {
-                    override fun getProgress(value: Float) {}
-                    override fun onFileExists() {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.file_already_exists), Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    override fun onSuccess() {
-                        val file = downloadPath.resolve(filename)
-                        downloadDeferred.complete(file.toUri())
-                    }
-
-                    override fun onFailure(e: Throwable) {
-                        downloadDeferred.completeExceptionally(e)
-                    }
-                }
-
-                try {
-                    DownloadService.start(
-                        context = context,
-                        task = task,
-                        listener = listener
-                    )
-                    val file = downloadDeferred.await()
-                    downloadedFiles.add(file)
-                } catch (e: Throwable) {
-                    exceptions.add(e)
-                    Timber.d(e)
-                }
-            }
-
-            if (exceptions.isEmpty()) {
-                onAllSuccess(downloadedFiles)
+        fun addBulkModule(
+            module: BulkModule,
+            onSuccess: () -> Unit,
+            onFailure: (error: String) -> Unit,
+        ) {
+            val currentModules = bulkModulesFlow.value
+            if (currentModules.contains(module)) {
+                onFailure(context.getString(R.string.bulk_install_module_already_added))
             } else {
-                onFailure(exceptions.first())
+                bulkModulesFlow.value = currentModules + module
+                onSuccess()
             }
         }
-    }
 
-    @Composable
-    fun getProgress(item: VersionItem): Float {
-        val progress by DownloadService.getProgressByKey(item.hashCode())
-            .collectAsStateWithLifecycle(initialValue = 0f)
+        fun removeBulkModule(module: BulkModule) {
+            bulkModulesFlow.value -= module
+        }
 
-        return progress
+        fun clearBulkModules() {
+            bulkModulesFlow.value = listOf()
+        }
+
+        fun downloadMultiple(
+            items: List<BulkModule>,
+            onAllSuccess: (List<Uri>) -> Unit,
+            onFailure: (Throwable) -> Unit,
+        ) {
+            viewModelScope.launch {
+                val downloadPath = File(userPreferencesRepository.data.first().downloadPath)
+
+                val downloadedFiles = mutableListOf<Uri>()
+                val exceptions = mutableListOf<Throwable>()
+
+                items.forEach {
+                    val item = it.versionItem
+
+                    val filename =
+                        Utils.getFilename(
+                            name = it.name,
+                            version = item.version,
+                            versionCode = item.versionCode,
+                            extension = "zip",
+                        )
+
+                    val task =
+                        DownloadService.TaskItem(
+                            key = item.hashCode(),
+                            url = item.zipUrl,
+                            filename = filename,
+                            title = it.name,
+                            desc = item.versionDisplay,
+                        )
+
+                    val downloadDeferred = CompletableDeferred<Uri>()
+                    val listener =
+                        object : DownloadService.IDownloadListener {
+                            override fun getProgress(value: Float) {}
+
+                            override fun onFileExists() {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        context.getString(R.string.file_already_exists),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
+
+                            override fun onSuccess() {
+                                val file = downloadPath.resolve(filename)
+                                downloadDeferred.complete(file.toUri())
+                            }
+
+                            override fun onFailure(e: Throwable) {
+                                downloadDeferred.completeExceptionally(e)
+                            }
+                        }
+
+                    try {
+                        DownloadService.start(
+                            context = context,
+                            task = task,
+                            listener = listener,
+                        )
+                        val file = downloadDeferred.await()
+                        downloadedFiles.add(file)
+                    } catch (e: Throwable) {
+                        exceptions.add(e)
+                        Timber.d(e)
+                    }
+                }
+
+                if (exceptions.isEmpty()) {
+                    onAllSuccess(downloadedFiles)
+                } else {
+                    onFailure(exceptions.first())
+                }
+            }
+        }
+
+        @Composable
+        fun getProgress(item: VersionItem): Float {
+            val progress by DownloadService
+                .getProgressByKey(item.hashCode())
+                .collectAsStateWithLifecycle(initialValue = 0f)
+
+            return progress
+        }
     }
-}

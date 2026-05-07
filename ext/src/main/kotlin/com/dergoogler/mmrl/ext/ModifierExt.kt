@@ -29,15 +29,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Deprecated(message = "Use ignoreParentPadding instead")
-fun Modifier.ignoreHorizontalParentPadding(horizontal: Dp): Modifier {
-    return this.layout { measurable, constraints ->
+fun Modifier.ignoreHorizontalParentPadding(horizontal: Dp): Modifier =
+    this.layout { measurable, constraints ->
         val overridenWidth = constraints.maxWidth + 2 * horizontal.roundToPx()
         val placeable = measurable.measure(constraints.copy(maxWidth = overridenWidth))
         layout(placeable.width, placeable.height) {
             placeable.place(0, 0)
         }
     }
-}
 
 fun Modifier.ignoreParentPadding(
     horizontal: Dp = 0.dp,
@@ -46,8 +45,8 @@ fun Modifier.ignoreParentPadding(
     end: Dp = 0.dp,
     top: Dp = 0.dp,
     bottom: Dp = 0.dp,
-): Modifier {
-    return this.layout { measurable, constraints ->
+): Modifier =
+    this.layout { measurable, constraints ->
         // Combine individual and symmetrical paddings
         val totalStart = start.roundToPx() + horizontal.roundToPx()
         val totalEnd = end.roundToPx() + horizontal.roundToPx()
@@ -62,27 +61,28 @@ fun Modifier.ignoreParentPadding(
         val overriddenHeight = constraints.maxHeight + verticalPadding
 
         // Measure with updated constraints
-        val placeable = measurable.measure(
-            constraints.copy(
-                maxWidth = overriddenWidth,
-                maxHeight = overriddenHeight
+        val placeable =
+            measurable.measure(
+                constraints.copy(
+                    maxWidth = overriddenWidth,
+                    maxHeight = overriddenHeight,
+                ),
             )
-        )
 
         // Layout with adjusted size
         layout(placeable.width, placeable.height) {
             placeable.place(-totalStart, -totalTop)
         }
     }
-}
 
-fun Modifier.fillWidthOfParent(parentPadding: Dp) = this.layout { measurable, constraints ->
-    val placeable =
-        measurable.measure(constraints.copy(maxWidth = constraints.maxWidth + 2 * parentPadding.roundToPx()))
-    layout(placeable.width, placeable.height) {
-        placeable.place(0, 0)
+fun Modifier.fillWidthOfParent(parentPadding: Dp) =
+    this.layout { measurable, constraints ->
+        val placeable =
+            measurable.measure(constraints.copy(maxWidth = constraints.maxWidth + 2 * parentPadding.roundToPx()))
+        layout(placeable.width, placeable.height) {
+            placeable.place(0, 0)
+        }
     }
-}
 
 fun Modifier.fillSizeOfParent(
     all: Dp = Dp.Unspecified,
@@ -98,26 +98,29 @@ fun Modifier.fillSizeOfParent(
     val overriddenWidth = (constraints.maxWidth + extraWidth).coerceAtLeast(0)
     val overriddenHeight = (constraints.maxHeight + extraHeight).coerceAtLeast(0)
 
-    val placeable = measurable.measure(
-        constraints.copy(
-            maxWidth = overriddenWidth,
-            maxHeight = overriddenHeight
+    val placeable =
+        measurable.measure(
+            constraints.copy(
+                maxWidth = overriddenWidth,
+                maxHeight = overriddenHeight,
+            ),
         )
-    )
 
     layout(placeable.width, placeable.height) {
         placeable.place(-extraWidth / 2, -extraHeight / 2)
     }
 }
 
-fun Modifier.systemBarsPaddingEnd() = composed {
-    val layoutDirection = LocalLayoutDirection.current
-    return@composed padding(
-        end = WindowInsets.systemBars
-            .asPaddingValues()
-            .calculateEndPadding(layoutDirection),
-    )
-}
+fun Modifier.systemBarsPaddingEnd() =
+    composed {
+        val layoutDirection = LocalLayoutDirection.current
+        return@composed padding(
+            end =
+                WindowInsets.systemBars
+                    .asPaddingValues()
+                    .calculateEndPadding(layoutDirection),
+        )
+    }
 
 fun Modifier.fadingEdge(
     brush: Brush,
@@ -131,7 +134,7 @@ fun Modifier.fadingEdge(
         drawRect(
             brush = brush,
             size = size.copy(height = gradientHeight),
-            blendMode = blendMode
+            blendMode = blendMode,
         )
     }
 
@@ -158,7 +161,7 @@ fun Modifier.onClick(
         enabled = enabled,
         onClick = click,
         role = role,
-        indication = ripple()
+        indication = ripple(),
     )
 }
 
@@ -181,9 +184,7 @@ interface ModifierScope {
         column: Modifier = this.column,
     ): ModifierScope
 
-    fun copy(
-        original: ModifierScope,
-    ): ModifierScope
+    fun copy(original: ModifierScope): ModifierScope
 
     override fun hashCode(): Int
 }
@@ -199,7 +200,7 @@ class ModifierScopeImpl(
     constructor(original: ModifierScope) : this(
         surface = original.surface,
         box = original.box,
-        column = original.column
+        column = original.column,
     )
 
     @Suppress("RedundantIf")
@@ -218,29 +219,30 @@ class ModifierScopeImpl(
         surface: Modifier,
         box: Modifier,
         column: Modifier,
-    ): ModifierScope = ModifierScopeImpl(
-        surface = surface,
-        box = box,
-        column = column
-    )
+    ): ModifierScope =
+        ModifierScopeImpl(
+            surface = surface,
+            box = box,
+            column = column,
+        )
 
     override fun then(
         surface: Modifier,
         box: Modifier,
         column: Modifier,
-    ): ModifierScope = ModifierScopeImpl(
-        surface = this.surface.then(surface),
-        box = this.box.then(box),
-        column = this.column.then(column)
-    )
+    ): ModifierScope =
+        ModifierScopeImpl(
+            surface = this.surface.then(surface),
+            box = this.box.then(box),
+            column = this.column.then(column),
+        )
 
-    override fun copy(
-        original: ModifierScope,
-    ): ModifierScope = ModifierScopeImpl(
-        surface = original.surface,
-        box = original.box,
-        column = original.column
-    )
+    override fun copy(original: ModifierScope): ModifierScope =
+        ModifierScopeImpl(
+            surface = original.surface,
+            box = original.box,
+            column = original.column,
+        )
 
     override fun hashCode(): Int {
         var result = box.hashCode()

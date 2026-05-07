@@ -32,14 +32,16 @@ fun ListEditTextItem(
     val dialogParameters = remember { DialogParameters() }.apply(dialog)
 
     var open by remember { mutableStateOf(false) }
-    if (open) EditTextDialog(
-        value = value,
-        title = title,
-        onClose = { open = false },
-        onConfirm = onConfirm,
-        onValid = onValid,
-        dialogParameters = dialogParameters,
-    )
+    if (open) {
+        EditTextDialog(
+            value = value,
+            title = title,
+            onClose = { open = false },
+            onConfirm = onConfirm,
+            onValid = onValid,
+            dialogParameters = dialogParameters,
+        )
+    }
 
     ListButtonItem(
         modifier = modifier,
@@ -51,6 +53,6 @@ fun ListEditTextItem(
         interactionSource = interactionSource,
         enabled = enabled,
         itemTextStyle = itemTextStyle,
-        base = base
+        base = base,
     )
 }

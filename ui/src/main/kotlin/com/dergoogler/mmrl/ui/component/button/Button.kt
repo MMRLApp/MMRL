@@ -32,25 +32,28 @@ fun DoubleButton(
     enabledDropdown: Boolean = true,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     @DrawableRes dropdownIcon: Int = R.drawable.caret_down,
-    content: @Composable() (RowScope.() -> Unit),
+    content:
+        @Composable()
+        (RowScope.() -> Unit),
 ) {
     Row(
         modifier = rowModifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         val borderModifier = 2.5.dp
 
         Button(
             enabled = enabled,
             onClick = onClick,
-            shape = RoundedCornerShape(
-                topStart = 24.dp,
-                bottomStart = 24.dp,
-                topEnd = borderModifier,
-                bottomEnd = borderModifier
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = 24.dp,
+                    bottomStart = 24.dp,
+                    topEnd = borderModifier,
+                    bottomEnd = borderModifier,
+                ),
             modifier = modifier,
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
         ) {
             content()
         }
@@ -60,22 +63,24 @@ fun DoubleButton(
         Button(
             enabled = enabledDropdown,
             onClick = onDropdownClick,
-            shape = RoundedCornerShape(
-                topStart = borderModifier,
-                bottomStart = borderModifier,
-                topEnd = 24.dp,
-                bottomEnd = 24.dp
-            ),
+            shape =
+                RoundedCornerShape(
+                    topStart = borderModifier,
+                    bottomStart = borderModifier,
+                    topEnd = 24.dp,
+                    bottomEnd = 24.dp,
+                ),
             contentPadding = PaddingValues(0.dp),
-            modifier = Modifier
-                .width(dropdownButtonWidth)
-                .fillMaxHeight()
+            modifier =
+                Modifier
+                    .width(dropdownButtonWidth)
+                    .fillMaxHeight(),
         ) {
             Icon(
                 modifier = Modifier.size(20.dp),
                 painter = painterResource(id = dropdownIcon),
                 contentDescription = null,
-                tint = LocalContentColor.current
+                tint = LocalContentColor.current,
             )
         }
     }

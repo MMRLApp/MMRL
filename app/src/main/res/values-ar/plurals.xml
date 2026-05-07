@@ -1,3 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="module_count_explore_repo">
+        <item quantity="zero">%1$s وحدة محفوظة</item>
+        <item quantity="one">وحدة واحدة محفوظة</item>
+        <item quantity="two">وحدتان محفوظتان</item>
+        <item quantity="few">%1$s وحدات محفوظة</item>
+        <item quantity="many">%1$s وحدة محفوظة</item>
+        <item quantity="other">%1$s وحدة محفوظة</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="zero">%1$d ساعة</item>
+        <item quantity="one">ساعة واحدة</item>
+        <item quantity="two">ساعتان</item>
+        <item quantity="few">%1$d ساعات</item>
+        <item quantity="many">%1$d ساعة</item>
+        <item quantity="other">%1$d ساعة</item>
+    </plurals>
 </resources>

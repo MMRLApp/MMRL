@@ -1,6 +1,10 @@
 package com.dergoogler.mmrl.platform.ksu
 
-enum class Groups(val gid: Int, val display: String, val desc: String) {
+enum class Groups(
+    val gid: Int,
+    val display: String,
+    val desc: String,
+) {
     ROOT(0, "root", "traditional unix root user"),
     DAEMON(1, "daemon", "Traditional unix daemon owner."),
     BIN(2, "bin", "Traditional unix binaries owner."),

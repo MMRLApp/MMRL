@@ -39,23 +39,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.model.state.RepoState
-import com.dergoogler.mmrl.ui.component.BottomSheet
-import com.dergoogler.mmrl.ui.component.Cover
-import com.dergoogler.mmrl.ui.component.LabelItem
-import com.dergoogler.mmrl.ui.component.card.Card
-import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
-import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.ext.shareText
 import com.dergoogler.mmrl.ext.takeTrue
+import com.dergoogler.mmrl.model.state.RepoState
+import com.dergoogler.mmrl.ui.component.BottomSheet
+import com.dergoogler.mmrl.ui.component.Cover
+import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.LabelItemDefaults
+import com.dergoogler.mmrl.ui.component.card.Card
 import com.dergoogler.mmrl.ui.component.listItem.dsl.List
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.utils.toFormattedDateSafely
+import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 
 @Composable
 fun RepositoryItem(
@@ -68,10 +68,11 @@ fun RepositoryItem(
     val userPreferences = LocalUserPreferences.current
     val menu = userPreferences.repositoriesMenu
     val context = LocalContext.current
-    val (alpha, textDecoration) = when {
-        !repo.compatible -> 0.5f to TextDecoration.LineThrough
-        else -> 1f to TextDecoration.None
-    }
+    val (alpha, textDecoration) =
+        when {
+            !repo.compatible -> 0.5f to TextDecoration.LineThrough
+            else -> 1f to TextDecoration.None
+        }
 
     val isEnabled = repo.compatible && !isDemoMode
 
@@ -79,38 +80,41 @@ fun RepositoryItem(
 
     Card(
         enabled = repo.compatible,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Column(
-            modifier = Modifier.relative()
+            modifier = Modifier.relative(),
         ) {
             repoCover.nullable(menu.showCover) {
                 if (it.isNotEmpty()) {
                     Box(
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         Cover(
-                            modifier = Modifier.fadingEdge(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Black,
-                                    ),
-                                    startY = Float.POSITIVE_INFINITY,
-                                    endY = 0f
+                            modifier =
+                                Modifier.fadingEdge(
+                                    brush =
+                                        Brush.verticalGradient(
+                                            colors =
+                                                listOf(
+                                                    Color.Transparent,
+                                                    Color.Black,
+                                                ),
+                                            startY = Float.POSITIVE_INFINITY,
+                                            endY = 0f,
+                                        ),
                                 ),
-                            ),
                             url = it,
                         )
 
                         menu.showModulesCount.takeTrue {
                             Box(
-                                modifier = Modifier
-                                    .absolutePadding(
-                                        top = 16.dp,
-                                        right = 16.dp
-                                    )
-                                    .align(Alignment.TopEnd),
+                                modifier =
+                                    Modifier
+                                        .absolutePadding(
+                                            top = 16.dp,
+                                            right = 16.dp,
+                                        ).align(Alignment.TopEnd),
                             ) {
                                 ModuleCountLabelItem(repo)
                             }
@@ -121,32 +125,35 @@ fun RepositoryItem(
 
             Row(
                 modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .alpha(alpha),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .alpha(alpha),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     Text(
                         text = repo.name,
-                        style = MaterialTheme.typography.titleSmall
-                            .copy(fontWeight = FontWeight.Bold),
+                        style =
+                            MaterialTheme.typography.titleSmall
+                                .copy(fontWeight = FontWeight.Bold),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        textDecoration = textDecoration
+                        textDecoration = textDecoration,
                     )
 
                     menu.showUpdatedTime.takeTrue {
                         Text(
-                            text = stringResource(
-                                id = R.string.module_update_at,
-                                repo.timestamp.toFormattedDateSafely
-                            ),
+                            text =
+                                stringResource(
+                                    id = R.string.module_update_at,
+                                    repo.timestamp.toFormattedDateSafely,
+                                ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.outline,
-                            textDecoration = textDecoration
+                            textDecoration = textDecoration,
                         )
                     }
                 }
@@ -158,41 +165,43 @@ fun RepositoryItem(
 
             repo.description.nullable {
                 Text(
-                    modifier = Modifier
-                        .alpha(alpha = alpha)
-                        .padding(top = 16.dp)
-                        .padding(horizontal = 16.dp),
+                    modifier =
+                        Modifier
+                            .alpha(alpha = alpha)
+                            .padding(top = 16.dp)
+                            .padding(horizontal = 16.dp),
                     text = it,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
 
             HorizontalDivider(
                 thickness = 1.5.dp,
                 color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 8.dp),
             )
 
             Row(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 var open by remember { mutableStateOf(false) }
                 if (open) {
                     BottomSheetForItem(
                         repo = repo,
                         onDelete = delete,
-                        onClose = { open = false }
+                        onClose = { open = false },
                     )
                 }
 
                 CardButtonItem(
                     icon = R.drawable.share,
                     enabled = isEnabled,
-                    onClick = { context.shareText(repo.url) }
+                    onClick = { context.shareText(repo.url) },
                 )
 
                 Spacer(Modifier.weight(1f))
@@ -201,14 +210,14 @@ fun RepositoryItem(
                     icon = R.drawable.at,
                     label = R.string.repo_options,
                     onClick = { open = true },
-                    enabled = isEnabled
+                    enabled = isEnabled,
                 )
 
                 CardButtonItem(
                     icon = R.drawable.cloud_download,
                     label = R.string.repo_options_update,
                     onClick = update,
-                    enabled = isEnabled
+                    enabled = isEnabled,
                 )
             }
         }
@@ -217,44 +226,49 @@ fun RepositoryItem(
 
 @Composable
 private fun BottomSheetForItem(
-    repo: RepoState, onDelete: () -> Unit, onClose: () -> Unit,
+    repo: RepoState,
+    onDelete: () -> Unit,
+    onClose: () -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
     val browser = LocalUriHandler.current
 
     Column(
-        modifier = Modifier
-            .padding(bottom = 18.dp)
-            .padding(horizontal = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+        modifier =
+            Modifier
+                .padding(bottom = 18.dp)
+                .padding(horizontal = 18.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         Row(
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
                 Text(
                     text = repo.name,
-                    style = MaterialTheme.typography.titleSmall
-                        .copy(fontWeight = FontWeight.Bold),
+                    style =
+                        MaterialTheme.typography.titleSmall
+                            .copy(fontWeight = FontWeight.Bold),
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 Text(
-                    text = stringResource(
-                        id = R.string.module_update_at,
-                        repo.timestamp.toFormattedDateSafely
-                    ),
+                    text =
+                        stringResource(
+                            id = R.string.module_update_at,
+                            repo.timestamp.toFormattedDateSafely,
+                        ),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
 
             LabelItem(
                 text = stringResource(id = R.string.repo_modules, repo.size),
-                upperCase = false
+                upperCase = false,
             )
         }
 
@@ -265,17 +279,18 @@ private fun BottomSheetForItem(
             value = repo.url,
             onValueChange = {},
             readOnly = true,
-            singleLine = true
+            singleLine = true,
         )
     }
 
     List(
-        modifier = Modifier
-            .padding(bottom = 18.dp),
+        modifier =
+            Modifier
+                .padding(bottom = 18.dp),
     ) {
         repo.support.nullable {
             ButtonItem(
-                onClick = { browser.openUri(it) }
+                onClick = { browser.openUri(it) },
             ) {
                 this.Icon(painter = painterResource(id = R.drawable.brand_git))
                 Title(R.string.repo_options_support)
@@ -284,7 +299,7 @@ private fun BottomSheetForItem(
 
         repo.donate.nullable {
             ButtonItem(
-                onClick = { browser.openUri(it) }
+                onClick = { browser.openUri(it) },
             ) {
                 this.Icon(painter = painterResource(id = R.drawable.heart_handshake))
                 Title(R.string.repo_options_donate)
@@ -293,7 +308,7 @@ private fun BottomSheetForItem(
 
         repo.website.nullable {
             ButtonItem(
-                onClick = { browser.openUri(it) }
+                onClick = { browser.openUri(it) },
             ) {
                 this.Icon(painter = painterResource(id = R.drawable.world_www))
                 Title(R.string.repo_options_website)
@@ -302,7 +317,7 @@ private fun BottomSheetForItem(
 
         repo.submission.nullable {
             ButtonItem(
-                onClick = { browser.openUri(it) }
+                onClick = { browser.openUri(it) },
             ) {
                 this.Icon(painter = painterResource(id = R.drawable.cloud_upload))
                 Title(R.string.repo_options_submission)
@@ -310,11 +325,11 @@ private fun BottomSheetForItem(
         }
 
         HorizontalDivider(
-            thickness = Dp.Hairline
+            thickness = Dp.Hairline,
         )
 
         ButtonItem(
-            onClick = onDelete
+            onClick = onDelete,
         ) {
             this.Icon(painter = painterResource(id = R.drawable.trash))
             Title(R.string.repo_options_delete)
@@ -331,18 +346,18 @@ private fun CardButtonItem(
 ) = FilledTonalButton(
     onClick = onClick,
     enabled = enabled,
-    contentPadding = PaddingValues(horizontal = 12.dp)
+    contentPadding = PaddingValues(horizontal = 12.dp),
 ) {
     Icon(
         modifier = Modifier.size(20.dp),
         painter = painterResource(id = icon),
-        contentDescription = null
+        contentDescription = null,
     )
 
     label?.let {
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = stringResource(id = label)
+            text = stringResource(id = label),
         )
     }
 }
@@ -352,15 +367,16 @@ private fun ModuleCountLabelItem(repo: RepoState) {
     if (repo.compatible) {
         LabelItem(
             text = stringResource(id = R.string.repo_modules, repo.size),
-            upperCase = false
+            upperCase = false,
         )
     } else {
         LabelItem(
             text = stringResource(id = R.string.repo_incompatible),
-            style = LabelItemDefaults.style.copy(
-                containerColor = MaterialTheme.colorScheme.error,
-                contentColor = MaterialTheme.colorScheme.onError
-            )
+            style =
+                LabelItemDefaults.style.copy(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                ),
         )
     }
 }

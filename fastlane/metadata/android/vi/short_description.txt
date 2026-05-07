@@ -1,0 +1,1 @@
+Trình quản lý mô-đun dành cho Magisk & KernelSU.

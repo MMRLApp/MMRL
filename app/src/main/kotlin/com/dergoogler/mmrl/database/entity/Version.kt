@@ -11,28 +11,29 @@ data class VersionItemEntity(
     val version: String,
     val versionCode: Int,
     val zipUrl: String,
-    val changelog: String
+    val changelog: String,
 ) {
     constructor(
         original: VersionItem,
         id: String,
-        repoUrl: String
+        repoUrl: String,
     ) : this(
         id = id,
-        repoUrl= repoUrl,
+        repoUrl = repoUrl,
         timestamp = original.timestamp,
         version = original.version,
         versionCode = original.versionCode,
         zipUrl = original.zipUrl,
-        changelog = original.changelog
+        changelog = original.changelog,
     )
 
-    fun toItem() = VersionItem(
-        repoUrl= repoUrl,
-        timestamp = timestamp,
-        version = version,
-        versionCode = versionCode,
-        zipUrl = zipUrl,
-        changelog = changelog
-    )
+    fun toItem() =
+        VersionItem(
+            repoUrl = repoUrl,
+            timestamp = timestamp,
+            version = version,
+            versionCode = versionCode,
+            zipUrl = zipUrl,
+            changelog = changelog,
+        )
 }

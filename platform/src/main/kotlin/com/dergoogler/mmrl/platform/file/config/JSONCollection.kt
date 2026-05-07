@@ -17,46 +17,57 @@ import com.squareup.moshi.Types
 sealed interface JSONCollection
 
 @JsonClass(generateAdapter = true)
-data class JSONString(@Json(name = "value") val string: String) : JSONCollection {
+data class JSONString(
+    @Json(name = "value") val string: String,
+) : JSONCollection {
     companion object {
         val EMPTY = JSONString("")
+
         fun String.toJsonString() = JSONString(this)
     }
 }
 
 @JsonClass(generateAdapter = true)
-data class JSONBoolean(@Json(name = "value") val boolean: Boolean) : JSONCollection {
+data class JSONBoolean(
+    @Json(name = "value") val boolean: Boolean,
+) : JSONCollection {
     companion object {
         val TRUE = JSONBoolean(true)
         val FALSE = JSONBoolean(false)
+
         fun Boolean.toJsonBoolean() = JSONBoolean(this)
     }
 }
 
 @JsonClass(generateAdapter = true)
-data class JSONArray(@Json(name = "values") val array: List<Any?>) : JSONCollection {
+data class JSONArray(
+    @Json(name = "values") val array: List<Any?>,
+) : JSONCollection {
     companion object {
         val EMPTY = JSONArray(emptyList())
+
         fun List<Any?>.toJsonArray() = JSONArray(this)
 
         // Helper methods for type-safe access
-        fun <T> JSONArray.asListOf(type: Class<T>): List<T>? {
-            return array.filterIsInstance(type)
-        }
+        fun <T> JSONArray.asListOf(type: Class<T>): List<T>? = array.filterIsInstance(type)
 
-        inline fun <reified T> JSONArray.asListOf(): List<T> {
-            return array.filterIsInstance<T>()
-        }
+        inline fun <reified T> JSONArray.asListOf(): List<T> = array.filterIsInstance<T>()
     }
 }
 
 @JsonClass(generateAdapter = true)
-data class JSONNumber(@Json(name = "value") val number: Number) : JSONCollection {
+data class JSONNumber(
+    @Json(name = "value") val number: Number,
+) : JSONCollection {
     companion object {
         val ZERO = JSONNumber(0)
+
         fun Int.toJsonNumber() = JSONNumber(this)
+
         fun Double.toJsonNumber() = JSONNumber(this)
+
         fun Float.toJsonNumber() = JSONNumber(this)
+
         fun Long.toJsonNumber() = JSONNumber(this)
     }
 
@@ -68,19 +79,26 @@ data class JSONNumber(@Json(name = "value") val number: Number) : JSONCollection
 }
 
 @JsonClass(generateAdapter = true)
-data class JSONObject(@Json(name = "properties") val properties: Map<String, Any?>) :
-    JSONCollection {
+data class JSONObject(
+    @Json(name = "properties") val properties: Map<String, Any?>,
+) : JSONCollection {
     companion object {
         val EMPTY = JSONObject(emptyMap())
+
         fun Map<String, Any?>.toJsonObject() = JSONObject(this)
     }
 
     // Helper methods for easy access
     operator fun get(key: String): Any? = properties[key]
+
     fun getString(key: String): String? = properties[key] as? String
+
     fun getNumber(key: String): Number? = properties[key] as? Number
+
     fun getBoolean(key: String): Boolean? = properties[key] as? Boolean
+
     fun getArray(key: String): JSONArray? = properties[key] as? JSONArray
+
     fun getObject(key: String): JSONObject? = properties[key] as? JSONObject
 }
 
@@ -89,7 +107,8 @@ object JSONNull : JSONCollection {
 }
 
 val moshi: Moshi by lazy {
-    Moshi.Builder()
+    Moshi
+        .Builder()
         .add(JSONCollectionAdapter())
         .add(JSONNullAdapter())
         .build()
@@ -101,14 +120,14 @@ class JSONCollectionAdapter {
             Types.newParameterizedType(
                 Map::class.java,
                 String::class.java,
-                Any::class.java
-            )
+                Any::class.java,
+            ),
         )
     }
 
     @FromJson
-    fun fromJson(reader: JsonReader): JSONCollection? {
-        return when (reader.peek()) {
+    fun fromJson(reader: JsonReader): JSONCollection? =
+        when (reader.peek()) {
             JsonReader.Token.STRING -> JSONString(reader.nextString())
             JsonReader.Token.BOOLEAN -> JSONBoolean(reader.nextBoolean())
             JsonReader.Token.NUMBER -> parseJSONNumber(reader)
@@ -121,7 +140,6 @@ class JSONCollectionAdapter {
 
             else -> throw JsonDataException("Unexpected token: ${reader.peek()}")
         }
-    }
 
     private fun parseJSONNumber(reader: JsonReader): JSONNumber {
         // Use nextDouble() for all numbers to avoid precision issues
@@ -149,8 +167,8 @@ class JSONCollectionAdapter {
         return JSONObject(map)
     }
 
-    private fun parseDynamicValue(reader: JsonReader): Any? {
-        return when (reader.peek()) {
+    private fun parseDynamicValue(reader: JsonReader): Any? =
+        when (reader.peek()) {
             JsonReader.Token.STRING -> reader.nextString()
             JsonReader.Token.BOOLEAN -> reader.nextBoolean()
             JsonReader.Token.NUMBER -> reader.nextDouble()
@@ -181,10 +199,12 @@ class JSONCollectionAdapter {
 
             else -> throw JsonDataException("Unsupported token: ${reader.peek()}")
         }
-    }
 
     @ToJson
-    fun toJson(writer: JsonWriter, value: JSONCollection?) {
+    fun toJson(
+        writer: JsonWriter,
+        value: JSONCollection?,
+    ) {
         when (value) {
             is JSONString -> writer.value(value.string)
             is JSONBoolean -> writer.value(value.boolean)
@@ -197,13 +217,19 @@ class JSONCollectionAdapter {
         }
     }
 
-    private fun writeArray(writer: JsonWriter, array: List<*>) {
+    private fun writeArray(
+        writer: JsonWriter,
+        array: List<*>,
+    ) {
         writer.beginArray()
         array.forEach { writeDynamicValue(writer, it) }
         writer.endArray()
     }
 
-    private fun writeObject(writer: JsonWriter, properties: Map<String, Any?>) {
+    private fun writeObject(
+        writer: JsonWriter,
+        properties: Map<String, Any?>,
+    ) {
         writer.beginObject()
         properties.forEach { (key, value) ->
             writer.name(key)
@@ -212,7 +238,10 @@ class JSONCollectionAdapter {
         writer.endObject()
     }
 
-    private fun writeDynamicValue(writer: JsonWriter, value: Any?) {
+    private fun writeDynamicValue(
+        writer: JsonWriter,
+        value: Any?,
+    ) {
         when (value) {
             is String -> writer.value(value)
             is Number -> writer.value(value.toDouble())
@@ -244,19 +273,20 @@ class JSONNullAdapter {
     }
 
     @ToJson
-    fun toJson(writer: JsonWriter, value: JSONNull?) {
+    fun toJson(
+        writer: JsonWriter,
+        value: JSONNull?,
+    ) {
         writer.nullValue()
     }
 }
 
 // Extension functions for easier usage
-inline fun <reified T> JSONArray.mapElements(transform: (T) -> Any?): JSONArray {
-    return JSONArray(array.map { if (it is T) transform(it) else it })
-}
+inline fun <reified T> JSONArray.mapElements(transform: (T) -> Any?): JSONArray =
+    JSONArray(array.map { if (it is T) transform(it) else it })
 
 inline fun <reified T> JSONArray.toTypedList(): List<T> = array.filterIsInstance<T>()
-inline fun <reified T> JSONArray.toTypedMutableList(): MutableList<T> =
-    toTypedList<T>().toMutableList()
 
-inline fun <reified T> JSONArray.toTypedMutableStateList(): SnapshotStateList<T> =
-    toTypedList<T>().toMutableStateList()
+inline fun <reified T> JSONArray.toTypedMutableList(): MutableList<T> = toTypedList<T>().toMutableList()
+
+inline fun <reified T> JSONArray.toTypedMutableStateList(): SnapshotStateList<T> = toTypedList<T>().toMutableStateList()

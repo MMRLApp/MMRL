@@ -2,7 +2,6 @@ package com.dergoogler.mmrl.ui.component.text
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -64,11 +63,13 @@ fun TextRow(
         leadingContent.nullable {
             {
                 Box(
-                    modifier = Modifier.padding(
-                        end = contentPadding.calculateEndPadding(
-                            layoutDirection
-                        )
-                    )
+                    modifier =
+                        Modifier.padding(
+                            end =
+                                contentPadding.calculateEndPadding(
+                                    layoutDirection,
+                                ),
+                        ),
                 ) {
                     it()
                 }
@@ -79,11 +80,13 @@ fun TextRow(
         trailingContent.nullable {
             {
                 Box(
-                    modifier = Modifier.padding(
-                        start = contentPadding.calculateStartPadding(
-                            layoutDirection
-                        )
-                    )
+                    modifier =
+                        Modifier.padding(
+                            start =
+                                contentPadding.calculateStartPadding(
+                                    layoutDirection,
+                                ),
+                        ),
                 ) {
                     it()
                 }
@@ -96,7 +99,7 @@ fun TextRow(
         verticalAlignment = verticalAlignment,
         leadingContent = decoratedLeadingContent,
         content = content,
-        trailingContent = decoratedTrailingContent
+        trailingContent = decoratedTrailingContent,
     )
 }
 
@@ -109,37 +112,40 @@ private fun TextRowLayout(
     content: @Composable () -> Unit,
     trailingContent: (@Composable () -> Unit)? = null,
 ) {
-    val measurePolicy = remember(horizontalArrangement, verticalAlignment) {
-        TextRowMeasurePolicy(horizontalArrangement, verticalAlignment)
-    }
+    val measurePolicy =
+        remember(horizontalArrangement, verticalAlignment) {
+            TextRowMeasurePolicy(horizontalArrangement, verticalAlignment)
+        }
 
     Layout(
         modifier = modifier,
-        contents = listOf(
-            leadingContent ?: {},
-            content,
-            trailingContent ?: {}
-        ),
-        measurePolicy = measurePolicy
+        contents =
+            listOf(
+                leadingContent ?: {},
+                content,
+                trailingContent ?: {},
+            ),
+        measurePolicy = measurePolicy,
     )
 }
 
 private class TextRowMeasurePolicy(
     private val horizontalArrangement: Arrangement.Horizontal,
-    private val verticalAlignment: Alignment.Vertical
+    private val verticalAlignment: Alignment.Vertical,
 ) : MultiContentMeasurePolicy {
-
     override fun MeasureScope.measure(
         measurables: List<List<Measurable>>,
-        constraints: Constraints
+        constraints: Constraints,
     ): MeasureResult {
         val flattenedMeasurables = measurables.flatten()
         val placeables = flattenedMeasurables.map { it.measure(constraints) }
 
         val totalWidth =
             placeables.sumOf { it.width }.coerceIn(constraints.minWidth, constraints.maxWidth)
-        val maxHeight = placeables.maxOfOrNull { it.height }
-            ?.coerceIn(constraints.minHeight, constraints.maxHeight) ?: 0
+        val maxHeight =
+            placeables
+                .maxOfOrNull { it.height }
+                ?.coerceIn(constraints.minHeight, constraints.maxHeight) ?: 0
 
         val outPositions = IntArray(placeables.size)
         with(horizontalArrangement) {
@@ -147,7 +153,7 @@ private class TextRowMeasurePolicy(
                 totalSize = totalWidth,
                 sizes = placeables.map { it.width }.toIntArray(),
                 layoutDirection = LayoutDirection.Ltr,
-                outPositions = outPositions
+                outPositions = outPositions,
             )
         }
 

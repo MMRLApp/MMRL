@@ -75,7 +75,7 @@ fun <T> ListScope.RadioDialogItem(
                 this@RadioDialogItem.AlertRadioDialog(
                     title = {
                         ProvideTitleTypography(
-                            token = TypographyKeyTokens.HeadlineSmall
+                            token = TypographyKeyTokens.HeadlineSmall,
                         ) {
                             this@ButtonItem.FromSlot(ListItemSlot.Title) {
                                 content(selectedOption)
@@ -90,10 +90,10 @@ fun <T> ListScope.RadioDialogItem(
                     onConfirm = {
                         selectedOption = it
                         onConfirm(it)
-                    }
+                    },
                 )
             }
-        }
+        },
     )
 }
 
@@ -128,20 +128,21 @@ private fun <T> ListScope.AlertRadioDialog(
         Title(content = title)
 
         Content(
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(0.dp),
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .heightIn(max = 450.dp)
-                    .fadingEdge(
-                        Brush.verticalGradient(
-                            0f to Color.Transparent,
-                            0.03f to Color.Red,
-                            0.97f to Color.Red,
-                            1f to Color.Transparent
-                        )
-                    ),
-                contentPadding = PaddingValues(vertical = 4.dp)
+                modifier =
+                    Modifier
+                        .heightIn(max = 450.dp)
+                        .fadingEdge(
+                            Brush.verticalGradient(
+                                0f to Color.Transparent,
+                                0.03f to Color.Red,
+                                0.97f to Color.Red,
+                                1f to Color.Transparent,
+                            ),
+                        ),
+                contentPadding = PaddingValues(vertical = 4.dp),
             ) {
                 items(
                     items = options,
@@ -152,25 +153,26 @@ private fun <T> ListScope.AlertRadioDialog(
                     if (option.title == null) return@items
 
                     Row(
-                        modifier = Modifier
-                            .toggleable(
-                                enabled = option.enabled,
-                                value = checked,
-                                onValueChange = {
-                                    selectedOption = option
-                                },
-                                role = Role.RadioButton,
-                                interactionSource = interactionSource,
-                                indication = ripple()
-                            )
-                            .fillMaxWidth(),
+                        modifier =
+                            Modifier
+                                .toggleable(
+                                    enabled = option.enabled,
+                                    value = checked,
+                                    onValueChange = {
+                                        selectedOption = option
+                                    },
+                                    role = Role.RadioButton,
+                                    interactionSource = interactionSource,
+                                    indication = ripple(),
+                                ).fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         this@AlertRadioDialog.Item(
-                            contentPadding = PaddingValues(
-                                vertical = 8.dp,
-                                horizontal = 25.dp
-                            )
+                            contentPadding =
+                                PaddingValues(
+                                    vertical = 8.dp,
+                                    horizontal = 25.dp,
+                                ),
                         ) {
                             Title(option.title)
 
@@ -182,14 +184,13 @@ private fun <T> ListScope.AlertRadioDialog(
                                 RadioButton(
                                     enabled = option.enabled,
                                     selected = checked,
-                                    onClick = null
+                                    onClick = null,
                                 )
                             }
                         }
                     }
                 }
             }
-
         }
 
         Buttons {

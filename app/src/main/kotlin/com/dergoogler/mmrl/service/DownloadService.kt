@@ -55,15 +55,15 @@ class DownloadService : LifecycleService() {
             }
         }
 
-        progressFlow.drop(1)
+        progressFlow
+            .drop(1)
             .sample(500)
             .flowOn(Dispatchers.IO)
             .onEach { (item, progress) ->
                 if (progress != 0f) {
                     onProgressChanged(item, progress)
                 }
-            }
-            .launchIn(lifecycleScope)
+            }.launchIn(lifecycleScope)
     }
 
     override fun onCreate() {
@@ -80,7 +80,11 @@ class DownloadService : LifecycleService() {
         super.onDestroy()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         lifecycleScope.launch {
             val item = intent?.taskItemOrNull ?: return@launch
             val userPreferences = userPreferencesRepository.data.first()
@@ -94,115 +98,135 @@ class DownloadService : LifecycleService() {
                 return@launch
             }
 
-            val listener = object : IDownloadListener {
-                override fun getProgress(value: Float) {
-                    listeners[item]?.getProgress(value)
-                    progressFlow.value = item to value
+            val listener =
+                object : IDownloadListener {
+                    override fun getProgress(value: Float) {
+                        listeners[item]?.getProgress(value)
+                        progressFlow.value = item to value
+                    }
+
+                    override fun onSuccess() {
+                        listeners[item]?.onSuccess()
+                        progressFlow.value = item to 0f
+
+                        onDownloadSucceeded(item)
+                        tasks.remove(item)
+                    }
+
+                    override fun onFailure(e: Throwable) {
+                        listeners[item]?.onFailure(e)
+                        progressFlow.value = item to 0f
+
+                        Timber.e(e)
+                        onDownloadFailed(item, e.message)
+                        tasks.remove(item)
+                    }
                 }
 
-                override fun onSuccess() {
-                    listeners[item]?.onSuccess()
-                    progressFlow.value = item to 0f
-
-                    onDownloadSucceeded(item)
-                    tasks.remove(item)
+            val output =
+                try {
+                    val uri =
+                        createDownloadUri(
+                            path = file.toRelativeString(Const.PUBLIC_DOWNLOADS),
+                            mimeType = "android/zip",
+                        )
+                    checkNotNull(contentResolver.openOutputStream(uri))
+                } catch (e: Throwable) {
+                    listener.onFailure(e)
+                    return@launch
                 }
-
-                override fun onFailure(e: Throwable) {
-                    listeners[item]?.onFailure(e)
-                    progressFlow.value = item to 0f
-
-                    Timber.e(e)
-                    onDownloadFailed(item, e.message)
-                    tasks.remove(item)
-                }
-            }
-
-            val output = try {
-                val uri = createDownloadUri(
-                    path = file.toRelativeString(Const.PUBLIC_DOWNLOADS),
-                    mimeType = "android/zip"
-                )
-                checkNotNull(contentResolver.openOutputStream(uri))
-            } catch (e: Throwable) {
-                listener.onFailure(e)
-                return@launch
-            }
 
             tasks.add(item)
-            NetworkCompat.download(
-                url = item.url,
-                output = output,
-                onProgress = listener::getProgress
-            ).onSuccess {
-                listener.onSuccess()
-            }.onFailure {
-                listener.onFailure(it)
-            }
+            NetworkCompat
+                .download(
+                    url = item.url,
+                    output = output,
+                    onProgress = listener::getProgress,
+                ).onSuccess {
+                    listener.onSuccess()
+                }.onFailure {
+                    listener.onFailure(it)
+                }
         }
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun onProgressChanged(item: TaskItem, progress: Float) {
-        val notification = baseNotificationBuilder()
-            .setContentTitle(item.title)
-            .setSubText(item.desc)
-            .setSilent(true)
-            .setOngoing(true)
-            .setGroup(GROUP_KEY)
-            .setProgress(100, (progress * 100).toInt(), false)
-            .build()
+    private fun onProgressChanged(
+        item: TaskItem,
+        progress: Float,
+    ) {
+        val notification =
+            baseNotificationBuilder()
+                .setContentTitle(item.title)
+                .setSubText(item.desc)
+                .setSilent(true)
+                .setOngoing(true)
+                .setGroup(GROUP_KEY)
+                .setProgress(100, (progress * 100).toInt(), false)
+                .build()
 
         notify(item.key, notification)
     }
 
     private fun onDownloadSucceeded(item: TaskItem) {
-        val notification = baseNotificationBuilder()
-            .setContentTitle(item.title)
-            .setSubText(item.desc)
-            .setContentText(getString(R.string.message_download_success))
-            .setSilent(true)
-            .build()
+        val notification =
+            baseNotificationBuilder()
+                .setContentTitle(item.title)
+                .setSubText(item.desc)
+                .setContentText(getString(R.string.message_download_success))
+                .setSilent(true)
+                .build()
 
         notify(item.key, notification)
     }
 
-    private fun onDownloadFailed(item: TaskItem, message: String?) {
-        val notification = baseNotificationBuilder()
-            .setContentTitle(item.title)
-            .setSubText(item.desc)
-            .setContentText(message ?: getString(R.string.unknown_error))
-            .build()
+    private fun onDownloadFailed(
+        item: TaskItem,
+        message: String?,
+    ) {
+        val notification =
+            baseNotificationBuilder()
+                .setContentTitle(item.title)
+                .setSubText(item.desc)
+                .setContentText(message ?: getString(R.string.unknown_error))
+                .build()
 
         notify(item.key, notification)
     }
 
     private fun setForeground() {
-        val notification = baseNotificationBuilder()
-            .setContentTitle(getString(R.string.notification_name_download))
-            .setSilent(true)
-            .setOngoing(true)
-            .setGroup(GROUP_KEY)
-            .setGroupSummary(true)
-            .build()
+        val notification =
+            baseNotificationBuilder()
+                .setContentTitle(getString(R.string.notification_name_download))
+                .setSilent(true)
+                .setOngoing(true)
+                .setGroup(GROUP_KEY)
+                .setGroupSummary(true)
+                .build()
 
         startForeground(NotificationUtils.NOTIFICATION_ID_DOWNLOAD, notification)
     }
 
     private fun baseNotificationBuilder() =
-        NotificationCompat.Builder(this, NotificationUtils.CHANNEL_ID_DOWNLOAD)
+        NotificationCompat
+            .Builder(this, NotificationUtils.CHANNEL_ID_DOWNLOAD)
             .setSmallIcon(R.drawable.launcher_outline)
 
     @SuppressLint("MissingPermission")
-    private fun notify(id: Int, notification: Notification) {
-        val granted = if (BuildCompat.atLeastT) {
-            PermissionCompat.checkPermissions(
-                this,
-                listOf(Manifest.permission.POST_NOTIFICATIONS)
-            ).allGranted
-        } else {
-            true
-        }
+    private fun notify(
+        id: Int,
+        notification: Notification,
+    ) {
+        val granted =
+            if (BuildCompat.atLeastT) {
+                PermissionCompat
+                    .checkPermissions(
+                        this,
+                        listOf(Manifest.permission.POST_NOTIFICATIONS),
+                    ).allGranted
+            } else {
+                true
+            }
 
         NotificationManagerCompat.from(this).apply {
             if (granted) notify(id, notification)
@@ -218,20 +242,24 @@ class DownloadService : LifecycleService() {
         val desc: String?,
     ) : Parcelable {
         companion object {
-            fun empty() = TaskItem(
-                key = -1,
-                url = "",
-                filename = "",
-                title = null,
-                desc = null,
-            )
+            fun empty() =
+                TaskItem(
+                    key = -1,
+                    url = "",
+                    filename = "",
+                    title = null,
+                    desc = null,
+                )
         }
     }
 
     interface IDownloadListener {
         fun getProgress(value: Float) {}
+
         fun onFileExists() {}
+
         fun onSuccess() {}
+
         fun onFailure(e: Throwable) {}
     }
 
@@ -243,18 +271,18 @@ class DownloadService : LifecycleService() {
         private val listeners = hashMapOf<TaskItem, IDownloadListener>()
         private val progressFlow = MutableStateFlow(TaskItem.empty() to 0f)
 
-        fun getProgressByKey(key: Int): Flow<Float> {
-            return progressFlow.filter { (item, _) ->
-                item.key == key
-            }.map { (_, progress) ->
-                progress
-            }
-        }
+        fun getProgressByKey(key: Int): Flow<Float> =
+            progressFlow
+                .filter { (item, _) ->
+                    item.key == key
+                }.map { (_, progress) ->
+                    progress
+                }
 
         fun start(
             context: Context,
             task: TaskItem,
-            listener: IDownloadListener
+            listener: IDownloadListener,
         ) {
             val permissions = mutableListOf<String>()
             if (Build.VERSION.SDK_INT <= 29) {

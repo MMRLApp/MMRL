@@ -42,17 +42,17 @@ internal fun AboutModule() {
     val categoriesLazyListState = rememberLazyListState()
 
     List(
-        contentPadding = listItemContentPaddingValues
+        contentPadding = listItemContentPaddingValues,
     ) {
         if (!module.readme.isNullOrBlank()) {
             ButtonItem(
                 onClick = {
                     navigator.navigate(ViewDescriptionScreenDestination(module.readme))
-                }
+                },
             ) {
                 Icon(
                     slot = ListItemSlot.End,
-                    painter = painterResource(id = R.drawable.arrow_right)
+                    painter = painterResource(id = R.drawable.arrow_right),
                 )
                 Title(R.string.view_module_about_this_module)
             }
@@ -65,16 +65,18 @@ internal fun AboutModule() {
 
     Text(
         modifier = Modifier.padding(horizontal = 16.dp),
-        text = module.description
-            ?: stringResource(R.string.view_module_no_description),
-        style = MaterialTheme.typography.bodyMedium.apply {
-            if (module.description.isNullOrBlank()) {
-                copy(
-                    fontStyle = FontStyle.Italic
-                )
-            }
-        },
-        color = MaterialTheme.colorScheme.outline
+        text =
+            module.description
+                ?: stringResource(R.string.view_module_no_description),
+        style =
+            MaterialTheme.typography.bodyMedium.apply {
+                if (module.description.isNullOrBlank()) {
+                    copy(
+                        fontStyle = FontStyle.Italic,
+                    )
+                }
+            },
+        color = MaterialTheme.colorScheme.outline,
     )
 
     module.hasCategories {
@@ -82,10 +84,11 @@ internal fun AboutModule() {
 
         LazyRow(
             state = categoriesLazyListState,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
         ) {
             items(it.size) { category ->
                 AssistChip(
@@ -96,10 +99,10 @@ internal fun AboutModule() {
                                 title = it[category],
                                 query = it[category],
                                 repo = repo,
-                            )
+                            ),
                         )
                     },
-                    label = { Text(it[category]) }
+                    label = { Text(it[category]) },
                 )
             }
         }

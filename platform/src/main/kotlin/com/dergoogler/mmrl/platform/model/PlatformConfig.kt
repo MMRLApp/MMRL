@@ -17,6 +17,7 @@ interface PlatformConfig {
     var context: Context?
     var platform: Platform?
     var debug: Boolean
+
     /**
      * The root service provider instance.
      * This property holds an instance of [IServiceManager] that represents the root service provider.
@@ -24,6 +25,7 @@ interface PlatformConfig {
      * It can be null if the root service is not available or not yet initialized.
      */
     var rootProvider: IServiceManager?
+
     /**
      *  An instance of [IServiceManager] for the non-root provider,
      *  or `null` if the non-root provider is not available or not connected.
@@ -31,6 +33,7 @@ interface PlatformConfig {
      *  @see IServiceManager
      */
     var nonRootProvider: IServiceManager?
+
     suspend fun get(
         provider: IProvider,
         timeoutMillis: Long = TIMEOUT_MILLIS,
@@ -55,28 +58,34 @@ data class PlatformConfigImpl(
         timeoutMillis: Long,
     ) = withTimeout(timeoutMillis) {
         suspendCancellableCoroutine<IServiceManager> { continuation ->
-            val connection = object : ServiceConnection {
-                override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-                    val service = IServiceManager.Stub.asInterface(binder)
-                    continuation.tryResume(service)?.let {
-                        continuation.completeResume(it)
+            val connection =
+                object : ServiceConnection {
+                    override fun onServiceConnected(
+                        name: ComponentName,
+                        binder: IBinder,
+                    ) {
+                        val service = IServiceManager.Stub.asInterface(binder)
+                        continuation.tryResume(service)?.let {
+                            continuation.completeResume(it)
+                        }
+                    }
+
+                    override fun onServiceDisconnected(name: ComponentName) {
+                        continuation
+                            .tryResumeWithException(IllegalStateException("IServiceManager destroyed"))
+                            ?.let {
+                                continuation.completeResume(it)
+                            }
+                    }
+
+                    override fun onBindingDied(name: ComponentName?) {
+                        continuation
+                            .tryResumeWithException(IllegalStateException("IServiceManager destroyed"))
+                            ?.let {
+                                continuation.completeResume(it)
+                            }
                     }
                 }
-
-                override fun onServiceDisconnected(name: ComponentName) {
-                    continuation.tryResumeWithException(IllegalStateException("IServiceManager destroyed"))
-                        ?.let {
-                            continuation.completeResume(it)
-                        }
-                }
-
-                override fun onBindingDied(name: ComponentName?) {
-                    continuation.tryResumeWithException(IllegalStateException("IServiceManager destroyed"))
-                        ?.let {
-                            continuation.completeResume(it)
-                        }
-                }
-            }
 
             provider.bind(connection)
 
@@ -90,13 +99,14 @@ data class PlatformConfigImpl(
     override suspend fun from(
         provider: IProvider,
         timeoutMillis: Long,
-    ): IServiceManager = withContext(Dispatchers.Main) {
-        when {
-            !provider.isAvailable() -> throw IllegalStateException("${provider.name} not available")
-            !provider.isAuthorized() -> throw IllegalStateException("${provider.name} not authorized")
-            else -> get(provider, timeoutMillis)
+    ): IServiceManager =
+        withContext(Dispatchers.Main) {
+            when {
+                !provider.isAvailable() -> throw IllegalStateException("${provider.name} not available")
+                !provider.isAuthorized() -> throw IllegalStateException("${provider.name} not authorized")
+                else -> get(provider, timeoutMillis)
+            }
         }
-    }
 
     private companion object {
         const val TAG = "PlatformConfig"

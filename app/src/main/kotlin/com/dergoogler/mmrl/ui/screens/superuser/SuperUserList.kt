@@ -33,19 +33,21 @@ fun ScaffoldScope.SuperUserList(
         List {
             LazyColumn(
                 state = state,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .hazeSource(state = LocalHazeState.current),
-                contentPadding = PaddingValues(
-                    top = innerPadding.calculateTopPadding(),
-                    start = innerPadding.calculateStartPadding(layoutDirection),
-                    bottom = paddingValues.calculateBottomPadding(),
-                    end = 0.dp
-                ),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .hazeSource(state = LocalHazeState.current),
+                contentPadding =
+                    PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
+                        start = innerPadding.calculateStartPadding(layoutDirection),
+                        bottom = paddingValues.calculateBottomPadding(),
+                        end = 0.dp,
+                    ),
             ) {
                 items(
                     items = list,
-                    key = { it.packageName + it.uid }
+                    key = { it.packageName + it.uid },
                 ) { app ->
                     SuperUserItem(app) {
                         navigator.navigate(AppProfileScreenDestination(app))

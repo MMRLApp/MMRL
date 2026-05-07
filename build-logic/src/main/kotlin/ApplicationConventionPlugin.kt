@@ -11,40 +11,43 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
 class ApplicationConventionPlugin : Plugin<Project> {
-    override fun apply(target: Project) = with(target) {
-        apply(plugin = "com.android.application")
-        apply(plugin = "org.jetbrains.kotlin.android")
-
-        extensions.configure<ApplicationExtension> {
-            compileSdk = COMPILE_SDK
-            buildToolsVersion = BUILD_TOOLS_VERSION
-
-            defaultConfig {
-                minSdk = MIN_SDK
-                targetSdk = COMPILE_SDK
+    override fun apply(target: Project) =
+        with(target) {
+            apply(plugin = "com.android.application")
+            if (extensions.findByName("kotlin") == null) {
+                apply(plugin = "org.jetbrains.kotlin.android")
             }
 
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_21
-                targetCompatibility = JavaVersion.VERSION_21
+            extensions.configure<ApplicationExtension> {
+                compileSdk = COMPILE_SDK
+                buildToolsVersion = BUILD_TOOLS_VERSION
+
+                defaultConfig {
+                    minSdk = MIN_SDK
+                    targetSdk = COMPILE_SDK
+                }
+
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_21
+                    targetCompatibility = JavaVersion.VERSION_21
+                }
             }
-        }
 
-        extensions.configure<JavaPluginExtension> {
-            toolchain {
-                languageVersion.set(JavaLanguageVersion.of(21))
+            extensions.configure<JavaPluginExtension> {
+                toolchain {
+                    languageVersion.set(JavaLanguageVersion.of(21))
+                }
             }
-        }
 
-        extensions.configure<KotlinAndroidProjectExtension> {
-            jvmToolchain(21)
+            extensions.configure<KotlinAndroidProjectExtension> {
+                jvmToolchain(21)
 
-            sourceSets.all {
-                languageSettings {
-                    optIn("kotlin.ExperimentalStdlibApi")
-                    optIn("kotlinx.coroutines.FlowPreview")
+                compilerOptions {
+                    optIn.addAll(
+                        "kotlin.ExperimentalStdlibApi",
+                        "kotlinx.coroutines.FlowPreview",
+                    )
                 }
             }
         }
-    }
 }

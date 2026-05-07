@@ -83,7 +83,8 @@ internal fun Toolbar() {
         navigationIcon = {
             IconButton(onClick = { navigator.popBackStack() }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.arrow_left), contentDescription = null
+                    painter = painterResource(id = R.drawable.arrow_left),
+                    contentDescription = null,
                 )
             }
         },
@@ -95,7 +96,7 @@ internal fun Toolbar() {
                 count = viewModel.versions.size,
                 onClick = {
                     viewModel.versionSelectBottomSheet = true
-                }
+                },
             )
 
             Spacer(modifier = Modifier.width(4.dp))
@@ -108,7 +109,7 @@ internal fun Toolbar() {
             }
             DropdownMenu(
                 expanded = viewModel.menuExpanded,
-                onDismissRequest = { viewModel.menuExpanded = false }
+                onDismissRequest = { viewModel.menuExpanded = false },
             ) {
                 DropdownMenuItem(
                     leadingIcon = {
@@ -119,13 +120,15 @@ internal fun Toolbar() {
                     },
                     text = {
                         Text(
-                            text = stringResource(id = R.string.view_module_share)
+                            text = stringResource(id = R.string.view_module_share),
                         )
                     },
                     onClick = {
                         viewModel.menuExpanded = false
-                        context.shareText("https://mmrl.dev/repository/${repo.url.repoId}/${module.id}?utm_medium=share&utm_source=${context.packageName}")
-                    }
+                        context.shareText(
+                            "https://mmrl.dev/repository/${repo.url.repoId}/${module.id}?utm_medium=share&utm_source=${context.packageName}",
+                        )
+                    },
                 )
 
                 lastVersionItem.isValid {
@@ -138,22 +141,23 @@ internal fun Toolbar() {
                         },
                         text = {
                             Text(
-                                text = stringResource(id = R.string.bulk_add_as_bulk)
+                                text = stringResource(id = R.string.bulk_add_as_bulk),
                             )
                         },
                         onClick = {
                             viewModel.menuExpanded = false
                             bulkInstallViewModel.addBulkModule(
-                                module = BulkModule(
-                                    id = module.id,
-                                    name = module.name,
-                                    versionItem = it
-                                ),
+                                module =
+                                    BulkModule(
+                                        id = module.id,
+                                        name = module.name,
+                                        versionItem = it,
+                                    ),
                                 onSuccess = {
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
                                             message = context.getString(R.string.bulk_install_module_added),
-                                            duration = SnackbarDuration.Short
+                                            duration = SnackbarDuration.Short,
                                         )
                                     }
                                 },
@@ -161,12 +165,12 @@ internal fun Toolbar() {
                                     scope.launch {
                                         snackbarHostState.showSnackbar(
                                             message = error,
-                                            duration = SnackbarDuration.Short
+                                            duration = SnackbarDuration.Short,
                                         )
                                     }
-                                }
+                                },
                             )
-                        }
+                        },
                     )
                 }
 
@@ -180,13 +184,13 @@ internal fun Toolbar() {
                         },
                         text = {
                             Text(
-                                text = "track.json"
+                                text = "track.json",
                             )
                         },
                         onClick = {
                             viewModel.menuExpanded = false
                             browser.openUri("${it.repoUrl}modules/${module.id}/track.json")
-                        }
+                        },
                     )
                 }
 
@@ -194,31 +198,35 @@ internal fun Toolbar() {
                     DropdownMenuItem(
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(
-                                    id = if (viewModel.notifyUpdates) {
-                                        R.drawable.target_off
-                                    } else {
-                                        R.drawable.target
-                                    }
-                                ),
+                                painter =
+                                    painterResource(
+                                        id =
+                                            if (viewModel.notifyUpdates) {
+                                                R.drawable.target_off
+                                            } else {
+                                                R.drawable.target
+                                            },
+                                    ),
                                 contentDescription = null,
                             )
                         },
                         text = {
                             Text(
-                                text = stringResource(
-                                    id = if (viewModel.notifyUpdates) {
-                                        R.string.view_module_update_ignore
-                                    } else {
-                                        R.string.view_module_update_notify
-                                    }
-                                )
+                                text =
+                                    stringResource(
+                                        id =
+                                            if (viewModel.notifyUpdates) {
+                                                R.string.view_module_update_ignore
+                                            } else {
+                                                R.string.view_module_update_notify
+                                            },
+                                    ),
                             )
                         },
                         onClick = {
                             viewModel.menuExpanded = false
                             viewModel.setUpdatesTag(!viewModel.notifyUpdates)
-                        }
+                        },
                     )
                 }
             }

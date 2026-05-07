@@ -18,31 +18,34 @@ fun AlertView(block: AlertBlock) {
     val colorScheme = MaterialTheme.colorScheme
     val width = LocalTerminalWidth.current
 
-    val (color, textColor) = remember(block.type) {
-        when (block.type) {
-            AlertType.NOTICE -> Color(0xff2294f2) to "#2294f2"
-            AlertType.WARNING -> Color.Yellow to "yellow"
-            AlertType.ERROR -> Color.Red to "red"
+    val (color, textColor) =
+        remember(block.type) {
+            when (block.type) {
+                AlertType.NOTICE -> Color(0xff2294f2) to "#2294f2"
+                AlertType.WARNING -> Color.Yellow to "yellow"
+                AlertType.ERROR -> Color.Red to "red"
+            }
         }
-    }
 
-    val type = remember(block.type, block.title) {
-        block.title ?: when (block.type) {
-            AlertType.NOTICE -> "Notice"
-            AlertType.WARNING -> "Warning"
-            AlertType.ERROR -> "Error"
+    val type =
+        remember(block.type, block.title) {
+            block.title ?: when (block.type) {
+                AlertType.NOTICE -> "Notice"
+                AlertType.WARNING -> "Warning"
+                AlertType.ERROR -> "Error"
+            }
         }
-    }
 
     Line(
-        modifier = Modifier
-            .width(width)
-            .background(color.copy(alpha = 0.09f)),
-        index = block.lineNumber
+        modifier =
+            Modifier
+                .width(width)
+                .background(color.copy(alpha = 0.09f)),
+        index = block.lineNumber,
     ) {
         BBCodeText(
             text = "[color=$textColor]$type:[/color] ${block.text}",
-            style = style.copy(color = colorScheme.outline)
+            style = style.copy(color = colorScheme.outline),
         )
     }
 }

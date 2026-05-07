@@ -31,7 +31,7 @@ fun LiteColumn(
     Layout(
         content = { LiteColumnScopeInstance.content() },
         modifier = modifier,
-        measurePolicy = rememberColumnMeasurePolicy(spaceBetweenItem, horizontalAlignment)
+        measurePolicy = rememberColumnMeasurePolicy(spaceBetweenItem, horizontalAlignment),
     )
 }
 
@@ -39,7 +39,7 @@ fun LiteColumn(
 @Composable
 private fun rememberColumnMeasurePolicy(
     spaceBetweenItem: Dp,
-    alignment: HorizontalAlignment
+    alignment: HorizontalAlignment,
 ) = remember(spaceBetweenItem, alignment) {
     LiteColumnMeasurePolicy(spaceBetweenItem, alignment)
 }
@@ -47,40 +47,43 @@ private fun rememberColumnMeasurePolicy(
 @Immutable
 private class LiteColumnMeasurePolicy(
     private val space: Dp,
-    private val parentAlignment: HorizontalAlignment
+    private val parentAlignment: HorizontalAlignment,
 ) : MeasurePolicy {
-
     override fun MeasureScope.measure(
         measurables: List<Measurable>,
-        constraints: Constraints
+        constraints: Constraints,
     ): MeasureResult {
         val alignments = arrayOfNulls<HorizontalAlignment>(measurables.size)
         val spaceAsPixel = space.toPx().toInt()
 
-        val childConstraints = constraints.copy(
-            minWidth = 0,
-            maxWidth = if (constraints.hasBoundedWidth) constraints.maxWidth else Constraints.Infinity,
-            minHeight = 0,
-            maxHeight = if (constraints.hasBoundedHeight) constraints.maxHeight else Constraints.Infinity
-        )
+        val childConstraints =
+            constraints.copy(
+                minWidth = 0,
+                maxWidth = if (constraints.hasBoundedWidth) constraints.maxWidth else Constraints.Infinity,
+                minHeight = 0,
+                maxHeight = if (constraints.hasBoundedHeight) constraints.maxHeight else Constraints.Infinity,
+            )
 
-        val hasWeightedChild = measurables.any {
-            it.liteColumnChildDataNode?.weight?.let { weight ->
-                weight > 0f
-            } ?: false
-        }
+        val hasWeightedChild =
+            measurables.any {
+                it.liteColumnChildDataNode?.weight?.let { weight ->
+                    weight > 0f
+                } ?: false
+            }
 
         if (!hasWeightedChild) {
-            val placeables = Array(measurables.size) { index ->
+            val placeables =
+                Array(measurables.size) { index ->
 
-                measurables[index].liteColumnChildDataNode?.alignment?.let {
-                    alignments[index] = it
+                    measurables[index].liteColumnChildDataNode?.alignment?.let {
+                        alignments[index] = it
+                    }
+                    measurables[index].measure(childConstraints)
                 }
-                measurables[index].measure(childConstraints)
-            }
             val totalWidth = placeables.maxOfOrNull { it.width } ?: 0
             val constrainedWidth = constraints.constrainWidth(totalWidth)
-            val totalHeight = placeables.sumOf { it.height } +
+            val totalHeight =
+                placeables.sumOf { it.height } +
                     (placeables.size - 1).coerceAtLeast(0) * spaceAsPixel
             val constrainedHeight = constraints.constrainHeight(totalHeight)
             var yPosition = 0
@@ -89,11 +92,12 @@ private class LiteColumnMeasurePolicy(
                     val alignment = alignments.getOrNull(index)
                     val placeable = placeables.getOrNull(index) ?: continue
                     val targetAlignment = alignment ?: parentAlignment
-                    val xPosition = when (targetAlignment) {
-                        HorizontalAlignment.Start -> 0
-                        HorizontalAlignment.Center -> (constrainedWidth - placeable.width) / 2
-                        HorizontalAlignment.End -> constrainedWidth - placeable.width
-                    }
+                    val xPosition =
+                        when (targetAlignment) {
+                            HorizontalAlignment.Start -> 0
+                            HorizontalAlignment.Center -> (constrainedWidth - placeable.width) / 2
+                            HorizontalAlignment.End -> constrainedWidth - placeable.width
+                        }
                     placeable.placeRelative(x = xPosition, y = yPosition)
                     yPosition += placeable.height + spaceAsPixel
                 }
@@ -106,11 +110,12 @@ private class LiteColumnMeasurePolicy(
 
             for (i in 0 until count) {
                 val childData = measurables[i].liteColumnChildDataNode
-                childData?.alignment?.let { alignments[i] = it}
+                childData?.alignment?.let { alignments[i] = it }
 
-                val hasWeight = childData?.weight?.let {
-                    it > 0f
-                } ?: false
+                val hasWeight =
+                    childData?.weight?.let {
+                        it > 0f
+                    } ?: false
 
                 if (hasWeight) {
                     weightedIndices.add(i)
@@ -125,22 +130,27 @@ private class LiteColumnMeasurePolicy(
             val availableHeight = constraints.maxHeight
             val remainingHeightForWeighted =
                 (availableHeight - usedHeightNonWeighted - totalSpacing).coerceAtLeast(0)
-            val totalWeight = weightedIndices.sumOf {
-                (measurables[it].liteColumnChildDataNode?.weight ?: 0f).toDouble()
-            }.toFloat()
+            val totalWeight =
+                weightedIndices
+                    .sumOf {
+                        (measurables[it].liteColumnChildDataNode?.weight ?: 0f).toDouble()
+                    }.toFloat()
 
             for (i in weightedIndices) {
                 measurables[i].liteColumnChildDataNode?.weight?.let {
-                    val allocatedHeight = if (totalWeight > 0f) {
-                        (remainingHeightForWeighted * (it / totalWeight)).toInt()
-                    } else 0
-                    val weightedConstraints = childConstraints.copy(
-                        minHeight = allocatedHeight,
-                        maxHeight = allocatedHeight
-                    )
+                    val allocatedHeight =
+                        if (totalWeight > 0f) {
+                            (remainingHeightForWeighted * (it / totalWeight)).toInt()
+                        } else {
+                            0
+                        }
+                    val weightedConstraints =
+                        childConstraints.copy(
+                            minHeight = allocatedHeight,
+                            maxHeight = allocatedHeight,
+                        )
                     val placeable = measurables[i].measure(weightedConstraints)
                     placeables[i] = placeable
-
                 }
             }
 
@@ -156,11 +166,12 @@ private class LiteColumnMeasurePolicy(
                     val childData = alignments[index]
                     val placeable = placeables.getOrNull(index) ?: continue
                     val targetAlignment = childData ?: parentAlignment
-                    val xPosition = when (targetAlignment) {
-                        HorizontalAlignment.Start -> 0
-                        HorizontalAlignment.Center -> (constrainedWidth - placeable.width) / 2
-                        HorizontalAlignment.End -> constrainedWidth - placeable.width
-                    }
+                    val xPosition =
+                        when (targetAlignment) {
+                            HorizontalAlignment.Start -> 0
+                            HorizontalAlignment.Center -> (constrainedWidth - placeable.width) / 2
+                            HorizontalAlignment.End -> constrainedWidth - placeable.width
+                        }
                     placeable.placeRelative(x = xPosition, y = yPosition)
                     yPosition += placeable.height + spaceAsPixel
                 }
@@ -168,24 +179,19 @@ private class LiteColumnMeasurePolicy(
         }
     }
 
-
     override fun IntrinsicMeasureScope.maxIntrinsicWidth(
         measurables: List<IntrinsicMeasurable>,
-        height: Int
-    ): Int {
-        return measurables.fastMaxOfOrNull { maxIntrinsicWidthLambda(it, height) } ?: 0
-    }
+        height: Int,
+    ): Int = measurables.fastMaxOfOrNull { maxIntrinsicWidthLambda(it, height) } ?: 0
 
     override fun IntrinsicMeasureScope.minIntrinsicWidth(
         measurables: List<IntrinsicMeasurable>,
-        height: Int
-    ): Int {
-        return measurables.fastMaxOfOrNull { minIntrinsicWidthLambda(it, height) } ?: 0
-    }
+        height: Int,
+    ): Int = measurables.fastMaxOfOrNull { minIntrinsicWidthLambda(it, height) } ?: 0
 
     override fun IntrinsicMeasureScope.maxIntrinsicHeight(
         measurables: List<IntrinsicMeasurable>,
-        width: Int
+        width: Int,
     ): Int {
         val childHeights = measurables.fastMap { maxIntrinsicHeightLambda(it, width) }
         val totalSpace = (childHeights.size - 1).coerceAtLeast(0) * space.roundToPx()
@@ -194,7 +200,7 @@ private class LiteColumnMeasurePolicy(
 
     override fun IntrinsicMeasureScope.minIntrinsicHeight(
         measurables: List<IntrinsicMeasurable>,
-        width: Int
+        width: Int,
     ): Int {
         val childHeights = measurables.fastMap { minIntrinsicHeightLambda(it, width) }
         val totalSpace = (childHeights.size - 1).coerceAtLeast(0) * space.roundToPx()

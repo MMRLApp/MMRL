@@ -17,9 +17,7 @@ fun rememberRepos(): State<List<Repo>> {
 }
 
 @Composable
-fun rememberRepo(
-    url: String,
-): State<Repo?> {
+fun rememberRepo(url: String): State<Repo?> {
     val repos by rememberRepos()
     return remember(repos) {
         derivedStateOf {

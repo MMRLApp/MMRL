@@ -8,13 +8,18 @@ import com.dergoogler.mmrl.platform.model.ModId.Companion.removeFile
 import com.dergoogler.mmrl.platform.stub.IModuleOpsCallback
 import com.dergoogler.mmrl.platform.util.Shell.submit
 
-open class KsuNextModuleManager() : KernelSUModuleManager() {
-    override fun getModuleCompatibility() = ModuleCompatibility(
-        hasMagicMount = false,
-        canRestoreModules = true
-    )
+open class KsuNextModuleManager : KernelSUModuleManager() {
+    override fun getModuleCompatibility() =
+        ModuleCompatibility(
+            hasMagicMount = false,
+            canRestoreModules = true,
+        )
 
-    override fun enable(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun enable(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) callback.onFailure(id, null)
 
@@ -38,11 +43,12 @@ open class KsuNextModuleManager() : KernelSUModuleManager() {
         }
     }
 
-    override fun getActionEnvironment(): List<String> = listOf(
-        "export ASH_STANDALONE=1",
-        "export KSU=true",
-        "export KSU_NEXT=true",
-        "export KSU_VER=${version}",
-        "export KSU_VER_CODE=${versionCode}",
-    )
+    override fun getActionEnvironment(): List<String> =
+        listOf(
+            "export ASH_STANDALONE=1",
+            "export KSU=true",
+            "export KSU_NEXT=true",
+            "export KSU_VER=$version",
+            "export KSU_VER_CODE=$versionCode",
+        )
 }

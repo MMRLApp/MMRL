@@ -31,30 +31,33 @@ fun Alert(
     @DrawableRes icon: Int? = null,
 ) = Card(
     onClick = onClick,
-    modifier = Modifier
-        .padding(vertical = 16.dp, horizontal = 25.dp)
-        .fillMaxWidth()
-        .then(modifier),
+    modifier =
+        Modifier
+            .padding(vertical = 16.dp, horizontal = 25.dp)
+            .fillMaxWidth()
+            .then(modifier),
     outsideContentPadding = outsideContentPadding,
     color = backgroundColor,
     contentColor = textColor,
 ) {
     Column(
         modifier = Modifier.relative(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         title.nullable {
             TextWithIcon(
                 text = it,
                 icon = icon,
-                style = TextWithIconDefaults.style.copy(
-                    textStyle = MaterialTheme.typography.titleMedium.copy(
-                        color = textColor,
-                        fontWeight = FontWeight.Bold
+                style =
+                    TextWithIconDefaults.style.copy(
+                        textStyle =
+                            MaterialTheme.typography.titleMedium.copy(
+                                color = textColor,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        spacing = 8.dp,
+                        iconTint = textColor,
                     ),
-                    spacing = 8.dp,
-                    iconTint = textColor
-                )
             )
         }
 

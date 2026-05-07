@@ -10,11 +10,17 @@ object Shell {
         runCatching {
             Log.d(TAG, "exec: $this")
             val process = ProcessBuilder("sh", "-c", this).start()
-            val output = process.inputStream.bufferedReader().readText()
-                .removeSurrounding("", "\n")
+            val output =
+                process.inputStream
+                    .bufferedReader()
+                    .readText()
+                    .removeSurrounding("", "\n")
 
-            val error = process.errorStream.bufferedReader().readText()
-                .removeSurrounding("", "\n")
+            val error =
+                process.errorStream
+                    .bufferedReader()
+                    .readText()
+                    .removeSurrounding("", "\n")
 
             require(process.waitFor().ok()) { error }
             Log.d(TAG, "output: $output")
@@ -26,7 +32,7 @@ object Shell {
 
     fun String.exec(
         stdout: (String) -> Unit,
-        stderr: (String) -> Unit
+        stderr: (String) -> Unit,
     ) = runCatching {
         Log.d(TAG, "exec: $this")
         val process = ProcessBuilder("sh", "-c", this).start()
@@ -52,28 +58,29 @@ object Shell {
 
     fun String.submit(callback: ShellResult.() -> Unit) {
         Thread {
-            val result = runCatching {
-                Log.d(TAG, "submit: $this")
-                val process = ProcessBuilder("sh", "-c", this).start()
-                val output = process.inputStream.bufferedReader().readLines()
-                val error = process.errorStream.bufferedReader().readLines()
+            val result =
+                runCatching {
+                    Log.d(TAG, "submit: $this")
+                    val process = ProcessBuilder("sh", "-c", this).start()
+                    val output = process.inputStream.bufferedReader().readLines()
+                    val error = process.errorStream.bufferedReader().readLines()
 
-                val exitCode = process.waitFor()
+                    val exitCode = process.waitFor()
 
-                ShellResult(
-                    isSuccess = exitCode == 0,
-                    out = output,
-                    err = error,
-                    exitCode = exitCode
-                )
-            }.getOrElse {
-                ShellResult(
-                    isSuccess = false,
-                    out = emptyList(),
-                    err = listOf(it.message ?: "Unknown error"),
-                    exitCode = -1
-                )
-            }
+                    ShellResult(
+                        isSuccess = exitCode == 0,
+                        out = output,
+                        err = error,
+                        exitCode = exitCode,
+                    )
+                }.getOrElse {
+                    ShellResult(
+                        isSuccess = false,
+                        out = emptyList(),
+                        err = listOf(it.message ?: "Unknown error"),
+                        exitCode = -1,
+                    )
+                }
 
             callback(result)
         }.start()

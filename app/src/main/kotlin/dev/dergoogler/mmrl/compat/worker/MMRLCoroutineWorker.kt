@@ -16,71 +16,81 @@ import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
-open class MMRLCoroutineWorker @Inject constructor(
-    context: Context,
-    params: WorkerParameters,
-    val modulesRepository: ModulesRepository
-) : CoroutineWorker(context, params) {
-    private val notificationManager =
-        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    open val notificationId = 0
-    open val channelName = ""
-    open val channelTitle = ""
-    open val channelDescription = ""
+open class MMRLCoroutineWorker
+    @Inject
+    constructor(
+        context: Context,
+        params: WorkerParameters,
+        val modulesRepository: ModulesRepository,
+    ) : CoroutineWorker(context, params) {
+        private val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        open val notificationId = 0
+        open val channelName = ""
+        open val channelTitle = ""
+        open val channelDescription = ""
 
-    override suspend fun doWork(): Result {
-        if (channelName.isEmpty() || channelTitle.isEmpty() || channelDescription.isEmpty()) {
-            return Result.failure()
+        override suspend fun doWork(): Result {
+            if (channelName.isEmpty() || channelTitle.isEmpty() || channelDescription.isEmpty()) {
+                return Result.failure()
+            }
+
+            setForeground(createForegroundInfo())
+
+            return Result.success()
         }
 
-        setForeground(createForegroundInfo())
+        val database
+            get(): AppDatabase {
+                val database: AppDatabase =
+                    Room
+                        .databaseBuilder(
+                            applicationContext,
+                            AppDatabase::class.java,
+                            "mmrl",
+                        ).build()
 
-        return Result.success()
-    }
+                return database
+            }
 
-    val database
-        get(): AppDatabase {
-            val database: AppDatabase = Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java,
-                "mmrl"
-            ).build()
+        private fun createForegroundInfo(): ForegroundInfo {
+            val notification =
+                NotificationCompat
+                    .Builder(applicationContext, channelName)
+                    .apply {
+                        setContentTitle(channelTitle)
+                        setContentText(channelDescription)
+                        setSmallIcon(R.drawable.box)
+                        priority = NotificationCompat.PRIORITY_LOW
+                    }.build()
 
-            return database
+            return ForegroundInfo(notificationId, notification)
         }
 
-    private fun createForegroundInfo(): ForegroundInfo {
-        val notification = NotificationCompat.Builder(applicationContext, channelName).apply {
-            setContentTitle(channelTitle)
-            setContentText(channelDescription)
-            setSmallIcon(R.drawable.box)
-            priority = NotificationCompat.PRIORITY_LOW
-        }.build()
+        fun pushNotification(
+            id: Int = Random.nextInt(0, 100),
+            title: String,
+            message: String,
+            pendingIntent: PendingIntent? = null,
+            @DrawableRes icon: Int = R.drawable.box,
+        ) {
+            val notification =
+                NotificationCompat
+                    .Builder(applicationContext, channelName)
+                    .apply {
+                        setContentTitle(title)
+                        setContentText(message)
+                        setSmallIcon(icon)
+                        setContentIntent(pendingIntent)
+                        setAutoCancel(true)
+                        priority = NotificationCompat.PRIORITY_HIGH
+                        setDefaults(NotificationCompat.DEFAULT_ALL)
 
-        return ForegroundInfo(notificationId, notification)
+                        Timber.d("Channel ID: $channelName")
+                        Timber.d("Channel Name: $channelTitle")
+                        Timber.d("Channel Description: $channelDescription")
+                    }.build()
+
+            notificationManager.notify(id, notification)
+        }
     }
-
-    fun pushNotification(
-        id: Int = Random.nextInt(0, 100),
-        title: String,
-        message: String,
-        pendingIntent: PendingIntent? = null,
-        @DrawableRes icon: Int = R.drawable.box
-    ) {
-        val notification = NotificationCompat.Builder(applicationContext, channelName).apply {
-            setContentTitle(title)
-            setContentText(message)
-            setSmallIcon(icon)
-            setContentIntent(pendingIntent)
-            setAutoCancel(true)
-            priority = NotificationCompat.PRIORITY_HIGH
-            setDefaults(NotificationCompat.DEFAULT_ALL)
-
-            Timber.d("Channel ID: $channelName")
-            Timber.d("Channel Name: $channelTitle")
-            Timber.d("Channel Description: $channelDescription")
-        }.build()
-
-        notificationManager.notify(id, notification)
-    }
-}

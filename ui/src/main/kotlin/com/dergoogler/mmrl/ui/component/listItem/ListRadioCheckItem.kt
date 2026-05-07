@@ -31,15 +31,17 @@ fun <T> ListRadioCheckItem(
     base: BaseParameters.() -> Unit = {},
 ) {
     var open by remember { mutableStateOf(false) }
-    if (open) RadioCheckDialog(
-        value = value,
-        title = title,
-        suffix = suffix,
-        prefix = prefix,
-        options = options,
-        onClose = { open = false },
-        onConfirm = onConfirm
-    )
+    if (open) {
+        RadioCheckDialog(
+            value = value,
+            title = title,
+            suffix = suffix,
+            prefix = prefix,
+            options = options,
+            onClose = { open = false },
+            onConfirm = onConfirm,
+        )
+    }
 
     ListButtonItem(
         modifier = modifier,
@@ -51,6 +53,6 @@ fun <T> ListRadioCheckItem(
         interactionSource = interactionSource,
         enabled = enabled,
         itemTextStyle = itemTextStyle,
-        base = base
+        base = base,
     )
 }

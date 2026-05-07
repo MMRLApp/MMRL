@@ -1,8 +1,8 @@
 package com.dergoogler.mmrl.ui.providable
 
 import android.os.Bundle
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.CompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
  * [CompositionLocal] that provides a [Bundle] containing arguments that were present when a
@@ -45,6 +45,7 @@ import androidx.compose.runtime.CompositionLocal
  * **Note:** This CompositionLocal is typically populated internally by the navigation library
  * when a panic occurs. It should not be set manually by the application.
  */
-val LocalPanicArguments = staticCompositionLocalOf<Bundle> {
-    error("CompositionLocal NavBackStackEntry.panicArguments not present")
-}
+val LocalPanicArguments =
+    staticCompositionLocalOf<Bundle> {
+        error("CompositionLocal NavBackStackEntry.panicArguments not present")
+    }

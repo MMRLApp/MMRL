@@ -36,11 +36,12 @@ fun TextWithIcon(
         icon.nullable {
             {
                 Icon(
-                    modifier = Modifier.iconSize(
-                        density = density,
-                        textStyle = style.textStyle,
-                        scaling = style.iconScaling
-                    ),
+                    modifier =
+                        Modifier.iconSize(
+                            density = density,
+                            textStyle = style.textStyle,
+                            scaling = style.iconScaling,
+                        ),
                     painter = painterResource(id = it),
                     contentDescription = null,
                     tint = style.iconTint,
@@ -60,7 +61,7 @@ fun TextWithIcon(
             text = text,
             style = style.textStyle,
             maxLines = style.maxLines,
-            overflow = style.overflow
+            overflow = style.overflow,
         )
     }
 }
@@ -99,15 +100,16 @@ class TextWithIconStyle(
         iconTint: Color = this.iconTint,
         overflow: TextOverflow = this.overflow,
         maxLines: Int = this.maxLines,
-    ): TextWithIconStyle = TextWithIconStyle(
-        textStyle,
-        iconScaling,
-        spacing,
-        rightIcon,
-        iconTint,
-        overflow,
-        maxLines
-    )
+    ): TextWithIconStyle =
+        TextWithIconStyle(
+            textStyle,
+            iconScaling,
+            spacing,
+            rightIcon,
+            iconTint,
+            overflow,
+            maxLines,
+        )
 
     override fun hashCode(): Int {
         var result = textStyle.hashCode()
@@ -126,13 +128,14 @@ internal val TextWIthIconSpacing: Dp = 4.dp
 
 object TextWithIconDefaults {
     val style
-        @Composable get() = TextWithIconStyle(
-            textStyle = LocalTextStyle.current,
-            iconScaling = TextWIthIconIconScaling,
-            spacing = TextWIthIconSpacing,
-            rightIcon = false,
-            iconTint = LocalContentColor.current,
-            maxLines = Int.MAX_VALUE,
-            overflow = TextOverflow.Clip
-        )
+        @Composable get() =
+            TextWithIconStyle(
+                textStyle = LocalTextStyle.current,
+                iconScaling = TextWIthIconIconScaling,
+                spacing = TextWIthIconSpacing,
+                rightIcon = false,
+                iconTint = LocalContentColor.current,
+                maxLines = Int.MAX_VALUE,
+                overflow = TextOverflow.Clip,
+            )
 }

@@ -2,6 +2,12 @@ name: "Build APK"
 description: "Builds an APK for a specified flavor and build type."
 
 inputs:
+  username:
+    description: "Username"
+    required: true
+  token:
+    description: "Token"
+    required: true
   flavor:
     description: "Flavor"
     required: true
@@ -57,6 +63,15 @@ runs:
             echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
             echo ${{ inputs.keyStore }} | base64 --decode > ${{ github.workspace }}/key.jks
         fi
+
+    - name: Set up credentials for private packages
+      shell: bash
+      run: |
+        [ -f gradle.properties ] && [ "$(tail -c1 gradle.properties)" != "" ] && echo >> gradle.properties
+        {
+          echo "gpr.user=${{ inputs.username }}"
+          echo "gpr.key=${{ inputs.token }}"
+        } >> gradle.properties
 
     - name: Set up JDK
       uses: actions/setup-java@v4

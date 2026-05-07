@@ -33,40 +33,44 @@ fun BlurBottomToolbar(
 ) {
     val prefs = LocalUserPreferences.current
 
-    val isBlurEnabled = remember(prefs) {
-        prefs.enableBlur && BlurUtil.isBlurSupported()
-    }
-
-    val blurModifier = if (isBlurEnabled) {
-        Modifier.hazeEffect(
-            state = LocalHazeState.current,
-            style = HazeMaterials.ultraThin()
-        ) {
-            backgroundColor = containerColor
+    val isBlurEnabled =
+        remember(prefs) {
+            prefs.enableBlur && BlurUtil.isBlurSupported()
         }
-    } else Modifier
+
+    val blurModifier =
+        if (isBlurEnabled) {
+            Modifier.hazeEffect(
+                state = LocalHazeState.current,
+                style = HazeMaterials.ultraThin(),
+            ) {
+                backgroundColor = containerColor
+            }
+        } else {
+            Modifier
+        }
 
     val borderColor = MaterialTheme.colorScheme.outlineVariant
 
     Column {
         NavigationBar(
-            modifier = Modifier
-                .then(blurModifier)
-                .drawBehind {
-                    val borderSize = Dp.Hairline
-                    drawLine(
-                        color = borderColor,
-                        start = Offset(0f, 0f),
-                        end = Offset(size.width, 0f),
-                        strokeWidth = borderSize.value
-                    )
-                }
-                .then(modifier),
+            modifier =
+                Modifier
+                    .then(blurModifier)
+                    .drawBehind {
+                        val borderSize = Dp.Hairline
+                        drawLine(
+                            color = borderColor,
+                            start = Offset(0f, 0f),
+                            end = Offset(size.width, 0f),
+                            strokeWidth = borderSize.value,
+                        )
+                    }.then(modifier),
             containerColor = if (isBlurEnabled) Color.Transparent else containerColor,
             contentColor = contentColor,
             tonalElevation = tonalElevation,
             windowInsets = windowInsets,
-            content = content
+            content = content,
         )
     }
 }

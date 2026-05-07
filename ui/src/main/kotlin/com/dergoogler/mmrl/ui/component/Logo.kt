@@ -40,14 +40,14 @@ fun Logo(
             modifier = it,
             painter = painterResource(id = icon),
             contentDescription = null,
-            tint = LocalContentColor.current
+            tint = LocalContentColor.current,
         )
     },
     modifier = modifier,
     shape = shape,
     contentColor = contentColor,
     containerColor = containerColor,
-    fraction = fraction
+    fraction = fraction,
 )
 
 /**
@@ -72,10 +72,10 @@ fun Logo(
     modifier = modifier,
     shape = shape,
     color = containerColor,
-    contentColor = contentColor
+    contentColor = contentColor,
 ) {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         icon(Modifier.fillMaxSize(fraction))
     }

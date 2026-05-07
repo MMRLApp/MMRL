@@ -16,28 +16,29 @@ import androidx.compose.runtime.Composable
 @Composable
 fun LazyListState.scrollbarState(
     itemsAvailable: Int = layoutInfo.totalItemsCount,
-    itemIndex: (LazyListItemInfo) -> Int = LazyListItemInfo::index
-): ScrollbarState = scrollbarState(
-    itemsAvailable = itemsAvailable,
-    visibleItems = { layoutInfo.visibleItemsInfo },
-    firstVisibleItemIndex = { visibleItems ->
-        interpolateFirstItemIndex(
-            visibleItems = visibleItems,
-            itemSize = { it.size },
-            offset = { it.offset },
-            nextItemOnMainAxis = { first -> visibleItems.find { it != first } },
-            itemIndex = itemIndex,
-        )
-    },
-    itemPercentVisible = itemPercentVisible@{ itemInfo ->
-        itemVisibilityPercentage(
-            itemSize = itemInfo.size,
-            itemStartOffset = itemInfo.offset,
-            viewportStartOffset = layoutInfo.viewportStartOffset,
-            viewportEndOffset = layoutInfo.viewportEndOffset,
-        )
-    }
-)
+    itemIndex: (LazyListItemInfo) -> Int = LazyListItemInfo::index,
+): ScrollbarState =
+    scrollbarState(
+        itemsAvailable = itemsAvailable,
+        visibleItems = { layoutInfo.visibleItemsInfo },
+        firstVisibleItemIndex = { visibleItems ->
+            interpolateFirstItemIndex(
+                visibleItems = visibleItems,
+                itemSize = { it.size },
+                offset = { it.offset },
+                nextItemOnMainAxis = { first -> visibleItems.find { it != first } },
+                itemIndex = itemIndex,
+            )
+        },
+        itemPercentVisible = itemPercentVisible@{ itemInfo ->
+            itemVisibilityPercentage(
+                itemSize = itemInfo.size,
+                itemStartOffset = itemInfo.offset,
+                viewportStartOffset = layoutInfo.viewportStartOffset,
+                viewportEndOffset = layoutInfo.viewportEndOffset,
+            )
+        },
+    )
 
 /**
  * Calculates a [ScrollbarState] driven by the changes in a [LazyGridState]
@@ -48,37 +49,40 @@ fun LazyListState.scrollbarState(
 @Composable
 fun LazyGridState.scrollbarState(
     itemsAvailable: Int,
-    itemIndex: (LazyGridItemInfo) -> Int = LazyGridItemInfo::index
-): ScrollbarState = scrollbarState(
-    itemsAvailable = itemsAvailable,
-    visibleItems = { layoutInfo.visibleItemsInfo },
-    firstVisibleItemIndex = { visibleItems ->
-        interpolateFirstItemIndex(
-            visibleItems = visibleItems,
-            itemSize = {
-                layoutInfo.orientation.valueOf(it.size)
-            },
-            offset = { layoutInfo.orientation.valueOf(it.offset) },
-            nextItemOnMainAxis = { first ->
-                when (layoutInfo.orientation) {
-                    Orientation.Vertical -> visibleItems.find {
-                        it != first && it.row != first.row
-                    }
+    itemIndex: (LazyGridItemInfo) -> Int = LazyGridItemInfo::index,
+): ScrollbarState =
+    scrollbarState(
+        itemsAvailable = itemsAvailable,
+        visibleItems = { layoutInfo.visibleItemsInfo },
+        firstVisibleItemIndex = { visibleItems ->
+            interpolateFirstItemIndex(
+                visibleItems = visibleItems,
+                itemSize = {
+                    layoutInfo.orientation.valueOf(it.size)
+                },
+                offset = { layoutInfo.orientation.valueOf(it.offset) },
+                nextItemOnMainAxis = { first ->
+                    when (layoutInfo.orientation) {
+                        Orientation.Vertical ->
+                            visibleItems.find {
+                                it != first && it.row != first.row
+                            }
 
-                    Orientation.Horizontal -> visibleItems.find {
-                        it != first && it.column != first.column
+                        Orientation.Horizontal ->
+                            visibleItems.find {
+                                it != first && it.column != first.column
+                            }
                     }
-                }
-            },
-            itemIndex = itemIndex,
-        )
-    },
-    itemPercentVisible = itemPercentVisible@{ itemInfo ->
-        itemVisibilityPercentage(
-            itemSize = layoutInfo.orientation.valueOf(itemInfo.size),
-            itemStartOffset = layoutInfo.orientation.valueOf(itemInfo.offset),
-            viewportStartOffset = layoutInfo.viewportStartOffset,
-            viewportEndOffset = layoutInfo.viewportEndOffset,
-        )
-    }
-)
+                },
+                itemIndex = itemIndex,
+            )
+        },
+        itemPercentVisible = itemPercentVisible@{ itemInfo ->
+            itemVisibilityPercentage(
+                itemSize = layoutInfo.orientation.valueOf(itemInfo.size),
+                itemStartOffset = layoutInfo.orientation.valueOf(itemInfo.offset),
+                viewportStartOffset = layoutInfo.viewportStartOffset,
+                viewportEndOffset = layoutInfo.viewportEndOffset,
+            )
+        },
+    )

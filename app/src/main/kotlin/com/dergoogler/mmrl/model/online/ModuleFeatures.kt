@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.model.online
 
-
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.serialization.Serializable
@@ -21,19 +20,28 @@ data class ModuleFeatures(
     val action: Boolean? = null,
 ) {
     fun isNotEmpty() =
-        service != null || postFsData != null || resetprop != null || sepolicy != null || zygisk != null || apks != null || webroot != null || postMount != null || bootCompleted != null || action != null
+        service != null ||
+            postFsData != null ||
+            resetprop != null ||
+            sepolicy != null ||
+            zygisk != null ||
+            apks != null ||
+            webroot != null ||
+            postMount != null ||
+            bootCompleted != null ||
+            action != null
 
-    val size = listOf(
-        service,
-        postFsData,
-        resetprop,
-        sepolicy,
-        zygisk,
-        apks,
-        webroot,
-        postMount,
-        bootCompleted,
-        action
-    ).count { it != null }
+    val size =
+        listOf(
+            service,
+            postFsData,
+            resetprop,
+            sepolicy,
+            zygisk,
+            apks,
+            webroot,
+            postMount,
+            bootCompleted,
+            action,
+        ).count { it != null }
 }
-

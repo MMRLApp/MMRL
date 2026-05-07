@@ -7,6 +7,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 
 @Composable
@@ -24,5 +26,22 @@ fun LazyListState.isScrollingUp(): State<Boolean> {
                 previousScrollOffset = firstVisibleItemScrollOffset
             }
         }
+    }
+}
+
+@Composable
+fun rememberSaveableLazyListState(
+    key: String? = null,
+    initialFirstVisibleItemIndex: Int = 0,
+    initialFirstVisibleItemScrollOffset: Int = 0
+): LazyListState {
+    return rememberSaveable(
+        key = key,
+        saver = LazyListState.Saver
+    ) {
+        LazyListState(
+            firstVisibleItemIndex = initialFirstVisibleItemIndex,
+            firstVisibleItemScrollOffset = initialFirstVisibleItemScrollOffset
+        )
     }
 }

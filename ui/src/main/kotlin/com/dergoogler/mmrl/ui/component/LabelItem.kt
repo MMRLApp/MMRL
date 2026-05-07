@@ -80,11 +80,12 @@ fun LabelItem(
         icon.nullable {
             {
                 Box(
-                    modifier = Modifier.iconSize(
-                        density = density,
-                        textStyle = style.textStyle,
-                        scaling = TextWIthIconIconScaling
-                    ),
+                    modifier =
+                        Modifier.iconSize(
+                            density = density,
+                            textStyle = style.textStyle,
+                            scaling = TextWIthIconIconScaling,
+                        ),
                 ) {
                     it()
                 }
@@ -92,17 +93,17 @@ fun LabelItem(
         }
 
     TextRow(
-        modifier = Modifier
-            .background(
-                color = style.containerColor,
-                shape = style.shape
-            )
-            .padding(horizontal = 4.dp)
-            .then(modifier),
+        modifier =
+            Modifier
+                .background(
+                    color = style.containerColor,
+                    shape = style.shape,
+                ).padding(horizontal = 4.dp)
+                .then(modifier),
         contentPadding = PaddingValues(start = 2.dp, end = 2.dp),
         horizontalArrangement = Arrangement.Center,
         leadingContent = decoratedIconContent,
-        content = text
+        content = text,
     )
 }
 
@@ -138,22 +139,24 @@ fun LabelItem(
         modifier = modifier,
         text = {
             Text(
-                text = when {
-                    upperCase -> text.toUpperCase(Locale.current)
-                    else -> text
-                },
+                text =
+                    when {
+                        upperCase -> text.toUpperCase(Locale.current)
+                        else -> text
+                    },
                 style = style.textStyle.copy(color = style.contentColor),
             )
         },
-        icon = icon.nullable<Int, @Composable () -> Unit> {
-            {
-                Icon(
-                    painter = painterResource(id = it),
-                    contentDescription = text,
-                    tint = style.contentColor,
-                )
-            }
-        },
+        icon =
+            icon.nullable<Int, @Composable () -> Unit> {
+                {
+                    Icon(
+                        painter = painterResource(id = it),
+                        contentDescription = text,
+                        tint = style.contentColor,
+                    )
+                }
+            },
         style = style,
     )
 }
@@ -162,7 +165,7 @@ fun LabelItem(
 fun KernelSuLabel() {
     LabelItem(
         icon = R.drawable.kernelsu_logo,
-        text = "KernelSU"
+        text = "KernelSU",
     )
 }
 
@@ -170,7 +173,7 @@ fun KernelSuLabel() {
 fun KernelSuNextLabel() {
     LabelItem(
         icon = R.drawable.kernelsu_next_logo,
-        text = "KernelSU Next"
+        text = "KernelSU Next",
     )
 }
 
@@ -178,7 +181,7 @@ fun KernelSuNextLabel() {
 fun MagiskLabel() {
     LabelItem(
         icon = R.drawable.magisk_logo,
-        text = "KernelSU"
+        text = "KernelSU",
     )
 }
 
@@ -186,7 +189,7 @@ fun MagiskLabel() {
 fun APatchLabel() {
     LabelItem(
         icon = R.drawable.brand_android,
-        text = "APatch"
+        text = "APatch",
     )
 }
 
@@ -194,7 +197,7 @@ fun APatchLabel() {
 fun MMRLLabel() {
     LabelItem(
         icon = R.drawable.mmrl_logo,
-        text = "MMRL"
+        text = "MMRL",
     )
 }
 
@@ -202,7 +205,7 @@ fun MMRLLabel() {
 fun SukiSU() {
     LabelItem(
         icon = R.drawable.sukisu_logo,
-        text = "SukiSU Ultra"
+        text = "SukiSU Ultra",
     )
 }
 
@@ -231,12 +234,13 @@ class LabelItemStyle(
         contentColor: Color = this.contentColor,
         shape: Shape = this.shape,
         textStyle: TextStyle = this.textStyle,
-    ): LabelItemStyle = LabelItemStyle(
-        containerColor,
-        contentColor,
-        shape,
-        textStyle
-    )
+    ): LabelItemStyle =
+        LabelItemStyle(
+            containerColor,
+            contentColor,
+            shape,
+            textStyle,
+        )
 
     override fun hashCode(): Int {
         var result = containerColor.hashCode()
@@ -249,10 +253,11 @@ class LabelItemStyle(
 
 object LabelItemDefaults {
     val style
-        @Composable get() = LabelItemStyle(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            shape = RoundedCornerShape(3.dp),
-            textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp)
-        )
+        @Composable get() =
+            LabelItemStyle(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                shape = RoundedCornerShape(3.dp),
+                textStyle = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
+            )
 }

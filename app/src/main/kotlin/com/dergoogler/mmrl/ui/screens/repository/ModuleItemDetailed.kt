@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
@@ -29,6 +31,7 @@ import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.LabelItemDefaults
 import com.dergoogler.mmrl.ui.component.card.Card
+import com.dergoogler.mmrl.ui.component.text.BBCodeText
 import com.dergoogler.mmrl.ui.component.text.IconText
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModuleState
@@ -40,7 +43,7 @@ enum class LabelType {
     INSTALLED,
     ANTIFEATURES,
     CATEGORY,
-    UPDATABLE
+    UPDATABLE,
 }
 
 @Composable
@@ -73,24 +76,27 @@ fun ModuleItemDetailed(
 
     Card(
         enabled = enabled,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Column(
-            modifier = Modifier.relative()
+            modifier = Modifier.relative(),
         ) {
             module.cover.nullable(menu.showCover) {
                 if (it.isNotEmpty()) {
                     Cover(
-                        modifier = Modifier.fadingEdge(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black,
-                                ),
-                                startY = Float.POSITIVE_INFINITY,
-                                endY = 0f
+                        modifier =
+                            Modifier.fadingEdge(
+                                brush =
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Transparent,
+                                                Color.Black,
+                                            ),
+                                        startY = Float.POSITIVE_INFINITY,
+                                        endY = 0f,
+                                    ),
                             ),
-                        ),
                         url = it,
                     )
                 }
@@ -98,18 +104,20 @@ fun ModuleItemDetailed(
 
             Row(
                 modifier = Modifier.padding(all = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(
-                    modifier = Modifier
-                        .alpha(alpha = alpha)
-                        .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    modifier =
+                        Modifier
+                            .alpha(alpha = alpha)
+                            .weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
                     IconText(
-                        style = MaterialTheme.typography.titleSmall.copy(
-                            textDecoration = decoration
-                        ),
+                        style =
+                            MaterialTheme.typography.titleSmall.copy(
+                                textDecoration = decoration,
+                            ),
                         tint = MaterialTheme.colorScheme.surfaceTint,
                         alignment = Alignment.End,
                         maxLines = 2,
@@ -119,100 +127,119 @@ fun ModuleItemDetailed(
                     )
 
                     Text(
-                        text = stringResource(
-                            id = R.string.module_version_author,
-                            module.versionDisplay,
-                            module.author
-                        ),
+                        text =
+                            stringResource(
+                                id = R.string.module_version_author,
+                                module.versionDisplay,
+                                module.author,
+                            ),
                         style = MaterialTheme.typography.bodySmall,
                         textDecoration = decoration,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
 
                     if (menu.showUpdatedTime) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.module_update_at,
-                                state.lastUpdated.toFormattedDateSafely
-                            ),
+                        BBCodeText(
                             style = MaterialTheme.typography.bodySmall,
                             textDecoration = decoration,
-                            color = MaterialTheme.colorScheme.outline
+                            color = MaterialTheme.colorScheme.outline,
+                            text = state.lastUpdated.toFormattedDateSafely + if (module.stars != null && menu.showStars) " • [icon=star] ${module.stars}" else "",
+                            iconContent = {
+                                if (it == "star") {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.star),
+                                        contentDescription = null,
+                                    )
+                                }
+                            }
                         )
                     }
                 }
             }
 
             Text(
-                modifier = Modifier
-                    .alpha(alpha = alpha)
-                    .padding(end = 16.dp, bottom = 16.dp, start = 16.dp),
-                text = module.description
-                    ?: stringResource(R.string.view_module_no_description),
+                modifier =
+                    Modifier
+                        .alpha(alpha = alpha)
+                        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp),
+                text =
+                    module.description
+                        ?: stringResource(R.string.view_module_no_description),
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodySmall.apply {
-                    if (module.description.isNullOrBlank()) {
-                        copy(
-                            fontStyle = FontStyle.Italic
-                        )
-                    }
-                },
+                style =
+                    MaterialTheme.typography.bodySmall.apply {
+                        if (module.description.isNullOrBlank()) {
+                            copy(
+                                fontStyle = FontStyle.Italic,
+                            )
+                        }
+                    },
                 textDecoration = decoration,
-                color = MaterialTheme.colorScheme.outline
+                color = MaterialTheme.colorScheme.outline,
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
             if (hasLabel) {
                 Row(
-                    modifier = Modifier
-                        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
+                            .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     labelsToShow.forEach { labelType ->
                         when (labelType) {
-                            LabelType.CATEGORY -> module.categories?.firstOrNull()
-                                .nullable { category ->
-                                    LabelItem(
-                                        icon = R.drawable.category,
-                                        text = category,
-                                        style = LabelItemDefaults.style.copy(
-                                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                            LabelType.CATEGORY ->
+                                module.categories
+                                    ?.firstOrNull()
+                                    .nullable { category ->
+                                        LabelItem(
+                                            icon = R.drawable.category,
+                                            text = category,
+                                            style =
+                                                LabelItemDefaults.style.copy(
+                                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                                                ),
                                         )
+                                    }
+
+                            LabelType.LICENSE ->
+                                module.license.nullable { license ->
+                                    LabelItem(
+                                        icon = R.drawable.tag,
+                                        text = license,
                                     )
                                 }
 
-                            LabelType.LICENSE -> module.license.nullable { license ->
+                            LabelType.ANTIFEATURES ->
                                 LabelItem(
-                                    icon = R.drawable.tag,
-                                    text = license
+                                    icon = R.drawable.alert_triangle,
+                                    text = stringResource(id = R.string.view_module_antifeatures),
+                                    style =
+                                        LabelItemDefaults.style.copy(
+                                            containerColor = MaterialTheme.colorScheme.onTertiary,
+                                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                                        ),
                                 )
-                            }
 
-                            LabelType.ANTIFEATURES -> LabelItem(
-                                icon = R.drawable.alert_triangle,
-                                text = stringResource(id = R.string.view_module_antifeatures),
-                                style = LabelItemDefaults.style.copy(
-                                    containerColor = MaterialTheme.colorScheme.onTertiary,
-                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                            LabelType.INSTALLED ->
+                                LabelItem(
+                                    text = stringResource(id = R.string.module_installed),
                                 )
-                            )
 
-                            LabelType.INSTALLED -> LabelItem(
-                                text = stringResource(id = R.string.module_installed)
-                            )
-
-                            LabelType.UPDATABLE -> LabelItem(
-                                text = stringResource(id = R.string.module_new),
-                                style = LabelItemDefaults.style.copy(
-                                    containerColor = MaterialTheme.colorScheme.error,
-                                    contentColor = MaterialTheme.colorScheme.onError
+                            LabelType.UPDATABLE ->
+                                LabelItem(
+                                    text = stringResource(id = R.string.module_new),
+                                    style =
+                                        LabelItemDefaults.style.copy(
+                                            containerColor = MaterialTheme.colorScheme.error,
+                                            contentColor = MaterialTheme.colorScheme.onError,
+                                        ),
                                 )
-                            )
                         }
                     }
                 }

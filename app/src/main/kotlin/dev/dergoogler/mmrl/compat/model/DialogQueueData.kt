@@ -4,5 +4,5 @@ data class DialogQueueData(
     val title: String,
     val description: String,
     val onConfirm: () -> Unit = {},
-    val onDismiss: () -> Unit = {}
+    val onDismiss: () -> Unit = {},
 )

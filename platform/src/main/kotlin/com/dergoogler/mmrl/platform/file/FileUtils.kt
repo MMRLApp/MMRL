@@ -3,6 +3,7 @@ package com.dergoogler.mmrl.platform.file
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.ParcelFileDescriptor
+import android.os.RemoteException
 import android.system.ErrnoException
 import android.system.Int64Ref
 import android.system.Os
@@ -19,7 +20,6 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.nio.file.OpenOption
 import java.nio.file.StandardOpenOption
-
 
 @SuppressLint("DiscouragedPrivateApi")
 internal object FileUtils {
@@ -115,18 +115,25 @@ internal object FileUtils {
     @RequiresApi(api = 28)
     @Throws(ErrnoException::class)
     fun splice(
-        fdIn: FileDescriptor?, offIn: Int64Ref?,
-        fdOut: FileDescriptor?, offOut: Int64Ref?,
-        len: Long, flags: Int,
+        fdIn: FileDescriptor?,
+        offIn: Int64Ref?,
+        fdOut: FileDescriptor?,
+        offOut: Int64Ref?,
+        len: Long,
+        flags: Int,
     ): Long {
         try {
             if (splice == null) {
-                splice = Os::class.java.getMethod(
-                    "splice",
-                    FileDescriptor::class.java, Int64Ref::class.java,
-                    FileDescriptor::class.java, Int64Ref::class.java,
-                    Long::class.javaPrimitiveType, Int::class.javaPrimitiveType
-                )
+                splice =
+                    Os::class.java.getMethod(
+                        "splice",
+                        FileDescriptor::class.java,
+                        Int64Ref::class.java,
+                        FileDescriptor::class.java,
+                        Int64Ref::class.java,
+                        Long::class.javaPrimitiveType,
+                        Int::class.javaPrimitiveType,
+                    )
             }
             return splice!!.invoke(null, fdIn, offIn, fdOut, offOut, len, flags) as Long
         } catch (e: InvocationTargetException) {
@@ -139,8 +146,10 @@ internal object FileUtils {
     @Suppress("deprecation")
     @Throws(ErrnoException::class)
     fun sendfile(
-        outFd: FileDescriptor?, inFd: FileDescriptor?,
-        inOffset: MutableLong?, byteCount: Long,
+        outFd: FileDescriptor?,
+        inFd: FileDescriptor?,
+        inOffset: MutableLong?,
+        byteCount: Long,
     ): Long {
         if (Build.VERSION.SDK_INT >= 28) {
             val off = if (inOffset == null) null else Int64Ref(inOffset.value)
@@ -153,11 +162,14 @@ internal object FileUtils {
                     os = Class.forName("libcore.io.Libcore").getField("os")[null]
                 }
                 if (sendfile == null) {
-                    sendfile = os!!.javaClass.getMethod(
-                        "sendfile",
-                        FileDescriptor::class.java, FileDescriptor::class.java,
-                        MutableLong::class.java, Long::class.javaPrimitiveType
-                    )
+                    sendfile =
+                        os!!.javaClass.getMethod(
+                            "sendfile",
+                            FileDescriptor::class.java,
+                            FileDescriptor::class.java,
+                            MutableLong::class.java,
+                            Long::class.javaPrimitiveType,
+                        )
                 }
                 return sendfile!!.invoke(os, outFd, inFd, inOffset, byteCount) as Long
             } catch (e: InvocationTargetException) {
@@ -188,7 +200,7 @@ internal object FileUtils {
                     setFd =
                         FileDescriptor::class.java.getDeclaredMethod(
                             "setInt$",
-                            Int::class.javaPrimitiveType
+                            Int::class.javaPrimitiveType,
                         )
                 } catch (ignored: NoSuchMethodException) {
                 }
@@ -206,6 +218,35 @@ internal object FileUtils {
         } catch (e: ReflectiveOperationException) {
             return null
         }
+    }
+
+    @Throws(IOException::class)
+    fun openReadPipe(file: SuFile, flags: Int, mode: Int): ParcelFileDescriptor {
+        val pipe = ParcelFileDescriptor.createPipe()
+        try {
+            file.__open_read_stream__(pipe[1], flags, mode)
+        } catch (e: RemoteException) {
+            pipe[0].close()
+            throw IOException(e)
+        } finally {
+            pipe[1].close()
+        }
+        return pipe[0]
+    }
+
+    @Throws(IOException::class)
+    fun openWritePipe(file: SuFile, flags: Int, mode: Int): ParcelFileDescriptor {
+        val pipe = ParcelFileDescriptor.createPipe()
+        try {
+            file.__open_write_stream__(pipe[0], flags, mode)
+        } catch (e: RemoteException) {
+            pipe[1].close()
+            throw IOException(e)
+        } finally {
+            pipe[0].close()
+        }
+
+        return pipe[1]
     }
 
     internal class Flag {

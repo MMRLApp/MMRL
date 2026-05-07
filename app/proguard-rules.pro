@@ -48,11 +48,14 @@
 -dontwarn javax.lang.model.util.Types
 -dontwarn javax.tools.Diagnostic$Kind
 
-# Tell consumers to keep all classes that extend WXInterface
--keep class * extends com.dergoogler.mmrl.webui.interfaces.WXInterface {
-    <init>(...);
-    *;
-}
--keep class com.dergoogler.mmrl.webui.util.WebUIOptions
+-keep class androidx.compose.ui.graphics.Color { *; }
+-keep class androidx.compose.material3.ButtonColors { *; }
+-keep class androidx.compose.material3.CardColors { *; }
+-keep class androidx.compose.material3.ColorScheme { *; }
+
 -keep class com.dergoogler.mmrl.webui.interfaces.**
--keep class * extends com.dergoogler.mmrl.webui.interfaces.WXInterface
+
+# Keep the generated Moshi adapters within the app's packages.
+-keep class com.dergoogler.mmrl.**.*JsonAdapter { <init>(...); }
+# Also ensure classes annotated with @JsonClass are not stripped, especially their constructors.
+-keep @com.squareup.moshi.JsonClass class com.dergoogler.mmrl.** { <init>(...); }

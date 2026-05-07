@@ -10,28 +10,33 @@ import com.dergoogler.mmrl.ui.activity.terminal.Terminal
 class AddMask : Command {
     override val name: String = "add-mask"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
             var char = action.getProp<String>("char", "•")
             var flag = action.getProp<RegexOption>("flag", RegexOption.IGNORE_CASE)
 
             if (char.length != 1) {
-                console += AlertBlock(
-                    lineNumber = lineNumber,
-                    type = AlertType.ERROR,
-                    title = "Mask Error",
-                    text = "Can't use a mask character that has a length of more or less than one characters."
-                )
+                console +=
+                    AlertBlock(
+                        lineNumber = lineNumber,
+                        type = AlertType.ERROR,
+                        title = "Mask Error",
+                        text = "Can't use a mask character that has a length of more or less than one characters.",
+                    )
 
                 char = "•"
             }
 
             action.data.takeIf { it.isNotBlank() }?.let {
-                masks += Terminal.Mask(
-                    char = char,
-                    value = it,
-                    flag = flag
-                )
+                masks +=
+                    Terminal.Mask(
+                        char = char,
+                        value = it,
+                        flag = flag,
+                    )
             }
         }
     }
@@ -40,7 +45,10 @@ class AddMask : Command {
 class ReplaceSelf : Command {
     override val name: String = "replace-self"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
             val key = action.getProp<String>("key")
             if (key.isNullOrBlank()) return
@@ -57,7 +65,7 @@ class ReplaceSelf : Command {
                     lineAdded = false // replaced existing line → no new line added
                 } else {
                     console += TextBlock(lineNumber, data.fixNewLines, key = key)
-                    lineAdded = true  // new line added
+                    lineAdded = true // new line added
                 }
             } ?: run {
                 lineAdded = false // no data, no new line
@@ -69,7 +77,10 @@ class ReplaceSelf : Command {
 class RemoveLine : Command {
     override val name: String = "remove-line"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
             val key = action.getProp<String>("key")
             val data = action.data.takeIf { it.isNotBlank() }

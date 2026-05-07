@@ -21,9 +21,10 @@ fun CardScope.Absolute(
     alignment: Alignment = Alignment.TopStart,
     content: @Composable CardScope.() -> Unit,
 ) = Box(
-    modifier = Modifier
-        .absolute(alignment = alignment)
-        .then(modifier)
+    modifier =
+        Modifier
+            .absolute(alignment = alignment)
+            .then(modifier),
 ) {
     val instance = remember { CardAbsoluteScopeInstance(this@Absolute, this) }
     instance.content()

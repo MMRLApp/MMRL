@@ -43,15 +43,15 @@ internal fun Tabs(
         indicator = { tabPositions: List<TabPosition> ->
             AnimatedIndicator(
                 tabPositions = tabPositions,
-                selectedTabIndex = state.currentPage
+                selectedTabIndex = state.currentPage,
             )
         },
         divider = {
             HorizontalDivider(
                 thickness = 0.3.dp,
-                modifier = Modifier.shadow(6.dp)
+                modifier = Modifier.shadow(6.dp),
             )
-        }
+        },
     ) {
         pages.forEachIndexed { index, text ->
             Tab(
@@ -63,13 +63,13 @@ internal fun Tabs(
                     }
                 },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             ) {
                 Text(
                     text = text,
                     style = MaterialTheme.typography.labelLarge,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
         }
@@ -91,13 +91,16 @@ private fun Indicator(
             start = Offset(width, size.height),
             end = Offset(width * 3, size.height),
             strokeWidth = size.height * 2,
-            cap = StrokeCap.Round
+            cap = StrokeCap.Round,
         )
     }
 }
 
 @Composable
-private fun AnimatedIndicator(tabPositions: List<TabPosition>, selectedTabIndex: Int) {
+private fun AnimatedIndicator(
+    tabPositions: List<TabPosition>,
+    selectedTabIndex: Int,
+) {
     val transition = updateTransition(selectedTabIndex, label = "Indicator")
     val indicatorStart by transition.animateDp(
         transitionSpec = {
@@ -107,7 +110,7 @@ private fun AnimatedIndicator(tabPositions: List<TabPosition>, selectedTabIndex:
                 spring(dampingRatio = 1f, stiffness = 1000f)
             }
         },
-        label = "Indicator"
+        label = "Indicator",
     ) {
         tabPositions[it].left
     }
@@ -120,17 +123,18 @@ private fun AnimatedIndicator(tabPositions: List<TabPosition>, selectedTabIndex:
                 spring(dampingRatio = 1f, stiffness = 50f)
             }
         },
-        label = "Indicator"
+        label = "Indicator",
     ) {
         tabPositions[it].right
     }
 
     Indicator(
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .wrapContentSize(align = Alignment.BottomStart)
-            .offset(x = indicatorStart)
-            .width(indicatorEnd - indicatorStart)
-            .height(3.dp)
+        modifier =
+            Modifier
+                .wrapContentSize(align = Alignment.BottomStart)
+                .offset(x = indicatorStart)
+                .width(indicatorEnd - indicatorStart)
+                .height(3.dp),
     )
 }

@@ -58,18 +58,18 @@ fun EditTextDialog(
         confirmButton = {
             TextButton(
                 onClick = onDone,
-                enabled = !isError && text.isNotBlank()
+                enabled = !isError && text.isNotBlank(),
             ) {
                 Text(text = stringResource(id = R.string.confirm))
             }
         },
         dismissButton = {
             TextButton(
-                onClick = onClose
+                onClick = onClose,
             ) {
                 Text(text = stringResource(id = R.string.cancel))
             }
-        }
+        },
     ) { focusRequester ->
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -95,16 +95,17 @@ fun EditTextDialog(
                     }
                 },
                 isError = isError,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions {
-                    if (text.isNotBlank()) onDone()
-                },
-                shape = RoundedCornerShape(15.dp)
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
+                keyboardActions =
+                    KeyboardActions {
+                        if (text.isNotBlank()) onDone()
+                    },
+                shape = RoundedCornerShape(15.dp),
             )
         }
     }
 }
-

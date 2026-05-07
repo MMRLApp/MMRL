@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="requireNewVersion_require_text">يتطلب على الأقل MMRL &gt;=</string>
+    <string name="requireNewVersion_try_the_following">جرب التالي:</string>
+    <string name="requireNewVersion_try_the_following_one">حدث MMRL إلى أحدث إصدار بواسطة Google Play أو من GitHub Releases.</string>
+    <string name="requireNewVersion_try_the_following_two">تواصل مع مطور الوحدة للحصول على حل بديل ممكن.</string>
+    <string name="requireNewVersion_refresh">إنعاش</string>
 </resources>

@@ -89,35 +89,39 @@ fun SetupScreen(setWorkingMode: (WorkingMode) -> Unit) {
 
     Scaffold { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary.darken(),
-                            MaterialTheme.colorScheme.background
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.linearGradient(
+                            colors =
+                                listOf(
+                                    MaterialTheme.colorScheme.primary.darken(),
+                                    MaterialTheme.colorScheme.background,
+                                ),
+                            start = Offset(0f, 0f),
+                            end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY),
                         ),
-                        start = Offset(0f, 0f),
-                        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                    )
-                )
-                .padding(innerPadding)
+                    ).padding(innerPadding),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 AnimatedVisibility(
                     visible = showContent,
-                    enter = slideInVertically(
-                        initialOffsetY = { -it },
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    ) + fadeIn(animationSpec = tween(800))
+                    enter =
+                        slideInVertically(
+                            initialOffsetY = { -it },
+                            animationSpec =
+                                spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessLow,
+                                ),
+                        ) + fadeIn(animationSpec = tween(800)),
                 ) {
                     HeaderSection()
                 }
@@ -125,48 +129,53 @@ fun SetupScreen(setWorkingMode: (WorkingMode) -> Unit) {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
                 ) {
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fadingEdge(
-                                Brush.verticalGradient(
-                                    0f to Color.Transparent,
-                                    0.03f to Color.Red,
-                                    0.97f to Color.Red,
-                                    1f to Color.Transparent
-                                )
-                            )
-                            .padding(horizontal = 4.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .fadingEdge(
+                                    Brush.verticalGradient(
+                                        0f to Color.Transparent,
+                                        0.03f to Color.Red,
+                                        0.97f to Color.Red,
+                                        1f to Color.Transparent,
+                                    ),
+                                ).padding(horizontal = 4.dp),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(vertical = 20.dp)
+                        contentPadding = PaddingValues(vertical = 20.dp),
                     ) {
                         itemsIndexed(
                             items = FeaturedManager.managers,
-                            key = { _, manager -> manager.workingMode }
+                            key = { _, manager -> manager.workingMode },
                         ) { index, manager ->
                             this@Column.AnimatedVisibility(
                                 visible = animateCards,
-                                enter = slideInHorizontally(
-                                    initialOffsetX = { if (index % 2 == 0) -it else it },
-                                    animationSpec = spring(
-                                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                                        stiffness = Spring.StiffnessMediumLow
-                                    )
-                                ) + fadeIn(
-                                    animationSpec = tween(
-                                        durationMillis = 600,
-                                        delayMillis = index * 150
-                                    )
-                                )
+                                enter =
+                                    slideInHorizontally(
+                                        initialOffsetX = { if (index % 2 == 0) -it else it },
+                                        animationSpec =
+                                            spring(
+                                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                                stiffness = Spring.StiffnessMediumLow,
+                                            ),
+                                    ) +
+                                        fadeIn(
+                                            animationSpec =
+                                                tween(
+                                                    durationMillis = 600,
+                                                    delayMillis = index * 150,
+                                                ),
+                                        ),
                             ) {
                                 ManagerCard(
                                     manager = manager,
                                     isSelected = currentSelection == manager,
-                                    onSelect = { currentSelection = manager }
+                                    onSelect = { currentSelection = manager },
                                 )
                             }
                         }
@@ -177,20 +186,22 @@ fun SetupScreen(setWorkingMode: (WorkingMode) -> Unit) {
 
                 AnimatedVisibility(
                     visible = showContent,
-                    enter = slideInVertically(
-                        initialOffsetY = { it },
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        )
-                    ) + fadeIn(animationSpec = tween(1000, delayMillis = 400))
+                    enter =
+                        slideInVertically(
+                            initialOffsetY = { it },
+                            animationSpec =
+                                spring(
+                                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                                    stiffness = Spring.StiffnessLow,
+                                ),
+                        ) + fadeIn(animationSpec = tween(1000, delayMillis = 400)),
                 ) {
                     BottomSection(
                         currentSelection = currentSelection,
                         onContinue = {
                             Log.d("SetupScreen", "Selected: $currentSelection")
                             setWorkingMode(currentSelection!!.workingMode)
-                        }
+                        },
                     )
                 }
             }
@@ -202,7 +213,7 @@ fun SetupScreen(setWorkingMode: (WorkingMode) -> Unit) {
 private fun HeaderSection() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(vertical = 16.dp)
+        modifier = Modifier.padding(vertical = 16.dp),
     ) {
         var bounceState by remember { mutableStateOf(false) }
         LaunchedEffect(Unit) {
@@ -212,19 +223,21 @@ private fun HeaderSection() {
 
         val bounce by animateFloatAsState(
             targetValue = if (bounceState) 1.1f else 1f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(1000),
-                repeatMode = RepeatMode.Reverse
-            )
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(1000),
+                    repeatMode = RepeatMode.Reverse,
+                ),
         )
 
         Icon(
-            modifier = Modifier
-                .size(48.dp)
-                .graphicsLayer {
-                    scaleX = bounce
-                    scaleY = bounce
-                },
+            modifier =
+                Modifier
+                    .size(48.dp)
+                    .graphicsLayer {
+                        scaleX = bounce
+                        scaleY = bounce
+                    },
             painter = painterResource(R.drawable.launcher_outline),
             contentDescription = null,
         )
@@ -236,7 +249,7 @@ private fun HeaderSection() {
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -246,7 +259,7 @@ private fun HeaderSection() {
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            lineHeight = 22.sp
+            lineHeight = 22.sp,
         )
     }
 }
@@ -261,60 +274,66 @@ private fun ManagerCard(
 
     val animatedScale by animateFloatAsState(
         targetValue = if (isSelected) 1.02f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
     )
 
     val borderColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.4216f) else Color.Transparent,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
     )
 
     val borderWidth: Dp by animateDpAsState(
         targetValue = if (isSelected) 1.dp else 0.dp,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
     )
 
     Card(
         onClick = onSelect,
         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4216f),
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                width = borderWidth,
-                color = borderColor,
-                shape = RoundedCornerShape(20.dp)
-            )
-            .scale(animatedScale),
-        interactionSource = interactionSource
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .border(
+                    width = borderWidth,
+                    color = borderColor,
+                    shape = RoundedCornerShape(20.dp),
+                ).scale(animatedScale),
+        interactionSource = interactionSource,
     ) {
         Row(
-            modifier = Modifier
-                .relative()
-                .fillMaxWidth()
-                .padding(20.dp),
+            modifier =
+                Modifier
+                    .relative()
+                    .fillMaxWidth()
+                    .padding(20.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .background(
-                        color = if (isSelected)
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-                        shape = CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .size(56.dp)
+                        .background(
+                            color =
+                                if (isSelected) {
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                                } else {
+                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                },
+                            shape = CircleShape,
+                        ),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     painter = painterResource(manager.icon),
                     contentDescription = manager.name,
                     modifier = Modifier.size(28.dp),
-                    tint = if (isSelected)
-                        MaterialTheme.colorScheme.primary
-                    else
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                    tint =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primary
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
                 )
             }
 
@@ -322,32 +341,35 @@ private fun ManagerCard(
                 text = manager.name,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = if (isSelected)
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                else
-                    MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(1f)
+                color =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    },
+                modifier = Modifier.weight(1f),
             )
 
             AnimatedVisibility(
                 visible = isSelected,
                 enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)) + fadeIn(),
-                exit = scaleOut() + fadeOut()
+                exit = scaleOut() + fadeOut(),
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .size(24.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape,
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         modifier = Modifier.size(14.dp),
                         painter = painterResource(R.drawable.check),
                         tint = MaterialTheme.colorScheme.background,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -362,42 +384,45 @@ private fun BottomSection(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
     ) {
         val buttonScale by animateFloatAsState(
             targetValue = if (currentSelection != null) 1f else 0.95f,
-            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
         )
 
         Button(
             onClick = onContinue,
             enabled = currentSelection != null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .scale(buttonScale),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .scale(buttonScale),
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
-            )
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                ),
         ) {
             AnimatedContent(
                 targetState = currentSelection,
                 transitionSpec = {
                     fadeIn(animationSpec = tween(300)).togetherWith(
-                        fadeOut(animationSpec = tween(300))
+                        fadeOut(animationSpec = tween(300)),
                     )
-                }
+                },
             ) { selection ->
                 Text(
-                    text = if (selection != null) {
-                        stringResource(R.string.continue_with, selection.name)
-                    } else {
-                        stringResource(R.string.select)
-                    },
+                    text =
+                        if (selection != null) {
+                            stringResource(R.string.continue_with, selection.name)
+                        } else {
+                            stringResource(R.string.select)
+                        },
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
         }
@@ -409,7 +434,7 @@ private fun BottomSection(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
         )
     }
 }

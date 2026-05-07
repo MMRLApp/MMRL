@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="confirm">Corferma</string>
+    <string name="cancel">Annulla</string>
+    <string name="learn_more">Saperne di più</string>
+    <string name="loading">Caricamento…</string>
+    <string name="unknown_error">Errore sconosciuto</string>
+    <string name="search_placeholder">Ricerca…</string>
+    <string name="select_a_option">Seleziona un opzione</string>
 </resources>

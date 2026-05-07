@@ -39,7 +39,7 @@ fun Scaffold(
                 safeInsets.insets = contentWindowInsets.exclude(consumedWindowInsets)
             },
         color = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     ) {
         ScaffoldLayout(
             fabPosition = floatingActionButtonPosition,
@@ -51,7 +51,7 @@ fun Scaffold(
             fab = floatingActionButton,
             content = { paddingValues ->
                 ScaffoldScopeInstance.content(paddingValues)
-            }
+            },
         )
     }
 }

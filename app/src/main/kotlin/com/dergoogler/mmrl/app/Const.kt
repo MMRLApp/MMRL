@@ -7,9 +7,10 @@ import java.io.File
 typealias PLM = PlatformManager
 
 object Const {
-    val PUBLIC_DOWNLOADS: File = Environment.getExternalStoragePublicDirectory(
-        Environment.DIRECTORY_DOWNLOADS
-    )
+    val PUBLIC_DOWNLOADS: File =
+        Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_DOWNLOADS,
+        )
 
     const val PRIVACY_POLICY_URL = "https://mmrl.dev/legal/privacy"
     const val TERMS_OF_SERVICE_URL = "https://mmrl.dev/legal/terms"
@@ -27,9 +28,10 @@ object Const {
     const val SPDX_URL = "https://spdx.org/licenses/%s.json"
 
     val WEBUI_DOMAIN_SAFE_REGEX = Regex("^https?://mui\\.kernelsu\\.org(/.*)?$")
-    val WEBUI_DOMAIN_REMOTE_SAFE_REGEX = Regex(
-        "^(https?://)?(localhost|127\\.0\\.0\\.1|::1|10(?:\\.\\d{1,3}){3}|172\\.(?:1[6-9]|2\\d|3[01])(?:\\.\\d{1,3}){2}|192\\.168(?:\\.\\d{1,3}){2})(?::([0-9]{1,5}))?$"
-    )
+    val WEBUI_DOMAIN_REMOTE_SAFE_REGEX =
+        Regex(
+            "^(https?://)?(localhost|127\\.0\\.0\\.1|::1|10(?:\\.\\d{1,3}){3}|172\\.(?:1[6-9]|2\\d|3[01])(?:\\.\\d{1,3}){2}|192\\.168(?:\\.\\d{1,3}){2})(?::([0-9]{1,5}))?$",
+        )
 
     const val CLEAR_CMD = "[H[J"
 }

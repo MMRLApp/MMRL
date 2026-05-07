@@ -35,25 +35,26 @@ fun ModulesList(
     val navigator = LocalDestinationsNavigator.current
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         LazyColumn(
             modifier = Modifier.hazeSource(LocalHazeState.current),
             state = state,
-            contentPadding = PaddingValues(
-                start = 8.dp,
-                top = innerPadding.calculateTopPadding() + 8.dp,
-                end = 8.dp,
-                bottom = 8.dp
-            ),
+            contentPadding =
+                PaddingValues(
+                    start = 8.dp,
+                    top = innerPadding.calculateTopPadding() + 8.dp,
+                    end = 8.dp,
+                    bottom = 8.dp,
+                ),
         ) {
             items(
                 items = list,
-                key = { "${it.online.id}_${it.repo.url}_${it.repo.name}" }
+                key = { "${it.online.id}_${it.repo.url}_${it.repo.name}" },
             ) {
                 CompositionLocalProvider(
                     LocalOnlineModuleState provides it.state,
-                    LocalOnlineModule provides it.online
+                    LocalOnlineModule provides it.online,
                 ) {
                     ModuleItemCompact(
                         sourceProvider = it.repo.name,
@@ -61,14 +62,14 @@ fun ModulesList(
                             navigator.navigate(
                                 NewViewScreenDestination(
                                     it.repo,
-                                    it.online
-                                )
+                                    it.online,
+                                ),
                             )
-                        }
+                        },
                     )
                 }
             }
-            
+
             item {
                 Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
             }
@@ -76,12 +77,13 @@ fun ModulesList(
 
         VerticalFastScrollbar(
             state = state,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding()
-                )
+            modifier =
+                Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding(),
+                    ),
         )
     }
 }

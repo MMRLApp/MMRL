@@ -27,39 +27,36 @@ import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.datastore.model.ModulesMenu
 import com.dergoogler.mmrl.datastore.model.Option
-import com.dergoogler.mmrl.platform.Platform
+import com.dergoogler.mmrl.ext.isNotNullOrBlank
+import com.dergoogler.mmrl.ext.shareText
+import com.dergoogler.mmrl.ext.toFormattedDateSafely
+import com.dergoogler.mmrl.platform.PlatformManager
+import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.MenuChip
 import com.dergoogler.mmrl.ui.component.Segment
 import com.dergoogler.mmrl.ui.component.SegmentedButtons
 import com.dergoogler.mmrl.ui.component.SegmentedButtonsDefaults
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
-import com.dergoogler.mmrl.ext.isNotNullOrBlank
-import com.dergoogler.mmrl.ext.shareText
-import com.dergoogler.mmrl.ext.toFormattedDateSafely
-import com.dergoogler.mmrl.platform.PlatformManager
-import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
 
 @Composable
-fun ModulesMenu(
-    setMenu: (ModulesMenu) -> Unit,
-) {
+fun ModulesMenu(setMenu: (ModulesMenu) -> Unit) {
     val userPreferences = LocalUserPreferences.current
     var open by rememberSaveable { mutableStateOf(false) }
 
     IconButton(
-        onClick = { open = true }
+        onClick = { open = true },
     ) {
         Icon(
             painter = painterResource(id = R.drawable.filter_outlined),
-            contentDescription = null
+            contentDescription = null,
         )
 
         if (open) {
             MenuBottomSheet(
                 onClose = { open = false },
                 menu = userPreferences.modulesMenu,
-                setMenu = setMenu
+                setMenu = setMenu,
             )
         }
     }
@@ -71,43 +68,46 @@ private fun MenuBottomSheet(
     menu: ModulesMenu,
     setMenu: (ModulesMenu) -> Unit,
 ) = BottomSheet(onDismissRequest = onClose) {
-    val options = listOf(
-        Option.Name to R.string.menu_sort_option_name,
-        Option.UpdatedTime to R.string.menu_sort_option_updated,
-        Option.Size to R.string.menu_sort_option_size
-    )
+    val options =
+        listOf(
+            Option.Name to R.string.menu_sort_option_name,
+            Option.UpdatedTime to R.string.menu_sort_option_updated,
+            Option.Size to R.string.menu_sort_option_size,
+        )
 
     val context = LocalContext.current
 
     Text(
         text = stringResource(id = R.string.menu_advanced_menu),
         style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.align(Alignment.CenterHorizontally)
+        modifier = Modifier.align(Alignment.CenterHorizontally),
     )
 
     Column(
         modifier = Modifier.padding(all = 18.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
             text = stringResource(id = R.string.menu_sort_mode),
-            style = MaterialTheme.typography.titleSmall
+            style = MaterialTheme.typography.titleSmall,
         )
 
         SegmentedButtons(
-            border = SegmentedButtonsDefaults.border(
-                color = MaterialTheme.colorScheme.secondary
-            )
+            border =
+                SegmentedButtonsDefaults.border(
+                    color = MaterialTheme.colorScheme.secondary,
+                ),
         ) {
             options.forEach { (option, label) ->
                 Segment(
                     selected = option == menu.option,
                     onClick = { setMenu(menu.copy(option = option)) },
-                    colors = SegmentedButtonsDefaults.buttonColor(
-                        selectedContainerColor = MaterialTheme.colorScheme.secondary,
-                        selectedContentColor = MaterialTheme.colorScheme.onSecondary
-                    ),
-                    icon = null
+                    colors =
+                        SegmentedButtonsDefaults.buttonColor(
+                            selectedContainerColor = MaterialTheme.colorScheme.secondary,
+                            selectedContentColor = MaterialTheme.colorScheme.onSecondary,
+                        ),
+                    icon = null,
                 ) {
                     Text(text = stringResource(id = label))
                 }
@@ -115,46 +115,47 @@ private fun MenuBottomSheet(
         }
 
         FlowRow(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .wrapContentHeight(align = Alignment.Top),
+            modifier =
+                Modifier
+                    .fillMaxWidth(1f)
+                    .wrapContentHeight(align = Alignment.Top),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             MenuChip(
                 selected = menu.descending,
                 onClick = { setMenu(menu.copy(descending = !menu.descending)) },
-                label = { Text(text = stringResource(id = R.string.menu_descending)) }
+                label = { Text(text = stringResource(id = R.string.menu_descending)) },
             )
 
             MenuChip(
                 selected = menu.pinEnabled,
                 onClick = { setMenu(menu.copy(pinEnabled = !menu.pinEnabled)) },
-                label = { Text(text = stringResource(id = R.string.menu_pin_enabled)) }
+                label = { Text(text = stringResource(id = R.string.menu_pin_enabled)) },
             )
 
             MenuChip(
                 selected = menu.pinAction,
                 onClick = { setMenu(menu.copy(pinAction = !menu.pinAction)) },
-                label = { Text(text = stringResource(id = R.string.menu_pin_action)) }
+                label = { Text(text = stringResource(id = R.string.menu_pin_action)) },
             )
 
             MenuChip(
                 selected = menu.pinWebUI,
                 onClick = { setMenu(menu.copy(pinWebUI = !menu.pinWebUI)) },
-                label = { Text(text = stringResource(id = R.string.menu_pin_webui)) }
+                label = { Text(text = stringResource(id = R.string.menu_pin_webui)) },
             )
 
             MenuChip(
                 selected = menu.showUpdatedTime,
                 onClick = { setMenu(menu.copy(showUpdatedTime = !menu.showUpdatedTime)) },
-                label = { Text(text = stringResource(id = R.string.menu_show_updated)) }
+                label = { Text(text = stringResource(id = R.string.menu_show_updated)) },
             )
 
             MenuChip(
                 selected = menu.showCover,
                 onClick = { setMenu(menu.copy(showCover = !menu.showCover)) },
-                label = { Text(text = stringResource(id = R.string.menu_show_cover)) }
+                label = { Text(text = stringResource(id = R.string.menu_show_cover)) },
             )
         }
 
@@ -179,10 +180,10 @@ private fun MenuBottomSheet(
                 if (builder.isNotNullOrBlank()) {
                     context.shareText(builder.toString())
                 }
-            }
+            },
         ) {
             Text(
-                text = stringResource(id = R.string.menu_export_modules_as_text)
+                text = stringResource(id = R.string.menu_export_modules_as_text),
             )
         }
     }

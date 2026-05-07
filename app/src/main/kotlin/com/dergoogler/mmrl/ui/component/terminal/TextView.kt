@@ -7,10 +7,10 @@ import com.dergoogler.mmrl.ui.component.text.BBCodeText
 @Composable
 fun TextView(block: TextBlock) {
     Line(
-        index = block.lineNumber
+        index = block.lineNumber,
     ) {
         BBCodeText(
-            text = block.text
+            text = block.text,
         )
     }
 }

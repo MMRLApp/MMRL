@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="confirm">Ya</string>
+    <string name="cancel">Batal</string>
+    <string name="learn_more">Pelajari selengkapnya</string>
+    <string name="loading">Memuat…</string>
+    <string name="unknown_error">Kesalahan Tidak Diketahui</string>
+    <string name="search_placeholder">Mencari…</string>
+    <string name="select_a_option">Pilih opsi</string>
 </resources>

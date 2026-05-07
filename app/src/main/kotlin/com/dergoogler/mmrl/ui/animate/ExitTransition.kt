@@ -11,42 +11,42 @@ fun slideOutTopToBottom(
     animationSpec: FiniteAnimationSpec<IntOffset> =
         spring(
             stiffness = Spring.StiffnessMediumLow,
-            visibilityThreshold = IntOffset.VisibilityThreshold
-        )
+            visibilityThreshold = IntOffset.VisibilityThreshold,
+        ),
 ) = slideOut(
-    targetOffset = { IntOffset(0,  it.height) },
-    animationSpec = animationSpec
+    targetOffset = { IntOffset(0, it.height) },
+    animationSpec = animationSpec,
 )
 
 fun slideOutBottomToTop(
     animationSpec: FiniteAnimationSpec<IntOffset> =
         spring(
             stiffness = Spring.StiffnessMediumLow,
-            visibilityThreshold = IntOffset.VisibilityThreshold
-        )
+            visibilityThreshold = IntOffset.VisibilityThreshold,
+        ),
 ) = slideOut(
-    targetOffset = { IntOffset(0,  - it.height) },
-    animationSpec = animationSpec
+    targetOffset = { IntOffset(0, -it.height) },
+    animationSpec = animationSpec,
 )
 
 fun slideOutRightToLeft(
     animationSpec: FiniteAnimationSpec<IntOffset> =
         spring(
             stiffness = Spring.StiffnessMediumLow,
-            visibilityThreshold = IntOffset.VisibilityThreshold
-        )
+            visibilityThreshold = IntOffset.VisibilityThreshold,
+        ),
 ) = slideOut(
-    targetOffset = { IntOffset(- it.width,  0) },
-    animationSpec = animationSpec
+    targetOffset = { IntOffset(-it.width, 0) },
+    animationSpec = animationSpec,
 )
 
 fun slideOutLeftToRight(
     animationSpec: FiniteAnimationSpec<IntOffset> =
         spring(
             stiffness = Spring.StiffnessMediumLow,
-            visibilityThreshold = IntOffset.VisibilityThreshold
-        )
+            visibilityThreshold = IntOffset.VisibilityThreshold,
+        ),
 ) = slideOut(
-    targetOffset = { IntOffset(it.width,  0) },
-    animationSpec = animationSpec
+    targetOffset = { IntOffset(it.width, 0) },
+    animationSpec = animationSpec,
 )

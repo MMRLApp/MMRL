@@ -11,18 +11,22 @@ data class TrackJsonEntity(
     val added: Float? = 0f,
     val source: String,
     val antifeatures: List<String>? = null,
+    val buildMetadata: String? = null
 ) {
     constructor(original: TrackJson) : this(
         type = original.type.name,
         added = original.added,
         source = original.source,
         antifeatures = original.antifeatures,
+        buildMetadata = original.buildMetadata
     )
 
-    fun toTrack() = TrackJson(
-        typeName = type,
-        added = added,
-        source = source,
-        antifeatures = antifeatures
-    )
+    fun toTrack() =
+        TrackJson(
+            typeName = type,
+            added = added,
+            source = source,
+            antifeatures = antifeatures,
+            buildMetadata = buildMetadata
+        )
 }

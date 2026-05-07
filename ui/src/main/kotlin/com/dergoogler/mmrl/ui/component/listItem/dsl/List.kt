@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ui.component.listItem.dsl
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,15 +30,16 @@ fun List(
     Column(
         modifier = modifier,
         verticalArrangement = verticalArrangement,
-        horizontalAlignment = horizontalAlignment
+        horizontalAlignment = horizontalAlignment,
     ) {
-        val instance = remember {
-            ListScopeInstance(
-                columnScope = this,
-                contentPaddingValues = contentPadding,
-                iconSize = DefaultIconSize
-            )
-        }
+        val instance =
+            remember {
+                ListScopeInstance(
+                    columnScope = this,
+                    contentPaddingValues = contentPadding,
+                    iconSize = DefaultIconSize,
+                )
+            }
 
         instance.content()
     }

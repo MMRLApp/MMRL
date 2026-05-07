@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ui.component.listItem.dsl.component
 
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.Switch
@@ -23,20 +22,21 @@ fun ListScope.SwitchItem(
 ) {
     Item(
         enabled = enabled,
-        modifier = Modifier.toggleable(
-            value = checked,
-            enabled = enabled,
-            onValueChange = onChange,
-            role = Role.Switch,
-            interactionSource = interactionSource,
-            indication = ripple()
-        )
+        modifier =
+            Modifier.toggleable(
+                value = checked,
+                enabled = enabled,
+                onValueChange = onChange,
+                role = Role.Switch,
+                interactionSource = interactionSource,
+                indication = ripple(),
+            ),
     ) {
         content()
         End {
             Switch(
                 checked = checked,
-                onCheckedChange = null
+                onCheckedChange = null,
             )
         }
     }

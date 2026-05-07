@@ -1,6 +1,11 @@
 name: Release CI
 
+permissions:
+  contents: read
+  packages: read  
+
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       send_telegram:
@@ -18,6 +23,15 @@ on:
         required: true
         default: false
         type: boolean
+      track:
+        type: choice
+        default: production
+        description: Google Play Store Track
+        options:
+        - production
+        - beta
+        - alpha
+        - qa
 
 jobs:
   # Build step for both official & spoofed flavors
@@ -38,6 +52,8 @@ jobs:
         id: build-apk
         uses: ./.github/actions/build-apk
         with:
+          username: ${{ secrets.ACTOR }}
+          token: ${{ secrets.GH_TOKEN }}
           flavor: ${{ matrix.flavor }}
           buildType: "release"
           keyStore: ${{ secrets.KEY_STORE }}
@@ -82,6 +98,15 @@ jobs:
               echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
               echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
           fi
+          
+      - name: Set up credentials for private packages
+        shell: bash
+        run: |
+          [ -f gradle.properties ] && [ "$(tail -c1 gradle.properties)" != "" ] && echo >> gradle.properties
+          {
+            echo "gpr.user=${{ inputs.username }}"
+            echo "gpr.key=${{ inputs.token }}"
+          } >> gradle.properties
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -109,9 +134,11 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.dergoogler.mmrl
           releaseFiles: ${{ steps.find_aab.outputs.AAB_PATH }}
-          track: production
+          track: ${{ github.event.inputs.track }}
           status: completed
           inAppUpdatePriority: 5
+
+
 
 
 

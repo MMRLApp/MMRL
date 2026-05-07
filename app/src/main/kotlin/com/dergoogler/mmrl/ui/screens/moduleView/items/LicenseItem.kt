@@ -28,9 +28,10 @@ fun LicenseItem(
 
     Text(
         style = style.copy(color = MaterialTheme.colorScheme.surfaceTint),
-        modifier = Modifier.clickable(
-            onClick = { open = true }
-        ),
+        modifier =
+            Modifier.clickable(
+                onClick = { open = true },
+            ),
         text = licenseId,
     )
 
@@ -41,14 +42,15 @@ fun LicenseItem(
             Text(
                 text = stringResource(id = R.string.license_title),
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             )
 
             LicenseContent(
                 licenseId = licenseId,
-                modifier = Modifier
-                    .padding(top = 16.dp)
-                    .padding(horizontal = 16.dp)
+                modifier =
+                    Modifier
+                        .padding(top = 16.dp)
+                        .padding(horizontal = 16.dp),
             )
         }
     }

@@ -36,92 +36,88 @@ open class ServiceManager(
             Platform.RKSU,
             Platform.MKSU,
             Platform.KernelSU,
-                -> KernelSUModuleManager()
+            -> KernelSUModuleManager()
 
             Platform.SukiSU,
-                -> SukiSUModuleManager()
+            -> SukiSUModuleManager()
 
             Platform.KsuNext,
-                -> KsuNextModuleManager()
+            -> KsuNextModuleManager()
 
             Platform.APatch -> APatchModuleManager()
 
             else -> throw BrickException(
                 message = "Unknown platform: $platform",
                 helpMessage = "Contact the support",
-                helpLink = "https://t.me/MMRLGroup"
+                helpLink = "https://t.me/MMRLGroup",
             )
         }
     }
 
-    override fun getUid(): Int {
-        return Os.getuid()
-    }
+    override fun getUid(): Int = Os.getuid()
 
-    override fun getPid(): Int {
-        return Os.getpid()
-    }
+    override fun getPid(): Int = Os.getpid()
 
     override fun isSELinuxEnforced(): Boolean = SELinux.isSELinuxEnforced()
+
     override fun isSELinuxEnabled(): Boolean = SELinux.isSELinuxEnabled()
+
     override fun getSELinuxContext(): String = SELinux.getContext()
 
-    override fun currentPlatform(): String {
-        return platform.name.lowercase()
-    }
+    override fun currentPlatform(): String = platform.name.lowercase()
 
-    override fun getModuleManager(): IModuleManager {
-        return moduleManager
-    }
+    override fun getModuleManager(): IModuleManager = moduleManager
 
-    override fun getFileManager(): IFileManager {
-        return fileManager
-    }
+    override fun getFileManager(): IFileManager = fileManager
 
     override fun addService(service: Service<*>): IBinder? =
         runCatching {
             service.create(this).apply {
                 services[service.name] = this
             }
-
         }.onFailure {
             Log.e(TAG, Log.getStackTraceString(it))
-
         }.getOrNull()
 
-    override fun addServiceBinder(name: String, binder: IBinder) {
+    override fun addServiceBinder(
+        name: String,
+        binder: IBinder,
+    ) {
         runCatching {
             services[name] = binder
         }.onFailure {
             Log.e(TAG, Log.getStackTraceString(it))
-
         }.getOrNull()
     }
 
     override fun getService(name: String): IBinder? = services[name]
 
-    override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int) =
-        if (code == BINDER_TRANSACTION) {
-            data.enforceInterface(DESCRIPTOR)
-            val targetBinder = data.readStrongBinder()
-            val targetCode = data.readInt()
-            val targetFlags = data.readInt()
-            val newData = Parcel.obtain()
+    override fun onTransact(
+        code: Int,
+        data: Parcel,
+        reply: Parcel?,
+        flags: Int,
+    ) = if (code == BINDER_TRANSACTION) {
+        data.enforceInterface(DESCRIPTOR)
+        val targetBinder = data.readStrongBinder()
+        val targetCode = data.readInt()
+        val targetFlags = data.readInt()
+        val newData = Parcel.obtain()
 
-            try {
-                newData.appendFrom(data, data.dataPosition(), data.dataAvail())
+        try {
+            newData.appendFrom(data, data.dataPosition(), data.dataAvail())
 
-                val id = Binder.clearCallingIdentity()
-                targetBinder.transact(targetCode, newData, reply, targetFlags)
-                Binder.restoreCallingIdentity(id)
-            } finally {
-                newData.recycle()
-            }
-
-            true
-        } else {
-            super.onTransact(code, data, reply, flags)
+            val id = Binder.clearCallingIdentity()
+            targetBinder.transact(targetCode, newData, reply, targetFlags)
+            Binder.restoreCallingIdentity(id)
+        } finally {
+            newData.recycle()
         }
+
+        true
+    } else {
+        super.onTransact(code, data, reply, flags)
+    }
 
     protected companion object Default {
         const val TAG = "Platform->ServiceManager"

@@ -81,10 +81,18 @@ fun ModuleItem(
     indeterminate: Boolean = false,
     alpha: Float = 1f,
     decoration: TextDecoration = TextDecoration.None,
-    switch: @Composable() (() -> Unit?)? = null,
-    indicator: @Composable() (CardScope.() -> Unit?)? = null,
-    startTrailingButton: @Composable() (LiteRowScope.() -> Unit)? = null,
-    trailingButton: @Composable() (LiteRowScope.() -> Unit),
+    switch:
+        @Composable()
+        (() -> Unit?)? = null,
+    indicator:
+        @Composable()
+        (CardScope.() -> Unit?)? = null,
+    startTrailingButton:
+        @Composable()
+        (LiteRowScope.() -> Unit)? = null,
+    trailingButton:
+        @Composable()
+        (LiteRowScope.() -> Unit),
     isBlacklisted: Boolean = false,
     isProviderAlive: Boolean,
 ) {
@@ -97,26 +105,29 @@ fun ModuleItem(
 
     var requiredAppBottomSheet by remember { mutableStateOf(false) }
 
-    val canWenUIAccessed = remember(isProviderAlive, module) {
-        isProviderAlive && (module.hasWebUI || module.hasModConf) && module.state != State.REMOVE
-    }
+    val canWenUIAccessed =
+        remember(isProviderAlive, module) {
+            isProviderAlive && (module.hasWebUI || module.hasModConf) && module.state != State.REMOVE
+        }
 
-    val isWebUIXNotInstalled = remember(context) {
-        !context.isPackageInstalled(userPreferences.webuixPackageName)
-    }
+    val isWebUIXNotInstalled =
+        remember(context) {
+            !context.isPackageInstalled(userPreferences.webuixPackageName)
+        }
 
     val launch = userPreferences.webUILauncher(context, module)
 
-    val clicker: (() -> Unit)? = remember(canWenUIAccessed) {
-        canWenUIAccessed nullable jump@{
-            if (isWebUIXNotInstalled) {
-                requiredAppBottomSheet = true
-                return@jump
-            }
+    val clicker: (() -> Unit)? =
+        remember(canWenUIAccessed) {
+            canWenUIAccessed nullable jump@{
+                if (isWebUIXNotInstalled) {
+                    requiredAppBottomSheet = true
+                    return@jump
+                }
 
-            launch()
+                launch()
+            }
         }
-    }
 
     if (requiredAppBottomSheet) {
         BottomSheetForWXP {
@@ -125,11 +136,13 @@ fun ModuleItem(
     }
 
     Card(
-        border = isBlacklisted nullable BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.errorContainer
-        ),
-        onClick = clicker
+        border =
+            isBlacklisted nullable
+                BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.errorContainer,
+                ),
+        onClick = clicker,
     ) {
         indicator.nullable {
             Absolute(
@@ -147,16 +160,19 @@ fun ModuleItem(
 
                 file.exists {
                     LocalCover(
-                        modifier = Modifier.fadingEdge(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black,
-                                ),
-                                startY = Float.POSITIVE_INFINITY,
-                                endY = 0f
+                        modifier =
+                            Modifier.fadingEdge(
+                                brush =
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Transparent,
+                                                Color.Black,
+                                            ),
+                                        startY = Float.POSITIVE_INFINITY,
+                                        endY = 0f,
+                                    ),
                             ),
-                        ),
                         inputStream = it.newInputStream(),
                     )
                 }
@@ -164,17 +180,19 @@ fun ModuleItem(
 
             LiteRow(
                 modifier = Modifier.padding(all = 16.dp),
-                verticalAlignment = VerticalAlignment.Center
+                verticalAlignment = VerticalAlignment.Center,
             ) {
                 LiteColumn(
-                    modifier = Modifier
-                        .alpha(alpha = alpha)
-                        .weight(1f),
+                    modifier =
+                        Modifier
+                            .alpha(alpha = alpha)
+                            .weight(1f),
                     spaceBetweenItem = 2.dp,
                 ) {
-                    val name = remember {
-                        module.config.name ?: module.name
-                    }
+                    val name =
+                        remember {
+                            module.config.name ?: module.name
+                        }
 
                     val prefix = fun(): String? {
                         if (!canWenUIAccessed) return null
@@ -187,42 +205,47 @@ fun ModuleItem(
                         text = name,
                         bbEnabled = false,
                         disabledTags = BBCodeTag.disableAllExcept(BBCodeTag.ICON, BBCodeTag.IMAGE),
-                        iconContent = (canWenUIAccessed && module.hasWebUI) nullable {
-                            Icon(
-                                painter = painterResource(id = R.drawable.sandbox),
-                                contentDescription = null,
-                                tint = LocalContentColor.current,
-                            )
-                        },
-                        imageContent = (canWenUIAccessed && module.hasModConf) nullable {
-                            Image(
-                                painter = painterResource(id = com.dergoogler.mmrl.ui.R.drawable.jetpackcomposeicon),
-                                contentDescription = null,
-                            )
-                        },
+                        iconContent =
+                            (canWenUIAccessed && module.hasWebUI) nullable {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.sandbox),
+                                    contentDescription = null,
+                                    tint = LocalContentColor.current,
+                                )
+                            },
+                        imageContent =
+                            (canWenUIAccessed && module.hasModConf) nullable {
+                                Image(
+                                    painter = painterResource(id = com.dergoogler.mmrl.ui.R.drawable.jetpackcomposeicon),
+                                    contentDescription = null,
+                                )
+                            },
                         prefix = prefix(),
                         style = MaterialTheme.typography.titleSmall,
                     )
 
                     Text(
-                        text = stringResource(
-                            id = R.string.module_version_author,
-                            module.versionDisplay, module.author
-                        ),
+                        text =
+                            stringResource(
+                                id = R.string.module_version_author,
+                                module.versionDisplay,
+                                module.author,
+                            ),
                         style = MaterialTheme.typography.bodySmall,
                         textDecoration = decoration,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
 
                     if (module.lastUpdated != 0L && menu.showUpdatedTime) {
                         Text(
-                            text = stringResource(
-                                id = R.string.module_update_at,
-                                module.lastUpdated.toFormattedDateSafely
-                            ),
+                            text =
+                                stringResource(
+                                    id = R.string.module_update_at,
+                                    module.lastUpdated.toFormattedDateSafely,
+                                ),
                             style = MaterialTheme.typography.bodySmall,
                             textDecoration = decoration,
-                            color = MaterialTheme.colorScheme.outline
+                            color = MaterialTheme.colorScheme.outline,
                         )
                     }
                 }
@@ -230,77 +253,87 @@ fun ModuleItem(
                 switch?.invoke()
             }
 
-            val bbEnabled = remember(module) {
-                module.config.description != null
-            }
+            val bbEnabled =
+                remember(module) {
+                    module.config.description != null
+                }
 
             val desc = remember(module) { module.config.description ?: module.description }
 
             BBCodeText(
-                modifier = Modifier
-                    .alpha(alpha = alpha)
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .alpha(alpha = alpha)
+                        .padding(horizontal = 16.dp),
                 text = desc,
                 bbEnabled = bbEnabled,
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 5,
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = decoration,
-                color = MaterialTheme.colorScheme.outline
+                color = MaterialTheme.colorScheme.outline,
             )
 
             LiteRow(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .fillMaxWidth(),
                 verticalAlignment = VerticalAlignment.Center,
                 spaceBetweenItem = 8.dp,
             ) {
                 userPreferences.developerMode.rememberTrue {
                     LabelItem(
                         text = module.id.id,
-                        upperCase = false
+                        upperCase = false,
                     )
                 }
 
                 LabelItem(
                     text = module.size.toFormattedFileSize(),
-                    style = LabelItemDefaults.style.copy(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
+                    style =
+                        LabelItemDefaults.style.copy(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        ),
                 )
             }
 
             when {
-                indeterminate -> LinearProgressIndicator(
-                    strokeCap = StrokeCap.Round,
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .height(2.dp)
-                        .fillMaxWidth()
-                )
+                indeterminate ->
+                    LinearProgressIndicator(
+                        strokeCap = StrokeCap.Round,
+                        modifier =
+                            Modifier
+                                .padding(top = 8.dp)
+                                .height(2.dp)
+                                .fillMaxWidth(),
+                    )
 
-                progress != 0f -> LinearProgressIndicator(
-                    progress = { progress },
-                    strokeCap = StrokeCap.Round,
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .height(1.5.dp)
-                        .fillMaxWidth()
-                )
+                progress != 0f ->
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        strokeCap = StrokeCap.Round,
+                        modifier =
+                            Modifier
+                                .padding(top = 8.dp)
+                                .height(1.5.dp)
+                                .fillMaxWidth(),
+                    )
 
-                else -> HorizontalDivider(
-                    thickness = 1.5.dp,
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
+                else ->
+                    HorizontalDivider(
+                        thickness = 1.5.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
             }
 
             LiteRow(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .fillMaxWidth(),
                 verticalAlignment = VerticalAlignment.Center,
             ) {
                 startTrailingButton?.invoke(this)
@@ -312,9 +345,7 @@ fun ModuleItem(
 }
 
 @Composable
-fun BottomSheetForWXP(
-    onCancel: () -> Unit,
-) {
+fun BottomSheetForWXP(onCancel: () -> Unit) {
     val browser = LocalUriHandler.current
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
@@ -323,17 +354,18 @@ fun BottomSheetForWXP(
         onDismissRequest = onCancel,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.sandbox),
                 contentDescription = null,
                 modifier = Modifier.size(98.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.primary,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -341,7 +373,7 @@ fun BottomSheetForWXP(
             Text(
                 text = stringResource(R.string.external_app_required_title),
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -350,10 +382,11 @@ fun BottomSheetForWXP(
                 text = stringResource(R.string.external_app_required_desc),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                textAlign = TextAlign.Center,
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -367,12 +400,12 @@ fun BottomSheetForWXP(
                                     "https://play.google.com/store/apps/details?id=com.dergoogler.mmrl.wx"
                                 } else {
                                     "https://github.com/MMRLApp/WebUI-X-Portable"
-                                }
+                                },
                             )
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(R.string.module_download))
             }
@@ -385,7 +418,7 @@ fun BottomSheetForWXP(
                         onCancel()
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(stringResource(com.dergoogler.mmrl.ui.R.string.cancel))
             }
@@ -404,5 +437,5 @@ fun StateIndicator(
     painter = painterResource(id = icon),
     contentDescription = null,
     alpha = 0.1f,
-    colorFilter = ColorFilter.tint(color)
+    colorFilter = ColorFilter.tint(color),
 )

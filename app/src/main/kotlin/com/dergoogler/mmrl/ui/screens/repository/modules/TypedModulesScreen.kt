@@ -2,7 +2,6 @@ package com.dergoogler.mmrl.ui.screens.repository.modules
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -21,6 +20,7 @@ import com.dergoogler.mmrl.database.entity.Repo
 import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.none
+import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
@@ -36,7 +36,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class ModulesFilter {
-    ALL, AUTHOR, CATEGORY, NAME
+    ALL,
+    AUTHOR,
+    CATEGORY,
+    NAME,
 }
 
 @Destination<RootGraph>
@@ -53,34 +56,41 @@ fun TypedModulesScreen(
     val scope = rememberCoroutineScope()
     var isSearch by remember { mutableStateOf(false) }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
+    // Use rememberSaveable to persist scroll position across navigation
+    val listState = rememberSaveableLazyListState(key = "typed_modules_${repo.url}_${type}_${query}")
 
     val filterQuery = remember { query }
 
-    val filteredModules = remember(modules, filterQuery, type, searchQuery) {
-        modules.filter { (_, m) ->
-            val typeMatches = when (type) {
-                ModulesFilter.ALL -> true
-                ModulesFilter.AUTHOR -> m.author.equals(filterQuery, ignoreCase = true)
-                ModulesFilter.CATEGORY -> m.categories?.any {
-                    it.equals(
-                        filterQuery,
-                        ignoreCase = true
-                    )
-                } ?: false
+    val filteredModules =
+        remember(modules, filterQuery, type, searchQuery) {
+            modules.filter { (_, m) ->
+                val typeMatches =
+                    when (type) {
+                        ModulesFilter.ALL -> true
+                        ModulesFilter.AUTHOR -> m.author.equals(filterQuery, ignoreCase = true)
+                        ModulesFilter.CATEGORY ->
+                            m.categories?.any {
+                                it.equals(
+                                    filterQuery,
+                                    ignoreCase = true,
+                                )
+                            } ?: false
 
-                ModulesFilter.NAME -> m.name.equals(filterQuery, ignoreCase = true)
+                        ModulesFilter.NAME -> m.name.equals(filterQuery, ignoreCase = true)
+                    }
+
+                val searchMatches =
+                    if (searchQuery.isBlank()) {
+                        true
+                    } else {
+                        m.name.contains(searchQuery, ignoreCase = true) ||
+                            m.author.contains(searchQuery, ignoreCase = true) ||
+                            (m.categories?.any { it.contains(searchQuery, ignoreCase = true) } ?: false)
+                    }
+
+                typeMatches && searchMatches
             }
-
-            val searchMatches = if (searchQuery.isBlank()) true else {
-                m.name.contains(searchQuery, ignoreCase = true) ||
-                        m.author.contains(searchQuery, ignoreCase = true) ||
-                        (m.categories?.any { it.contains(searchQuery, ignoreCase = true) } ?: false)
-            }
-
-            typeMatches && searchMatches
         }
-    }
 
     val openSearch = fun() {
         isSearch = true
@@ -91,7 +101,9 @@ fun TypedModulesScreen(
         searchQuery = ""
     }
 
-    val search = fun(data: String) { searchQuery = data }
+    val search = fun(data: String) {
+        searchQuery = data
+    }
 
     val setRepositoryMenu = fun(value: RepositoryMenu) {
         scope.launch {
@@ -115,7 +127,7 @@ fun TypedModulesScreen(
                 setMenu = setRepositoryMenu,
             )
         },
-        contentWindowInsets = WindowInsets.none
+        contentWindowInsets = WindowInsets.none,
     ) { innerPadding ->
         if (filteredModules.isEmpty()) {
             PageIndicator(
@@ -166,31 +178,31 @@ private fun TopBar(
             if (title.isNotNullOrBlank()) {
                 ToolbarTitle(
                     title = title,
-                    subtitle = repo.name
+                    subtitle = repo.name,
                 )
 
                 return@BlurSearchToolbar
             }
 
             ToolbarTitle(
-                title = repo.name
+                title = repo.name,
             )
         },
         actions = {
             if (!isSearch) {
                 IconButton(
-                    onClick = onOpenSearch
+                    onClick = onOpenSearch,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
 
             RepositoryMenu(
-                setMenu = setMenu
+                setMenu = setMenu,
             )
-        }
+        },
     )
 }

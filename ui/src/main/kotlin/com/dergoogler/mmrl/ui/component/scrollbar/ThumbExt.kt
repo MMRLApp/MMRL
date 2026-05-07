@@ -15,24 +15,22 @@ import androidx.compose.runtime.setValue
  * @param itemsAvailable the amount of items in the list.
  */
 @Composable
-fun LazyListState.rememberDraggableScroller(
-    itemsAvailable: Int = layoutInfo.totalItemsCount
-): (Float) -> Unit = rememberDraggableScroller(
-    itemsAvailable = itemsAvailable,
-    scroll = ::scrollToItem
-)
+fun LazyListState.rememberDraggableScroller(itemsAvailable: Int = layoutInfo.totalItemsCount): (Float) -> Unit =
+    rememberDraggableScroller(
+        itemsAvailable = itemsAvailable,
+        scroll = ::scrollToItem,
+    )
 
 /**
  * Remembers a function to react to [Scrollbar] thumb position displacements for a [LazyGridState]
  * @param itemsAvailable the amount of items in the grid.
  */
 @Composable
-fun LazyGridState.rememberDraggableScroller(
-    itemsAvailable: Int = layoutInfo.totalItemsCount
-): (Float) -> Unit = rememberDraggableScroller(
-    itemsAvailable = itemsAvailable,
-    scroll = ::scrollToItem
-)
+fun LazyGridState.rememberDraggableScroller(itemsAvailable: Int = layoutInfo.totalItemsCount): (Float) -> Unit =
+    rememberDraggableScroller(
+        itemsAvailable = itemsAvailable,
+        scroll = ::scrollToItem,
+    )
 
 /**
  * Generic function to react to [Scrollbar] thumb displacements in a lazy layout.
@@ -42,7 +40,7 @@ fun LazyGridState.rememberDraggableScroller(
 @Composable
 private inline fun rememberDraggableScroller(
     itemsAvailable: Int,
-    crossinline scroll: suspend (index: Int) -> Unit
+    crossinline scroll: suspend (index: Int) -> Unit,
 ): (Float) -> Unit {
     var percentage by remember { mutableFloatStateOf(Float.NaN) }
     val itemCount by rememberUpdatedState(itemsAvailable)

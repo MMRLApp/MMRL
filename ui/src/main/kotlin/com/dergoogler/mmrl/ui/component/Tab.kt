@@ -32,27 +32,27 @@ fun Tab(
     selectedContentColor: Color = LocalContentColor.current,
     unselectedContentColor: Color = selectedContentColor,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val ripple = ripple(bounded = false, color = selectedContentColor)
 
     TabTransition(selectedContentColor, unselectedContentColor, selected) {
         ProvideTextStyle(value = MaterialTheme.typography.titleSmall) {
             Column(
-                modifier = Modifier
-                    .selectable(
-                        selected = selected,
-                        onClick = onClick,
-                        enabled = enabled,
-                        role = Role.Tab,
-                        interactionSource = interactionSource,
-                        indication = ripple
-                    )
-                    .then(modifier)
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .selectable(
+                            selected = selected,
+                            onClick = onClick,
+                            enabled = enabled,
+                            role = Role.Tab,
+                            interactionSource = interactionSource,
+                            indication = ripple,
+                        ).then(modifier)
+                        .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                content = content
+                content = content,
             )
         }
     }
@@ -63,7 +63,7 @@ private fun TabTransition(
     activeColor: Color,
     inactiveColor: Color,
     selected: Boolean,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val transition = updateTransition(selected, label = "Tab")
     val color by transition.animateColor(
@@ -73,21 +73,21 @@ private fun TabTransition(
                 tween(
                     durationMillis = TabFadeInAnimationDuration,
                     delayMillis = TabFadeInAnimationDelay,
-                    easing = LinearEasing
+                    easing = LinearEasing,
                 )
             } else {
                 tween(
                     durationMillis = TabFadeOutAnimationDuration,
-                    easing = LinearEasing
+                    easing = LinearEasing,
                 )
             }
-        }
+        },
     ) {
         if (it) activeColor else inactiveColor
     }
     CompositionLocalProvider(
         LocalContentColor provides color,
-        content = content
+        content = content,
     )
 }
 

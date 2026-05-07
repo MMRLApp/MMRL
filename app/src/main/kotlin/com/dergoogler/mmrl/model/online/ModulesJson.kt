@@ -12,7 +12,7 @@ data class ModulesJson(
     val cover: String? = null,
     val description: String? = null,
     val metadata: ModulesJsonMetadata = ModulesJsonMetadata.default(),
-    val modules: List<OnlineModule>
+    val modules: List<OnlineModule>,
 ) {
     companion object {
         const val CURRENT_VERSION = 1
@@ -22,12 +22,13 @@ data class ModulesJson(
 @JsonClass(generateAdapter = true)
 data class ModulesJsonMetadata(
     val version: Int,
-    val timestamp: Float
+    val timestamp: Float,
 ) {
     companion object {
-        fun default() = ModulesJsonMetadata(
-            version = 0,
-            timestamp = 0f
-        )
+        fun default() =
+            ModulesJsonMetadata(
+                version = 0,
+                timestamp = 0f,
+            )
     }
 }

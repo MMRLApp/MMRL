@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="confirm">تأكيد</string>
+    <string name="cancel">إلغاء</string>
+    <string name="learn_more">معرفة المزيد</string>
+    <string name="loading">جاري التحميل…</string>
+    <string name="unknown_error">خطأ غير معروف</string>
+    <string name="search_placeholder">البحث…</string>
+    <string name="select_a_option">حدد خيارًا</string>
 </resources>

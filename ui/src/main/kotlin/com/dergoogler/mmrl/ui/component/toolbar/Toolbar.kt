@@ -28,19 +28,22 @@ fun Toolbar(
     bottomBorder: Boolean = true,
 ) {
     val borderColor = MaterialTheme.colorScheme.outline
-    val borderModifier = if (bottomBorder) {
-        Modifier
-            .drawBehind {
-                val borderSize = Dp.Hairline
-                val y = size.height - borderSize.value
-                drawLine(
-                    color = borderColor,
-                    start = Offset(0f, y),
-                    end = Offset(size.width, y),
-                    strokeWidth = borderSize.value
-                )
-            }
-    } else Modifier
+    val borderModifier =
+        if (bottomBorder) {
+            Modifier
+                .drawBehind {
+                    val borderSize = Dp.Hairline
+                    val y = size.height - borderSize.value
+                    drawLine(
+                        color = borderColor,
+                        start = Offset(0f, y),
+                        end = Offset(size.width, y),
+                        strokeWidth = borderSize.value,
+                    )
+                }
+        } else {
+            Modifier
+        }
 
     TopAppBar(
         title = title,

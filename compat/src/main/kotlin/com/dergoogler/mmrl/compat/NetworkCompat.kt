@@ -31,9 +31,10 @@ import java.util.Locale
 object NetworkCompat {
     private var cacheDirOrNull: File? = null
     private val cacheOrNull: Cache?
-        get() = cacheDirOrNull?.let {
-            Cache(File(it, "okhttp"), 10 * 1024 * 1024)
-        }
+        get() =
+            cacheDirOrNull?.let {
+                Cache(File(it, "okhttp"), 10 * 1024 * 1024)
+            }
 
     val defaultJson = Json { ignoreUnknownKeys = true }
 
@@ -55,7 +56,7 @@ object NetworkCompat {
 
     private fun createOkHttpClient(
         debug: Boolean = false,
-        userAgent: String = "NetworkCompat/0x0"
+        userAgent: String = "NetworkCompat/0x0",
     ): OkHttpClient {
         val builder = OkHttpClient.Builder().cache(cacheOrNull)
 
@@ -64,7 +65,7 @@ object NetworkCompat {
                 HttpLoggingInterceptor { Log.d(TAG, it) }
                     .apply {
                         level = HttpLoggingInterceptor.Level.BASIC
-                    }
+                    },
             )
         } else {
             builder.connectionSpecs(listOf(ConnectionSpec.MODERN_TLS))
@@ -83,11 +84,11 @@ object NetworkCompat {
     fun createRetrofit(): Retrofit.Builder {
         val client = createOkHttpClient()
 
-        return Retrofit.Builder()
+        return Retrofit
+            .Builder()
             .addConverterFactory(
-                defaultJson.asConverterFactory("application/json; charset=UTF8".toMediaType())
-            )
-            .client(client)
+                defaultJson.asConverterFactory("application/json; charset=UTF8".toMediaType()),
+            ).client(client)
     }
 
     inline fun <reified T : Any> createApi(url: String) =
@@ -98,14 +99,17 @@ object NetworkCompat {
 
     suspend fun <T> request(
         url: String,
-        converter: (ResponseBody, Headers) -> T
+        converter: (ResponseBody, Headers) -> T,
     ) = runRequest(converter = converter) {
         val client = createOkHttpClient()
-        val request = Request.Builder()
-            .url(url)
-            .build()
+        val request =
+            Request
+                .Builder()
+                .url(url)
+                .build()
 
-        client.newCall(request)
+        client
+            .newCall(request)
             .execute()
     }
 
@@ -114,7 +118,7 @@ object NetworkCompat {
             url = url,
             converter = { body, _ ->
                 body.string()
-            }
+            },
         )
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -123,13 +127,13 @@ object NetworkCompat {
             url = url,
             converter = { body, _ ->
                 defaultJson.decodeFromStream<T>(body.byteStream())
-            }
+            },
         )
 
     suspend fun download(
         url: String,
         output: OutputStream,
-        onProgress: (Float) -> Unit
+        onProgress: (Float) -> Unit,
     ) = request(url) { body, _ ->
         val buffer = ByteArray(2048)
         val input = body.byteStream()
@@ -151,61 +155,63 @@ object NetworkCompat {
         input.close()
     }
 
-    suspend fun <T> runRequest(
-        block: () -> retrofit2.Response<T>
-    ): Result<T> = withContext(Dispatchers.IO) {
-        runCatching {
-            val response = block()
-            require(response.isSuccessful) {
-                val error = response.errorBody()?.string()
-                if (error?.let(::isHTML) == false) {
-                    error
-                } else {
-                    "status = ${response.code()}"
+    suspend fun <T> runRequest(block: () -> retrofit2.Response<T>): Result<T> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val response = block()
+                require(response.isSuccessful) {
+                    val error = response.errorBody()?.string()
+                    if (error?.let(::isHTML) == false) {
+                        error
+                    } else {
+                        "status = ${response.code()}"
+                    }
                 }
-            }
 
-            requireNotNull(response.body())
+                requireNotNull(response.body())
+            }
         }
-    }
 
     suspend fun <T> runRequest(
         converter: (ResponseBody, Headers) -> T,
-        block: () -> okhttp3.Response
-    ): Result<T> = withContext(Dispatchers.IO) {
-        runCatching {
-            val response = block()
-            val body = requireNotNull(response.body)
-            require(response.isSuccessful) {
-                val error = body.string()
-                if (!isHTML(error)) {
-                    error
-                } else {
-                    "status = ${response.code}"
+        block: () -> okhttp3.Response,
+    ): Result<T> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val response = block()
+                val body = requireNotNull(response.body)
+                require(response.isSuccessful) {
+                    val error = body.string()
+                    if (!isHTML(error)) {
+                        error
+                    } else {
+                        "status = ${response.code}"
+                    }
                 }
-            }
 
-            converter(body, response.headers)
+                converter(body, response.headers)
+            }
         }
-    }
 
     @Suppress("UNCHECKED_CAST")
     object Compose {
         data class Value(
             private val inner: Any?,
-            private val event: Event
+            private val event: Event,
         ) {
             constructor(result: Result<Any>) : this(
-                inner = when {
-                    result.isSuccess -> result.getOrNull()
-                    result.isFailure -> result.exceptionOrNull()
-                    else -> null
-                },
-                event = when {
-                    result.isSuccess -> Event.Succeeded
-                    result.isFailure -> Event.Failed
-                    else -> Event.Loading
-                }
+                inner =
+                    when {
+                        result.isSuccess -> result.getOrNull()
+                        result.isFailure -> result.exceptionOrNull()
+                        else -> null
+                    },
+                event =
+                    when {
+                        result.isSuccess -> Event.Succeeded
+                        result.isFailure -> Event.Failed
+                        else -> Event.Loading
+                    },
             )
 
             val isLoading by lazy { event == Event.Loading }
@@ -213,12 +219,13 @@ object NetworkCompat {
             val isFailure by lazy { event == Event.Failed }
 
             fun <T> data() = inner as T
+
             fun error() = inner as? Throwable
 
             enum class Event {
                 Loading,
                 Succeeded,
-                Failed;
+                Failed,
             }
 
             companion object {
@@ -227,23 +234,23 @@ object NetworkCompat {
         }
 
         @Composable
-        fun <T> runRequest(
-            block: suspend () -> Result<T>
-        ): Value {
+        fun <T> runRequest(block: suspend () -> Result<T>): Value {
             var value: Value by remember { mutableStateOf(Value.none()) }
             LaunchedEffect(true) { value = Value(block() as Result<Any>) }
             return value
         }
 
         @Composable
-        fun requestString(url: String) = runRequest(
-            block = { NetworkCompat.requestString(url) }
-        )
+        fun requestString(url: String) =
+            runRequest(
+                block = { NetworkCompat.requestString(url) },
+            )
 
         @Composable
-        inline fun <reified T> requestJson(url: String) = runRequest(
-            block = { NetworkCompat.requestJson<T>(url) }
-        )
+        inline fun <reified T> requestJson(url: String) =
+            runRequest(
+                block = { NetworkCompat.requestJson<T>(url) },
+            )
     }
 
     private const val TAG = "NetworkCompat"

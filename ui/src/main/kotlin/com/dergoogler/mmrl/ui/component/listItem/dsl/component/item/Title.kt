@@ -18,13 +18,11 @@ import com.dergoogler.mmrl.ui.token.fromToken
 import com.dergoogler.mmrl.ui.token.value
 
 @Composable
-fun ListItemScope.Title(
-    content: @Composable ListItemSlotScope.() -> Unit,
-) {
+fun ListItemScope.Title(content: @Composable ListItemSlotScope.() -> Unit) {
     ProvideTitleTypography(LocalTitleStyle.current) {
         Slot(
             slot = ListItemSlot.Title,
-            content = content
+            content = content,
         )
     }
 }
@@ -37,9 +35,12 @@ fun ListItemScope.Title(
     val titleStyle = LocalTitleStyle.current
     val textStyle = LocalTypography.current.fromToken(titleStyle)
 
-    val finalTextStyle = if (styleTransform != null) {
-        styleTransform(textStyle)
-    } else textStyle
+    val finalTextStyle =
+        if (styleTransform != null) {
+            styleTransform(textStyle)
+        } else {
+            textStyle
+        }
 
     ProvideTextStyle(finalTextStyle) {
         Text(text)
@@ -59,9 +60,10 @@ fun ListItemScope.Title(
     vararg formatArgs: Any,
 ) = Title(stringResource(id, formatArgs), styleTransform)
 
-val LocalTitleStyle = staticCompositionLocalOf {
-    TypographyKeyTokens.BodyLarge
-}
+val LocalTitleStyle =
+    staticCompositionLocalOf {
+        TypographyKeyTokens.BodyLarge
+    }
 
 @Composable
 fun ProvideTitleTypography(
@@ -73,6 +75,6 @@ fun ProvideTitleTypography(
     CompositionLocalProvider(
         LocalTextStyle provides mergedStyle,
         LocalTitleStyle provides token,
-        content = content
+        content = content,
     )
 }

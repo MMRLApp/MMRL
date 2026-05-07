@@ -3,7 +3,6 @@ package com.dergoogler.mmrl.ui.screens.superuser
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,75 +38,78 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 
 @Destination<RootGraph>
 @Composable
-fun SuperUserScreen() = LocalScreenProvider {
-    val userPrefs = LocalUserPreferences.current
-    val viewModel = LocalSuperUserViewModel.current
+fun SuperUserScreen() =
+    LocalScreenProvider {
+        val userPrefs = LocalUserPreferences.current
+        val viewModel = LocalSuperUserViewModel.current
 
-    val list by viewModel.local.collectAsStateWithLifecycle()
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val state by viewModel.screenState.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+        val list by viewModel.local.collectAsStateWithLifecycle()
+        val query by viewModel.query.collectAsStateWithLifecycle()
+        val state by viewModel.screenState.collectAsStateWithLifecycle()
+        val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    val pullToRefreshState = rememberPullToRefreshState()
+        val pullToRefreshState = rememberPullToRefreshState()
 
-    BackHandler(
-        enabled = viewModel.isSearch,
-        onBack = viewModel::closeSearch
-    )
+        BackHandler(
+            enabled = viewModel.isSearch,
+            onBack = viewModel::closeSearch,
+        )
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            TopBar(
-                isSearch = viewModel.isSearch,
-                query = query,
-                onQueryChange = viewModel::search,
-                onOpenSearch = viewModel::openSearch,
-                onCloseSearch = viewModel::closeSearch,
-                setMenu = viewModel::setSuperUserMenu,
-                scrollBehavior = scrollBehavior
-            )
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        if (isLoading) {
-            Loading()
-        }
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                TopBar(
+                    isSearch = viewModel.isSearch,
+                    query = query,
+                    onQueryChange = viewModel::search,
+                    onOpenSearch = viewModel::openSearch,
+                    onCloseSearch = viewModel::closeSearch,
+                    setMenu = viewModel::setSuperUserMenu,
+                    scrollBehavior = scrollBehavior,
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            if (isLoading) {
+                Loading()
+            }
 
-        if (list.isEmpty() && !isLoading) {
-            PageIndicator(
-                icon = R.drawable.keyframes,
-                text = if (viewModel.isSearch) R.string.search_empty else R.string.modules_empty,
-            )
-        }
-
-        PullToRefreshBox(
-            state = pullToRefreshState,
-            isRefreshing = state.isRefreshing,
-            onRefresh = viewModel::fetchAppList,
-            indicator = {
-                Indicator(
-                    modifier = Modifier.align(Alignment.TopCenter).let {
-                        if (!userPrefs.enableBlur) {
-                            it.padding(top = innerPadding.calculateTopPadding())
-                        } else it
-                    },
-                    isRefreshing = state.isRefreshing,
-                    state = pullToRefreshState
+            if (list.isEmpty() && !isLoading) {
+                PageIndicator(
+                    icon = R.drawable.keyframes,
+                    text = if (viewModel.isSearch) R.string.search_empty else R.string.modules_empty,
                 )
             }
-        ) {
-            this@Scaffold.SuperUserList(
-                innerPadding = innerPadding,
-                list = list,
-                state = listState,
-            )
+
+            PullToRefreshBox(
+                state = pullToRefreshState,
+                isRefreshing = state.isRefreshing,
+                onRefresh = viewModel::fetchAppList,
+                indicator = {
+                    Indicator(
+                        modifier =
+                            Modifier.align(Alignment.TopCenter).let {
+                                if (!userPrefs.enableBlur) {
+                                    it.padding(top = innerPadding.calculateTopPadding())
+                                } else {
+                                    it
+                                }
+                            },
+                        isRefreshing = state.isRefreshing,
+                        state = pullToRefreshState,
+                    )
+                },
+            ) {
+                this@Scaffold.SuperUserList(
+                    innerPadding = innerPadding,
+                    list = list,
+                    state = viewModel.listState,
+                )
+            }
         }
     }
-}
 
 @Composable
 private fun TopBar(
@@ -148,18 +150,18 @@ private fun TopBar(
         actions = {
             if (!isSearch) {
                 IconButton(
-                    onClick = onOpenSearch
+                    onClick = onOpenSearch,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
 
             SuperUserMenu(
-                setMenu = setMenu
+                setMenu = setMenu,
             )
-        }
+        },
     )
 }

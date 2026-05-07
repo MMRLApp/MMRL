@@ -47,7 +47,7 @@ fun ScaffoldScope.RepositoriesList(
     getUpdate: (RepoState, (Throwable) -> Unit) -> Unit,
     innerPadding: PaddingValues,
 ) = Box(
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier.fillMaxSize(),
 ) {
     val paddingValues = LocalMainScreenInnerPaddings.current
     val layoutDirection = LocalLayoutDirection.current
@@ -56,15 +56,17 @@ fun ScaffoldScope.RepositoriesList(
     this@RepositoriesList.ResponsiveContent {
         LazyColumn(
             state = state,
-            modifier = Modifier
-                .fillMaxSize()
-                .hazeSource(state = LocalHazeState.current),
-            contentPadding = PaddingValues(
-                top = innerPadding.calculateTopPadding() + 16.dp,
-                start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
-                bottom = 16.dp,
-                end = 16.dp
-            ),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .hazeSource(state = LocalHazeState.current),
+            contentPadding =
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding() + 16.dp,
+                    start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
+                    bottom = 16.dp,
+                    end = 16.dp,
+                ),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             item {
@@ -73,7 +75,7 @@ fun ScaffoldScope.RepositoriesList(
 
             items(
                 items = list,
-                key = { it.url }
+                key = { it.url },
             ) { repo ->
                 RepositoryItem(
                     repo = repo,
@@ -93,12 +95,13 @@ fun ScaffoldScope.RepositoriesList(
 
     VerticalFastScrollbar(
         state = state,
-        modifier = Modifier
-            .align(Alignment.CenterEnd)
-            .padding(
-                top = innerPadding.calculateTopPadding(),
-                bottom = paddingValues.calculateBottomPadding()
-            )
+        modifier =
+            Modifier
+                .align(Alignment.CenterEnd)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = paddingValues.calculateBottomPadding(),
+                ),
     )
 }
 
@@ -110,22 +113,26 @@ private fun RepositoryItem(
     onDelete: (RepoState) -> Unit,
 ) {
     var delete by remember { mutableStateOf(false) }
-    if (delete) DeleteDialog(
-        repo = repo,
-        onClose = { delete = false },
-        onConfirm = { onDelete(repo) }
-    )
+    if (delete) {
+        DeleteDialog(
+            repo = repo,
+            onClose = { delete = false },
+            onConfirm = { onDelete(repo) },
+        )
+    }
 
     var failure by remember { mutableStateOf(false) }
     var message: String by remember { mutableStateOf("") }
-    if (failure) FailureDialog(
-        name = repo.name,
-        message = message,
-        onClose = {
-            failure = false
-            message = ""
-        }
-    )
+    if (failure) {
+        FailureDialog(
+            name = repo.name,
+            message = message,
+            onClose = {
+                failure = false
+                message = ""
+            },
+        )
+    }
 
     RepositoryItem(
         repo = repo,
@@ -136,7 +143,7 @@ private fun RepositoryItem(
                 message = it.stackTraceToString()
             }
         },
-        delete = { delete = true }
+        delete = { delete = true },
     )
 }
 
@@ -157,18 +164,18 @@ private fun DeleteDialog(
             onClick = {
                 onConfirm()
                 onClose()
-            }
+            },
         ) {
             Text(text = stringResource(id = R.string.repo_options_delete))
         }
     },
     dismissButton = {
         TextButton(
-            onClick = onClose
+            onClick = onClose,
         ) {
             Text(text = stringResource(id = R.string.dialog_cancel))
         }
-    }
+    },
 )
 
 @Composable
@@ -183,16 +190,17 @@ fun FailureDialog(
     text = {
         Text(
             text = message,
-            modifier = Modifier
-                .requiredHeightIn(max = 280.dp)
-                .verticalScroll(rememberScrollState())
+            modifier =
+                Modifier
+                    .requiredHeightIn(max = 280.dp)
+                    .verticalScroll(rememberScrollState()),
         )
     },
     confirmButton = {
         TextButton(
-            onClick = onClose
+            onClick = onClose,
         ) {
             Text(text = stringResource(id = R.string.dialog_ok))
         }
-    }
+    },
 )

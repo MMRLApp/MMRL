@@ -7,10 +7,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 @JsonClass(generateAdapter = true)
 data class TrackJson(
-    @Json(name = "type") val typeName: String,
+    @param:Json(name = "type") val typeName: String,
     val added: Float? = 0f,
     val source: String = "",
     val antifeatures: List<String>? = null,
+    @param:Json(name = "build_metadata") val buildMetadata: String? = null,
 ) {
     val type = TrackType.valueOf(typeName)
     val hasAntifeatures = antifeatures.orEmpty().isNotEmpty()

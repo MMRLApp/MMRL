@@ -26,26 +26,26 @@ fun AppThemeScreen() {
 
     SettingsScaffold(
         modifier = ScaffoldDefaults.settingsScaffoldScrollModifier,
-        title = R.string.settings_app_theme
+        title = R.string.settings_app_theme,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ExampleItem()
         }
 
         TitleItem(text = stringResource(id = R.string.app_theme_palette))
         ThemePaletteItem(
-            themeColor =  userPreferences.themeColor,
+            themeColor = userPreferences.themeColor,
             isDarkMode = userPreferences.isDarkMode(),
-            onChange = viewModel::setThemeColor
+            onChange = viewModel::setThemeColor,
         )
 
         TitleItem(text = stringResource(id = R.string.app_theme_dark_theme))
         DarkModeItem(
             darkMode = userPreferences.darkMode,
-            onChange = viewModel::setDarkTheme
+            onChange = viewModel::setDarkTheme,
         )
     }
 }

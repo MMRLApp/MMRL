@@ -20,23 +20,18 @@ internal val MaxContentWidth: Dp = 840.dp
 @Immutable
 interface ScaffoldScope {
     @Composable
-    fun ResponsiveContent(
-        content: @Composable BoxScope.() -> Unit,
-    )
+    fun ResponsiveContent(content: @Composable BoxScope.() -> Unit)
 
     @Composable
     fun ResponsiveContent(
         maxContentWidth: Dp,
         content: @Composable BoxScope.() -> Unit,
     )
-
 }
 
 internal object ScaffoldScopeInstance : ScaffoldScope {
     @Composable
-    override fun ResponsiveContent(
-        content: @Composable BoxScope.() -> Unit,
-    ) = this.ResponsiveContent(MaxContentWidth, content)
+    override fun ResponsiveContent(content: @Composable BoxScope.() -> Unit) = this.ResponsiveContent(MaxContentWidth, content)
 
     @Composable
     override fun ResponsiveContent(
@@ -47,13 +42,13 @@ internal object ScaffoldScopeInstance : ScaffoldScope {
 
         Box(
             Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             Box(
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = horizontalPadding)
-                    .align(Alignment.TopCenter)
+                    .align(Alignment.TopCenter),
             ) {
                 content()
             }

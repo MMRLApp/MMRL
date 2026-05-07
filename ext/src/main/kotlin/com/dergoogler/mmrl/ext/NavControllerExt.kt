@@ -26,9 +26,10 @@ val NavBackStackEntry.panicArguments get() = arguments ?: throw BrickException("
  * @param force If true, will force the URL decoding even if the value is null.
  * @return The decoded string associated with the given key, or null if the key does not exist.
  */
-fun Bundle.loadString(key: String, force: Boolean = false): String? {
-    return this.getString(key)?.toDecodedUrl(force)
-}
+fun Bundle.loadString(
+    key: String,
+    force: Boolean = false,
+): String? = this.getString(key)?.toDecodedUrl(force)
 
 /**
  * Retrieves the string associated with the given key from the Bundle and decodes it as a URL.
@@ -39,12 +40,12 @@ fun Bundle.loadString(key: String, force: Boolean = false): String? {
  * @throws BrickException if the key is not found or if the value is null.
  * @return The decoded string associated with the given key.
  */
-fun Bundle.panicString(key: String, force: Boolean = false): String {
-    return this.loadString(key, force) ?: throw BrickException("Key '$key' is null")
-}
+fun Bundle.panicString(
+    key: String,
+    force: Boolean = false,
+): String = this.loadString(key, force) ?: throw BrickException("Key '$key' is null")
 
-inline fun <reified T : Any> Bundle.panicJson(key: String): T =
-    Json.decodeFromString<T>(panicString(key))
+inline fun <reified T : Any> Bundle.panicJson(key: String): T = Json.decodeFromString<T>(panicString(key))
 
 inline fun <reified T> Bundle.panicMoshiParcelable(key: String): T {
     val json = panicString(key)
@@ -57,7 +58,7 @@ fun NavController.navigateSingleTopTo(
     launchSingleTop: Boolean = true,
     builder: NavOptionsBuilder.() -> Unit = {},
 ) = navigate(
-    route = route
+    route = route,
 ) {
     this.launchSingleTop = launchSingleTop
     restoreState = true
@@ -98,10 +99,10 @@ fun NavController.navigatePopUpTo(
     restoreState: Boolean = true,
     inclusive: Boolean = true,
 ) = navigateSingleTopTo(
-    route = route
+    route = route,
 ) {
     popUpTo(
-        id = currentDestination?.parent?.id ?: graph.findStartDestination().id
+        id = currentDestination?.parent?.id ?: graph.findStartDestination().id,
     ) {
         this.saveState = restoreState
         this.inclusive = inclusive

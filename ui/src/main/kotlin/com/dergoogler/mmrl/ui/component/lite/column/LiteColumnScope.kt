@@ -11,7 +11,9 @@ import androidx.compose.ui.unit.Density
 
 @Immutable
 enum class HorizontalAlignment {
-    Start, Center, End
+    Start,
+    Center,
+    End,
 }
 
 typealias LiteColumnHorizontalAlignment = HorizontalAlignment
@@ -28,38 +30,34 @@ interface LiteColumnScope {
 
 object LiteColumnScopeInstance : LiteColumnScope {
     @Stable
-    override fun Modifier.align(alignment: HorizontalAlignment): Modifier =
-        this.then(LiteColumnChildDataElement(alignment))
+    override fun Modifier.align(alignment: HorizontalAlignment): Modifier = this.then(LiteColumnChildDataElement(alignment))
 
     @Stable
-    override fun Modifier.weight(weight: Float): Modifier =
-        this.then(LiteColumnWeightElement(weight))
+    override fun Modifier.weight(weight: Float): Modifier = this.then(LiteColumnWeightElement(weight))
 }
 
 @Immutable
 class LiteColumnChildData(
     var alignment: HorizontalAlignment = HorizontalAlignment.Start,
-    var weight: Float = 0f
+    var weight: Float = 0f,
 )
 
 @Immutable
 class LiteColumnChildDataAlignment(
     var alignment: HorizontalAlignment = HorizontalAlignment.Start,
-) : ParentDataModifierNode, Modifier.Node() {
-    override fun Density.modifyParentData(parentData: Any?): LiteColumnChildData {
-        return ((parentData as? LiteColumnChildData) ?: LiteColumnChildData()).also {
+) : Modifier.Node(),
+    ParentDataModifierNode {
+    override fun Density.modifyParentData(parentData: Any?): LiteColumnChildData =
+        ((parentData as? LiteColumnChildData) ?: LiteColumnChildData()).also {
             it.alignment = alignment
         }
-    }
 }
 
 @Immutable
 private class LiteColumnChildDataElement(
-    val alignment: HorizontalAlignment
+    val alignment: HorizontalAlignment,
 ) : ModifierNodeElement<LiteColumnChildDataAlignment>() {
-    override fun create(): LiteColumnChildDataAlignment {
-        return LiteColumnChildDataAlignment(alignment = alignment)
-    }
+    override fun create(): LiteColumnChildDataAlignment = LiteColumnChildDataAlignment(alignment = alignment)
 
     override fun update(node: LiteColumnChildDataAlignment) {
         node.alignment = alignment
@@ -76,22 +74,20 @@ private class LiteColumnChildDataElement(
 
 @Immutable
 class LiteColumnChildDataNodeWeight(
-    var weight: Float = 0f
-) : ParentDataModifierNode, Modifier.Node() {
-    override fun Density.modifyParentData(parentData: Any?): LiteColumnChildData {
-        return ((parentData as? LiteColumnChildData) ?: LiteColumnChildData()).also {
+    var weight: Float = 0f,
+) : Modifier.Node(),
+    ParentDataModifierNode {
+    override fun Density.modifyParentData(parentData: Any?): LiteColumnChildData =
+        ((parentData as? LiteColumnChildData) ?: LiteColumnChildData()).also {
             it.weight = weight
         }
-    }
 }
 
 @Immutable
 private class LiteColumnWeightElement(
-    val weight: Float
+    val weight: Float,
 ) : ModifierNodeElement<LiteColumnChildDataNodeWeight>() {
-    override fun create(): LiteColumnChildDataNodeWeight {
-        return LiteColumnChildDataNodeWeight(weight = weight)
-    }
+    override fun create(): LiteColumnChildDataNodeWeight = LiteColumnChildDataNodeWeight(weight = weight)
 
     override fun update(node: LiteColumnChildDataNodeWeight) {
         node.weight = weight

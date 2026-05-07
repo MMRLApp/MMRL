@@ -11,19 +11,21 @@ data class Contributor(
     val url: String,
     val contributions: Int,
 ) {
-    fun toMember(context: Context) = ExploreRepositoryMember(
-        avatar = avatarUrl,
-        name = login,
-        title = context.getString(R.string.contributions, contributions),
-        links = listOf(
-            SocialLink(
-                icon = "github",
-                link = url,
-            ),
-            SocialLink(
-                icon = "commit",
-                link = "https://github.com/MMRLApp/MMRL/commits?author=$login",
-            )
+    fun toMember(context: Context) =
+        ExploreRepositoryMember(
+            avatar = avatarUrl,
+            name = login,
+            title = context.getString(R.string.contributions, contributions),
+            links =
+                listOf(
+                    SocialLink(
+                        icon = "github",
+                        link = url,
+                    ),
+                    SocialLink(
+                        icon = "commit",
+                        link = "https://github.com/MMRLApp/MMRL/commits?author=$login",
+                    ),
+                ),
         )
-    )
 }

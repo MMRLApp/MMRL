@@ -5,13 +5,13 @@ import kotlin.math.min
 
 data class TopCategory(
     val label: String,
-    val modules: List<OnlineModule>
+    val modules: List<OnlineModule>,
 ) {
     companion object {
         fun fromModuleList(
             modules: List<OnlineModule>,
             maxCategories: Int = 5,
-            maxModulesPerCategory: Int = 9
+            maxModulesPerCategory: Int = 9,
         ): List<TopCategory> {
             if (modules.isEmpty()) return emptyList()
 
@@ -20,11 +20,13 @@ data class TopCategory(
             modules.forEach { module ->
                 val categories = module.categories
                 if (categories.isNullOrEmpty()) {
-                    categoryToModules.getOrPut("Uncategorized") { mutableListOf() }
+                    categoryToModules
+                        .getOrPut("Uncategorized") { mutableListOf() }
                         .add(module)
                 } else {
                     categories.forEach { category ->
-                        categoryToModules.getOrPut(category) { mutableListOf() }
+                        categoryToModules
+                            .getOrPut(category) { mutableListOf() }
                             .add(module)
                     }
                 }
@@ -32,14 +34,17 @@ data class TopCategory(
 
             if (categoryToModules.isEmpty()) return emptyList()
 
-            val topCategoryEntries = categoryToModules.entries
-                .sortedByDescending { it.value.size }
-                .take(maxCategories)
+            val topCategoryEntries =
+                categoryToModules.entries
+                    .sortedByDescending { it.value.size }
+                    .take(maxCategories)
 
             return topCategoryEntries.mapNotNull { (categoryName, categoryModules) ->
-                val realModules = categoryModules.shuffled()
-                    .take(maxModulesPerCategory)
-                    .toMutableList()
+                val realModules =
+                    categoryModules
+                        .shuffled()
+                        .take(maxModulesPerCategory)
+                        .toMutableList()
 
                 // Skip categories with no real modules
                 if (realModules.isEmpty()) return@mapNotNull null
@@ -47,8 +52,11 @@ data class TopCategory(
                 // Fill to nearest multiple of 3 but never with more fillers than real items
                 val remainder = realModules.size % 3
                 val fillersNeeded =
-                    if (remainder == 0) 0
-                    else min(3 - remainder, realModules.size)
+                    if (remainder == 0) {
+                        0
+                    } else {
+                        min(3 - remainder, realModules.size)
+                    }
 
                 repeat(fillersNeeded) {
                     realModules.add(OnlineModule.example())
@@ -56,7 +64,7 @@ data class TopCategory(
 
                 TopCategory(
                     label = categoryName,
-                    modules = realModules
+                    modules = realModules,
                 )
             }
         }

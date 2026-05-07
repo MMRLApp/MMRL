@@ -57,7 +57,7 @@ fun VersionItemBottomSheet(
     isProviderAlive: Boolean,
     onDownload: (Boolean) -> Unit,
     onClose: () -> Unit,
-    isBlacklisted: Boolean
+    isBlacklisted: Boolean,
 ) {
     val hasChangelog by remember {
         derivedStateOf { item.changelog.isNotBlank() }
@@ -71,15 +71,16 @@ fun VersionItemBottomSheet(
                 BottomSheetDefaults.DragHandle()
             } else {
                 Text(
-                    modifier = Modifier
-                        .padding(all = 18.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(all = 18.dp)
+                            .fillMaxWidth(),
                     text = stringResource(id = R.string.view_module_version_dialog_desc),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-        }
+        },
     ) {
         when {
             hasChangelog -> {
@@ -88,7 +89,7 @@ fun VersionItemBottomSheet(
                     enableInstall = isProviderAlive && !isBlacklisted,
                     state = state,
                     onDownload = onDownload,
-                    onClose = onClose
+                    onClose = onClose,
                 )
                 ChangelogItem(url = item.changelog)
             }
@@ -99,7 +100,7 @@ fun VersionItemBottomSheet(
                     enableInstall = isProviderAlive && !isBlacklisted,
                     state = state,
                     downloader = onDownload,
-                    onClose = onClose
+                    onClose = onClose,
                 )
             }
         }
@@ -114,12 +115,13 @@ private fun ColumnScope.ButtonRow(
     onDownload: (Boolean) -> Unit,
     onClose: () -> Unit,
 ) = Row(
-    modifier = Modifier
-        .padding(horizontal = 18.dp)
-        .padding(bottom = 18.dp)
-        .align(Alignment.CenterHorizontally),
+    modifier =
+        Modifier
+            .padding(horizontal = 18.dp)
+            .padding(bottom = 18.dp)
+            .align(Alignment.CenterHorizontally),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(10.dp)
+    horizontalArrangement = Arrangement.spacedBy(10.dp),
 ) {
     val scope = rememberCoroutineScope()
 
@@ -132,22 +134,26 @@ private fun ColumnScope.ButtonRow(
                 state.hide()
             }
         },
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
     ) {
         Icon(
             modifier = Modifier.size(20.dp),
             painter = painterResource(id = R.drawable.device_mobile_down),
-            contentDescription = null
+            contentDescription = null,
         )
 
         Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
 
         Text(
-            text = stringResource(id = if (isUpdate) {
-                R.string.module_update
-            } else {
-                R.string.module_install
-            })
+            text =
+                stringResource(
+                    id =
+                        if (isUpdate) {
+                            R.string.module_update
+                        } else {
+                            R.string.module_install
+                        },
+                ),
         )
     }
 
@@ -159,12 +165,12 @@ private fun ColumnScope.ButtonRow(
                 state.hide()
             }
         },
-        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
+        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
     ) {
         Icon(
             modifier = Modifier.size(20.dp),
             painter = painterResource(id = R.drawable.file_download),
-            contentDescription = null
+            contentDescription = null,
         )
 
         Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
@@ -176,19 +182,21 @@ private fun ColumnScope.ButtonRow(
 @Composable
 private fun ChangelogItem(url: String) {
     var changelog by remember { mutableStateOf("") }
-    val event = requestString(
-        url = url,
-        onSuccess = { changelog = it }
-    )
+    val event =
+        requestString(
+            url = url,
+            onSuccess = { changelog = it },
+        )
 
     Box(
-        modifier = Modifier
-            .animateContentSize(spring(stiffness = Spring.StiffnessLow))
+        modifier =
+            Modifier
+                .animateContentSize(spring(stiffness = Spring.StiffnessLow)),
     ) {
         AnimatedVisibility(
             visible = event.isLoading,
             enter = fadeIn(),
-            exit = fadeOut()
+            exit = fadeOut(),
         ) {
             Loading(minHeight = 200.dp)
         }
@@ -196,16 +204,17 @@ private fun ChangelogItem(url: String) {
         AnimatedVisibility(
             visible = event.isSucceeded,
             enter = fadeIn(),
-            exit = fadeOut()
+            exit = fadeOut(),
         ) {
             MarkdownText(
                 text = changelog,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp)
-                    .padding(bottom = 18.dp)
+                modifier =
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp)
+                        .padding(bottom = 18.dp),
             )
         }
     }
@@ -217,12 +226,13 @@ private fun ColumnScope.ButtonColumn(
     enableInstall: Boolean,
     state: SheetState,
     downloader: (Boolean) -> Unit,
-    onClose: () -> Unit
+    onClose: () -> Unit,
 ) = Column(
-    modifier = Modifier
-        .padding(bottom = 18.dp)
-        .align(Alignment.CenterHorizontally),
-    horizontalAlignment = Alignment.CenterHorizontally
+    modifier =
+        Modifier
+            .padding(bottom = 18.dp)
+            .align(Alignment.CenterHorizontally),
+    horizontalAlignment = Alignment.CenterHorizontally,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -236,11 +246,15 @@ private fun ColumnScope.ButtonColumn(
             }
         },
         icon = R.drawable.device_mobile_down,
-        text = stringResource(id = if (isUpdate) {
-            R.string.module_update
-        } else {
-            R.string.module_install
-        })
+        text =
+            stringResource(
+                id =
+                    if (isUpdate) {
+                        R.string.module_update
+                    } else {
+                        R.string.module_install
+                    },
+            ),
     )
 
     ButtonItem(
@@ -252,7 +266,7 @@ private fun ColumnScope.ButtonColumn(
             }
         },
         icon = R.drawable.file_download,
-        text = stringResource(id = R.string.module_download)
+        text = stringResource(id = R.string.module_download),
     )
 }
 
@@ -261,28 +275,29 @@ private fun ButtonItem(
     onClick: () -> Unit,
     enabled: Boolean = true,
     @DrawableRes icon: Int,
-    text: String
+    text: String,
 ) = Surface(
     onClick = onClick,
     enabled = enabled,
-    modifier = Modifier
-        .alpha(if (enabled) 1f else 0.5f)
-        .fillMaxWidth()
+    modifier =
+        Modifier
+            .alpha(if (enabled) 1f else 0.5f)
+            .fillMaxWidth(),
 ) {
     Row(
         modifier = Modifier.padding(vertical = 16.dp, horizontal = 18.dp),
         horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             modifier = Modifier.size(20.dp),
             painter = painterResource(id = icon),
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge,
         )
     }
 }

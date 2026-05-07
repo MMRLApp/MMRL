@@ -42,7 +42,11 @@ class ModuleService : MMRLLifecycleService() {
         isActive = false
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         super.onStartCommand(intent, flags, startId)
 
         if (intent == null) {
@@ -71,20 +75,23 @@ class ModuleService : MMRLLifecycleService() {
         return START_STICKY
     }
 
-    private suspend fun checkForUpdatesAndNotify() = withContext(Dispatchers.IO) {
-        val onlineModules = fetchOnlineModules()
-        val localModules = database.localDao().getAll()
-        val onlineModulesOrderedByNewestMap = onlineModules.groupBy { it.id }
-                .mapValues { module -> module.value.sortedByDescending { it.versionCode } }
-        
-        localModules.forEach { localModule ->
-            onlineModulesOrderedByNewestMap[localModule.id]?.getOrNull(0)?.let { newestOnlineModule ->
-                if (isNewerVersion(newestOnlineModule, localModule)) {
-                    sendUpdateNotification(localModule, newestOnlineModule)
+    private suspend fun checkForUpdatesAndNotify() =
+        withContext(Dispatchers.IO) {
+            val onlineModules = fetchOnlineModules()
+            val localModules = database.localDao().getAll()
+            val onlineModulesOrderedByNewestMap =
+                onlineModules
+                    .groupBy { it.id }
+                    .mapValues { module -> module.value.sortedByDescending { it.versionCode } }
+
+            localModules.forEach { localModule ->
+                onlineModulesOrderedByNewestMap[localModule.id]?.getOrNull(0)?.let { newestOnlineModule ->
+                    if (isNewerVersion(newestOnlineModule, localModule)) {
+                        sendUpdateNotification(localModule, newestOnlineModule)
+                    }
                 }
             }
         }
-    }
 
     private suspend fun fetchOnlineModules(): List<OnlineModuleEntity> =
         withContext(Dispatchers.IO) {
@@ -94,9 +101,11 @@ class ModuleService : MMRLLifecycleService() {
                 try {
                     val response = repoManager.modules.execute()
                     response.body()?.modules?.let { modulesJson ->
-                        onlineModules.addAll(modulesJson.map { module ->
-                            OnlineModuleEntity(module, repo.url, Blacklist.EMPTY)
-                        })
+                        onlineModules.addAll(
+                            modulesJson.map { module ->
+                                OnlineModuleEntity(module, repo.url, Blacklist.EMPTY)
+                            },
+                        )
                     } ?: Timber.e("No data found for repo: ${repo.url}")
                 } catch (e: Exception) {
                     Timber.e(e, "Error while fetching repo: ${repo.url}")
@@ -107,29 +116,35 @@ class ModuleService : MMRLLifecycleService() {
 
     private fun isNewerVersion(
         onlineModule: OnlineModuleEntity,
-        localModule: LocalModuleEntity
+        localModule: LocalModuleEntity,
     ): Boolean = onlineModule.versionCode > localModule.versionCode
 
     private fun sendUpdateNotification(
         localModule: LocalModuleEntity,
-        onlineModule: OnlineModuleEntity
+        onlineModule: OnlineModuleEntity,
     ) {
         val intent = Intent(applicationContext, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(
-            applicationContext, 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        val pendingIntent =
+            PendingIntent.getActivity(
+                applicationContext,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
 
         pushNotification(
             id = localModule.id.hashCode(),
             icon = R.drawable.file_3d,
             title = applicationContext.getString(R.string.has_a_new_update, localModule.name),
-            message = applicationContext.getString(
-                R.string.update_available_from_to,
-                localModule.version, localModule.versionCode,
-                onlineModule.version, onlineModule.versionCode
-            ),
-            pendingIntent = pendingIntent
+            message =
+                applicationContext.getString(
+                    R.string.update_available_from_to,
+                    localModule.version,
+                    localModule.versionCode,
+                    onlineModule.version,
+                    onlineModule.versionCode,
+                ),
+            pendingIntent = pendingIntent,
         )
     }
 
@@ -142,21 +157,20 @@ class ModuleService : MMRLLifecycleService() {
             context: Context,
             interval: Long,
         ) {
-            val intent = Intent().apply {
-                component = ComponentName(
-                    context.packageName,
-                    ModuleService::class.java.name
-                )
-                putExtra(INTERVAL_KEY, interval)
-            }
+            val intent =
+                Intent().apply {
+                    component =
+                        ComponentName(
+                            context.packageName,
+                            ModuleService::class.java.name,
+                        )
+                    putExtra(INTERVAL_KEY, interval)
+                }
 
             context.startForegroundService(intent)
         }
 
-
-        fun stop(
-            context: Context,
-        ) {
+        fun stop(context: Context) {
             val intent = Intent(context, ModuleService::class.java)
             context.stopService(intent)
         }

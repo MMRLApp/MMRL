@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
@@ -18,6 +17,10 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    publishing {
+        singleVariant("release")
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -31,10 +34,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    kotlinOptions {
-        jvmTarget = "21"
     }
 }
 
@@ -59,6 +58,8 @@ dependencies {
     implementation(libs.square.retrofit.kotlinxSerialization)
     implementation(libs.square.moshi)
     ksp(libs.square.moshi.kotlin)
+
+    implementation(libs.kotlinx.datetime)
 
     implementation(kotlin("reflect"))
 }

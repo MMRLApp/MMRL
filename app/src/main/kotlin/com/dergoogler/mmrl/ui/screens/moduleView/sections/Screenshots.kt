@@ -37,11 +37,11 @@ internal fun Screenshots() {
 
         LazyRow(
             state = screenshotsLazyListState,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp)
-
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
         ) {
             itemsIndexed(
                 items = screens,
@@ -51,22 +51,22 @@ internal fun Screenshots() {
                 AsyncImage(
                     model = screen,
                     contentDescription = null,
-                    modifier = Modifier
-                        .height(160.dp)
-                        .clickable(
-                            interactionSource = interactionSource,
-                            indication = ripple(),
-                            onClick = {
-                                ScreenshotsPreviewActivity.start(
-                                    context,
-                                    screens,
-                                    index
-                                )
-                            }
-                        )
-                        .aspectRatio(9f / 16f)
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop
+                    modifier =
+                        Modifier
+                            .height(160.dp)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = ripple(),
+                                onClick = {
+                                    ScreenshotsPreviewActivity.start(
+                                        context,
+                                        screens,
+                                        index,
+                                    )
+                                },
+                            ).aspectRatio(9f / 16f)
+                            .clip(RoundedCornerShape(10.dp)),
+                    contentScale = ContentScale.Crop,
                 )
             }
         }

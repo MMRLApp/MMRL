@@ -4,7 +4,11 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.dp
 
 @Immutable
-class FabPlacement(val left: Int, val width: Int, val height: Int)
+class FabPlacement(
+    val left: Int,
+    val width: Int,
+    val height: Int,
+)
 
 val FabSpacing = 16.dp
 

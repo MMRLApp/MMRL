@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 14,
-    "identityHash": "c6fcdcbc1b4591e8ecc8e138acf2126d",
+    "identityHash": "53fbd0f31a18d3d110e2ed3e07e390a0",
     "entities": [
       {
         "tableName": "repos",
@@ -29,38 +29,32 @@
           {
             "fieldPath": "submission",
             "columnName": "submission",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "website",
             "columnName": "website",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "cover",
             "columnName": "cover",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "donate",
             "columnName": "donate",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "support",
             "columnName": "support",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "metadata.version",
@@ -86,9 +80,7 @@
           "columnNames": [
             "url"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "localModules_updatable",
@@ -112,13 +104,11 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "onlineModules",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `repoUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `version` TEXT NOT NULL, `versionCode` INTEGER NOT NULL, `author` TEXT NOT NULL, `description` TEXT, `maxApi` INTEGER, `minApi` INTEGER, `size` INTEGER, `categories` TEXT, `icon` TEXT, `homepage` TEXT, `donate` TEXT, `support` TEXT, `cover` TEXT, `screenshots` TEXT, `license` TEXT, `readme` TEXT, `verified` INTEGER, `require` TEXT, `devices` TEXT, `arch` TEXT, `permissions` TEXT, `magiskManager` TEXT, `kernelsuManager` TEXT, `apatchManager` TEXT, `magisk` TEXT, `kernelsu` TEXT, `apatch` TEXT, `title` TEXT, `message` TEXT, `service` INTEGER, `postFsData` INTEGER, `resetprop` INTEGER, `sepolicy` INTEGER, `zygisk` INTEGER, `apks` INTEGER, `webroot` INTEGER, `postMount` INTEGER, `bootCompleted` INTEGER, `action` INTEGER, `type` TEXT NOT NULL, `added` REAL, `source` TEXT NOT NULL, `antifeatures` TEXT, `blId` TEXT, `blSource` TEXT, `blNotes` TEXT, `blAntiFeatures` TEXT, PRIMARY KEY(`id`, `repoUrl`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `repoUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `version` TEXT NOT NULL, `versionCode` INTEGER NOT NULL, `author` TEXT NOT NULL, `description` TEXT, `maxApi` INTEGER, `minApi` INTEGER, `size` INTEGER, `categories` TEXT, `icon` TEXT, `homepage` TEXT, `donate` TEXT, `support` TEXT, `cover` TEXT, `screenshots` TEXT, `license` TEXT, `readme` TEXT, `verified` INTEGER, `require` TEXT, `devices` TEXT, `arch` TEXT, `permissions` TEXT, `stars` INTEGER, `magiskManager` TEXT, `kernelsuManager` TEXT, `apatchManager` TEXT, `magisk` TEXT, `kernelsu` TEXT, `apatch` TEXT, `title` TEXT, `message` TEXT, `service` INTEGER, `postFsData` INTEGER, `resetprop` INTEGER, `sepolicy` INTEGER, `zygisk` INTEGER, `apks` INTEGER, `webroot` INTEGER, `postMount` INTEGER, `bootCompleted` INTEGER, `action` INTEGER, `type` TEXT NOT NULL, `added` REAL, `source` TEXT NOT NULL, `antifeatures` TEXT, `buildMetadata` TEXT, `blId` TEXT, `blSource` TEXT, `blNotes` TEXT, `blAntiFeatures` TEXT, PRIMARY KEY(`id`, `repoUrl`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -159,218 +149,187 @@
           {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "maxApi",
             "columnName": "maxApi",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "minApi",
             "columnName": "minApi",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "size",
             "columnName": "size",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "categories",
             "columnName": "categories",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "icon",
             "columnName": "icon",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "homepage",
             "columnName": "homepage",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "donate",
             "columnName": "donate",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "support",
             "columnName": "support",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "cover",
             "columnName": "cover",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "screenshots",
             "columnName": "screenshots",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "license",
             "columnName": "license",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "readme",
             "columnName": "readme",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "verified",
             "columnName": "verified",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "require",
             "columnName": "require",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "devices",
             "columnName": "devices",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "arch",
             "columnName": "arch",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "permissions",
             "columnName": "permissions",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "stars",
+            "columnName": "stars",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "manager.magisk",
             "columnName": "magiskManager",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "manager.kernelsu",
             "columnName": "kernelsuManager",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "manager.apatch",
             "columnName": "apatchManager",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "root.magisk",
             "columnName": "magisk",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "root.kernelsu",
             "columnName": "kernelsu",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "root.apatch",
             "columnName": "apatch",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "note.title",
             "columnName": "title",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "note.message",
             "columnName": "message",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "features.service",
             "columnName": "service",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.postFsData",
             "columnName": "postFsData",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.resetprop",
             "columnName": "resetprop",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.sepolicy",
             "columnName": "sepolicy",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.zygisk",
             "columnName": "zygisk",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.apks",
             "columnName": "apks",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.webroot",
             "columnName": "webroot",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.postMount",
             "columnName": "postMount",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.bootCompleted",
             "columnName": "bootCompleted",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "features.action",
             "columnName": "action",
-            "affinity": "INTEGER",
-            "notNull": false
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "track.type",
@@ -381,8 +340,7 @@
           {
             "fieldPath": "track.added",
             "columnName": "added",
-            "affinity": "REAL",
-            "notNull": false
+            "affinity": "REAL"
           },
           {
             "fieldPath": "track.source",
@@ -393,32 +351,32 @@
           {
             "fieldPath": "track.antifeatures",
             "columnName": "antifeatures",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "track.buildMetadata",
+            "columnName": "buildMetadata",
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "blacklist.blId",
             "columnName": "blId",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "blacklist.blSource",
             "columnName": "blSource",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "blacklist.blNotes",
             "columnName": "blNotes",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "blacklist.blAntiFeatures",
             "columnName": "blAntiFeatures",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -427,9 +385,7 @@
             "id",
             "repoUrl"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "versions",
@@ -485,9 +441,7 @@
             "repoUrl",
             "versionCode"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "localModules",
@@ -559,9 +513,7 @@
           "columnNames": [
             "id"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       },
       {
         "tableName": "blacklist",
@@ -582,14 +534,12 @@
           {
             "fieldPath": "blNotes",
             "columnName": "blNotes",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           },
           {
             "fieldPath": "blAntiFeatures",
             "columnName": "blAntiFeatures",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -597,15 +547,12 @@
           "columnNames": [
             "blId"
           ]
-        },
-        "indices": [],
-        "foreignKeys": []
+        }
       }
     ],
-    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c6fcdcbc1b4591e8ecc8e138acf2126d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '53fbd0f31a18d3d110e2ed3e07e390a0')"
     ]
   }
 }

@@ -45,80 +45,86 @@ import timber.log.Timber
 
 @Destination<RootGraph>
 @Composable
-fun ExploreRepositoriesScreen() = LocalScreenProvider {
-    var exploreRepositories by remember { mutableStateOf<List<ExploreRepository>?>(null) }
+fun ExploreRepositoriesScreen() =
+    LocalScreenProvider {
+        var exploreRepositories by remember { mutableStateOf<List<ExploreRepository>?>(null) }
 
-    val navigator = LocalDestinationsNavigator.current
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val navigator = LocalDestinationsNavigator.current
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    LaunchedEffect(Unit) {
-        runRequest {
-            withContext(Dispatchers.IO) {
-                val api = IMMRLApiManager.build()
-                return@withContext api.repositories.execute()
+        LaunchedEffect(Unit) {
+            runRequest {
+                withContext(Dispatchers.IO) {
+                    val api = IMMRLApiManager.build()
+                    return@withContext api.repositories.execute()
+                }
+            }.onSuccess { list ->
+                exploreRepositories = list
+            }.onFailure {
+                Timber.e(it, "unable to get recommended repos")
             }
-        }.onSuccess { list ->
-            exploreRepositories = list
-        }.onFailure {
-            Timber.e(it, "unable to get recommended repos")
         }
-    }
 
-    Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            BlurNavigateUpToolbar(
-                title = stringResource(id = R.string.explore_repositories),
-                fade = true,
-                fadeDistance = 50f
-            )
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        this@Scaffold.ResponsiveContent {
-            AnimatedVisibility(
-                visible = exploreRepositories == null, enter = fadeIn(), exit = fadeOut()
-            ) {
-                Loading()
-            }
+        Scaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                BlurNavigateUpToolbar(
+                    title = stringResource(id = R.string.explore_repositories),
+                    fade = true,
+                    fadeDistance = 50f,
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            this@Scaffold.ResponsiveContent {
+                AnimatedVisibility(
+                    visible = exploreRepositories == null,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Loading()
+                }
 
-            AnimatedVisibility(
-                visible = exploreRepositories != null, enter = fadeIn(), exit = fadeOut()
-            ) {
-                exploreRepositories.nullable { er ->
-                    LazyColumn(
-                        modifier = Modifier.hazeSource(LocalHazeState.current),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(
-                            start = 16.dp,
-                            top = innerPadding.calculateTopPadding() + 16.dp,
-                            end = 16.dp,
-                            bottom = 16.dp,
-                        )
-                    ) {
-                        item {
-                            HeadlineCard(
-                                repoCount = er.size,
-                                moduleCount = er.sumOf { it.modulesCount ?: 0 }
-                            )
-                        }
+                AnimatedVisibility(
+                    visible = exploreRepositories != null,
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    exploreRepositories.nullable { er ->
+                        LazyColumn(
+                            modifier = Modifier.hazeSource(LocalHazeState.current),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            contentPadding =
+                                PaddingValues(
+                                    start = 16.dp,
+                                    top = innerPadding.calculateTopPadding() + 16.dp,
+                                    end = 16.dp,
+                                    bottom = 16.dp,
+                                ),
+                        ) {
+                            item {
+                                HeadlineCard(
+                                    repoCount = er.size,
+                                    moduleCount = er.sumOf { it.modulesCount ?: 0 },
+                                )
+                            }
 
-                        items(
-                            items = er,
-                            key = { it.url }
-                        ) { repo ->
-                            RepoCard(
-                                repo = repo
-                            )
-                        }
+                            items(
+                                items = er,
+                                key = { it.url },
+                            ) { repo ->
+                                RepoCard(
+                                    repo = repo,
+                                )
+                            }
 
-                        item {
-                            val paddingValues = LocalMainScreenInnerPaddings.current
-                            Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                            item {
+                                val paddingValues = LocalMainScreenInnerPaddings.current
+                                Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                            }
                         }
                     }
                 }
             }
         }
     }
-}

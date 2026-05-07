@@ -29,8 +29,8 @@ interface IFileManager {
     boolean setPermissions(String path, int mode);
     boolean setOwner(String path, int owner, int group);
     ParcelFileDescriptor parcelFile(String path);
-    ParcelResult openReadStream(String path, in ParcelFileDescriptor fd);
-    ParcelResult openWriteStream(String path, in ParcelFileDescriptor fd, boolean append);
+    ParcelResult openReadStream(String path, int flags, int mode, in ParcelFileDescriptor fd);
+    ParcelResult openWriteStream(String path, int flags, int mode, in ParcelFileDescriptor fd);
     int getMode(String path);
     boolean loadSharedObjects(in String[] path);
 }

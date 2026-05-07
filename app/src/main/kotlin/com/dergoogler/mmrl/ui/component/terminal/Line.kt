@@ -12,7 +12,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -31,13 +30,14 @@ fun Line(
     val lineNumbersEnabled by rememberUpdatedState(userPrefs.showTerminalLineNumbers)
 
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier)
-            .padding(
-                start = if (lineNumbersEnabled) 0.dp else 8.dp,
-                end = 8.dp
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .then(modifier)
+                .padding(
+                    start = if (lineNumbersEnabled) 0.dp else 8.dp,
+                    end = 8.dp,
+                ),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         LineNumber(number = index, enabled = lineNumbersEnabled)
@@ -46,28 +46,33 @@ fun Line(
 }
 
 @Composable
-fun RowScope.LineNumber(number: Int?, enabled: Boolean) {
+fun RowScope.LineNumber(
+    number: Int?,
+    enabled: Boolean,
+) {
     if (!enabled) return
 
-    val index = remember(number) {
-        if (number == null || number == -1) "" else number.toString()
-    }
+    val index =
+        remember(number) {
+            if (number == null || number == -1) "" else number.toString()
+        }
 
     val style = LocalTextStyle.current
     val colorScheme = MaterialTheme.colorScheme
 
-    val outlineColor = remember {
-        colorScheme.outline.copy(alpha = 0.6f)
-    }
+    val outlineColor =
+        remember {
+            colorScheme.outline.copy(alpha = 0.6f)
+        }
 
     DisableSelection {
         Box(
             modifier = Modifier.width(40.dp),
-            contentAlignment = Alignment.TopEnd
+            contentAlignment = Alignment.TopEnd,
         ) {
             Text(
                 text = index,
-                style = style.copy(color = outlineColor)
+                style = style.copy(color = outlineColor),
             )
         }
     }

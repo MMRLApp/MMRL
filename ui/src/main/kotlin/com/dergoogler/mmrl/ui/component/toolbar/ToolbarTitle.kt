@@ -79,19 +79,20 @@ fun ToolbarTitle(
             text = title,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            color = LocalContentColor.current
+            color = LocalContentColor.current,
         )
     },
-    subtitleContent = subtitle.nullable {
-        {
-            Text(
-                text = it,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                color = LocalContentColor.current
-            )
-        }
-    }
+    subtitleContent =
+        subtitle.nullable {
+            {
+                Text(
+                    text = it,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = LocalContentColor.current,
+                )
+            }
+        },
 )
 
 @Composable
@@ -104,7 +105,7 @@ fun ToolbarTitle(
         ProvideContentColorTextStyle(
             LocalContentColor.current,
             MaterialTheme.typography.titleLarge,
-            titleContent
+            titleContent,
         )
     }
 
@@ -114,7 +115,7 @@ fun ToolbarTitle(
                 ProvideContentColorTextStyle(
                     LocalContentColor.current.copy(alpha = 0.75f),
                     MaterialTheme.typography.bodySmall,
-                    it
+                    it,
                 )
             }
         }
@@ -122,10 +123,9 @@ fun ToolbarTitle(
     ToolbarTitleLayout(
         modifier = modifier,
         title = decoratedTitleContent,
-        subtitle = decoratedSubtitleContent
+        subtitle = decoratedSubtitleContent,
     )
 }
-
 
 @Composable
 internal fun ToolbarTitleLayout(
@@ -136,10 +136,11 @@ internal fun ToolbarTitleLayout(
     val measurePolicy = remember { ToolbarTitleMeasurePolicy() }
 
     Layout(
-        contents = listOf(
-            title,
-            subtitle ?: {}
-        ),
+        contents =
+            listOf(
+                title,
+                subtitle ?: {},
+            ),
         modifier = modifier,
         measurePolicy = measurePolicy,
     )

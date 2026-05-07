@@ -1,0 +1,558 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 15,
+    "identityHash": "53fbd0f31a18d3d110e2ed3e07e390a0",
+    "entities": [
+      {
+        "tableName": "repos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `name` TEXT NOT NULL, `enable` INTEGER NOT NULL, `submission` TEXT, `website` TEXT, `cover` TEXT, `description` TEXT, `donate` TEXT, `support` TEXT, `version` INTEGER NOT NULL, `timestamp` REAL NOT NULL, `size` INTEGER NOT NULL, PRIMARY KEY(`url`))",
+        "fields": [
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enable",
+            "columnName": "enable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "submission",
+            "columnName": "submission",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "website",
+            "columnName": "website",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "cover",
+            "columnName": "cover",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "donate",
+            "columnName": "donate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "support",
+            "columnName": "support",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "metadata.version",
+            "columnName": "version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metadata.timestamp",
+            "columnName": "timestamp",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "metadata.size",
+            "columnName": "size",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "url"
+          ]
+        }
+      },
+      {
+        "tableName": "localModules_updatable",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `updatable` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatable",
+            "columnName": "updatable",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "onlineModules",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `repoUrl` TEXT NOT NULL, `name` TEXT NOT NULL, `version` TEXT NOT NULL, `versionCode` INTEGER NOT NULL, `author` TEXT NOT NULL, `description` TEXT, `maxApi` INTEGER, `minApi` INTEGER, `size` INTEGER, `categories` TEXT, `icon` TEXT, `homepage` TEXT, `donate` TEXT, `support` TEXT, `cover` TEXT, `screenshots` TEXT, `license` TEXT, `readme` TEXT, `verified` INTEGER, `require` TEXT, `devices` TEXT, `arch` TEXT, `permissions` TEXT, `stars` INTEGER, `magiskManager` TEXT, `kernelsuManager` TEXT, `apatchManager` TEXT, `magisk` TEXT, `kernelsu` TEXT, `apatch` TEXT, `title` TEXT, `message` TEXT, `service` INTEGER, `postFsData` INTEGER, `resetprop` INTEGER, `sepolicy` INTEGER, `zygisk` INTEGER, `apks` INTEGER, `webroot` INTEGER, `postMount` INTEGER, `bootCompleted` INTEGER, `action` INTEGER, `type` TEXT NOT NULL, `added` REAL, `source` TEXT NOT NULL, `antifeatures` TEXT, `buildMetadata` TEXT, `blId` TEXT, `blSource` TEXT, `blNotes` TEXT, `blAntiFeatures` TEXT, PRIMARY KEY(`id`, `repoUrl`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repoUrl",
+            "columnName": "repoUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "versionCode",
+            "columnName": "versionCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "author",
+            "columnName": "author",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "maxApi",
+            "columnName": "maxApi",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "minApi",
+            "columnName": "minApi",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "categories",
+            "columnName": "categories",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "icon",
+            "columnName": "icon",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "homepage",
+            "columnName": "homepage",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "donate",
+            "columnName": "donate",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "support",
+            "columnName": "support",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "cover",
+            "columnName": "cover",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "screenshots",
+            "columnName": "screenshots",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "license",
+            "columnName": "license",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "readme",
+            "columnName": "readme",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "verified",
+            "columnName": "verified",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "require",
+            "columnName": "require",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "devices",
+            "columnName": "devices",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "arch",
+            "columnName": "arch",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "permissions",
+            "columnName": "permissions",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "stars",
+            "columnName": "stars",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "manager.magisk",
+            "columnName": "magiskManager",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "manager.kernelsu",
+            "columnName": "kernelsuManager",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "manager.apatch",
+            "columnName": "apatchManager",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "root.magisk",
+            "columnName": "magisk",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "root.kernelsu",
+            "columnName": "kernelsu",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "root.apatch",
+            "columnName": "apatch",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "note.title",
+            "columnName": "title",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "note.message",
+            "columnName": "message",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "features.service",
+            "columnName": "service",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.postFsData",
+            "columnName": "postFsData",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.resetprop",
+            "columnName": "resetprop",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.sepolicy",
+            "columnName": "sepolicy",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.zygisk",
+            "columnName": "zygisk",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.apks",
+            "columnName": "apks",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.webroot",
+            "columnName": "webroot",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.postMount",
+            "columnName": "postMount",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.bootCompleted",
+            "columnName": "bootCompleted",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "features.action",
+            "columnName": "action",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "track.type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "track.added",
+            "columnName": "added",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "track.source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "track.antifeatures",
+            "columnName": "antifeatures",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "track.buildMetadata",
+            "columnName": "buildMetadata",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "blacklist.blId",
+            "columnName": "blId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "blacklist.blSource",
+            "columnName": "blSource",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "blacklist.blNotes",
+            "columnName": "blNotes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "blacklist.blAntiFeatures",
+            "columnName": "blAntiFeatures",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id",
+            "repoUrl"
+          ]
+        }
+      },
+      {
+        "tableName": "versions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `repoUrl` TEXT NOT NULL, `timestamp` REAL NOT NULL, `version` TEXT NOT NULL, `versionCode` INTEGER NOT NULL, `zipUrl` TEXT NOT NULL, `changelog` TEXT NOT NULL, PRIMARY KEY(`id`, `repoUrl`, `versionCode`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "repoUrl",
+            "columnName": "repoUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "versionCode",
+            "columnName": "versionCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zipUrl",
+            "columnName": "zipUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "changelog",
+            "columnName": "changelog",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id",
+            "repoUrl",
+            "versionCode"
+          ]
+        }
+      },
+      {
+        "tableName": "localModules",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `version` TEXT NOT NULL, `versionCode` INTEGER NOT NULL, `author` TEXT NOT NULL, `description` TEXT NOT NULL, `state` TEXT NOT NULL, `size` INTEGER NOT NULL, `updateJson` TEXT NOT NULL, `lastUpdated` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "version",
+            "columnName": "version",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "versionCode",
+            "columnName": "versionCode",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "author",
+            "columnName": "author",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "size",
+            "columnName": "size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updateJson",
+            "columnName": "updateJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        }
+      },
+      {
+        "tableName": "blacklist",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`blId` TEXT NOT NULL, `blSource` TEXT NOT NULL, `blNotes` TEXT, `blAntiFeatures` TEXT, PRIMARY KEY(`blId`))",
+        "fields": [
+          {
+            "fieldPath": "blId",
+            "columnName": "blId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "blSource",
+            "columnName": "blSource",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "blNotes",
+            "columnName": "blNotes",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "blAntiFeatures",
+            "columnName": "blAntiFeatures",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "blId"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '53fbd0f31a18d3d110e2ed3e07e390a0')"
+    ]
+  }
+}

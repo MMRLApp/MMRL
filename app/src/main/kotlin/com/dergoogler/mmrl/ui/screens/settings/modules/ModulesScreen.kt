@@ -37,7 +37,10 @@ fun ModulesScreen2() {
             ) {
                 Title(R.string.settings_shell_module_state_change)
                 Description(R.string.settings_shell_module_state_change_desc)
-                Labels { KernelSuLabel(); APatchLabel() }
+                Labels {
+                    KernelSuLabel()
+                    APatchLabel()
+                }
             }
 
             SwitchItem(
@@ -47,34 +50,38 @@ fun ModulesScreen2() {
             ) {
                 Title(R.string.settings_use_generic_action)
                 Description(R.string.settings_use_generic_action_desc)
-                Labels { KernelSuLabel(); APatchLabel() }
+                Labels {
+                    KernelSuLabel()
+                    APatchLabel()
+                }
             }
         }
 
         Section(
             title = stringResource(id = R.string.view_module_features_webui),
-            divider = false
+            divider = false,
         ) {
             RadioDialogItem(
                 enabled = viewModel.isProviderAlive,
                 selection = userPreferences.webuiEngine,
-                options = listOf(
-                    RadioDialogItem(
-                        value = WebUIEngine.WX,
-                        title = stringResource(R.string.settings_webui_engine_wx)
+                options =
+                    listOf(
+                        RadioDialogItem(
+                            value = WebUIEngine.WX,
+                            title = stringResource(R.string.settings_webui_engine_wx),
+                        ),
+                        RadioDialogItem(
+                            value = WebUIEngine.KSU,
+                            title = stringResource(R.string.settings_webui_engine_ksu),
+                        ),
+                        RadioDialogItem(
+                            value = WebUIEngine.PREFER_MODULE,
+                            title = stringResource(R.string.settings_webui_engine_prefer_module),
+                        ),
                     ),
-                    RadioDialogItem(
-                        value = WebUIEngine.KSU,
-                        title = stringResource(R.string.settings_webui_engine_ksu)
-                    ),
-                    RadioDialogItem(
-                        value = WebUIEngine.PREFER_MODULE,
-                        title = stringResource(R.string.settings_webui_engine_prefer_module)
-                    )
-                ),
                 onConfirm = {
                     viewModel.setWebUIEngine(it.value)
-                }
+                },
             ) {
                 Title(R.string.settings_webui_engine)
                 Description(R.string.settings_webui_engine_desc)

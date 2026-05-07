@@ -1,3 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="confirm">پذیرش</string>
+    <string name="cancel">رد کردن</string>
+    <string name="learn_more">بیشتر بدانید</string>
+    <string name="loading">بارگذاری…</string>
+    <string name="unknown_error">خطای ناشناخته</string>
+    <string name="search_placeholder">جستجو…</string>
+    <string name="select_a_option">یک مورد را انتخاب کنید</string>
 </resources>

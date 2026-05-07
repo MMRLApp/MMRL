@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.9.1"
+androidGradlePlugin = "9.0.0"
 androidxActivity = "1.10.1"
 androidxAnnotation = "1.9.1"
 androidxAppCompat = "1.7.1"
@@ -13,7 +13,7 @@ androidxHiltNavigationCompose = "1.2.0"
 androidxLifecycle = "2.9.1"
 androidxNavigation = "2.9.0"
 arbor = "2.0.103"
-foundation = "1.7.3"
+foundation = "1.8.3"
 kotlinxHtmlJvm = "0.9.1"
 multiplatformMarkdownRenderer = "0.27.0"
 processPhoenix = "3.0.0"
@@ -25,29 +25,29 @@ browser = "1.8.0"
 coilCompose = "2.7.0"
 composeMarkdown = "0.5.4"
 hiddenApiRefine = "4.4.0"
-hilt = "2.51.1"
-kotlin = "2.0.0"
+hilt = "2.59.2"
+kotlin = "2.2.0"
 kotlinReflect = "1.9.24"
 kotlinxCoroutines = "1.8.1"
 kotlinxDatetime = "0.6.0"
 kotlinxSerialization = "1.7.1"
-ksp = "2.0.0-1.0.21"
+ksp = "2.2.0-2.0.2"
 libsu = "6.0.0"
-protobuf = "4.28.2"
-protobufPlugin = "0.9.4"
+protobuf = "4.34.1"
+protobufPlugin = "0.9.6"
 semver = "2.0.0"
 shizuku = "13.1.5"
 squareRetrofit = "2.11.0"
 squareOkhttp = "4.12.0"
 squareMoshi = "1.15.1"
 runtimeAndroid = "1.7.6"
-webuiXPortable = "1c97cba712"
+webuiXPortable = "c92f5f6c3c"
 workRuntimeKtx = "2.10.0"
 lifecycleProcess = "2.8.7"
 apacheCommons = "1.28.0"
 parcelablelist = "2.0.1"
 zoomableVersion = "2.2.0"
-kotlinVersion = "1.9.0"
+kotlinVersion = "2.2.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -76,7 +76,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "androidxDocumentFile" }
-androidx-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
@@ -99,6 +99,8 @@ compose-markdown = { module = "com.github.jeziellago:compose-markdown", version.
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinReflect" }
+kotlin-parcelize-compiler = { module = "org.jetbrains.kotlin:kotlin-parcelize-compiler", version.ref = "kotlin" }
+kotlin-parcelize-runtime = { module = "org.jetbrains.kotlin:kotlin-parcelize-runtime", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-html-jvm = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kotlinxHtmlJvm" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
@@ -133,7 +135,7 @@ square-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin-codeg
 dev-rikka-rikkax-parcelablelist = { module = "dev.rikka.rikkax.parcelablelist:parcelablelist", version.ref = "parcelablelist" }
 
 markwon-core = "io.noties.markwon:core:4.6.2"
-hiddenApiBypass = "org.lsposed.hiddenapibypass:hiddenapibypass:4.3"
+hiddenApiBypass = "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
 timber = "com.jakewharton.timber:timber:5.0.1"
 
 # Dependencies of the included build-logic
@@ -150,7 +152,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 runtime-android = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "runtimeAndroidVersion" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
-webuix-portable = { module = "com.github.MMRLApp:WebUI-X-Portable", version.ref = "webuiXPortable" }
+webuix-hwui = { module = "com.github.MMRLApp.WebUI-X-Portable:hwui", version.ref = "webuiXPortable" }
 webuix-helper = { module = "com.github.MMRLApp.WebUI-X-Portable:helper", version.ref = "webuiXPortable" }
 
 [plugins]

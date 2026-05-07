@@ -2,19 +2,21 @@ package com.dergoogler.mmrl.platform.content
 
 import android.os.IBinder
 import android.os.Parcelable
+import com.dergoogler.mmrl.platform.stub.IServiceManager
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import com.dergoogler.mmrl.platform.stub.IServiceManager
 
 interface IService {
     val name: String
+
     fun create(manager: IServiceManager): IBinder
 }
 
 @Parcelize
 class Service<T : IService>(
-    private val className: String
-) : Parcelable, IService {
+    private val className: String,
+) : Parcelable,
+    IService {
     @IgnoredOnParcel
     private val cls: Class<T> by lazy {
         @Suppress("UNCHECKED_CAST")
@@ -37,7 +39,5 @@ class Service<T : IService>(
 
     override val name: String get() = original.name
 
-    override fun create(manager: IServiceManager): IBinder {
-        return original.create(manager)
-    }
+    override fun create(manager: IServiceManager): IBinder = original.create(manager)
 }

@@ -25,34 +25,34 @@ data class Repo(
 
     val isUpdateJson get() = name == UPDATE_JSON
 
-    override fun equals(other: Any?): Boolean {
-        return when (other) {
+    override fun equals(other: Any?): Boolean =
+        when (other) {
             is Repo -> url == other.url
             else -> false
         }
-    }
 
-    override fun hashCode(): Int {
-        return url.hashCode()
-    }
+    override fun hashCode(): Int = url.hashCode()
 
-    fun copy(modulesJson: ModulesJson) = copy(
-        name = modulesJson.name,
-        website = modulesJson.website,
-        support = modulesJson.support,
-        donate = modulesJson.donate,
-        submission = modulesJson.submission,
-        cover = modulesJson.cover,
-        description = modulesJson.description,
-        metadata = RepoMetadata(
-            version = modulesJson.metadata.version,
-            timestamp = modulesJson.metadata.timestamp,
-            size = modulesJson.modules.size
+    fun copy(modulesJson: ModulesJson) =
+        copy(
+            name = modulesJson.name,
+            website = modulesJson.website,
+            support = modulesJson.support,
+            donate = modulesJson.donate,
+            submission = modulesJson.submission,
+            cover = modulesJson.cover,
+            description = modulesJson.description,
+            metadata =
+                RepoMetadata(
+                    version = modulesJson.metadata.version,
+                    timestamp = modulesJson.metadata.timestamp,
+                    size = modulesJson.modules.size,
+                ),
         )
-    )
 
     companion object {
         fun String.toRepo() = Repo(url = this)
+
         fun example() = RepoState.example().toRepo()
 
         const val UPDATE_JSON = "Update Json"
@@ -67,10 +67,11 @@ data class RepoMetadata(
     val size: Int,
 ) {
     companion object {
-        fun default() = RepoMetadata(
-            version = ModulesJson.CURRENT_VERSION,
-            timestamp = 0f,
-            size = 0
-        )
+        fun default() =
+            RepoMetadata(
+                version = ModulesJson.CURRENT_VERSION,
+                timestamp = 0f,
+                size = 0,
+            )
     }
 }

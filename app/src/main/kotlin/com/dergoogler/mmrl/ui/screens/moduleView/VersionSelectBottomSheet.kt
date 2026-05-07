@@ -27,12 +27,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.database.entity.Repo
+import com.dergoogler.mmrl.ext.ignoreParentPadding
 import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.LabelItem
-import com.dergoogler.mmrl.ui.component.VersionItemBottomSheet
-import com.dergoogler.mmrl.ext.ignoreParentPadding
 import com.dergoogler.mmrl.ui.component.LabelItemDefaults
+import com.dergoogler.mmrl.ui.component.VersionItemBottomSheet
 import com.dergoogler.mmrl.utils.toFormattedDateSafely
 
 @Composable
@@ -47,11 +47,11 @@ fun VersionSelectBottomSheet(
 ) = BottomSheet(onDismissRequest = onClose) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(
             items = versions,
-            key = { it.first.url + it.second.versionCode }
+            key = { it.first.url + it.second.versionCode },
         ) { (repo, item) ->
             VersionItem(
                 isBlacklisted = isBlacklisted,
@@ -59,7 +59,7 @@ fun VersionSelectBottomSheet(
                 repo = repo,
                 localVersionCode = localVersionCode,
                 isProviderAlive = isProviderAlive,
-                onDownload = { onDownload(item, it) }
+                onDownload = { onDownload(item, it) },
             )
 
             val progress = getProgress(item)
@@ -67,11 +67,12 @@ fun VersionSelectBottomSheet(
                 LinearProgressIndicator(
                     progress = { progress },
                     strokeCap = StrokeCap.Round,
-                    modifier = Modifier
-                        .height(2.dp)
-                        .padding(horizontal = 20.dp)
-                        .ignoreParentPadding(vertical = 2.dp)
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .height(2.dp)
+                            .padding(horizontal = 20.dp)
+                            .ignoreParentPadding(vertical = 2.dp)
+                            .fillMaxWidth(),
                 )
             }
         }
@@ -88,47 +89,51 @@ private fun VersionItem(
     isBlacklisted: Boolean,
 ) {
     var open by remember { mutableStateOf(false) }
-    if (open) VersionItemBottomSheet(
-        isBlacklisted = isBlacklisted,
-        isUpdate = false,
-        item = item,
-        isProviderAlive = isProviderAlive,
-        onClose = { open = false },
-        onDownload = onDownload
-    )
+    if (open) {
+        VersionItemBottomSheet(
+            isBlacklisted = isBlacklisted,
+            isUpdate = false,
+            item = item,
+            isProviderAlive = isProviderAlive,
+            onClose = { open = false },
+            onDownload = onDownload,
+        )
+    }
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 1.dp,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(20.dp),
     ) {
         Row(
-            modifier = Modifier
-                .clickable(onClick = { open = true })
-                .padding(all = 16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .clickable(onClick = { open = true })
+                    .padding(all = 16.dp)
+                    .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = item.versionDisplay,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
 
                     if (localVersionCode < item.versionCode) {
                         LabelItem(
                             text = stringResource(id = R.string.module_new),
-                            style = LabelItemDefaults.style.copy(
-                                containerColor = MaterialTheme.colorScheme.error,
-                                contentColor = MaterialTheme.colorScheme.onError
-                            )
+                            style =
+                                LabelItemDefaults.style.copy(
+                                    containerColor = MaterialTheme.colorScheme.error,
+                                    contentColor = MaterialTheme.colorScheme.onError,
+                                ),
                         )
                     }
                 }
@@ -136,7 +141,7 @@ private fun VersionItem(
                 Text(
                     text = stringResource(id = R.string.view_module_provided, repo.name),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
 
@@ -144,7 +149,7 @@ private fun VersionItem(
                 Text(
                     text = item.timestamp.toFormattedDateSafely,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
         }

@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.model.online.OnlineModule
+import com.dergoogler.mmrl.model.online.VersionItem
 
 @Entity(tableName = "onlineModules", primaryKeys = ["id", "repoUrl"])
 data class OnlineModuleEntity(
@@ -14,10 +15,8 @@ data class OnlineModuleEntity(
     val versionCode: Int,
     val author: String,
     val description: String? = null,
-
     val maxApi: Int? = null,
     val minApi: Int? = null,
-
     val size: Int? = null,
     val categories: List<String>? = null,
     val icon: String? = null,
@@ -29,12 +28,11 @@ data class OnlineModuleEntity(
     val license: String? = "",
     val readme: String? = null,
     val verified: Boolean? = null,
-
     val require: List<String>? = null,
     val devices: List<String>? = null,
     val arch: List<String>? = null,
     val permissions: List<String>? = null,
-
+    val stars: Int? = null,
     @Embedded val manager: ModuleManagerEntity? = null,
     @Embedded val root: ModuleRootEntity? = null,
     @Embedded val note: ModuleNoteEntity? = null,
@@ -76,40 +74,43 @@ data class OnlineModuleEntity(
         require = original.require,
         devices = original.devices,
         arch = original.arch,
-        blacklist = BlacklistEntity(blacklist)
+        blacklist = BlacklistEntity(blacklist),
+        stars = original.stars
     )
 
-    fun toModule() = OnlineModule(
-        repoUrl = repoUrl,
-        id = id,
-        name = name,
-        version = version,
-        versionCode = versionCode,
-        author = author,
-        description = description,
-        track = track.toTrack(),
-        note = note?.toNote(),
-        root = root?.toRoot(),
-        features = features?.toFeatures(),
-        versions = listOf(),
-        maxApi = maxApi,
-        minApi = minApi,
-        size = size,
-        categories = categories,
-        icon = icon,
-        homepage = homepage,
-        donate = donate,
-        support = support,
-        cover = cover,
-        screenshots = screenshots,
-        license = license,
-        readme = readme,
-        verified = verified,
-        manager = manager?.toManager(),
-        permissions = permissions,
-        require = require,
-        devices = devices,
-        arch = arch,
-        blacklist = blacklist?.toBlacklist()
-    )
+    fun toModule(versions: List<VersionItem> = emptyList()) =
+        OnlineModule(
+            repoUrl = repoUrl,
+            id = id,
+            name = name,
+            version = version,
+            versionCode = versionCode,
+            author = author,
+            description = description,
+            track = track.toTrack(),
+            note = note?.toNote(),
+            root = root?.toRoot(),
+            features = features?.toFeatures(),
+            versions = versions,
+            maxApi = maxApi,
+            minApi = minApi,
+            size = size,
+            categories = categories,
+            icon = icon,
+            homepage = homepage,
+            donate = donate,
+            support = support,
+            cover = cover,
+            screenshots = screenshots,
+            license = license,
+            readme = readme,
+            verified = verified,
+            manager = manager?.toManager(),
+            permissions = permissions,
+            require = require,
+            devices = devices,
+            arch = arch,
+            blacklist = blacklist?.toBlacklist(),
+            stars = stars
+        )
 }

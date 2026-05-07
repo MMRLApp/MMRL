@@ -27,16 +27,18 @@ internal fun Alerts() {
     val viewModel = LocalModuleViewModel.current
     val module = LocalOnlineModule.current
 
-    val manager = remember(module) {
-        module.manager(viewModel.platform)
-    }
+    val manager =
+        remember(module) {
+            module.manager(viewModel.platform)
+        }
 
     module.hasBlacklist {
         var open by remember { mutableStateOf(false) }
         if (open) {
             BlacklistBottomSheet(
                 module = it,
-                onClose = { open = false })
+                onClose = { open = false },
+            )
         }
 
         Alert(

@@ -22,41 +22,42 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 
 @Destination<RootGraph>
 @Composable
-fun SearchScreen() = LocalScreenProvider {
-    val viewModel = hiltViewModel<SearchViewModel>()
-    val list by viewModel.online.collectAsStateWithLifecycle()
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
+fun SearchScreen() =
+    LocalScreenProvider {
+        val viewModel = hiltViewModel<SearchViewModel>()
+        val list by viewModel.online.collectAsStateWithLifecycle()
+        val query by viewModel.query.collectAsStateWithLifecycle()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val listState = rememberLazyListState()
 
-    ResponsiveScaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            BlurSearchToolbar(
-                isSearch = true,
-                query = query,
-                autoFocus = false,
-                onQueryChange = viewModel::search,
-                title = {},
+        ResponsiveScaffold(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            topBar = {
+                BlurSearchToolbar(
+                    isSearch = true,
+                    query = query,
+                    autoFocus = false,
+                    onQueryChange = viewModel::search,
+                    title = {},
+                )
+            },
+            contentWindowInsets = WindowInsets.none,
+        ) { innerPadding ->
+            if (viewModel.isLoading) {
+                Loading()
+            }
+
+            if (list.isEmpty() && !viewModel.isLoading) {
+                PageIndicator(
+                    icon = R.drawable.cloud,
+                    text = R.string.search_empty,
+                )
+            }
+
+            ModulesList(
+                innerPadding = innerPadding,
+                state = listState,
+                list = list,
             )
-        },
-        contentWindowInsets = WindowInsets.none
-    ) { innerPadding ->
-        if (viewModel.isLoading) {
-            Loading()
         }
-
-        if (list.isEmpty() && !viewModel.isLoading) {
-            PageIndicator(
-                icon = R.drawable.cloud,
-                text = R.string.search_empty,
-            )
-        }
-
-        ModulesList(
-            innerPadding = innerPadding,
-            state = listState,
-            list = list,
-        )
     }
-}

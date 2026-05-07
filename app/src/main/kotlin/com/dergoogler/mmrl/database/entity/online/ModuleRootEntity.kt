@@ -16,9 +16,10 @@ data class ModuleRootEntity(
         apatch = original?.apatch,
     )
 
-    fun toRoot() = ModuleRoot(
-        magisk = magisk,
-        kernelsu = kernelsu,
-        apatch = apatch,
-    )
+    fun toRoot() =
+        ModuleRoot(
+            magisk = magisk,
+            kernelsu = kernelsu,
+            apatch = apatch,
+        )
 }

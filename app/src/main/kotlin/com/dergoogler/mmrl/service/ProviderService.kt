@@ -20,7 +20,6 @@ import com.dergoogler.mmrl.utils.initPlatform
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-
 class ProviderService : LifecycleService() {
     override fun onCreate() {
         Timber.d("onCreate")
@@ -35,7 +34,11 @@ class ProviderService : LifecycleService() {
         super.onDestroy()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onStartCommand(
+        intent: Intent?,
+        flags: Int,
+        startId: Int,
+    ): Int {
         super.onStartCommand(intent, flags, startId)
 
         if (intent == null) {
@@ -53,17 +56,19 @@ class ProviderService : LifecycleService() {
     }
 
     private fun baseNotificationBuilder() =
-        NotificationCompat.Builder(this, NotificationUtils.CHANNEL_ID_PROVIDER)
+        NotificationCompat
+            .Builder(this, NotificationUtils.CHANNEL_ID_PROVIDER)
             .setSmallIcon(R.drawable.launcher_outline)
 
     private fun setForeground() {
-        val notification = baseNotificationBuilder()
-            .setContentTitle("Provider Service is running")
-            .setSilent(true)
-            .setOngoing(true)
-            .setGroup(GROUP_KEY)
-            .setGroupSummary(true)
-            .build()
+        val notification =
+            baseNotificationBuilder()
+                .setContentTitle("Provider Service is running")
+                .setSilent(true)
+                .setOngoing(true)
+                .setGroup(GROUP_KEY)
+                .setGroupSummary(true)
+                .build()
 
         startForeground(NotificationUtils.NOTIFICATION_ID_PROVIDER, notification)
     }
@@ -73,28 +78,33 @@ class ProviderService : LifecycleService() {
             private set
         private const val GROUP_KEY = "PROVIDER_SERVICE_GROUP_KEY"
 
-        suspend fun init(context: Context, platform: Platform) = if (!isActive) {
+        suspend fun init(
+            context: Context,
+            platform: Platform,
+        ) = if (!isActive) {
             initPlatform(context, platform)
-        } else isActive
+        } else {
+            isActive
+        }
 
         fun start(
             context: Context,
             mode: WorkingMode,
         ) {
-            val intent = Intent().apply {
-                component = ComponentName(
-                    context.packageName,
-                    ProviderService::class.java.name
-                )
-                putExtra(PLATFORM_KEY, mode.toPlatform())
-            }
+            val intent =
+                Intent().apply {
+                    component =
+                        ComponentName(
+                            context.packageName,
+                            ProviderService::class.java.name,
+                        )
+                    putExtra(PLATFORM_KEY, mode.toPlatform())
+                }
 
             context.startForegroundService(intent)
         }
 
-        fun stop(
-            context: Context,
-        ) {
+        fun stop(context: Context) {
             val intent = Intent(context, ProviderService::class.java)
             context.stopService(intent)
         }

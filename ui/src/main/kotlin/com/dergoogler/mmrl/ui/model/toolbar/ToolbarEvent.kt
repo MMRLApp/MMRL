@@ -40,7 +40,10 @@ data class ToolbarEvent(
     val title: Any? = null,
     @DrawableRes val icon: Int = com.dergoogler.mmrl.ui.R.drawable.mmrl_logo,
 ) {
-    private fun checkDateRange(startDate: String, endDate: String): Boolean {
+    private fun checkDateRange(
+        startDate: String,
+        endDate: String,
+    ): Boolean {
         val currentDateTime = LocalDateTime.now()
         val currentMonthDay = MonthDay.from(currentDateTime)
         val currentTime = currentDateTime.toLocalTime()
@@ -49,9 +52,12 @@ data class ToolbarEvent(
         val (endMonthDay, endTime) = parseMonthDayTime(endDate)
 
         val isInDateRange =
-            currentMonthDay.isAfter(startMonthDay) && currentMonthDay.isBefore(endMonthDay) ||
-                    currentMonthDay == startMonthDay && currentTime.isAfter(startTime) ||
-                    currentMonthDay == endMonthDay && currentTime.isBefore(endTime)
+            currentMonthDay.isAfter(startMonthDay) &&
+                currentMonthDay.isBefore(endMonthDay) ||
+                currentMonthDay == startMonthDay &&
+                currentTime.isAfter(startTime) ||
+                currentMonthDay == endMonthDay &&
+                currentTime.isBefore(endTime)
 
         return isInDateRange
     }
@@ -65,13 +71,14 @@ data class ToolbarEvent(
     }
 
     @Composable
-    fun getTitle(): String? = title.nullable {
-        when (it) {
-            is Int -> stringResource(it)
-            is String -> it
-            else -> null
+    fun getTitle(): String? =
+        title.nullable {
+            when (it) {
+                is Int -> stringResource(it)
+                is String -> it
+                else -> null
+            }
         }
-    }
 
     val isActive = checkDateRange(start, end)
 }

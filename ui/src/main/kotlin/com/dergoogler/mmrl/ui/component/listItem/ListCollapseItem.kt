@@ -52,16 +52,21 @@ fun ListCollapseItem(
     val layoutDirection = LocalLayoutDirection.current
     val start by remember {
         derivedStateOf {
-            if (!iconToRight) contentPaddingValues.calculateStartPadding(
-                layoutDirection
-            ) else contentPaddingValues.calculateEndPadding(layoutDirection)
+            if (!iconToRight) {
+                contentPaddingValues.calculateStartPadding(
+                    layoutDirection,
+                )
+            } else {
+                contentPaddingValues.calculateEndPadding(layoutDirection)
+            }
         }
     }
     var isExpanded by remember { mutableStateOf(isInitiallyExpanded) }
 
     val rotation by animateFloatAsState(
         targetValue = if (isExpanded) 180f else 0f,
-        animationSpec = tween(durationMillis = 300), label = title
+        animationSpec = tween(durationMillis = 300),
+        label = title,
     )
 
     val onClick: () -> Unit = {
@@ -71,55 +76,57 @@ fun ListCollapseItem(
     val icon = if (isExpanded) R.drawable.chevron_up else R.drawable.chevron_down
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .animateContentSize()
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .animateContentSize(),
     ) {
         Row(
-            modifier = modifier
-                .alpha(alpha = if (enabled) 1f else 0.5f)
-                .combinedClickable(
-                    enabled = enabled,
-                    onClick = onClick,
-                    interactionSource = interactionSource,
-                    indication = ripple()
-                )
-                .padding(contentPaddingValues)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                modifier
+                    .alpha(alpha = if (enabled) 1f else 0.5f)
+                    .combinedClickable(
+                        enabled = enabled,
+                        onClick = onClick,
+                        interactionSource = interactionSource,
+                        indication = ripple(),
+                    ).padding(contentPaddingValues)
+                    .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             if (!iconToRight) {
                 Icon(
-                    modifier = Modifier
-                        .size(itemTextStyle.iconSize)
-                        .graphicsLayer(rotationZ = rotation),
+                    modifier =
+                        Modifier
+                            .size(itemTextStyle.iconSize)
+                            .graphicsLayer(rotationZ = rotation),
                     painter = painterResource(id = icon),
                     contentDescription = null,
-                    tint = LocalContentColor.current
+                    tint = LocalContentColor.current,
                 )
 
                 Spacer(modifier = Modifier.width(start))
             }
-
 
             BaseListContent(
                 modifier = Modifier.weight(1f),
                 title = title,
                 desc = desc,
                 itemTextStyle = itemTextStyle,
-                base = base
+                base = base,
             )
 
             if (iconToRight) {
                 Spacer(modifier = Modifier.width(start))
 
                 Icon(
-                    modifier = Modifier
-                        .size(itemTextStyle.iconSize)
-                        .graphicsLayer(rotationZ = rotation),
+                    modifier =
+                        Modifier
+                            .size(itemTextStyle.iconSize)
+                            .graphicsLayer(rotationZ = rotation),
                     painter = painterResource(id = icon),
                     contentDescription = null,
-                    tint = LocalContentColor.current
+                    tint = LocalContentColor.current,
                 )
             }
         }

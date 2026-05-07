@@ -13,4 +13,6 @@
     <string name="installation_aborted_due_to_an_error">! Installazione interrotta a causa di un errore</string>
     <string name="install_view_installing">- Installazione %1$s</string>
     <string name="module_not_found">! Modulo non trovato.</string>
+    <string name="execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action">- Esecuzione fallita. Prova a utilizzare Shell per l\'esecuzione dell\'azione, Impostazioni → Moduli → Usa Shell per l\'azione del modulo.</string>
+    <string name="is_not_a_module_file_magisk_modules_must_be_zip_files_skipping">! %1$s non è un file del modulo. i moduli Magisk devono essere files .zip . Saltando…</string>
 </resources>

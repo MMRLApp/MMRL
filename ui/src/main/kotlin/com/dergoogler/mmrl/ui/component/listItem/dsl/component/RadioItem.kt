@@ -2,9 +2,7 @@ package com.dergoogler.mmrl.ui.component.listItem.dsl.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Switch
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -24,20 +22,21 @@ fun ListScope.RadioItem(
 ) {
     Item(
         enabled = enabled,
-        modifier = Modifier.selectable(
-            selected = selected,
-            enabled = enabled,
-            onClick = onClick,
-            role = Role.RadioButton,
-            interactionSource = interactionSource,
-            indication = ripple()
-        )
+        modifier =
+            Modifier.selectable(
+                selected = selected,
+                enabled = enabled,
+                onClick = onClick,
+                role = Role.RadioButton,
+                interactionSource = interactionSource,
+                indication = ripple(),
+            ),
     ) {
         content()
         End {
             RadioButton(
                 selected = selected,
-                onClick = null
+                onClick = null,
             )
         }
     }

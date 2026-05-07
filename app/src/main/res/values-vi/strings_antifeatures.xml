@@ -8,4 +8,24 @@
     <string name="knownvuln_desc">Mô-đun này chứa lỗ hổng bảo mật.</string>
     <string name="nosourcesince_desc">Mã nguồn không còn nữa, không thể cập nhật được.</string>
     <string name="nonfreeadd_name">Addons không miễn phí</string>
+    <string name="knownvuln_name">Lỗ hổng đã biết</string>
+    <string name="closedsource_desc">Module này không phải là mã nguồn mở, mã nguồn của nó không được công khai để xem xét, chỉnh sửa hoặc phân phối lại</string>
+    <string name="closedsource_name">Mã nguồn đóng</string>
+    <string name="llm_desc">Mô-đun này có thể được viết một phần hoặc toàn bộ bởi LLM</string>
+    <string name="llm_name">Mô hình ngôn ngữ lớn</string>
+    <string name="unaskedremoval_desc">Mô-đun này xóa ứng dụng, tệp hoặc các mô-đun khác mà không có sự đồng ý của người dùng.</string>
+    <string name="unaskedremoval_name">Tự ý gỡ bỏ</string>
+    <string name="obfuscation_desc">Mã nguồn của mô-đun có thể đã bị làm xáo trộn, gây khó khăn cho việc tìm hiểu, kiểm định hoặc chỉnh sửa.</string>
+    <string name="obfuscation_name">Xáo trộn mã</string>
+    <string name="nsfw_name">Nội dung nhạy cảm</string>
+    <string name="nonfreenet_desc">Mô-đun này quảng bá hoặc phụ thuộc hoàn toàn vào một dịch vụ mạng không thể thay đổi hoặc không tự do.</string>
+    <string name="tracking_name">Theo dõi</string>
+    <string name="nosourcesince_name">Không còn mã nguồn từ</string>
+    <string name="nonfreeassets_name">Tài nguyên không tự do</string>
+    <string name="nonfreeassets_desc">Mô-đun này chứa các tài nguyên không tự do.</string>
+    <string name="nonfreedep_name">Các phụ thuộc không tự do</string>
+    <string name="nonfreedep_desc">Mô-đun này phụ thuộc vào các mô-đun không tự do khác.</string>
+    <string name="nonfreenet_name">Dịch vụ mạng không tự do</string>
+    <string name="upstreamnonfree_desc">Mã nguồn gốc không hoàn toàn mở.</string>
+    <string name="upstreamnonfree_name">Nguồn gốc không tự do</string>
 </resources>

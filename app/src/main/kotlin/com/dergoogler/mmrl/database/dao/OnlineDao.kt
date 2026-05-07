@@ -12,7 +12,10 @@ interface OnlineDao {
     suspend fun getAllById(id: String): List<OnlineModuleEntity>
 
     @Query("SELECT * FROM onlineModules WHERE id = :id AND repoUrl = :repoUrl")
-    suspend fun getAllByIdAndUrl(id: String, repoUrl: String): List<OnlineModuleEntity>
+    suspend fun getAllByIdAndUrl(
+        id: String,
+        repoUrl: String,
+    ): List<OnlineModuleEntity>
 
     @Query("SELECT * FROM onlineModules WHERE repoUrl = :repoUrl")
     suspend fun getAllByUrl(repoUrl: String): List<OnlineModuleEntity>

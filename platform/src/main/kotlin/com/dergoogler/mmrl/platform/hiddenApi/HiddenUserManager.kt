@@ -16,13 +16,12 @@ import com.dergoogler.mmrl.platform.PlatformManager.getSystemService
 import com.dergoogler.mmrl.platform.stub.IServiceManager
 import java.util.Random
 
-
 class HiddenUserManager(
     private val service: IServiceManager,
 ) {
     private val userManager by lazy {
         IUserManager.Stub.asInterface(
-            service.getSystemService(Context.USER_SERVICE)
+            service.getSystemService(Context.USER_SERVICE),
         )
     }
 
@@ -38,13 +37,12 @@ class HiddenUserManager(
                     "getUsers",
                     Boolean::class.javaPrimitiveType,
                     Boolean::class.javaPrimitiveType,
-                    Boolean::class.javaPrimitiveType
-                )
-                .invoke(
+                    Boolean::class.javaPrimitiveType,
+                ).invoke(
                     userManager,
                     excludePartial,
                     excludeDying,
-                    excludePreCreated
+                    excludePreCreated,
                 ) as List<UserInfo>
         } catch (e: NoSuchMethodException) {
             Log.w("HiddenUserManager", "Error getting users, falling back to old method.", e)
@@ -54,9 +52,8 @@ class HiddenUserManager(
                     .getMethod(
                         "getUsers",
                         Boolean::class.javaPrimitiveType,
-                        Boolean::class.javaPrimitiveType
-                    )
-                    .invoke(userManager, excludePartial, excludeDying) as List<UserInfo>
+                        Boolean::class.javaPrimitiveType,
+                    ).invoke(userManager, excludePartial, excludeDying) as List<UserInfo>
             } catch (e2: NoSuchMethodException) {
                 Log.w("HiddenUserManager", "Error getting users, falling back to old method.", e2)
 
@@ -68,20 +65,23 @@ class HiddenUserManager(
     }
 
     @Throws(RemoteException::class)
-    fun getUsers(): List<UserInfo> = getUsers(
-        excludePartial = true,
-        excludeDying = true,
-        excludePreCreated = true
-    )
+    fun getUsers(): List<UserInfo> =
+        getUsers(
+            excludePartial = true,
+            excludeDying = true,
+            excludePreCreated = true,
+        )
 
-    fun getProfileIds(userId: Int, enabledOnly: Boolean): IntArray {
-        return try {
+    fun getProfileIds(
+        userId: Int,
+        enabledOnly: Boolean,
+    ): IntArray =
+        try {
             userManager.getProfileIds(userId, enabledOnly)
         } catch (e: RemoteException) {
             Log.w("HiddenUserManager", "Error getting profile ids.", e)
             IntArray(0)
         }
-    }
 
     fun getUserProfiles(): List<UserHandle> {
         val userIds: IntArray = getProfileIds(myUserId, true)
@@ -92,7 +92,10 @@ class HiddenUserManager(
 
     fun getUserProfiles(enabledOnly: Boolean): List<UserHandle> = getUserProfiles(myUserId, enabledOnly)
 
-    fun getUserProfiles(userId: Int, enabledOnly: Boolean): List<UserHandle> {
+    fun getUserProfiles(
+        userId: Int,
+        enabledOnly: Boolean,
+    ): List<UserHandle> {
         val userIds: IntArray = userManager.getProfileIds(userId, enabledOnly)
         return convertUserIdsToUserHandles(userIds)
     }
@@ -103,7 +106,10 @@ class HiddenUserManager(
 
     val myUserId get(): Int = getUserId(Process.myUid())
 
-    fun isSameUser(uid1: Int, uid2: Int): Boolean = getUserId(uid1) == getUserId(uid2)
+    fun isSameUser(
+        uid1: Int,
+        uid2: Int,
+    ): Boolean = getUserId(uid1) == getUserId(uid2)
 
     private fun convertUserIdsToUserHandles(userIds: IntArray): List<UserHandle> {
         val result: MutableList<UserHandle> = ArrayList(userIds.size)
@@ -119,7 +125,7 @@ class HiddenUserManager(
         const val PER_USER_RANGE: Int = 100000
 
         const val MU_ENABLED: Boolean = true
-        val NUM_CACHED_USERS = if (MU_ENABLED) 8 else 0;
+        val NUM_CACHED_USERS = if (MU_ENABLED) 8 else 0
 
         val CACHED_USER_HANDLES: Array<UserHandle?> =
             arrayOfNulls(NUM_CACHED_USERS)
@@ -160,8 +166,8 @@ class HiddenUserManager(
                 USER_CURRENT_OR_SELF -> return CURRENT_OR_SELF
             }
 
-            if (userId >= MIN_SECONDARY_USER_ID
-                && userId < (MIN_SECONDARY_USER_ID + CACHED_USER_HANDLES.size)
+            if (userId >= MIN_SECONDARY_USER_ID &&
+                userId < (MIN_SECONDARY_USER_ID + CACHED_USER_HANDLES.size)
             ) {
                 return CACHED_USER_HANDLES[userId - MIN_SECONDARY_USER_ID] ?: NULL
             }
@@ -181,7 +187,7 @@ class HiddenUserManager(
                 }
                 if (extraUserHandleCache.size >= MAX_EXTRA_USER_HANDLE_CACHE_SIZE) {
                     extraUserHandleCache.removeAt(
-                        (Random()).nextInt(MAX_EXTRA_USER_HANDLE_CACHE_SIZE)
+                        (Random()).nextInt(MAX_EXTRA_USER_HANDLE_CACHE_SIZE),
                     )
                 }
                 val newHandle = userHandle(userId)
@@ -195,11 +201,9 @@ class HiddenUserManager(
             parcel.writeInt(userId)
             parcel.setDataPosition(0)
 
-
             val handle: UserHandle = UserHandle.CREATOR.createFromParcel(parcel)
             parcel.recycle()
             return handle
         }
     }
 }
-

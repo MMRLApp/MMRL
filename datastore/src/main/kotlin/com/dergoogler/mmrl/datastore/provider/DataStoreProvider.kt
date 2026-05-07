@@ -25,7 +25,7 @@ class DataStoreProvider(
         userPreferencesSerializer: UserPreferencesSerializer,
     ): DataStore<UserPreferences> =
         DataStoreFactory.create(
-            serializer = userPreferencesSerializer
+            serializer = userPreferencesSerializer,
         ) {
             context.dataStoreFile(fileName)
         }

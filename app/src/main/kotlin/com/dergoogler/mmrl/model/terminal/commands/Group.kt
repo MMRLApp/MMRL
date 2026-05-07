@@ -8,13 +8,17 @@ import com.dergoogler.mmrl.ui.activity.terminal.Terminal
 class Group : Command {
     override val name: String = "group"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
-            currentGroup = GroupBlock(
-                title = action.data.ifBlank { action.getProp<String>("title") }?.fixNewLines,
-                startLine = lineNumber,
-                initiallyExpanded = false
-            )
+            currentGroup =
+                GroupBlock(
+                    title = action.data.ifBlank { action.getProp<String>("title") }?.fixNewLines,
+                    startLine = lineNumber,
+                    initiallyExpanded = false,
+                )
         }
     }
 }
@@ -22,8 +26,10 @@ class Group : Command {
 class EndGroup : Command {
     override val name: String = "endgroup"
 
-    override fun run(action: ActionCommand, terminal: Terminal) {
-
+    override fun run(
+        action: ActionCommand,
+        terminal: Terminal,
+    ) {
         with(terminal) {
             currentGroup?.let {
                 console += it

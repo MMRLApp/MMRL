@@ -43,7 +43,7 @@ fun BottomSheet(
     windowInsets: WindowInsets = WindowInsets(0),
     properties: ModalBottomSheetProperties = ModalBottomSheetDefaults.properties,
     enabledNavigationSpacer: Boolean = true,
-    columnHorizontalAlignment: Alignment. Horizontal = Alignment.Start,
+    columnHorizontalAlignment: Alignment.Horizontal = Alignment.Start,
     content: @Composable ColumnScope.() -> Unit,
 ) = ModalBottomSheet(
     onDismissRequest,
@@ -64,11 +64,12 @@ fun BottomSheet(
     val maxHeight = LocalConfiguration.current.screenHeightDp.dp - statusBarHeight
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(unbounded = true)
-            .heightIn(max = maxHeight),
-        horizontalAlignment = columnHorizontalAlignment
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(unbounded = true)
+                .heightIn(max = maxHeight),
+        horizontalAlignment = columnHorizontalAlignment,
     ) {
         content()
         enabledNavigationSpacer.takeTrue {

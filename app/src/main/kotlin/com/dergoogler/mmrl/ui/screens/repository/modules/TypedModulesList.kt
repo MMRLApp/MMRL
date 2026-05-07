@@ -52,42 +52,45 @@ fun ScaffoldScope.TypedModulesList(
     val pad = remember(menu) { if (menu.repoListMode == RepoListMode.Compact) 0.dp else 16.dp }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
     ) {
         this@TypedModulesList.ResponsiveContent {
             LazyColumn(
                 state = state,
                 modifier = Modifier.fillMaxSize().hazeSource(LocalHazeState.current),
-                contentPadding = PaddingValues(
-                    top = innerPadding.calculateTopPadding() + pad,
-                    bottom = pad,
-                    start = innerPadding.calculateStartPadding(layoutDirection) + pad,
-                    end = pad,
-                ),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                contentPadding =
+                    PaddingValues(
+                        top = innerPadding.calculateTopPadding() + pad,
+                        bottom = pad,
+                        start = innerPadding.calculateStartPadding(layoutDirection) + pad,
+                        end = pad,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 items(
                     items = list,
-                    key = { it.second.id }
+                    key = { it.second.id },
                 ) { (moduleState, module) ->
                     CompositionLocalProvider(
                         LocalOnlineModuleState provides moduleState,
-                        LocalOnlineModule provides module
+                        LocalOnlineModule provides module,
                     ) {
                         val click = fun() {
                             navigator.navigate(
-                                NewViewScreenDestination(repo, module)
+                                NewViewScreenDestination(repo, module),
                             )
                         }
 
                         when (menu.repoListMode) {
-                            RepoListMode.Compact -> ModuleItemCompact(
-                                onClick = click
-                            )
+                            RepoListMode.Compact ->
+                                ModuleItemCompact(
+                                    onClick = click,
+                                )
 
-                            RepoListMode.Detailed -> ModuleItemDetailed(
-                                onClick = click
-                            )
+                            RepoListMode.Detailed ->
+                                ModuleItemDetailed(
+                                    onClick = click,
+                                )
                         }
                     }
                 }
@@ -100,12 +103,13 @@ fun ScaffoldScope.TypedModulesList(
 
         VerticalFastScrollbar(
             state = state,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding()
-                )
+            modifier =
+                Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding(),
+                    ),
         )
     }
 }

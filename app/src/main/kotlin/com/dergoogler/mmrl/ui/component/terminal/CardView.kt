@@ -11,8 +11,9 @@ import com.dergoogler.mmrl.ui.component.text.BBCodeText
 fun CardView(card: CardBlock) {
     Card {
         Column(
-            modifier = Modifier
-                .relative()
+            modifier =
+                Modifier
+                    .relative(),
         ) {
             card.lines.forEach { (index, line) ->
                 Line(index = index) {

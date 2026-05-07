@@ -5,7 +5,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidedValue
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dergoogler.mmrl.ui.component.StatusBarStyle
@@ -21,26 +20,27 @@ fun MMRLAppTheme(
     content: @Composable () -> Unit,
 ) {
     val color = Colors.getColor(id = themeColor)
-    val colorScheme = when {
-        darkMode -> color.darkColorScheme
-        else -> color.lightColorScheme
-    }
+    val colorScheme =
+        when {
+            darkMode -> color.darkColorScheme
+            else -> color.lightColorScheme
+        }
 
     StatusBarStyle(
-        darkMode = darkMode
+        darkMode = darkMode,
     )
 
     if (providerValues != null) {
         CompositionLocalProvider(
             LocalNavController provides navController,
             LocalTypography provides MaterialTheme.typography,
-            *providerValues
+            *providerValues,
         ) {
             MaterialTheme(
                 colorScheme = colorScheme,
                 shapes = Shapes,
                 typography = Typography,
-                content = content
+                content = content,
             )
         }
     } else {
@@ -48,7 +48,7 @@ fun MMRLAppTheme(
             colorScheme = colorScheme,
             shapes = Shapes,
             typography = Typography,
-            content = content
+            content = content,
         )
     }
 }

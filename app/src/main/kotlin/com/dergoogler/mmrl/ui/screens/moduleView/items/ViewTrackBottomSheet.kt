@@ -35,27 +35,28 @@ fun ViewTrackBottomSheet(
     tracks: List<Pair<Repo, TrackJson>>,
 ) = BottomSheet(
     onDismissRequest = onClose,
-    enabledNavigationSpacer = false
+    enabledNavigationSpacer = false,
 ) {
     Text(
         text = stringResource(id = R.string.view_module_view_track),
         style = MaterialTheme.typography.headlineSmall,
-        modifier = Modifier.align(Alignment.CenterHorizontally)
+        modifier = Modifier.align(Alignment.CenterHorizontally),
     )
 
     LazyColumn(
-        modifier = Modifier
-            .padding(top = 16.dp)
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        modifier =
+            Modifier
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(
             items = tracks,
-            key = { it.first.url }
+            key = { it.first.url },
         ) { (repo, track) ->
             ValueItem(
                 repo = repo,
-                track = track
+                track = track,
             )
         }
 
@@ -73,50 +74,52 @@ private fun ValueItem(
     modifier = Modifier.fillMaxWidth(),
     tonalElevation = 6.dp,
     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-    shape = RoundedCornerShape(15.dp)
+    shape = RoundedCornerShape(15.dp),
 ) {
     Row(
         modifier = Modifier.padding(all = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             modifier = Modifier.size(30.dp),
             painter = painterResource(id = R.drawable.code_asterix),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Column(
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .fillMaxWidth()
+            modifier =
+                Modifier
+                    .padding(start = 16.dp)
+                    .fillMaxWidth(),
         ) {
             Text(
                 text = repo.name,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = stringResource(
-                    id = R.string.view_module_type,
-                    track.type.name.replace("_", " ")
-                ),
+                text =
+                    stringResource(
+                        id = R.string.view_module_type,
+                        track.type.name.replace("_", " "),
+                    ),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.outline
+                color = MaterialTheme.colorScheme.outline,
             )
 
             track.added?.let {
-
                 Text(
-                    text = stringResource(
-                        id = R.string.view_module_added,
-                        it.toFormattedDateSafely
-                    ),
+                    text =
+                        stringResource(
+                            id = R.string.view_module_added,
+                            it.toFormattedDateSafely,
+                        ),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.outline
+                    color = MaterialTheme.colorScheme.outline,
                 )
             }
         }

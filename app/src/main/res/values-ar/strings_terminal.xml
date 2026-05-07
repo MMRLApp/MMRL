@@ -8,4 +8,7 @@
     <string name="install_view_module_info">معلومات الوحدة</string>
     <string name="copying_failed">فشل النسخ</string>
     <string name="unable_to_gather_module_info">غير قادر على جمع معلومات الوحدة</string>
+    <string name="install_view_path">- المسار: %1$s</string>
+    <string name="install_view_installing">- جاري تحميل [color=primary]%1$s[/color]</string>
+    <string name="module_not_found">[color=red]الوحدة غير موجودة![/color]</string>
 </resources>

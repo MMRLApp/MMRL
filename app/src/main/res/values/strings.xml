@@ -35,6 +35,7 @@
     <string name="page_superuser">SuperUser</string>
     <string name="page_repository">Repository</string>
     <string name="page_modules">Modules</string>
+    <string name="meta_modules">Meta Modules</string>
     <string name="page_settings">Settings</string>
     <!-- Repository -->
     <string name="repository_empty">Repository is empty</string>
@@ -177,7 +178,7 @@
     <string name="settings_hide_fingerprint">Hide Fingerprint in Home</string>
     <string name="settings_hide_fingerprint_desc">Doesn\'t matter if it is a real or fake one</string>
     <string name="settings_check_modules_update">Check for Module Updates</string>
-    <string name="settings_check_modules_update_desc">Enables update check for installed moudles</string>
+    <string name="settings_check_modules_update_desc">Enables update check for installed modules</string>
     <string name="settings_check_modules_update_interval">Module update check interval</string>
     <string name="settings_check_modules_update_interval_desc">Select the time interval for checking your installed modules</string>
     <string name="settings_include_preleases">Include Pre-Releases</string>
@@ -237,6 +238,7 @@
     <string name="menu_pin_action">Pin Action</string>
     <string name="menu_pin_webui">Pin WebUI</string>
     <string name="menu_show_updated">Show Updated Time</string>
+    <string name="menu_show_stars">Show Stars</string>
     <string name="menu_show_antifeatures">Show Anti-Features</string>
     <string name="menu_show_category">Show Category</string>
     <string name="menu_export_modules_as_text">Export Modules as Text</string>
@@ -440,7 +442,7 @@
     <string name="settings_set_spoofed_wxp_desc">Set a custom spoofed WebUI X Portable Package name.</string>
     <string name="settings_enable_blur">Enable Blur</string>
     <string name="settings_enable_blur_desc">Enabled blur effect in components</string>
-    <string name="settings_hide_bottom_bar_labels">Hide Bottom Bar Lables</string>
+    <string name="settings_hide_bottom_bar_labels">Hide Bottom Bar Labels</string>
     <string name="failed_to_update_app_profile">Failed to update App Profile for %s</string>
     <string name="failed_to_update_sepolicy">Failed to update SELinux rules for %s</string>
     <string name="su_not_allowed">Couldn\'t grant Superuser access to %s</string>

@@ -33,20 +33,14 @@ object ShapeDefaults {
     val ExtraLarge: CornerBasedShape = ShapeTokens.CornerExtraLarge
 }
 
-fun CornerBasedShape.top(): CornerBasedShape {
-    return copy(bottomStart = CornerSize(0.0.dp), bottomEnd = CornerSize(0.0.dp))
-}
+fun CornerBasedShape.top(): CornerBasedShape = copy(bottomStart = CornerSize(0.0.dp), bottomEnd = CornerSize(0.0.dp))
 
-fun CornerBasedShape.bottom(): CornerBasedShape {
-    return copy(topStart = CornerSize(0.0.dp), topEnd = CornerSize(0.0.dp))
-}
+fun CornerBasedShape.bottom(): CornerBasedShape = copy(topStart = CornerSize(0.0.dp), topEnd = CornerSize(0.0.dp))
 
-fun CornerBasedShape.start(): CornerBasedShape {
-    return copy(topEnd = CornerSize(0.0.dp), bottomEnd = CornerSize(0.0.dp))
-}
+fun CornerBasedShape.start(): CornerBasedShape = copy(topEnd = CornerSize(0.0.dp), bottomEnd = CornerSize(0.0.dp))
 
-fun Shapes.fromToken(value: ShapeKeyTokens): Shape {
-    return when (value) {
+fun Shapes.fromToken(value: ShapeKeyTokens): Shape =
+    when (value) {
         ShapeKeyTokens.CornerExtraLarge -> extraLarge
         ShapeKeyTokens.CornerExtraLargeTop -> extraLarge.top()
         ShapeKeyTokens.CornerExtraSmall -> extraSmall
@@ -59,11 +53,9 @@ fun Shapes.fromToken(value: ShapeKeyTokens): Shape {
         ShapeKeyTokens.CornerNone -> RectangleShape
         ShapeKeyTokens.CornerSmall -> small
     }
-}
 
-fun CornerBasedShape.end(): CornerBasedShape {
-    return copy(topStart = CornerSize(0.0.dp), bottomStart = CornerSize(0.0.dp))
-}
+fun CornerBasedShape.end(): CornerBasedShape = copy(topStart = CornerSize(0.0.dp), bottomStart = CornerSize(0.0.dp))
 
 val ShapeKeyTokens.value: Shape
-    @Composable @ReadOnlyComposable get() = MaterialTheme.shapes.fromToken(this)
+    @Composable @ReadOnlyComposable
+    get() = MaterialTheme.shapes.fromToken(this)

@@ -27,14 +27,16 @@ fun ListScope.DownloadPathItem(
     onChange: (String) -> Unit,
 ) {
     var edit by remember { mutableStateOf(false) }
-    if (edit) OpenDocumentTreeDialog(
-        path = downloadPath,
-        onClose = { edit = false },
-        onConfirm = { if (it != downloadPath) onChange(it) }
-    )
+    if (edit) {
+        OpenDocumentTreeDialog(
+            path = downloadPath,
+            onClose = { edit = false },
+            onConfirm = { if (it != downloadPath) onChange(it) },
+        )
+    }
 
     ButtonItem(
-        onClick = { edit = true }
+        onClick = { edit = true },
     ) {
         Title(R.string.settings_download_path)
         Description(File(downloadPath).absolutePath)
@@ -67,12 +69,12 @@ private fun OpenDocumentTreeDialog(
         },
         dismissButton = {
             TextButton(
-                onClick = onClose
+                onClick = onClose,
             ) {
                 Text(text = stringResource(id = R.string.dialog_cancel))
             }
         },
-        launchKeyboard = false
+        launchKeyboard = false,
     ) {
         OutlinedTextField(
             textStyle = MaterialTheme.typography.bodyLarge,
@@ -80,7 +82,7 @@ private fun OpenDocumentTreeDialog(
             onValueChange = { name = it },
             shape = RoundedCornerShape(15.dp),
             label = { Text(text = Const.PUBLIC_DOWNLOADS.absolutePath) },
-            singleLine = true
+            singleLine = true,
         )
     }
 }

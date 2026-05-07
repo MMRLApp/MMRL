@@ -1,5 +1,6 @@
 package com.dergoogler.mmrl.ui.screens.repository
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
+import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.ui.component.listItem.dsl.List
 import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
@@ -29,25 +31,34 @@ import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 @Composable
 fun TopPicks(
     label: String,
+    @DrawableRes icon: Int? = null,
     onMoreClick: () -> Unit,
     list: List<OnlineModule>,
 ) {
-    val randomModules = remember(list) {
-        list.shuffled()
-            .sortedBy { if (it == OnlineModule.example()) 1 else 0 }
-    }
+    val randomModules =
+        remember(list) {
+            list
+                .shuffled()
+                .sortedBy { if (it == OnlineModule.example()) 1 else 0 }
+        }
 
     val pagerState =
         rememberPagerState(pageCount = { (randomModules.size + 2) / 3 })
 
     List {
         ButtonItem(
-            onClick = onMoreClick
+            onClick = onMoreClick,
         ) {
+            icon.nullable {
+                Icon(
+                    slot = ListItemSlot.Start,
+                    painter = painterResource(it),
+                )
+            }
             Title(label)
             Icon(
                 slot = ListItemSlot.End,
-                painter = painterResource(R.drawable.arrow_right)
+                painter = painterResource(R.drawable.arrow_right),
             )
         }
 
@@ -55,15 +66,17 @@ fun TopPicks(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxWidth()
-                .animateContentSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .animateContentSize(),
+            contentPadding = PaddingValues(horizontal = 16.dp),
         ) { page ->
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 6.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 6.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

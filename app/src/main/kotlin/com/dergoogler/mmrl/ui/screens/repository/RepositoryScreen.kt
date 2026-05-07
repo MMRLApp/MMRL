@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,6 +55,7 @@ import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.nullply
 import com.dergoogler.mmrl.ext.onClick
+import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
 import com.dergoogler.mmrl.ext.stripLinks
 import com.dergoogler.mmrl.model.ui.TopCategory
 import com.dergoogler.mmrl.ui.component.Cover
@@ -83,248 +83,295 @@ import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 
 @Destination<RootGraph>()
 @Composable
-fun RepositoryScreen(repo: Repo) = LocalScreenProvider {
-    val viewModel = RepositoryViewModel.build(repo)
-    val list by viewModel.online.collectAsStateWithLifecycle()
+fun RepositoryScreen(repo: Repo) =
+    LocalScreenProvider {
+        val viewModel = RepositoryViewModel.build(repo)
+        val list by viewModel.online.collectAsStateWithLifecycle()
 
-    val browser = LocalUriHandler.current
-    val density = LocalDensity.current
-    val navigator = LocalDestinationsNavigator.current
-    val hazeState = LocalHazeState.current
+        val browser = LocalUriHandler.current
+        val density = LocalDensity.current
+        val navigator = LocalDestinationsNavigator.current
+        val hazeState = LocalHazeState.current
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    val listState = rememberLazyListState()
+        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-    BackHandler(
-        enabled = viewModel.isSearch,
-        onBack = viewModel::closeSearch
-    )
+        // Use rememberSaveable to persist scroll position across navigation
+        val listState = rememberSaveableLazyListState(key = "repository_${repo.url}")
 
-    val modules = remember(list) { list.map { it.second } }
-    val topCategories = remember(modules) { TopCategory.fromModuleList(modules) }
+        BackHandler(
+            enabled = viewModel.isSearch,
+            onBack = viewModel::closeSearch,
+        )
 
-    var coverHeight by remember { mutableIntStateOf(0) }
-    var cardHeight by remember { mutableIntStateOf(0) }
+        val modules = remember(list) { list.map { it.second } }
+        val topCategories = remember(modules) { TopCategory.fromModuleList(modules) }
+        val metaModules = remember(modules) {
+            modules.filter {
+                it.permissions?.contains("kernelsu.permission.METAMODULE") == true
+            }
+        }
 
-    CompositionLocalProvider(
-        LocalRepo provides repo
-    ) {
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                BlurToolbar(
-                    fadeBackgroundIfNoBlur = true,
-                    navigationIcon = {
-                        IconButton(onClick = { navigator.popBackStack() }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.arrow_left),
-                                contentDescription = null
+        var coverHeight by remember { mutableIntStateOf(0) }
+        var cardHeight by remember { mutableIntStateOf(0) }
+
+        CompositionLocalProvider(
+            LocalRepo provides repo,
+        ) {
+            Scaffold(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = {
+                    BlurToolbar(
+                        fadeBackgroundIfNoBlur = true,
+                        navigationIcon = {
+                            IconButton(onClick = { navigator.popBackStack() }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.arrow_left),
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        title = {
+                            ToolbarTitle(
+                                modifier = Modifier.alpha(it),
+                                title = repo.name,
                             )
-                        }
-                    },
-                    title = {
-                        ToolbarTitle(
-                            modifier = Modifier.alpha(it),
-                            title = repo.name
-                        )
-                    },
-                    fade = true,
-                    scrollBehavior = scrollBehavior
-                )
-            },
-            contentWindowInsets = WindowInsets.none
-        ) { _ ->
-            ResponsiveContent {
-                if (viewModel.isLoading) {
-                    Loading()
-
-                    return@ResponsiveContent
-                }
-
-                if (list.isEmpty() && !viewModel.isLoading) {
-                    PageIndicator(
-                        icon = R.drawable.cloud,
-                        text = if (viewModel.isSearch) R.string.search_empty else R.string.repository_empty,
+                        },
+                        fade = true,
+                        scrollBehavior = scrollBehavior,
                     )
+                },
+                contentWindowInsets = WindowInsets.none,
+            ) { _ ->
+                ResponsiveContent {
+                    if (viewModel.isLoading) {
+                        Loading()
 
-                    return@ResponsiveContent
-                }
+                        return@ResponsiveContent
+                    }
 
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .hazeSource(state = hazeState),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    item {
-                        Box {
-                            Cover(
-                                modifier = Modifier
-                                    .fadingEdge(
-                                        brush = Brush.verticalGradient(
-                                            colors = listOf(Color.Transparent, Color.Black),
-                                            startY = Float.POSITIVE_INFINITY,
-                                            endY = 0f
-                                        )
-                                    )
-                                    .onGloballyPositioned { coordinates ->
-                                        coverHeight = coordinates.size.height
-                                    },
-                                url = repo.cover ?: "ERROR ME",
-                                errorIcon = R.drawable.box,
-                            )
+                    if (list.isEmpty() && !viewModel.isLoading) {
+                        PageIndicator(
+                            icon = R.drawable.cloud,
+                            text = if (viewModel.isSearch) R.string.search_empty else R.string.repository_empty,
+                        )
 
-                            Box(
-                                modifier = Modifier
-                                    .offset(y = 164.4.dp)
-                                    .align(Alignment.TopCenter)
-                                    .fillMaxWidth(0.85f)
-                                    .onGloballyPositioned { coordinates ->
-                                        cardHeight = coordinates.size.height
-                                    }
-                            ) {
-                                Card(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .background(
-                                            brush = Brush.linearGradient(
-                                                colors = listOf(
-                                                    MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                                        1.dp
-                                                    ),
-                                                    MaterialTheme.colorScheme.background
-                                                ),
-                                                start = Offset(0f, 0f),
-                                                end = Offset(
-                                                    Float.POSITIVE_INFINITY,
-                                                    Float.POSITIVE_INFINITY
-                                                )
-                                            ),
-                                            RoundedCornerShape(20.dp)
-                                        )
-                                        .border(
-                                            Dp.Hairline,
-                                            MaterialTheme.colorScheme.outlineVariant,
-                                            RoundedCornerShape(20.dp)
-                                        ),
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .relative()
-                                            .padding(16.dp),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                                    ) {
-                                        Text(
-                                            text = repo.name,
-                                            maxLines = 2,
-                                            overflow = TextOverflow.Ellipsis,
-                                            textAlign = TextAlign.Center,
-                                            style = MaterialTheme.typography.headlineMedium,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.onBackground,
-                                        )
+                        return@ResponsiveContent
+                    }
 
-                                        BBCodeText(
-                                            text = (repo.description
-                                                ?: stringResource(R.string.view_module_no_description)).stripLinks(
-                                                "<URL>"
-                                            ),
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            textAlign = TextAlign.Center,
-                                            color = MaterialTheme.colorScheme.outlineVariant,
-                                            lineHeight = 20.sp
-                                        )
-
-                                        FlowRow {
-                                            repo.nullply {
-                                                if (submission.isNotNullOrBlank()) {
-                                                    LabelItem(
-                                                        style = LabelItemDefaults.style.copy(
-                                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    LazyColumn(
+                        state = listState,
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .hazeSource(state = hazeState),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        item {
+                            Box {
+                                Cover(
+                                    modifier =
+                                        Modifier
+                                            .fadingEdge(
+                                                brush =
+                                                    Brush.verticalGradient(
+                                                        colors = listOf(
+                                                            Color.Transparent,
+                                                            Color.Black
                                                         ),
-                                                        modifier = Modifier.onClick {
-                                                            browser.openUri(submission)
-                                                        },
-                                                        icon = getDomainIcon(submission),
-                                                        text = stringResource(R.string.repo_options_submission)
-                                                    )
+                                                        startY = Float.POSITIVE_INFINITY,
+                                                        endY = 0f,
+                                                    ),
+                                            )
+                                            .onGloballyPositioned { coordinates ->
+                                                coverHeight = coordinates.size.height
+                                            },
+                                    url = repo.cover ?: "ERROR ME",
+                                    errorIcon = R.drawable.box,
+                                )
+
+                                Box(
+                                    modifier =
+                                        Modifier
+                                            .offset(y = 164.4.dp)
+                                            .align(Alignment.TopCenter)
+                                            .fillMaxWidth(0.85f)
+                                            .onGloballyPositioned { coordinates ->
+                                                cardHeight = coordinates.size.height
+                                            },
+                                ) {
+                                    Card(
+                                        modifier =
+                                            Modifier
+                                                .align(Alignment.BottomCenter)
+                                                .background(
+                                                    brush =
+                                                        Brush.linearGradient(
+                                                            colors =
+                                                                listOf(
+                                                                    MaterialTheme.colorScheme.surfaceColorAtElevation(
+                                                                        1.dp,
+                                                                    ),
+                                                                    MaterialTheme.colorScheme.background,
+                                                                ),
+                                                            start = Offset(0f, 0f),
+                                                            end =
+                                                                Offset(
+                                                                    Float.POSITIVE_INFINITY,
+                                                                    Float.POSITIVE_INFINITY,
+                                                                ),
+                                                        ),
+                                                    RoundedCornerShape(20.dp),
+                                                )
+                                                .border(
+                                                    Dp.Hairline,
+                                                    MaterialTheme.colorScheme.outlineVariant,
+                                                    RoundedCornerShape(20.dp),
+                                                ),
+                                    ) {
+                                        Column(
+                                            modifier =
+                                                Modifier
+                                                    .relative()
+                                                    .padding(16.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                                        ) {
+                                            Text(
+                                                text = repo.name,
+                                                maxLines = 2,
+                                                overflow = TextOverflow.Ellipsis,
+                                                textAlign = TextAlign.Center,
+                                                style = MaterialTheme.typography.headlineMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.onBackground,
+                                            )
+
+                                            BBCodeText(
+                                                text =
+                                                    (
+                                                            repo.description
+                                                                ?: stringResource(R.string.view_module_no_description)
+                                                            ).stripLinks(
+                                                            "<URL>",
+                                                        ),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                textAlign = TextAlign.Center,
+                                                color = MaterialTheme.colorScheme.outlineVariant,
+                                                lineHeight = 20.sp,
+                                            )
+
+                                            FlowRow {
+                                                repo.nullply {
+                                                    if (submission.isNotNullOrBlank()) {
+                                                        LabelItem(
+                                                            style =
+                                                                LabelItemDefaults.style.copy(
+                                                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                                ),
+                                                            modifier =
+                                                                Modifier.onClick {
+                                                                    browser.openUri(submission)
+                                                                },
+                                                            icon = getDomainIcon(submission),
+                                                            text = stringResource(R.string.repo_options_submission),
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
-                            }
 
-                            with(density) {
-                                Spacer(modifier = Modifier.height(((coverHeight / 1.2f) + cardHeight).toDp()))
+                                with(density) {
+                                    Spacer(modifier = Modifier.height(((coverHeight / 1.2f) + cardHeight).toDp()))
+                                }
                             }
                         }
-                    }
 
-                    item {
-                        val takenModules = remember { modules.take(9) }
-                        val title = stringResource(R.string.page_modules)
+                        item {
+                            val takenModules = remember { modules.take(9) }
+                            val title = stringResource(R.string.page_modules)
 
-                        TopPicks(
-                            label = title,
-                            list = takenModules,
-                            onMoreClick = {
-                                navigator.navigate(
-                                    TypedModulesScreenDestination(
-                                        type = ModulesFilter.ALL,
-                                        title = title,
-                                        repo = repo,
+                            TopPicks(
+                                label = title,
+                                list = takenModules,
+                                onMoreClick = {
+                                    navigator.navigate(
+                                        TypedModulesScreenDestination(
+                                            type = ModulesFilter.ALL,
+                                            title = title,
+                                            repo = repo,
+                                        ),
                                     )
+                                },
+                            )
+                        }
+
+                        if (!metaModules.isEmpty() && viewModel.platform.isKernelSuVariant) {
+                            item {
+                                val title = stringResource(R.string.meta_modules)
+
+                                TopPicks(
+                                    label = title,
+                                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
+                                    list = metaModules,
+                                    onMoreClick = {
+                                        navigator.navigate(
+                                            TypedModulesScreenDestination(
+                                                type = ModulesFilter.ALL,
+                                                title = title,
+                                                repo = repo,
+                                            ),
+                                        )
+                                    },
                                 )
                             }
-                        )
-                    }
+                        }
 
-                    items(
-                        items = topCategories,
-                        key = { it.label }
-                    ) {
-                        TopPicks(
-                            label = it.label,
-                            list = it.modules,
-                            onMoreClick = {
-                                navigator.navigate(
-                                    TypedModulesScreenDestination(
-                                        type = ModulesFilter.CATEGORY,
-                                        title = it.label,
-                                        repo = repo,
-                                        query = it.label
+                        items(
+                            items = topCategories,
+                            key = { it.label },
+                        ) {
+                            TopPicks(
+                                label = it.label,
+                                list = it.modules,
+                                onMoreClick = {
+                                    navigator.navigate(
+                                        TypedModulesScreenDestination(
+                                            type = ModulesFilter.CATEGORY,
+                                            title = it.label,
+                                            repo = repo,
+                                            query = it.label,
+                                        ),
                                     )
-                                )
-                            }
-                        )
-                    }
+                                },
+                            )
+                        }
 
-                    item {
-                        Spacer(
-                            Modifier.height(16.dp)
-                        )
+                        item {
+                            Spacer(
+                                Modifier.height(16.dp),
+                            )
 
-                        val paddingValues = LocalMainScreenInnerPaddings.current
-                        Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                            val paddingValues = LocalMainScreenInnerPaddings.current
+                            Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                        }
                     }
                 }
             }
         }
     }
-}
 
 @Composable
-fun getDomainIcon(url: String) = when (getDomain(url)) {
-    "github.com" -> R.drawable.github
-    else -> R.drawable.link
-}
+fun getDomainIcon(url: String) =
+    when (getDomain(url)) {
+        "github.com" -> R.drawable.github
+        else -> R.drawable.link
+    }
 
-fun getDomain(url: String): String {
-    return try {
+fun getDomain(url: String): String =
+    try {
         val uri = url.toUri()
         val host = uri.host ?: ""
         // Remove "www." if present
@@ -332,4 +379,3 @@ fun getDomain(url: String): String {
     } catch (_: Exception) {
         ""
     }
-}

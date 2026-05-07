@@ -55,7 +55,7 @@ fun SettingsScreen() {
 
     SettingsScaffold(
         allowNavigateBack = false,
-        title = R.string.page_settings
+        title = R.string.page_settings,
     ) {
         List {
             context.isPackageInstalled(userPreferences.webuixPackageName).takeFalse {
@@ -66,18 +66,18 @@ fun SettingsScreen() {
                                 "https://play.google.com/store/apps/details?id=com.dergoogler.mmrl.wx"
                             } else {
                                 "https://github.com/MMRLApp/WebUI-X-Portable"
-                            }
+                            },
                         )
-                    }
+                    },
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.sandbox)
+                        painter = painterResource(R.drawable.sandbox),
                     )
                     Title(R.string.settings_try_wxp)
                     Icon(
                         slot = ListItemSlot.End,
                         size = 12.dp,
-                        painter = painterResource(R.drawable.external_link)
+                        painter = painterResource(R.drawable.external_link),
                     )
                 }
             }
@@ -86,49 +86,49 @@ fun SettingsScreen() {
                 route = AppearanceScreenDestination,
                 icon = R.drawable.color_swatch,
                 title = R.string.settings_appearance,
-                desc = R.string.settings_appearance_desc
+                desc = R.string.settings_appearance_desc,
             )
 
             NavButton(
                 route = SecurityScreenDestination,
                 icon = R.drawable.shield,
                 title = R.string.settings_security,
-                desc = R.string.settings_security_desc
+                desc = R.string.settings_security_desc,
             )
 
             NavButton(
                 route = UpdatesScreenDestination,
                 icon = R.drawable.refresh,
                 title = R.string.settings_updates,
-                desc = R.string.settings_updates_desc
+                desc = R.string.settings_updates_desc,
             )
 
             NavButton(
                 route = ModulesScreen2Destination,
                 icon = R.drawable.stack_middle,
                 title = R.string.settings_modules,
-                desc = R.string.settings_modules_desc
+                desc = R.string.settings_modules_desc,
             )
 
             NavButton(
                 route = TerminalScreenDestination,
                 icon = R.drawable.terminal_2_outlined,
                 title = R.string.settings_terminal,
-                desc = R.string.settings_terminal_desc
+                desc = R.string.settings_terminal_desc,
             )
 
             NavButton(
                 route = OtherScreenDestination,
                 icon = R.drawable.tool,
                 title = R.string.settings_other,
-                desc = R.string.settings_other_desc
+                desc = R.string.settings_other_desc,
             )
 
             LinkButton(
                 uri = Const.RESOURCES_URL,
                 icon = R.drawable.file_3d,
                 title = R.string.settings_resources,
-                desc = R.string.settings_resources_desc
+                desc = R.string.settings_resources_desc,
             )
 
             val manager =
@@ -149,8 +149,8 @@ fun SettingsScreen() {
                                 onConfirm = {
                                     viewModel.setWorkingMode(it.value)
                                     ProcessPhoenix.triggerRebirth(context)
-                                }
-                            )
+                                },
+                            ),
                         )
                     },
                 ) {
@@ -164,14 +164,14 @@ fun SettingsScreen() {
                 route = ChangelogScreenDestination,
                 icon = R.drawable.files,
                 title = R.string.settings_changelog,
-                desc = R.string.settings_changelo_desc
+                desc = R.string.settings_changelo_desc,
             )
 
             NavButton(
                 route = BlacklistScreenDestination,
                 icon = R.drawable.file_shredder,
                 title = R.string.settings_blacklist,
-                desc = R.string.settings_blacklist_desc
+                desc = R.string.settings_blacklist_desc,
             )
 
             NavButton(
@@ -184,7 +184,7 @@ fun SettingsScreen() {
                 route = DeveloperScreenDestination,
                 icon = R.drawable.bug,
                 title = R.string.settings_developer,
-                desc = R.string.settings_developer_desc
+                desc = R.string.settings_developer_desc,
             )
 
             LinkButton(
@@ -218,14 +218,14 @@ internal fun ListScope.NavButton(
         content = {
             icon.nullable {
                 Icon(
-                    painter = painterResource(it)
+                    painter = painterResource(it),
                 )
             }
             Title(title)
             desc.nullable {
                 Description(it)
             }
-        }
+        },
     )
 }
 
@@ -244,7 +244,7 @@ internal fun ListScope.LinkButton(
         },
         content = {
             Icon(
-                painter = painterResource(icon)
+                painter = painterResource(icon),
             )
             Title(title)
             desc.nullable {
@@ -253,8 +253,8 @@ internal fun ListScope.LinkButton(
             Icon(
                 slot = ListItemSlot.End,
                 size = 12.dp,
-                painter = painterResource(R.drawable.external_link)
+                painter = painterResource(R.drawable.external_link),
             )
-        }
+        },
     )
 }

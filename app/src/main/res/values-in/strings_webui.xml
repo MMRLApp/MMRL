@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="requireNewVersion_cannot_load_webui">Tidak dapat memuat WebUI</string>
+    <string name="requireNewVersion_require_text">membutuhkan setidaknya MMRL &gt;=</string>
+    <string name="requireNewVersion_try_the_following">Cobalah hal berikut:</string>
+    <string name="requireNewVersion_try_the_following_one">Perbarui MMRL ke versi terbaru dari Google Play atau GitHub Releases.</string>
+    <string name="requireNewVersion_try_the_following_two">Hubungi pengembang modul untuk mencari solusi alternatif.</string>
+    <string name="requireNewVersion_refresh">Segarkan</string>
 </resources>

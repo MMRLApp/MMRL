@@ -25,7 +25,7 @@ internal inline fun <LazyState : ScrollableState, LazyStateItem> LazyState.scrol
     itemsAvailable: Int,
     crossinline visibleItems: LazyState.() -> List<LazyStateItem>,
     crossinline firstVisibleItemIndex: LazyState.(List<LazyStateItem>) -> Float,
-    crossinline itemPercentVisible: LazyState.(LazyStateItem) -> Float
+    crossinline itemPercentVisible: LazyState.(LazyStateItem) -> Float,
 ): ScrollbarState {
     var state by remember { mutableStateOf(ScrollbarState.FULL) }
 
@@ -39,30 +39,34 @@ internal inline fun <LazyState : ScrollableState, LazyStateItem> LazyState.scrol
             val visibleItemsInfo = visibleItems(this@scrollbarState)
             if (visibleItemsInfo.isEmpty()) return@snapshotFlow null
 
-            val firstIndex = min(
-                a = firstVisibleItemIndex(visibleItemsInfo),
-                b = itemsAvailable.toFloat(),
-            )
+            val firstIndex =
+                min(
+                    a = firstVisibleItemIndex(visibleItemsInfo),
+                    b = itemsAvailable.toFloat(),
+                )
             if (firstIndex.isNaN()) return@snapshotFlow null
 
-            val itemsVisible = visibleItemsInfo.sumOf {
-                itemPercentVisible(it).toDouble()
-            }.toFloat()
+            val itemsVisible =
+                visibleItemsInfo
+                    .sumOf {
+                        itemPercentVisible(it).toDouble()
+                    }.toFloat()
 
-            val thumbTravelPercent = min(
-                a = firstIndex / itemsAvailable,
-                b = 1f,
-            )
-            val thumbSizePercent = min(
-                a = itemsVisible / itemsAvailable,
-                b = 1f,
-            )
+            val thumbTravelPercent =
+                min(
+                    a = firstIndex / itemsAvailable,
+                    b = 1f,
+                )
+            val thumbSizePercent =
+                min(
+                    a = itemsVisible / itemsAvailable,
+                    b = 1f,
+                )
             ScrollbarState(
                 thumbSizePercent = thumbSizePercent,
-                thumbMovedPercent = thumbTravelPercent
+                thumbMovedPercent = thumbTravelPercent,
             )
-        }
-            .filterNotNull()
+        }.filterNotNull()
             .distinctUntilChanged()
             .collect { state = it }
     }
@@ -125,14 +129,16 @@ internal fun itemVisibilityPercentage(
 ): Float {
     if (itemSize == 0) return 0f
     val itemEnd = itemStartOffset + itemSize
-    val startOffset = when {
-        itemStartOffset > viewportStartOffset -> 0
-        else -> abs(abs(viewportStartOffset) - abs(itemStartOffset))
-    }
-    val endOffset = when {
-        itemEnd < viewportEndOffset -> 0
-        else -> abs(abs(itemEnd) - abs(viewportEndOffset))
-    }
+    val startOffset =
+        when {
+            itemStartOffset > viewportStartOffset -> 0
+            else -> abs(abs(viewportStartOffset) - abs(itemStartOffset))
+        }
+    val endOffset =
+        when {
+            itemEnd < viewportEndOffset -> 0
+            else -> abs(abs(itemEnd) - abs(viewportEndOffset))
+        }
     val size = itemSize.toFloat()
     return (size - startOffset - endOffset) / size
 }

@@ -11,7 +11,7 @@ import com.dergoogler.mmrl.platform.model.ModId.Companion.removeFile
 import com.dergoogler.mmrl.platform.stub.IModuleOpsCallback
 import com.dergoogler.mmrl.platform.util.Shell.submit
 
-open class KernelSUModuleManager() : BaseModuleManager() {
+open class KernelSUModuleManager : BaseModuleManager() {
     override fun getManagerName(): String = "KernelSU"
 
     override fun getVersion(): String = mVersion
@@ -27,20 +27,22 @@ open class KernelSUModuleManager() : BaseModuleManager() {
     }
 
     override fun setSuEnabled(enabled: Boolean): Boolean = KsuNative.setSuEnabled(enabled)
+
     override fun isSuEnabled(): Boolean = KsuNative.isSuEnabled()
 
-    override fun isLkmMode(): NullableBoolean = with(KsuNative) {
-        val kernelVersion = KernelVersion.getKernelVersion()
-        val ksuVersion = getVersion()
+    override fun isLkmMode(): NullableBoolean =
+        with(KsuNative) {
+            val kernelVersion = KernelVersion.getKernelVersion()
+            val ksuVersion = getVersion()
 
-        return NullableBoolean(
-            if (ksuVersion >= MINIMAL_SUPPORTED_KERNEL_LKM && kernelVersion.isGKI()) {
-                isLkmMode()
-            } else {
-                null
-            }
-        )
-    }
+            return NullableBoolean(
+                if (ksuVersion >= MINIMAL_SUPPORTED_KERNEL_LKM && kernelVersion.isGKI()) {
+                    isLkmMode()
+                } else {
+                    null
+                },
+            )
+        }
 
     override fun getSuperUserCount(): Int = KsuNative.getAllowList().size
 
@@ -48,12 +50,17 @@ open class KernelSUModuleManager() : BaseModuleManager() {
 
     override fun uidShouldUmount(uid: Int): Boolean = KsuNative.uidShouldUmount(uid)
 
-    override fun getModuleCompatibility() = ModuleCompatibility(
-        hasMagicMount = false,
-        canRestoreModules = false
-    )
+    override fun getModuleCompatibility() =
+        ModuleCompatibility(
+            hasMagicMount = false,
+            canRestoreModules = false,
+        )
 
-    override fun enable(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun enable(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) callback.onFailure(id, null)
 
@@ -77,7 +84,11 @@ open class KernelSUModuleManager() : BaseModuleManager() {
         }
     }
 
-    override fun disable(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun disable(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) return callback.onFailure(id, null)
 
@@ -101,7 +112,11 @@ open class KernelSUModuleManager() : BaseModuleManager() {
         }
     }
 
-    override fun remove(id: ModId, useShell: Boolean, callback: IModuleOpsCallback) {
+    override fun remove(
+        id: ModId,
+        useShell: Boolean,
+        callback: IModuleOpsCallback,
+    ) {
         val dir = id.moduleDir
         if (!dir.exists()) return callback.onFailure(id, null)
 
@@ -126,12 +141,14 @@ open class KernelSUModuleManager() : BaseModuleManager() {
     }
 
     override fun getInstallCommand(path: String): String = "ksud module install \"$path\""
+
     override fun getActionCommand(id: ModId): String = "ksud module action ${id.id}"
 
-    override fun getActionEnvironment(): List<String> = listOf(
-        "export ASH_STANDALONE=1",
-        "export KSU=true",
-        "export KSU_VER=${version}",
-        "export KSU_VER_CODE=${versionCode}",
-    )
+    override fun getActionEnvironment(): List<String> =
+        listOf(
+            "export ASH_STANDALONE=1",
+            "export KSU=true",
+            "export KSU_VER=$version",
+            "export KSU_VER_CODE=$versionCode",
+        )
 }
