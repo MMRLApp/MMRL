@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach Camel Debugger after starting the Camel Application using the preLaunchTask specified",
+            "type": "apache.camel",
+            "request": "attach",
+            "preLaunchTask": "Start Camel application"
+        },
+        {
+            "name": "Attach Camel Debugger after starting the Camel Application using the preLaunchTask specified",
+            "type": "apache.camel",
+            "request": "attach",
+            "preLaunchTask": "Start Camel application"
+        },
+        {
+            "name": "Attach Camel Debugger after starting the Camel Application using the preLaunchTask specified",
+            "type": "apache.camel",
+            "request": "attach",
+            "preLaunchTask": "Start Camel application"
+        },
+        {
+            "name": "Launch Apex Replay Debugger",
+            "type": "apex-replay",
+            "request": "launch",
+            "logFile": "${command:AskForLogFileName}",
+            "stopOnEntry": true,
+            "trace": true
+        },
+        {
+            "name": "Deploy Cloud Function",
+            "type": "cloudcode.cloudfunctions",
+            "request": "launch",
+            "functionName": "",
+            "gen": "",
+            "runtime": "",
+            "entryPoint": "",
+            "testInput": ""
+        }
+    ]
+}
