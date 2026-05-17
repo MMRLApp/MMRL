@@ -20,7 +20,7 @@
     <string name="module_remove">Remover</string>
     <string name="module_restore">Restaurar</string>
     <string name="module_install">Instalar</string>
-    <string name="module_download">Baixar</string>
+    <string name="module_download">Descarregar</string>
     <string name="modules_empty">Nenhum módulo encontrado</string>
     <string name="search_empty">Lista vazia</string>
     <string name="search_placeholder">Pesquisar…</string>
@@ -28,7 +28,7 @@
     <string name="settings_app_theme">Tema do aplicativo</string>
     <string name="settings_app_theme_desc">Mudar paleta de cores e modo escuro.</string>
     <string name="settings_app">Aplicativo</string>
-    <string name="settings_download_path">Caminho dos Downloads</string>
+    <string name="settings_download_path">Caminho de Descargas</string>
     <string name="app_theme_palette">Paleta do tema</string>
     <string name="app_theme_dark_theme">Tema escuro</string>
     <string name="app_theme_dark_theme_auto">Automático</string>
@@ -43,9 +43,9 @@
     <string name="dialog_attention">Atenção</string>
     <string name="dialog_cancel">Cancelar</string>
     <string name="dialog_ok">Ok</string>
-    <string name="message_download_success">Download com sucesso</string>
+    <string name="message_download_success">Descarga com sucesso</string>
     <string name="message_loading">Carregando…</string>
-    <string name="notification_name_download">Serviço de Downloads</string>
+    <string name="notification_name_download">Serviço de Descargas</string>
     <string name="unknown_error">Erro desconhecido</string>
     <string name="settings_root_access">Acesso Enraizado: %s</string>
     <string name="page_repository">Repositório</string>
@@ -53,12 +53,12 @@
     <string name="settings_delete_zip">Excluir arquivo Zip</string>
     <string name="settings_delete_zip_desc">Exclui o arquivo zip após a instalação ser bem-sucedida, Observe que este é o melhor esforço e não funcionará se o aplicativo não tiver permissão para excluir</string>
     <string name="view_module_version">Versão</string>
-    <string name="view_module_version_dialog_desc">Você deseja instalar ou baixar esta versão desse módulo\?</string>
+    <string name="view_module_version_dialog_desc">Deseja instalar ou descarregar esta versão desse módulo?</string>
     <string name="settings_about">Sobre</string>
     <string name="about_app_version">Versão %1$s (%2$s)</string>
     <string name="about_desc1">Disponibiliza repositórios de módulos e gerencia módulos do Magisk e KernelSU.</string>
     <string name="about_desc2">Feito com ❤️ por %s</string>
-    <string name="setup_non_root_desc">Não requer permissões root, apenas a função de módulo de download está disponível.</string>
+    <string name="setup_non_root_desc">Não requer permissões root, apenas a função de módulo de descargas está disponível.</string>
     <string name="install_screen_title">Instalação</string>
     <string name="install_logs_saved">Registros salvos</string>
     <string name="install_logs_save_failed">Falha ao salvar: %s</string>
@@ -133,7 +133,7 @@
     <string name="settings_appearance">Aparência</string>
     <string name="settings_appearance_desc">Altere o aplicativo de acordo com suas necessidades</string>
     <string name="settings_other">Outro</string>
-    <string name="settings_other_desc">DoH, caminho de download e mais</string>
+    <string name="settings_other_desc">DoH, caminho de descargas e mais</string>
     <string name="settings_text_wrap">Quebra de texto</string>
     <string name="settings_text_wrap_desc">Habilita o ajuste de texto dentro do terminal de instalação</string>
     <string name="settings_changelog">Registro de alterações</string>
@@ -206,7 +206,7 @@
     <string name="reboot_userspace">Reinicialização suave</string>
     <string name="reboot_recovery">Reiniciar para recuperação</string>
     <string name="reboot_bootloader">Reiniciar para Bootloader</string>
-    <string name="reboot_download">Reiniciar em modo Download</string>
+    <string name="reboot_download">Reiniciar no modo Descargas</string>
     <string name="reboot_edl">Reiniciar para EDL</string>
     <string name="home_support_title">Apoie-me</string>
     <string name="home_support_content">MMRL é, e sempre será, gratuito e de código aberto. No entanto, você pode me mostrar que se importa fazendo uma doação.</string>
