@@ -164,6 +164,10 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                             view: WebView,
                                             request: WebResourceRequest,
                                         ): Boolean {
+                                            if (!request.isForMainFrame) {
+                                                return false
+                                            }
+
                                             val mUri = request.url ?: return false
                                             val mUrl = mUri.toString()
 
@@ -179,7 +183,6 @@ fun ViewDescriptionScreen(readmeUrl: String) =
                                                 return true
                                             }
 
-                                            view.loadUrl(mUrl)
                                             return false
                                         }
 
