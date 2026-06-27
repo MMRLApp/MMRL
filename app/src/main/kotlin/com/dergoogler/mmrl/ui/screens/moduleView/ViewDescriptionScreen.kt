@@ -83,7 +83,7 @@ fun ViewDescriptionScreen(readmeUrl: String) =
 
         DisposableEffect(Unit) {
             onDispose {
-                wstate.webui.destroy()
+                wstate.destroy()
             }
         }
 
@@ -98,7 +98,7 @@ fun ViewDescriptionScreen(readmeUrl: String) =
             contentWindowInsets = WindowInsets.none,
         ) { innerPadding ->
             val bottomBarPaddingValues = LocalMainScreenInnerPaddings.current
-            wstate.webui.insets(
+            wstate.insets(
                 PaddingValues(
                     top = innerPadding.calculateTopPadding(),
                     bottom = bottomBarPaddingValues.calculateBottomPadding(),
