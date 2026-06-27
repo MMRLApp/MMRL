@@ -11,19 +11,21 @@
 </head>
 
 <body>
-  <div class="toolbar"></div>
-  <div class="markdown-body" id="content"></div>
-  <div class="bottom-bar"></div>
-  <script type="module">
-    import { Marked } from "https://desc.mmrl.dev/internal/assets/marked/index.mjs";
-    import markedAlert from "https://desc.mmrl.dev/internal/assets/marked/alert.mjs";
-
-    const html = new Marked()
-      .use(markedAlert())
-      .parse(markdown.get())
-
-    document.getElementById("content").innerHTML = html;
-  </script>
+<div class="toolbar"></div>
+<div class="markdown-body" id="content"></div>
+<div class="bottom-bar"></div>
+<script type="module">
+  import { Marked } from "https://desc.mmrl.dev/internal/assets/marked/index.mjs";
+  import markedAlert from "https://desc.mmrl.dev/internal/assets/marked/alert.mjs";
+  fetch("https://desc.mmrl.dev/internal/readme.md")
+    .then((response) => response.text())
+    .then((text) => {
+      const html = new Marked()
+        .use(markedAlert())
+        .parse(text)
+      document.getElementById("content").innerHTML = html;
+    })
+</script>
 </body>
 
 </html>

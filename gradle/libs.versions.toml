@@ -41,6 +41,7 @@ squareRetrofit = "2.11.0"
 squareOkhttp = "4.12.0"
 squareMoshi = "1.15.1"
 runtimeAndroid = "1.7.6"
+mmrlx = "1.0.145"
 webuiXPortable = "c92f5f6c3c"
 workRuntimeKtx = "2.10.0"
 lifecycleProcess = "2.8.7"
@@ -136,6 +137,8 @@ dev-rikka-rikkax-parcelablelist = { module = "dev.rikka.rikkax.parcelablelist:pa
 
 markwon-core = "io.noties.markwon:core:4.6.2"
 hiddenApiBypass = "org.lsposed.hiddenapibypass:hiddenapibypass:6.1"
+mmrlx-terminal = { module = "dev.mmrlx:terminal", version.ref = "mmrlx" }
+mmrlx-webui-core = { module = "dev.mmrlx:webui.core", version.ref = "mmrlx" }
 timber = "com.jakewharton.timber:timber:5.0.1"
 
 # Dependencies of the included build-logic
