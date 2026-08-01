@@ -1,44 +1,50 @@
 package com.dergoogler.mmrl.pathHandler
 
 
-import android.content.Context
 import android.util.Log
 import android.webkit.WebResourceResponse
 import androidx.compose.material3.ColorScheme
-import com.dergoogler.mmrl.hybridwebui.HybridWebUI
-import com.dergoogler.mmrl.hybridwebui.HybridWebUIInsets
-import com.dergoogler.mmrl.hybridwebui.HybridWebUIResourceRequest
 import com.dergoogler.mmrl.model.WebColors
+import dev.mmrlx.webui.PathHandler
+import dev.mmrlx.webui.WebUI
+import dev.mmrlx.webui.WebUIResourceRequest
 import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 
 class InternalPathHandler(
-    private val context: Context,
+    webui: WebUI,
+    private val readmeUrl: String,
     private val colorScheme: ColorScheme,
-    private val insets: HybridWebUIInsets,
-) : HybridWebUI.PathHandler() {
+) : PathHandler(webui) {
+    override val id = "/internal/"
     val webColors get() = WebColors(colorScheme)
-    val assetsPathHandler = AssetsPathHandler(context)
+    val assetsPathHandler = AssetsPathHandler(this)
 
-    override fun handle(
-        view: HybridWebUI,
-        request: HybridWebUIResourceRequest,
-    ): WebResourceResponse {
+    override fun handle(request: WebUIResourceRequest): WebResourceResponse {
         val path = request.path
 
         try {
             if (path.matches(Regex("^assets(/.*)?$"))) {
                 return assetsPathHandler.handle(
-                    view,
-                    HybridWebUIResourceRequest(
+                    WebUIResourceRequest(
                         method = request.method,
                         isForMainFrame = request.isForMainFrame,
                         url = request.url,
                         path = path.removePrefix("assets/"),
                         requestHeaders = request.requestHeaders,
                         isRedirect = request.isRedirect,
-                        hasGesture = request.hasGesture
+                        hasGesture = request.hasGesture()
                     )
                 )
+            }
+
+
+
+            if (path.matches(Regex("readme\\.md"))) {
+                val connection = URL(readmeUrl).openConnection() as HttpURLConnection
+                connection.connect()
+                return htmlResponse(connection.getInputStream())
             }
 
             if (path.matches(Regex("insets\\.css"))) {

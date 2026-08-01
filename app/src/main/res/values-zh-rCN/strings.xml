@@ -463,7 +463,7 @@
     <string name="settings_umount_modules_default_desc">应用程序配置文件中“卸载模块”的全局默认值。启用后，它将移除所有未设置配置文件的应用程序对系统的模块修改。</string>
     <string name="profile_selinux_domain">域名</string>
     <string name="profile_namespace">挂载命名空间</string>
-    <string name="profile_namespace_inherited">遗留</string>
+    <string name="profile_namespace_inherited">继承</string>
     <string name="profile_namespace_global">全局</string>
     <string name="profile_namespace_individual">独立</string>
     <string name="empty">空</string>

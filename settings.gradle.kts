@@ -2,9 +2,9 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 val user: String? = providers.gradleProperty("gpr.user").orNull
-    ?: System.getenv("GITHUB_ACTOR")
+    ?: System.getenv("ACTOR")
 val pass: String? = providers.gradleProperty("gpr.key").orNull
-    ?: System.getenv("GITHUB_TOKEN")
+    ?: System.getenv("GH_TOKEN")
 
 dependencyResolutionManagement drm@{
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)

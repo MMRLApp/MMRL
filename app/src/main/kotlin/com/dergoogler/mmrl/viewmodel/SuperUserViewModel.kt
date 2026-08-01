@@ -24,6 +24,7 @@ import com.dergoogler.mmrl.platform.ksu.KsuNative
 import com.dergoogler.mmrl.platform.ksu.Profile
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
+import com.dergoogler.mmrl.utils.packages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -186,8 +187,7 @@ class SuperUserViewModel
 
         private fun getAppList(): List<AppInfo> {
             val pm = context.packageManager
-            val packages =
-                PlatformManager.packageManager.getInstalledPackagesAll(PlatformManager.userManager, 0)
+            val packages = context.packages
             return packages
                 .map { pkg ->
                     val appInfo = pkg.applicationInfo!!

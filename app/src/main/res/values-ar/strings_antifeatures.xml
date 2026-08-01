@@ -24,4 +24,8 @@
     <string name="nonfreenet_desc">هذه الإضافة تقوم بدعاية أو تعتمد كليا على خدمة شبكة غير قابلة للتغير أو غير مجانية.</string>
     <string name="upstreamnonfree_desc">كود المصدر العلوي ليس مجانياً بالكامل.</string>
     <string name="obfuscation_desc">كود مصدر هذه الإضافة قد يكون مشفراً مما يمنع فهم أو تعديل الكود.</string>
+    <string name="llm_name">نموذج لغة كبير</string>
+    <string name="llm_desc">الوحدة ربما مكتوبة جزئيا او كليا بواسطة LLM</string>
+    <string name="closedsource_name">مغلق المصدر</string>
+    <string name="closedsource_desc">هذه الوحدة ليست مفتوحة المصدر ، والكود غير متاح للعامة للمراجعة او التعديل او التوزيع</string>
 </resources>

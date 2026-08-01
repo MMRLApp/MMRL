@@ -1,24 +1,19 @@
 package com.dergoogler.mmrl.pathHandler
 
-import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import android.webkit.WebResourceResponse
 import com.dergoogler.mmrl.hybridwebui.HybridWebUI
-import com.dergoogler.mmrl.hybridwebui.HybridWebUIResourceRequest
+import dev.mmrlx.webui.PathHandler
+import dev.mmrlx.webui.WebUI
+import dev.mmrlx.webui.WebUIResourceRequest
 import java.io.IOException
 
 class AssetsPathHandler(
-    private val context: Context
-) : HybridWebUI.PathHandler() {
+    webui: WebUI,
+) : PathHandler(webui) {
+    private val assetHelper get() = kontext.assets
 
-    private val assetHelper get() = context.assets
-
-    @SuppressLint("WrongThread")
-    override fun handle(
-        view: HybridWebUI,
-        request: HybridWebUIResourceRequest,
-    ): WebResourceResponse {
+    override fun handle(request: WebUIResourceRequest): WebResourceResponse {
         val path = request.path
 
         try {
