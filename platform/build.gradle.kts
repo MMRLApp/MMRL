@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.rikka.refine)
 }
 
 android {
@@ -91,6 +92,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.serialization.protobuf)
     implementation(libs.square.moshi)
+    implementation(libs.rikka.refine.runtime)
     ksp(libs.square.moshi.kotlin)
 }
 
