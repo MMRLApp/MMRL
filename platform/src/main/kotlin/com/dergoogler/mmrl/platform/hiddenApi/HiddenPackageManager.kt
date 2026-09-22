@@ -5,6 +5,7 @@ package com.dergoogler.mmrl.platform.hiddenApi
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.IPackageManager
+import android.content.pm.IPackageManagerV37
 import android.content.pm.PackageInfo
 import android.content.pm.ResolveInfo
 import android.os.SystemProperties
@@ -12,6 +13,8 @@ import android.util.Log
 import com.dergoogler.mmrl.compat.BuildCompat
 import com.dergoogler.mmrl.platform.PlatformManager.getSystemService
 import com.dergoogler.mmrl.platform.stub.IServiceManager
+
+import dev.rikka.tools.refine.Refine;
 
 class HiddenPackageManager(
     private val service: IServiceManager,
@@ -59,7 +62,9 @@ class HiddenPackageManager(
         flags: Int,
         userId: Int,
     ): List<PackageInfo> =
-        if (BuildCompat.atLeastT) {
+        if (BuildCompat.atLeastC) {
+            Refine.unsafeCast<IPackageManagerV37>(packageManager).getInstalledPackages(flags.toLong(), userId).list
+        } else if (BuildCompat.atLeastT) {
             packageManager.getInstalledPackages(flags.toLong(), userId)
         } else {
             packageManager.getInstalledPackages(flags, userId)

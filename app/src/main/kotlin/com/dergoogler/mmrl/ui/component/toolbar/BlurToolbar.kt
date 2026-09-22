@@ -70,11 +70,9 @@ fun BlurToolbar(
     val borderColor = MaterialTheme.colorScheme.outline
     val backgroundColor = MaterialTheme.colorScheme.background
 
-    val topAppBarColors = TopAppBarDefaults.topAppBarColors()
-
     val colors =
         if (isBlurEnabled) {
-            topAppBarColors.copy(
+            TopAppBarDefaults.topAppBarColors(
                 scrolledContainerColor = Color.Transparent,
                 containerColor = Color.Transparent,
             )
@@ -89,7 +87,7 @@ fun BlurToolbar(
                         }
                     }
 
-            topAppBarColors.copy(
+            TopAppBarDefaults.topAppBarColors(
                 scrolledContainerColor = backgroundColor,
                 containerColor = backgroundColor,
             )

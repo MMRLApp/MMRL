@@ -4,6 +4,9 @@ import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 
 object BuildCompat {
+    @get:ChecksSdkIntAtLeast(api = 37)
+    val atLeastC get() = Build.VERSION.SDK_INT >= 37
+
     @get:ChecksSdkIntAtLeast(api = Build.VERSION_CODES.VANILLA_ICE_CREAM)
     val atLeastV get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
 
