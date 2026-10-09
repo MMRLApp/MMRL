@@ -274,7 +274,7 @@
     <string name="settings_changelo_desc">Alle aktuellen Änderungen in MMRL</string>
     <string name="settings_root_version">Version: %s</string>
     <string name="settings_reboot_protection">Neustart-Schutz</string>
-    <string name="settings_reboot_protection_desc">Wenn aktiviert, muss jeder Neustart bestätigt werden</string>
+    <string name="settings_reboot_protection_desc">Wenn diese Einstellung aktiviert ist, musst du jeden Neustart bestätigen.</string>
     <string name="settings_blacklist">Sperrliste</string>
     <string name="settings_blacklist_desc">Aufgelistete Module, die möglicherweise Closed-Source oder gefährlich sind</string>
     <string name="settings_updates_desc">Verwalte deine Einstellungen zum Update-Vorgang</string>
@@ -283,7 +283,7 @@
     <string name="settings_auto_update_repos_desc">Repos automatisch im Hintergrund aktualisieren</string>
     <string name="settings_repo_update_interval">Repo-Aktualisierungsintervall</string>
     <string name="settings_check_app_updates">Nach App-Updates suchen</string>
-    <string name="settings_check_app_updates_desc">Sucht bei jedem Öffnen der App automatisch nach App-Updates</string>
+    <string name="settings_check_app_updates_desc">Beim Öffnen der App automatisch nach Updates suchen</string>
     <string name="settings_hide_fingerprint">Fingerabdruck auf Startseite verbergen</string>
     <string name="settings_hide_fingerprint_desc">Egal, ob echt oder gefälscht</string>
     <string name="settings_check_modules_update">Nach Modul-Updates suchen</string>
