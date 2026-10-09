@@ -23,7 +23,7 @@
     <string name="license_fsf_libre">FSF Libre</string>
     <string name="page_modules">Módulos</string>
     <string name="page_settings">Ajustes</string>
-    <string name="settings_root_access">Acceso Root: %s</string>
+    <string name="settings_root_access">Acceso root: %s</string>
     <string name="settings_root_provider">Proveedor: %s</string>
     <string name="settings_root_granted">Concedido</string>
     <string name="settings_root_not_available">No disponible</string>
@@ -95,7 +95,7 @@
     <string name="view_module_features_action_sub">Permite al usuario ejecutar un script mediante un clic de botón</string>
     <string name="settings_resources_desc">Documentación, repositorios compatibles y cualquier otra cosa</string>
     <string name="view_module_unsupported_desc">Parece que su dispositivo no es compatible con esta versión del módulo. ¡Instálelo bajo su propio riesgo!</string>
-    <string name="settings_hide_fingerprint">Ocultar huella digital en el inicio</string>
+    <string name="settings_hide_fingerprint">Ocultar huella digital en página principal</string>
     <string name="view_module_donate">Donar</string>
     <string name="view_module_required_os_value">Android %1$s y posteriores</string>
     <string name="settings_security">Seguridad</string>
@@ -172,7 +172,7 @@
     <string name="view_module_unsupported_arch_desc">Parece que su dispositivo no tiene soporte para la arquitectura requerida declarada por el desarrollador.</string>
     <string name="view_module_unsupported_device_desc">Parece que su dispositivo no es compatible con estos módulos o ha sido excluído.</string>
     <string name="module_reinstall">Reinstalar</string>
-    <string name="settings_security_desc">Temas relacionados con la seguridad de la aplicación</string>
+    <string name="settings_security_desc">Cosas relacionadas con la seguridad de la app</string>
     <string name="settings_appearance">Apariencia</string>
     <string name="settings_appearance_desc">Cambie la aplicación según sus necesidades</string>
     <string name="settings_other_desc">DoH, ruta de descarga y más</string>
@@ -256,7 +256,7 @@
     <string name="menu_export_modules_as_text">Exportar módulos como texto</string>
     <string name="menu_show_modules_count">Mostrar cantidad de módulos</string>
     <string name="view_module_features_post_fs_data">Post FS Data</string>
-    <string name="settings_root_version">Versión: %s</string>
+    <string name="settings_root_version">Versión %s</string>
     <string name="settings_developer">Desarrollador</string>
     <string name="settings_webui_remote_url">URL remota de WebUI</string>
     <string name="settings_developer_desc">Herramientas de desarrollador</string>
@@ -265,7 +265,7 @@
     <string name="install_screen_cancel_title">¿Cancelar la instalación?</string>
     <string name="menu_pin_action">Acción de fijado</string>
     <string name="menu_pin_webui">Fijar WebUI</string>
-    <string name="home_storage_usage">Uso de almacenamiento</string>
+    <string name="home_storage_usage">Uso del almacenamiento</string>
     <string name="home_root_provider_version_name">Nombre de la versión del proveedor de root</string>
     <string name="home_root_provider_se_linux_context">Contexto SELinux</string>
     <string name="copy_logs">Copiar registros</string>
@@ -274,7 +274,7 @@
     <string name="action_screen_cancel_text">¿Está seguro que desea cancelar esta acción?</string>
     <string name="settings_use_generic_action">Usar acción genérica</string>
     <string name="settings_use_generic_action_desc">La mayoría de los proveedores de root no admiten un comando CLI de acción. En su lugar, puede utilizar un script genérico</string>
-    <string name="learn_more">Aprender más</string>
+    <string name="learn_more">Aprenda más</string>
     <string name="sponsors">Patrocinadores</string>
     <string name="blacklisted">En lista negra</string>
     <string name="settings_blacklist_alerts">Alertas de lista negra</string>
