@@ -443,4 +443,7 @@
     <string name="events_christmas"></string>
     <string name="settings_webui_remote_url"></string>
     <string name="thank_you"></string>
+    <string name="invalid_ip"></string>
+    <string name="settings_webui_remote_url_desc"></string>
+    <string name="settings_modules_permissions"></string>
 </resources>
