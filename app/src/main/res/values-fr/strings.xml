@@ -413,10 +413,10 @@
     <string name="profile_name">Nom du profil</string>
     <string name="profile_groups">Groupes</string>
     <string name="profile_selinux_rules">Règles de SELinux</string>
-    <string name="profile_selinux_rules_invalid">Règles invalides !</string>
+    <string name="profile_selinux_rules_invalid">Règles invalides !</string>
     <string name="profile_selinux">SELinux</string>
     <string name="profile_selinux_context">Contexte SELinux</string>
-    <string name="profile_selinux_context_invalid">Contexte invalide !</string>
+    <string name="profile_selinux_context_invalid">Contexte invalide !</string>
     <string name="profile_selinux_domain">Domaine</string>
     <string name="profile_namespace_global">Global</string>
     <string name="profile_namespace_individual">Individuel</string>
