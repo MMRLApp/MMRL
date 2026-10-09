@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="requireNewVersion_try_the_following">Спробуйте наступне:</string>
-    <string name="requireNewVersion_try_the_following_two">Зверніться до розробника модуля за можливим рішенням.</string>
+    <string name="requireNewVersion_try_the_following">Спробуйте ось що:</string>
+    <string name="requireNewVersion_try_the_following_two">Зверніться до розробника модуля, аби дізнатися про можливий обхідний шлях.</string>
     <string name="requireNewVersion_refresh">Оновити</string>
     <string name="requireNewVersion_cannot_load_webui">Не вдалося завантажити WebUI</string>
     <string name="requireNewVersion_require_text">потрібна щонайменше MMRL &gt;=</string>
