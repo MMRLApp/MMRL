@@ -21,7 +21,7 @@
     <string name="view_module_version">Phiên bản</string>
     <string name="view_module_update_notify">Thông báo</string>
     <string name="view_module_update_ignore">Phớt lờ</string>
-    <string name="view_module_version_dialog_desc">Bạn có muốn cài đặt hoặc tải xuống phiên bản mô-đun này không\?</string>
+    <string name="view_module_version_dialog_desc">Bạn có muốn cài đặt hoặc tải xuống phiên bản mô-đun này không?</string>
     <string name="view_module_homepage">Trang chủ</string>
     <string name="view_module_source">Mã nguồn</string>
     <string name="view_module_support">Ủng hộ</string>
@@ -56,7 +56,7 @@
     <string name="repo_options_update">Cập nhật</string>
     <string name="repo_options_delete">Xóa bỏ</string>
     <string name="repo_update_at">Đã cập nhật lúc: %s</string>
-    <string name="repo_delete_dialog_desc">Bạn có chắc chắn xóa %s không\?</string>
+    <string name="repo_delete_dialog_desc">Bạn có chắc chắn xóa %s không?</string>
     <string name="repo_add_dialog_title">Thêm kho lưu trữ</string>
     <string name="repo_add_dialog_add">Thêm</string>
     <string name="about_app_version">Phiên bản %1$s (%2$s)</string>

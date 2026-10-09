@@ -37,7 +37,7 @@
     <string name="repo_modules">Módulos de %d</string>
     <string name="repo_options_update">Atualizar</string>
     <string name="repo_options_delete">Apagar</string>
-    <string name="repo_delete_dialog_desc">Você tem certeza de que gostaria de apagar %s\?</string>
+    <string name="repo_delete_dialog_desc">Você tem certeza de que gostaria de apagar %s?</string>
     <string name="repo_add_dialog_title">Adicionar repositório</string>
     <string name="repo_add_dialog_add">Adicionar</string>
     <string name="dialog_attention">Atenção</string>

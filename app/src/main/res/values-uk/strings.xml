@@ -121,7 +121,7 @@
     <string name="settings_resources">Ресурси</string>
     <string name="settings_resources_desc">Документація, підтримувані репозиторії та все інше</string>
     <string name="settings_security">Безпека</string>
-    <string name="settings_security_desc">Питання безпеки застосунків</string>
+    <string name="settings_security_desc">Питання, пов’язані з безпекою застосунків</string>
     <string name="settings_appearance">Вигляд</string>
     <string name="settings_appearance_desc">Налаштуйте застосунок під свої потреби</string>
     <string name="settings_other">Інше</string>
@@ -134,7 +134,7 @@
     <string name="settings_root_access">Root-доступ: %s</string>
     <string name="settings_root_provider">Постачальник: %s</string>
     <string name="settings_root_version">Версія: %s</string>
-    <string name="settings_root_granted">Дозволено</string>
+    <string name="settings_root_granted">Надано</string>
     <string name="settings_root_not_available">Недоступно</string>
     <string name="settings_root_none">Немає</string>
     <string name="settings_non_root_desc">Функціональність обмежена</string>
@@ -161,7 +161,7 @@
     <string name="settings_repo_update_interval_desc">Вибрати інтервал часу для оновлення репозиторіїв</string>
     <string name="settings_check_app_updates">Перевірити оновлення застосунку</string>
     <string name="settings_check_app_updates_desc">Автоматично перевіряє наявність оновлень застосунку щоразу, коли ви його відкриваєте</string>
-    <string name="settings_hide_fingerprint">Приховати відбиток пальця на головній</string>
+    <string name="settings_hide_fingerprint">Приховати відбиток пальця на Головній</string>
     <string name="settings_hide_fingerprint_desc">Не має значення, справжній він чи підробка</string>
     <string name="settings_check_modules_update">Перевірити наявність оновлень модуля</string>
     <string name="settings_check_modules_update_desc">Вмикає перевірки оновлень для встановлених модулів</string>
@@ -411,7 +411,7 @@
     <string name="module_repositories">Репозиторії модулів</string>
     <string name="latest_commit_id">ID останнього коміту</string>
     <string name="build_tools_version">Версія Build Tools</string>
-    <string name="compile_sdk">Compile SDK</string>
+    <string name="compile_sdk">Компілювати SDK</string>
     <string name="settings_set_spoofed_wxp">Пакет WebUI X Portable</string>
     <string name="settings_set_spoofed_wxp_desc">Встановіть власну підроблену назву пакета WebUI X Portable.</string>
     <string name="settings_enable_blur">Увімкнути розмиття</string>
