@@ -37,7 +37,7 @@
     <string name="repo_modules">%d modules</string>
     <string name="repo_options_update">Mise à jour</string>
     <string name="repo_options_delete">Supprimer</string>
-    <string name="repo_delete_dialog_desc">Êtes-vous sûr de supprimer %s \?</string>
+    <string name="repo_delete_dialog_desc">Êtes-vous sûr de supprimer %s ?</string>
     <string name="repo_add_dialog_title">Ajout dépôt</string>
     <string name="repo_add_dialog_add">Ajouter</string>
     <string name="dialog_cancel">Annuler</string>
@@ -55,7 +55,7 @@
     <string name="menu_pin_installed">Épingler Installé</string>
     <string name="menu_show_icon">Afficher icône</string>
     <string name="menu_show_license">Afficher la licence</string>
-    <string name="view_module_version_dialog_desc">Voulez-vous télécharger ou installer cette version du module \?</string>
+    <string name="view_module_version_dialog_desc">Voulez-vous télécharger ou installer cette version du module ?</string>
     <string name="view_module_homepage">Page d\'accueil</string>
     <string name="view_module_source">Code source</string>
     <string name="view_module_support">Support</string>

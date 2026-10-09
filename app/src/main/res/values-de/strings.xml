@@ -74,9 +74,9 @@
     <string name="setup_mode">Arbeitsmodus</string>
     <string name="page_modules">Module</string>
     <string name="repository_empty">Repository ist leer</string>
-    <string name="view_module_version_dialog_desc">Möchtest du diese Version installieren oder herunterladen\?</string>
+    <string name="view_module_version_dialog_desc">Möchtest du diese Version installieren oder herunterladen?</string>
     <string name="settings_delete_zip_desc">Löscht Zip Dateien nach der erfolgreichen Installation</string>
-    <string name="repo_delete_dialog_desc">Willst du wirklich %s löschen\?</string>
+    <string name="repo_delete_dialog_desc">Willst du wirklich %s löschen?</string>
     <string name="menu_sort_mode">Sortierreihenfolge</string>
     <string name="about_app_version">Version %1$s (%2$s)</string>
     <string name="install_screen_title">Installation</string>
