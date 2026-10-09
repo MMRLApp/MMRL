@@ -224,7 +224,7 @@
     <string name="home_root_provider_version_name">Nom de la version du fournisseur root</string>
     <string name="update_available_from_to">Mise à jour disponible de %s (%d) à %s (%d).</string>
     <string name="home_storage_usage">Utilisation du stockage</string>
-    <string name="invalid_ip">Il ne s\'agit pas d\'un domaine local valide !</string>
+    <string name="invalid_ip">Il ne s\'agit pas d\'un domaine local valide !</string>
     <string name="install_screen_cancel_title">Annuler l\'installation ?</string>
     <string name="action_screen_cancel_text">Êtes-vous sûr de vouloir annuler cette action ?</string>
     <string name="install_screen_cancel_text">Êtes-vous sûr de vouloir annuler l\'installation ?</string>
@@ -263,10 +263,10 @@
     <string name="repository_service_started">Service de Référentiel démarré</string>
     <string name="provider_service_started">Service du fournisseur démarré</string>
     <string name="get_the_most_out_of_mmrl">Tirez le meilleur parti de MMRL !</string>
-    <string name="allow_advanced_kernelsu_api">Autoriser l\'accès à l\'API avancée KernelSU ?</string>
+    <string name="allow_advanced_kernelsu_api">Autoriser l\'accès à l\'API avancée KernelSU ?</string>
     <string name="explore_more_repositories">Explorez plus de Référentiels</string>
     <string name="allow_filesystem_api_desc">Voulez-vous autoriser ce module à utiliser l\'API FileSystem ? Si vous ne lui faites pas confiance, vous pouvez lui refuser l\'accès</string>
-    <string name="allow_filesystem_api">Autoriser l\'accès à l\'API FileSystem ?</string>
+    <string name="allow_filesystem_api">Autoriser l\'accès à l\'API FileSystem ?</string>
     <string name="learn_more">En savoir plus</string>
     <string name="settings_clear_install_terminal">Effacer le terminal d\'installation</string>
     <string name="settings_strict_mode">Mode Strict</string>
@@ -278,7 +278,7 @@
     <string name="view_module_features_mmrl_webui_config_sub">Ce module utilise un fichier de configuration pour les interfaces Web avec MMRL</string>
     <string name="repo_options_website">Site Web</string>
     <string name="working_mode_shizuku_title">Shizuku</string>
-    <string name="settings_root_version">Version : %s</string>
+    <string name="settings_root_version">Version : %s</string>
     <string name="settings_doh">DNS via HTTPS</string>
     <string name="settings_modules_installer">Installateur</string>
     <string name="selinux_status_permissive">Permissif</string>
@@ -321,7 +321,7 @@
     <string name="dialog_attention">Attention</string>
     <string name="reboot_userspace">Redémarrage doux</string>
     <string name="action_activity">Action</string>
-    <string name="events_halloween">BOUH ! … AHH</string>
+    <string name="events_halloween">BOUH ! … AHH</string>
     <string name="events_christmas">← Arbre.</string>
     <string name="kernel">Noyau</string>
     <string name="page_repositorys">Dépôts</string>
@@ -333,7 +333,7 @@
     <string name="working_mode_kernelsu_title">KernelSU</string>
     <string name="working_mode_kernelsu_next_title">KernelSU Next</string>
     <string name="working_mode_apatch_title">APatch</string>
-    <string name="view_module_type">Type : %s</string>
+    <string name="view_module_type">Type : %s</string>
     <string name="view_module_added_on">Ajouté le</string>
     <string name="view_module_install_confirm_desc">Êtes-vous sûr(e) de vouloir installer [color=surface_tint]%1$s[/color]?</string>
     <string name="selected">Sélectionné</string>
@@ -350,7 +350,7 @@
     <string name="view_module_features_zygisk">Zygisk</string>
     <string name="view_module_features_apks">APKs</string>
     <string name="view_module_features_webui">WebUI</string>
-    <string name="are_you_sure_you_want_to_exit">Êtes-vous sûr de vouloir quitter ?</string>
+    <string name="are_you_sure_you_want_to_exit">Êtes-vous sûr de vouloir quitter ?</string>
     <string name="exit">Quitter</string>
     <string name="says">%1$s dit</string>
     <string name="settings_enable_toolbar_events">Activer les événements de la barre d\'outils</string>
@@ -363,7 +363,7 @@
     <string name="select">Sélectionner</string>
     <string name="platform">Plateforme</string>
     <string name="change_platform">Changer de plateforme</string>
-    <string name="welcome">Bienvenue !</string>
+    <string name="welcome">Bienvenue !</string>
     <string name="select_your_platform">Sélectionnez votre plateforme</string>
     <string name="setup_root_note">Pour accéder à toutes les fonctionnalités de MMRL, un appareil Android rooté est nécessaire. MMRL ne fournit pas d\'instructions pour le rooting et n\'est pas responsable des dommages qui pourraient survenir au cours du processus de rooting ou de l\'utilisation de MMRL lui-même.\n\n[link=https://mmrl.dev/legal/privacy]Politique de confidentialité[/link] • [link=https://mmrl.dev/legal/terms]Conditions d\'utilisation[/link]</string>
     <string name="shortcut_not_supported">Les raccourcis ne sont pas pris en charge par votre appareil ou votre lanceur</string>
@@ -377,14 +377,14 @@
     <string name="settings_terminal_line_numbers">Numéros de ligne</string>
     <string name="settings_terminal_line_numbers_desc">Affiche les numéros de ligne sur le côté gauche du terminal</string>
     <string name="super_user_apps">Applications superutilisateur</string>
-    <string name="settings_date_pattern_dialog_desc">Le modèle de date sera analysé comme suit :\n[color=primary]%1$s[/color]</string>
-    <string name="view_module_install_confirm_desc_deps">Êtes-vous sûr de vouloir installer [color=surface_tint]%1$s[/color] ? Ce module nécessite également :</string>
+    <string name="settings_date_pattern_dialog_desc">Le modèle de date sera analysé comme suit :\n[color=primary]%1$s[/color]</string>
+    <string name="view_module_install_confirm_desc_deps">Êtes-vous sûr de vouloir installer [color=surface_tint]%1$s[/color] ? Ce module nécessite également :</string>
     <string name="menu_sort_option_size">Taille</string>
-    <string name="settings_try_wxp">Essayez WebUI X : Portable !</string>
+    <string name="settings_try_wxp">Essayez WebUI X : Portable !</string>
     <string name="external_app_required_title">Application externe requise</string>
-    <string name="external_app_required_desc">Afin d\'améliorer votre expérience et de fournir des fonctionnalités WebUI plus robustes, MMRL utilise désormais une application externe dédiée : WebUI X : Portable. Cette application permet d\'améliorer les performances, la sécurité et la fréquence des mises à jour des fonctionnalités de l\'interface WebUI. Vous devrez installer WebUI X : Portable pour continuer à accéder aux WebUI de vos modules. Les utilisateurs qui ont installé MMRL via le Google Play Store seront redirigés vers la page Google Play Store pour WebUI X : Portable.</string>
+    <string name="external_app_required_desc">Afin d\'améliorer votre expérience et de fournir des fonctionnalités WebUI plus robustes, MMRL utilise désormais une application externe dédiée : WebUI X : Portable. Cette application permet d\'améliorer les performances, la sécurité et la fréquence des mises à jour des fonctionnalités de l\'interface WebUI. Vous devrez installer WebUI X : Portable pour continuer à accéder aux WebUI de vos modules. Les utilisateurs qui ont installé MMRL via le Google Play Store seront redirigés vers la page Google Play Store pour WebUI X : Portable.</string>
     <string name="settings_always_show_update_alert">Toujours afficher l\'alerte de mise à jour</string>
-    <string name="update_available">Mise à jour disponible !</string>
+    <string name="update_available">Mise à jour disponible !</string>
     <string name="settings_webui_engine_desc">Sélectionnez votre moteur préféré</string>
     <string name="view_module_no_description">Aucune description fournie.</string>
     <string name="view_module_permissions">Permissions</string>
