@@ -6,9 +6,9 @@
     <string name="nsfw_name">NSFW</string>
     <string name="nsfw_desc">Dieses Modul enthält Inhalte, die nicht überall veröffentlicht oder sichtbar sein sollten.</string>
     <string name="nosourcesince_desc">Der Quellcode ist nicht mehr verfügbar, keine Updates möglich.</string>
-    <string name="knownvuln_name">Bekannte Schwachstelle</string>
+    <string name="knownvuln_name">Bekannte Sicherheitslücke</string>
     <string name="nosourcesince_name">Keine Quelle seit</string>
-    <string name="nonfreeadd_name">Nicht-quelloffene Erweiterungen</string>
+    <string name="nonfreeadd_name">Nicht-kostenlose Add-ons</string>
     <string name="nonfreeassets_name">Nicht-quelloffene Bestandteile</string>
     <string name="nonfreedep_name">Nicht-quelloffene Abhängigkeiten</string>
     <string name="nonfreedep_desc">Dieses Modul ist von anderen nicht freien Modulen abhängig.</string>
@@ -20,12 +20,12 @@
     <string name="upstreamnonfree_desc">Der Upstream-Quellcode ist nicht völlig kostenlos.</string>
     <string name="obfuscation_name">Verschleierung</string>
     <string name="obfuscation_desc">Der Quellcode des Moduls ist möglicherweise verschleiert, was es schwierig macht, ihn zu verstehen, zu prüfen oder zu ändern.</string>
-    <string name="unaskedremoval_name">Unaufgeforderte Entfernung</string>
+    <string name="unaskedremoval_name">Ungefragte Entfernung</string>
     <string name="unaskedremoval_desc">Das Modul entfernt Apps, Dateien oder andere Module ohne Zustimmung des Benutzers.</string>
     <string name="nonfreeadd_desc">Dieses Modul fördert nicht kostenlose Add-ons.</string>
     <string name="nonfreeassets_desc">Dieses Modul enthält unfreie Assets.</string>
-    <string name="llm_name">Großes Sprachmodell</string>
-    <string name="llm_desc">Modul vielleicht teilweise oder komplett von LLM geschrieben</string>
+    <string name="llm_name">Künstliche Intelligenz</string>
+    <string name="llm_desc">Modul vielleicht teilweise oder komplett von KI geschrieben</string>
     <string name="closedsource_desc">Das Modul ist nicht Open Source und seine Codebasis ist für die Öffentlichkeit nicht zur Überprüfung, Änderung oder Weiterverteilung zugänglich</string>
-    <string name="closedsource_name">Closed Source</string>
+    <string name="closedsource_name">Nicht quelloffen</string>
 </resources>
