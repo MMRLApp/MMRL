@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <plurals name="hours">
+    </plurals>
+    <plurals name="module_count_explore_repo">
+    </plurals>
+    <plurals name="search_results">
+    </plurals>
 </resources>

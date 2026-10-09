@@ -38,7 +38,7 @@
     <string name="app_theme_dark_theme_dark">Întunecată</string>
     <string name="repo_modules">%d module</string>
     <string name="repo_options_delete">Șterge</string>
-    <string name="repo_delete_dialog_desc">Sigur ștergi %s\?</string>
+    <string name="repo_delete_dialog_desc">Sigur ștergi %s?</string>
     <string name="repo_add_dialog_title">Adaugă un depozit</string>
     <string name="repo_add_dialog_add">Adaugă</string>
     <string name="dialog_attention">Atenție</string>
@@ -51,7 +51,7 @@
     <string name="settings_delete_zip">Șterge fișierul Zip</string>
     <string name="settings_delete_zip_desc">Șterge fișierul zip al modulului după ce instalarea a reușit, aceasta va fi executată de Super-utilizator</string>
     <string name="page_repository">Depozit</string>
-    <string name="view_module_version_dialog_desc">Dorești să instalezi sau să descarci această versiune a modulului\?</string>
+    <string name="view_module_version_dialog_desc">Dorești să instalezi sau să descarci această versiune a modulului?</string>
     <string name="settings_about">Despre</string>
     <string name="module_installed">Instalat</string>
     <string name="view_module_version">Versiune</string>

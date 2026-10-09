@@ -3,7 +3,7 @@
     <string name="setup_mode">Tryb pracy</string>
     <string name="repository_empty">Repozytorium jest puste</string>
     <string name="view_module_version">Wersja</string>
-    <string name="view_module_version_dialog_desc">Chcesz zainstalować czy pobrać tę wersję modułu\?</string>
+    <string name="view_module_version_dialog_desc">Chcesz zainstalować czy pobrać tę wersję modułu?</string>
     <string name="settings_delete_zip">Usuwaj plik zip</string>
     <string name="settings_delete_zip_desc">Usuwa plik zip modułu (za pomocą roota) po pomyślnej instalacji.</string>
     <string name="app_theme_palette">Paleta motywów</string>
@@ -42,7 +42,7 @@
     <string name="repo_modules">Ilość modułów: %d</string>
     <string name="repo_options_update">Zaktualizuj</string>
     <string name="repo_options_delete">Usuń</string>
-    <string name="repo_delete_dialog_desc">Usunąć %s\?</string>
+    <string name="repo_delete_dialog_desc">Usunąć %s?</string>
     <string name="repo_add_dialog_title">Dodaj repozytorium</string>
     <string name="repo_add_dialog_add">Dodaj</string>
     <string name="about_app_version">Wersja %1$s (%2$s)</string>
@@ -149,8 +149,7 @@
     <string name="settings_updates_desc">Zarządzaj swoimi preferencjami dotyczącymi procesu aktualizacji.</string>
     <string name="we_hit_a_brick_crash">Trafiliśmy na ścianę!</string>
     <string name="report_to_issues">Zgłoś problemy</string>
-    <string name="stack_trace_truncated">%s
-\n… %d więcej</string>
+    <string name="stack_trace_truncated">%s \n… %d więcej</string>
     <string name="additional_notes">Dodatkowe uwagi</string>
     <string name="repo_added">Repo zostało dodane</string>
     <string name="repo_update_service">Pomyślnie zaktualizowano repozytoria</string>
