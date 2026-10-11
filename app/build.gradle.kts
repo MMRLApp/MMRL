@@ -174,10 +174,14 @@ android {
 
 androidComponents {
     onVariants { variant ->
+        val distributionFlavor = variant.productFlavors
+            .firstOrNull { it.first == "distribution" }
+            ?.second
+
         variant.outputs.filterIsInstance<VariantOutputImpl>().forEach { output ->
             output.outputFileName.set(
                 output.versionName.map { vName ->
-                    "MMRL-${vName}-${variant.buildType ?: variant.name}.apk"
+                    "MMRL-$vName-$distributionFlavor.apk"
                 }
             )
         }
@@ -196,9 +200,6 @@ dependencies {
     implementation(projects.ext)
     implementation(projects.compat)
     implementation(projects.datastore)
-
-    implementation(libs.webuix.hwui)
-    implementation(libs.webuix.helper)
 
     implementation(libs.kotlin.stdlib)
 
@@ -272,6 +273,8 @@ dependencies {
     ksp(libs.square.moshi.kotlin)
 
     implementation(libs.mmrlx.terminal)
+//    implementation(libs.mmrlx.nio)
+//    implementation(libs.mmrlx.utilities)
     implementation(libs.mmrlx.webui.core)
 
     implementation("dev.chrisbanes.haze:haze:1.6.10")

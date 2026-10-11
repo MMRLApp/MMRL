@@ -16,7 +16,7 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 fun ListScope.PermissionItem(
     permissions: List<String>,
     contentPadding: PaddingValues,
-) = permissions.forEach {
+) = permissions.forEach { it ->
     val permission = getPermissionDetails(it)
     permission.nullable { p ->
         Item(
@@ -80,7 +80,7 @@ private fun getPermissionDetails(id: String): Permission? {
                     {
                         KernelSuLabel()
                         APatchLabel()
-                        MMRLLabel()
+                        WebUIXLabel()
                     },
                 ),
             "kernelsu.permission.POST_MOUNT" to
@@ -111,7 +111,7 @@ private fun getPermissionDetails(id: String): Permission? {
                 Permission(
                     R.string.view_module_features_mmrl_webui_config,
                     R.string.view_module_features_mmrl_webui_config_sub,
-                    { MMRLLabel() },
+                    { WebUIXLabel() },
                 ),
             "mmrl.permission.APKS" to
                 Permission(

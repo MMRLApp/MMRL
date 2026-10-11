@@ -4,14 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.platform.ksu.KsuNative
 import com.dergoogler.mmrl.ui.remember.rememberIsRoot
-import com.dergoogler.mmrl.utils.isManager
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ModulesScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.RepositoriesScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.SuperUserScreenDestination
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
 // @NavHostGraph
@@ -32,15 +29,6 @@ enum class MainDestination(
         iconFilled = R.drawable.home_filled,
         requiresRoot = false,
         requiresKernel = false,
-    ),
-
-    SuperUser(
-        direction = SuperUserScreenDestination,
-        label = R.string.page_superuser,
-        icon = R.drawable.user,
-        iconFilled = R.drawable.user_filled,
-        requiresRoot = true,
-        requiresKernel = true,
     ),
 
     Repository(
@@ -75,7 +63,5 @@ enum class MainDestination(
 val MainDestination.isAccessible: Boolean
     get() {
         val isRoot = rememberIsRoot()
-        if (this.requiresRoot && !isRoot) return false
-        if (this.requiresKernel && !(KsuNative.isManager && isRoot)) return false
-        return true
+        return !(this.requiresRoot && !isRoot)
     }

@@ -70,6 +70,7 @@ jobs:
             ${{ env.MESSAGE }}
 
             Branch: ${{ env.BRANCH_NAME }}
+            Track: ${{ github.event.inputs.track }}
             [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
           files: |
             ${{ steps.find_apks.outputs.OFFICIAL_APK_PATH }}

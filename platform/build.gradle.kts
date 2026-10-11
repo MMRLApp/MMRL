@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.platform"
-    compileSdk = 36
+    compileSdk = 37
 
     publishing {
         singleVariant("release")

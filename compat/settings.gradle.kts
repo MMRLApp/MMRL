@@ -13,6 +13,6 @@ dependencyResolutionManagement {
 
 include(
     ":platform",
-    ":ui"
+    ":ui",
     ":ext"
 )

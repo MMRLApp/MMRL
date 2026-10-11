@@ -172,7 +172,7 @@ enum class Platform(
     // Category checks
     val isKernelSuVariant: Boolean get() = type is PlatformType.KernelSU
     val isKernelSuOrNext: Boolean get() = this == KernelSU || this == KsuNext
-    val isValid: Boolean get() = this != NonRoot
+    val isValid: Boolean get() = this != NonRoot && this != Unknown
 
     // Negation checks (computed properties for consistency)
     val isNotMagisk: Boolean get() = !isMagisk

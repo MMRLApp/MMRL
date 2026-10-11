@@ -50,14 +50,14 @@ fun BottomSheet(
     modifier,
     sheetState,
     sheetMaxWidth,
-    shape,
-    containerColor,
-    contentColor,
-    tonalElevation,
-    scrimColor,
-    dragHandle,
-    { windowInsets },
-    properties,
+//    shape,
+//    containerColor,
+//    contentColor,
+//    tonalElevation,
+//    scrimColor,
+//    dragHandle,
+//    { windowInsets },
+//    properties,
 ) {
     val statusBarHeight =
         WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 28.dp

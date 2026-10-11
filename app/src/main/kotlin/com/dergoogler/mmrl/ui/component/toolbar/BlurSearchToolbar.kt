@@ -46,7 +46,13 @@ fun BlurSearchToolbar(
     fadeBackgroundIfNoBlur: Boolean = false,
     fadeDistance: Float = 200f,
     fade: Boolean = false,
+    state: BlurToolbarState = rememberBlurToolbarState(
+        scrollBehavior = scrollBehavior,
+        fade = fade,
+        fadeDistance = fadeDistance,
+    ),
 ) = BlurToolbar(
+    state = state,
     modifier = modifier,
     actions = actions,
     windowInsets = windowInsets,

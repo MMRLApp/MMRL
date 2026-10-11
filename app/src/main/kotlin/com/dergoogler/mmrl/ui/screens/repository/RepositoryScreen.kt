@@ -1,6 +1,7 @@
 package com.dergoogler.mmrl.ui.screens.repository
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -9,32 +10,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -50,318 +50,279 @@ import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.database.entity.Repo
+import com.dergoogler.mmrl.datastore.model.RepoListMode
+import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.nullply
 import com.dergoogler.mmrl.ext.onClick
-import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
 import com.dergoogler.mmrl.ext.stripLinks
-import com.dergoogler.mmrl.model.ui.TopCategory
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.LabelItemDefaults
-import com.dergoogler.mmrl.ui.component.Loading
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.card.Card
 import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
 import com.dergoogler.mmrl.ui.component.text.BBCodeText
-import com.dergoogler.mmrl.ui.component.toolbar.BlurToolbar
+import com.dergoogler.mmrl.ui.component.toolbar.BlurSearchToolbar
 import com.dergoogler.mmrl.ui.component.toolbar.ToolbarTitle
-import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
-import com.dergoogler.mmrl.ui.providable.LocalHazeState
-import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
-import com.dergoogler.mmrl.ui.providable.LocalRepo
-import com.dergoogler.mmrl.ui.screens.repository.modules.ModulesFilter
+import com.dergoogler.mmrl.ui.component.toolbar.rememberBlurToolbarState
+import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.RepositoryViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.destinations.TypedModulesScreenDestination
-import dev.chrisbanes.haze.hazeSource
 import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 
-@Destination<RootGraph>()
+@Destination<RootGraph>
 @Composable
-fun RepositoryScreen(repo: Repo) =
-    LocalScreenProvider {
-        val viewModel = RepositoryViewModel.build(repo)
-        val list by viewModel.online.collectAsStateWithLifecycle()
+fun RepositoryScreen(
+    repo: Repo,
+) = LocalScreenProvider {
+    val userPreferences = LocalUserPreferences.current
+    val browser = LocalUriHandler.current
+    val density = LocalDensity.current
 
-        val browser = LocalUriHandler.current
-        val density = LocalDensity.current
-        val navigator = LocalDestinationsNavigator.current
-        val hazeState = LocalHazeState.current
+    val viewModel = RepositoryViewModel.build(repo)
+    val modules by viewModel.online.collectAsStateWithLifecycle()
 
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val openSearch = viewModel::openSearch
+    val closeSearch = viewModel::closeSearch
+    val search = viewModel::search
+    val isSearch by viewModel::isSearch
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
 
-        // Use rememberSaveable to persist scroll position across navigation
-        val listState = rememberSaveableLazyListState(key = "repository_${repo.url}")
+    var coverHeight by remember { mutableIntStateOf(0) }
+    var cardHeight by remember { mutableIntStateOf(0) }
 
-        BackHandler(
-            enabled = viewModel.isSearch,
-            onBack = viewModel::closeSearch,
-        )
+    val menu = userPreferences.repositoryMenu
+    val pad = remember(menu) { if (menu.repoListMode == RepoListMode.Compact) 0.dp else 16.dp }
 
-        val modules = remember(list) { list.map { it.second } }
-        val topCategories = remember(modules) { TopCategory.fromModuleList(modules) }
-        val metaModules = remember(modules) {
-            modules.filter {
-                it.permissions?.contains("kernelsu.permission.METAMODULE") == true
-            }
+    BackHandler(enabled = viewModel.isSearch, onBack = viewModel::closeSearch)
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            TopBar0(
+                repo = repo,
+                isSearch = isSearch,
+                query = query,
+                onQueryChange = search,
+                onOpenSearch = openSearch,
+                onCloseSearch = closeSearch,
+                scrollBehavior = scrollBehavior,
+                setMenu = viewModel::setRepositoryMenu,
+            )
+        },
+        contentWindowInsets = WindowInsets.none,
+    ) { innerPadding ->
+        if (modules.isEmpty()) {
+            PageIndicator(
+                icon = R.drawable.cloud,
+                text = if (isSearch) R.string.search_empty else R.string.repository_empty,
+            )
+
+            return@Scaffold
         }
 
-        var coverHeight by remember { mutableIntStateOf(0) }
-        var cardHeight by remember { mutableIntStateOf(0) }
-
-        CompositionLocalProvider(
-            LocalRepo provides repo,
+        this@Scaffold.ModulesList(
+            innerPadding = innerPadding,
+            repo = repo,
+            list = modules,
+            state = viewModel.listState,
         ) {
-            Scaffold(
-                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-                topBar = {
-                    BlurToolbar(
-                        fadeBackgroundIfNoBlur = true,
-                        navigationIcon = {
-                            IconButton(onClick = { navigator.popBackStack() }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.arrow_left),
-                                    contentDescription = null,
-                                )
-                            }
-                        },
-                        title = {
-                            ToolbarTitle(
-                                modifier = Modifier.alpha(it),
-                                title = repo.name,
-                            )
-                        },
-                        fade = true,
-                        scrollBehavior = scrollBehavior,
-                    )
-                },
-                contentWindowInsets = WindowInsets.none,
-            ) { _ ->
-                ResponsiveContent {
-                    if (viewModel.isLoading) {
-                        Loading()
+            item {
+                AnimatedVisibility(isSearch) {
+                    Spacer(Modifier.height(innerPadding.calculateTopPadding() + pad))
+                }
 
-                        return@ResponsiveContent
-                    }
-
-                    if (list.isEmpty() && !viewModel.isLoading) {
-                        PageIndicator(
-                            icon = R.drawable.cloud,
-                            text = if (viewModel.isSearch) R.string.search_empty else R.string.repository_empty,
+                AnimatedVisibility(!isSearch) {
+                    Box(Modifier.animateEnterExit()) {
+                        Cover(
+                            modifier =
+                                Modifier
+                                    .fadingEdge(
+                                        brush =
+                                            Brush.verticalGradient(
+                                                colors = listOf(
+                                                    Color.Transparent,
+                                                    Color.Black
+                                                ),
+                                                startY = Float.POSITIVE_INFINITY,
+                                                endY = 0f,
+                                            ),
+                                    )
+                                    .onGloballyPositioned { coordinates ->
+                                        coverHeight = coordinates.size.height
+                                    },
+                            url = repo.cover ?: "ERROR ME",
+                            errorIcon = R.drawable.box,
                         )
 
-                        return@ResponsiveContent
-                    }
-
-                    LazyColumn(
-                        state = listState,
-                        modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .hazeSource(state = hazeState),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        item {
-                            Box {
-                                Cover(
-                                    modifier =
-                                        Modifier
-                                            .fadingEdge(
-                                                brush =
-                                                    Brush.verticalGradient(
-                                                        colors = listOf(
-                                                            Color.Transparent,
-                                                            Color.Black
+                        Box(
+                            modifier =
+                                Modifier
+                                    .offset(y = 164.4.dp)
+                                    .align(Alignment.TopCenter)
+                                    .fillMaxWidth(0.85f)
+                                    .onGloballyPositioned { coordinates ->
+                                        cardHeight = coordinates.size.height
+                                    },
+                        ) {
+                            Card(
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .background(
+                                            brush =
+                                                Brush.linearGradient(
+                                                    colors =
+                                                        listOf(
+                                                            MaterialTheme.colorScheme.surfaceColorAtElevation(
+                                                                1.dp,
+                                                            ),
+                                                            MaterialTheme.colorScheme.background,
                                                         ),
-                                                        startY = Float.POSITIVE_INFINITY,
-                                                        endY = 0f,
-                                                    ),
-                                            )
-                                            .onGloballyPositioned { coordinates ->
-                                                coverHeight = coordinates.size.height
-                                            },
-                                    url = repo.cover ?: "ERROR ME",
-                                    errorIcon = R.drawable.box,
-                                )
-
-                                Box(
-                                    modifier =
-                                        Modifier
-                                            .offset(y = 164.4.dp)
-                                            .align(Alignment.TopCenter)
-                                            .fillMaxWidth(0.85f)
-                                            .onGloballyPositioned { coordinates ->
-                                                cardHeight = coordinates.size.height
-                                            },
-                                ) {
-                                    Card(
-                                        modifier =
-                                            Modifier
-                                                .align(Alignment.BottomCenter)
-                                                .background(
-                                                    brush =
-                                                        Brush.linearGradient(
-                                                            colors =
-                                                                listOf(
-                                                                    MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                                                        1.dp,
-                                                                    ),
-                                                                    MaterialTheme.colorScheme.background,
-                                                                ),
-                                                            start = Offset(0f, 0f),
-                                                            end =
-                                                                Offset(
-                                                                    Float.POSITIVE_INFINITY,
-                                                                    Float.POSITIVE_INFINITY,
-                                                                ),
+                                                    start = Offset(0f, 0f),
+                                                    end =
+                                                        Offset(
+                                                            Float.POSITIVE_INFINITY,
+                                                            Float.POSITIVE_INFINITY,
                                                         ),
-                                                    RoundedCornerShape(20.dp),
-                                                )
-                                                .border(
-                                                    Dp.Hairline,
-                                                    MaterialTheme.colorScheme.outlineVariant,
-                                                    RoundedCornerShape(20.dp),
                                                 ),
-                                    ) {
-                                        Column(
-                                            modifier =
-                                                Modifier
-                                                    .relative()
-                                                    .padding(16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                                        ) {
-                                            Text(
-                                                text = repo.name,
-                                                maxLines = 2,
-                                                overflow = TextOverflow.Ellipsis,
-                                                textAlign = TextAlign.Center,
-                                                style = MaterialTheme.typography.headlineMedium,
-                                                fontWeight = FontWeight.Bold,
-                                                color = MaterialTheme.colorScheme.onBackground,
-                                            )
+                                            RoundedCornerShape(20.dp),
+                                        )
+                                        .border(
+                                            Dp.Hairline,
+                                            MaterialTheme.colorScheme.outlineVariant,
+                                            RoundedCornerShape(20.dp),
+                                        ),
+                            ) {
+                                Column(
+                                    modifier =
+                                        Modifier
+                                            .relative()
+                                            .padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                                ) {
+                                    Text(
+                                        text = repo.name,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                        textAlign = TextAlign.Center,
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
 
-                                            BBCodeText(
-                                                text =
-                                                    (
-                                                            repo.description
-                                                                ?: stringResource(R.string.view_module_no_description)
-                                                            ).stripLinks(
-                                                            "<URL>",
+                                    BBCodeText(
+                                        text =
+                                            (
+                                                    repo.description
+                                                        ?: stringResource(R.string.view_module_no_description)
+                                                    ).stripLinks(
+                                                    "<URL>",
+                                                ),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        textAlign = TextAlign.Center,
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        lineHeight = 20.sp,
+                                    )
+
+                                    FlowRow {
+                                        repo.nullply {
+                                            if (submission.isNotNullOrBlank()) {
+                                                LabelItem(
+                                                    style =
+                                                        LabelItemDefaults.style.copy(
+                                                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                                                         ),
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                textAlign = TextAlign.Center,
-                                                color = MaterialTheme.colorScheme.outlineVariant,
-                                                lineHeight = 20.sp,
-                                            )
-
-                                            FlowRow {
-                                                repo.nullply {
-                                                    if (submission.isNotNullOrBlank()) {
-                                                        LabelItem(
-                                                            style =
-                                                                LabelItemDefaults.style.copy(
-                                                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                                                                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                                ),
-                                                            modifier =
-                                                                Modifier.onClick {
-                                                                    browser.openUri(submission)
-                                                                },
-                                                            icon = getDomainIcon(submission),
-                                                            text = stringResource(R.string.repo_options_submission),
-                                                        )
-                                                    }
-                                                }
+                                                    modifier =
+                                                        Modifier.onClick {
+                                                            browser.openUri(submission)
+                                                        },
+                                                    icon = getDomainIcon(submission),
+                                                    text = stringResource(R.string.repo_options_submission),
+                                                )
                                             }
                                         }
                                     }
                                 }
-
-                                with(density) {
-                                    Spacer(modifier = Modifier.height(((coverHeight / 1.2f) + cardHeight).toDp()))
-                                }
                             }
                         }
 
-                        item {
-                            val takenModules = remember { modules.take(9) }
-                            val title = stringResource(R.string.page_modules)
-
-                            TopPicks(
-                                label = title,
-                                list = takenModules,
-                                onMoreClick = {
-                                    navigator.navigate(
-                                        TypedModulesScreenDestination(
-                                            type = ModulesFilter.ALL,
-                                            title = title,
-                                            repo = repo,
-                                        ),
-                                    )
-                                },
-                            )
-                        }
-
-                        if (!metaModules.isEmpty() && viewModel.platform.isKernelSuVariant) {
-                            item {
-                                val title = stringResource(R.string.meta_modules)
-
-                                TopPicks(
-                                    label = title,
-                                    icon = com.dergoogler.mmrl.ui.R.drawable.kernelsu_logo,
-                                    list = metaModules,
-                                    onMoreClick = {
-                                        navigator.navigate(
-                                            TypedModulesScreenDestination(
-                                                type = ModulesFilter.ALL,
-                                                title = title,
-                                                repo = repo,
-                                            ),
-                                        )
-                                    },
-                                )
-                            }
-                        }
-
-                        items(
-                            items = topCategories,
-                            key = { it.label },
-                        ) {
-                            TopPicks(
-                                label = it.label,
-                                list = it.modules,
-                                onMoreClick = {
-                                    navigator.navigate(
-                                        TypedModulesScreenDestination(
-                                            type = ModulesFilter.CATEGORY,
-                                            title = it.label,
-                                            repo = repo,
-                                            query = it.label,
-                                        ),
-                                    )
-                                },
-                            )
-                        }
-
-                        item {
-                            Spacer(
-                                Modifier.height(16.dp),
-                            )
-
-                            val paddingValues = LocalMainScreenInnerPaddings.current
-                            Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
+                        with(density) {
+                            Spacer(modifier = Modifier.height((((coverHeight / 1.05f) + cardHeight)).toDp()))
                         }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun TopBar0(
+    repo: Repo,
+    isSearch: Boolean,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onOpenSearch: () -> Unit,
+    onCloseSearch: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+    setMenu: (RepositoryMenu) -> Unit,
+) {
+    val state = rememberBlurToolbarState(scrollBehavior, fade = true)
+
+    var currentQuery by remember { mutableStateOf(query) }
+    DisposableEffect(isSearch) {
+        onDispose { currentQuery = "" }
+    }
+
+    BlurSearchToolbar(
+        state = state,
+        fadeBackgroundIfNoBlur = true,
+        isSearch = isSearch,
+        query = currentQuery,
+        scrollBehavior = scrollBehavior,
+        fade = true,
+        fadeDistance = 200f,
+        onQueryChange = {
+            onQueryChange(it)
+            currentQuery = it
+        },
+        onClose = {
+            onCloseSearch()
+            currentQuery = ""
+        },
+        title = {
+            ToolbarTitle(
+                title = repo.name,
+                modifier = Modifier.graphicsLayer { alpha = state.alpha },
+            )
+        },
+        actions = {
+            if (!isSearch) {
+                IconButton(
+                    onClick = onOpenSearch,
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.search),
+                        contentDescription = null,
+                    )
+                }
+            }
+
+            RepositoryMenu(
+                setMenu = setMenu,
+            )
+        },
+    )
+}
 
 @Composable
 fun getDomainIcon(url: String) =

@@ -372,8 +372,8 @@
     <string name="failed_to_close_the_action_execution">Failed to close the action execution</string>
     <string name="view_module_features_mmrl_webui">MMRL WebUI</string>
     <string name="view_module_features_mmrl_webui_sub">This module includes a MMRL only WebUI.</string>
-    <string name="view_module_features_mmrl_webui_config">MMRL WebUI Config</string>
-    <string name="view_module_features_mmrl_webui_config_sub">This module uses a config file for WebUI\'s in MMRL</string>
+    <string name="view_module_features_mmrl_webui_config">WebUI X Config</string>
+    <string name="view_module_features_mmrl_webui_config_sub">This module uses a configuration file for WebUI\'s in WebUI X</string>
     <string name="view_module_features_filesystem">FileSystem API</string>
     <string name="view_module_features_filesystem_sub">This module maybe used the FileSystem API provided by MMRL.</string>
     <string name="view_module_features_eruda">Eruda Console</string>

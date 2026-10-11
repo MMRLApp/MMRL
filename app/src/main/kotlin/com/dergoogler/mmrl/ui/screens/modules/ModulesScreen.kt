@@ -188,11 +188,8 @@ private fun TopBar(
     }
 
     BlurSearchToolbar(
-        scrollBehavior = scrollBehavior,
         isSearch = isSearch,
         query = currentQuery,
-        fade = true,
-        fadeDistance = 50f,
         onQueryChange = {
             onQueryChange(it)
             currentQuery = it
@@ -222,6 +219,9 @@ private fun TopBar(
                 setMenu = setMenu,
             )
         },
+        scrollBehavior = scrollBehavior,
+        fadeDistance = 50f,
+        fade = true,
     )
 }
 

@@ -190,7 +190,7 @@ private fun MenuBottomSheet(
 
             MenuChip(
                 selected = menu.showCategory,
-                onClick = { setMenu(menu.copy(showIcon = !menu.showCategory)) },
+                onClick = { setMenu(menu.copy(showCategory = !menu.showCategory)) },
                 label = { Text(text = stringResource(id = R.string.menu_show_category)) },
             )
 

@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ui.screens.moduleView.sections
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,8 +43,6 @@ import com.dergoogler.mmrl.ui.providable.LocalRepo
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.providable.LocalVersionItem
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
-import com.dergoogler.mmrl.ui.screens.repository.modules.ModulesFilter
-import com.ramcosta.composedestinations.generated.destinations.TypedModulesScreenDestination
 
 @Composable
 internal fun Header() {
@@ -104,19 +101,19 @@ internal fun Header() {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                modifier =
-                    Modifier.clickable(
-                        onClick = {
-                            navigator.navigate(
-                                TypedModulesScreenDestination(
-                                    type = ModulesFilter.AUTHOR,
-                                    title = module.author,
-                                    query = module.author,
-                                    repo = repo,
-                                ),
-                            )
-                        },
-                    ),
+//                modifier =
+//                    Modifier.clickable(
+//                        onClick = {
+//                            navigator.navigate(
+//                                TypedModulesScreenDestination(
+//                                    type = ModulesFilter.AUTHOR,
+//                                    title = module.author,
+//                                    query = module.author,
+//                                    repo = repo,
+//                                ),
+//                            )
+//                        },
+//                    ),
                 text = module.author,
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.surfaceTint),
                 maxLines = 2,
