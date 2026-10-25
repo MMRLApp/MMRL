@@ -4,14 +4,17 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.none
@@ -45,7 +48,7 @@ import java.net.URL
 @Destination<RootGraph>
 fun DescriptionScreen(readmeUrl: String) {
     val navigator = LocalDestinationsNavigator.current
-    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
+    val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
     val userPrefs = LocalUserPreferences.current
 
     val colors = MMRLXTheme.colors
@@ -135,7 +138,7 @@ fun DescriptionScreen(readmeUrl: String) {
         wstate.insets(
             PaddingValues(
                 top = contentPadding.calculateTopPadding(),
-                bottom = contentPadding.calculateBottomPadding(),
+                bottom = with(LocalDensity.current) { WindowInsets.navigationBars.getBottom(this).dp },
             )
         )
 
