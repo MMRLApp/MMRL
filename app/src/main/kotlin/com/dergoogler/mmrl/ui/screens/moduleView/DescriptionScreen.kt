@@ -45,7 +45,7 @@ import java.net.URL
 @Destination<RootGraph>
 fun DescriptionScreen(readmeUrl: String) {
     val navigator = LocalDestinationsNavigator.current
-    val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
     val userPrefs = LocalUserPreferences.current
 
     val colors = MMRLXTheme.colors

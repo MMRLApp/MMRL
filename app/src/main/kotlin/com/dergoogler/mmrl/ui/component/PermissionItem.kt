@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.runtime.Composable
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.nullable
-import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import dev.mmrlx.compose.ui.list.ListScope
+import dev.mmrlx.compose.ui.list.component.Item
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Supporting
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Composable
 fun ListScope.PermissionItem(
@@ -25,7 +25,7 @@ fun ListScope.PermissionItem(
             Title(p.title)
             Description(p.desc)
             p.rootSolutions.nullable {
-                Labels {
+                Supporting {
                     it()
                 }
             }

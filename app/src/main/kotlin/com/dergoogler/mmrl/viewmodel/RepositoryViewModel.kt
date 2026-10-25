@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.database.entity.Repo
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
@@ -205,7 +204,7 @@ constructor(
     companion object {
         @Composable
         fun build(repo: Repo): RepositoryViewModel =
-            hiltViewModel<RepositoryViewModel, Factory> { factory ->
+            androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<RepositoryViewModel, Factory> { factory ->
                 factory.create(repo)
             }
     }

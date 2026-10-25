@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -23,19 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
-import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.model.local.State
 import com.dergoogler.mmrl.model.online.isBlacklisted
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.isEmpty
 import com.dergoogler.mmrl.platform.content.isValid
 import com.dergoogler.mmrl.ui.component.Logo
-import com.dergoogler.mmrl.ui.component.text.IconText
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
@@ -43,6 +41,10 @@ import com.dergoogler.mmrl.ui.providable.LocalRepo
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.providable.LocalVersionItem
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.text.FormatText
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
 @Composable
 internal fun Header() {
@@ -88,15 +90,22 @@ internal fun Header() {
         Column(
             modifier = Modifier.weight(1f),
         ) {
-            IconText(
-                style = MaterialTheme.typography.titleLarge,
-                tint = MaterialTheme.colorScheme.surfaceTint,
-                alignment = Alignment.End,
+            FormatText(
+                style = MMRLXTheme.typography.titleMedium,
+                text = module.name + if (module.isVerified) " %y" else "",
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                text = module.name,
-                resId = module.isVerified nullable R.drawable.rosette_discount_check,
-            )
+            ) {
+                if (module.isVerified) {
+                    composable {
+                        Icon(
+                            tint = MaterialTheme.colorScheme.surfaceTint,
+                            modifier = Modifier.size(fontSize.dp),
+                            painter = painterResource(id = R.drawable.rosette_discount_check),
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -144,7 +153,7 @@ internal fun Header() {
             OutlinedButton(
                 enabled =
                     viewModel.isProviderAlive &&
-                        (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
+                            (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
                 modifier =
                     Modifier
                         .fillMaxWidth()
