@@ -20,12 +20,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.database.entity.Repo
-import com.dergoogler.mmrl.datastore.model.RepoListMode
 import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.none
@@ -64,10 +62,6 @@ fun RepositoryScreen(
     val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
 
     var coverHeight by remember { mutableIntStateOf(0) }
-    var cardHeight by remember { mutableIntStateOf(0) }
-
-    val menu = userPreferences.repositoryMenu
-    val pad = remember(menu) { if (menu.repoListMode == RepoListMode.Compact) 0.dp else 16.dp }
 
     BackHandler(enabled = viewModel.isSearch, onBack = closeSearch)
 

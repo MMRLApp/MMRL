@@ -1,4 +1,4 @@
-package com.dergoogler.mmrl.ui.screens.moduleDetails
+package com.dergoogler.mmrl.ui.screens.moduleView
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues

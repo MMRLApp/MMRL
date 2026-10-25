@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +35,9 @@ import com.dergoogler.mmrl.ui.component.Segment
 import com.dergoogler.mmrl.ui.component.SegmentedButtons
 import com.dergoogler.mmrl.ui.component.SegmentedButtonsDefaults
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.icon.IconButton
 
 @Composable
 fun ModulesMenu(setMenu: (ModulesMenu) -> Unit) {

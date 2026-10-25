@@ -42,7 +42,6 @@ import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.model.online.isBlacklisted
 import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
-import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
@@ -182,7 +181,7 @@ fun NewViewScreen(
         )
     }
 
-    val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
 
     val isBlacklisted by module.isBlacklisted
 
@@ -221,9 +220,6 @@ fun NewViewScreen(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 Toolbar()
-            },
-            bottomBar = {
-                BottomBar()
             },
             contentWindowInsets = WindowInsets.none,
         ) { innerPadding ->
