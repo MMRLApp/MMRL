@@ -54,6 +54,8 @@ import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.InstallViewModel
 import dev.chrisbanes.haze.hazeSource
 import dev.mmrlx.compose.terminal.Terminal
+import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
+import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 import dev.mmrlx.terminal.TerminalEmulator.Companion.TERMINAL_CURSOR_STYLE_NONE
 import kotlinx.coroutines.launch
 
@@ -62,7 +64,7 @@ fun InstallScreen(viewModel: InstallViewModel) =
     LocalScreenProvider {
         val scope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
 
         val userPreferences = LocalUserPreferences.current
         val context = LocalContext.current
@@ -226,7 +228,7 @@ private fun TopBar(
     exportLog: () -> Unit,
     event: Event,
     onBack: () -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ToolbarScrollBehavior,
     enable: Boolean,
 ) = BlurNavigateUpToolbar(
     title = stringResource(id = R.string.install_screen_title),

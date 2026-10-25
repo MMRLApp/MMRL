@@ -7,12 +7,6 @@ import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.toFormattedDateSafely
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.TextEditDialogItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.DialogDescription
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.screens.settings.NavButton
@@ -20,6 +14,12 @@ import com.dergoogler.mmrl.utils.BlurUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.AppThemeScreenDestination
+import dev.mmrlx.compose.ui.list.component.InputDialogItem
+import dev.mmrlx.compose.ui.list.component.SwitchItem
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.DialogDescription
+import dev.mmrlx.compose.ui.list.component.item.Supporting
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Destination<RootGraph>
 @Composable
@@ -36,10 +36,10 @@ fun AppearanceScreen() {
             route = AppThemeScreenDestination,
         )
 
-        TextEditDialogItem(
+        InputDialogItem(
             value = userPreferences.datePattern,
             onConfirm = {
-                viewModel.setDatePattern(it)
+                viewModel.setDatePattern(it.value)
             },
         ) {
             Title(R.string.settings_date_pattern)
@@ -70,7 +70,7 @@ fun AppearanceScreen() {
             Description(R.string.settings_enable_blur_desc)
 
             if (!isBlurSupported) {
-                Labels {
+                Supporting {
                     LabelItem(text = stringResource(R.string.view_module_unsupported))
                 }
             }

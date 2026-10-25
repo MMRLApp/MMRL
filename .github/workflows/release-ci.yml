@@ -30,8 +30,6 @@ on:
         options:
         - production
         - beta
-        - alpha
-        - qa
 
 jobs:
   # Build step for both official & spoofed flavors
@@ -104,8 +102,8 @@ jobs:
         run: |
           [ -f gradle.properties ] && [ "$(tail -c1 gradle.properties)" != "" ] && echo >> gradle.properties
           {
-            echo "gpr.user=${{ inputs.username }}"
-            echo "gpr.key=${{ inputs.token }}"
+            echo "gpr.user=${{ secrets.ACTOR }}"
+            echo "gpr.key=${{ secrets.GH_TOKEN }}"
           } >> gradle.properties
 
       - name: Set up JDK

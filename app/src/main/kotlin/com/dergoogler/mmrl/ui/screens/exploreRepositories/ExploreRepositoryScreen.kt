@@ -70,6 +70,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import dev.chrisbanes.haze.hazeSource
 import dev.dergoogler.mmrl.compat.core.LocalUriHandler
+import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import kotlinx.coroutines.launch
 
 @Destination<RootGraph>
@@ -81,7 +82,7 @@ fun ExploreRepositoryScreen(repo: ExploreRepository) =
         val scope = rememberCoroutineScope()
         val snackbarHostState = LocalSnackbarHost.current
         val browser = LocalUriHandler.current
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
 
         val userPreferences = LocalUserPreferences.current
         val repositoriesMenu = userPreferences.repositoriesMenu

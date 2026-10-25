@@ -5,20 +5,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.model.online.hasBlacklist
 import com.dergoogler.mmrl.model.online.hasValidMessage
 import com.dergoogler.mmrl.ui.component.Alert
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
-import com.dergoogler.mmrl.ui.screens.settings.blacklist.items.BlacklistBottomSheet
 
 private val alertPadding = PaddingValues(horizontal = 16.dp)
 
@@ -31,25 +26,6 @@ internal fun Alerts() {
         remember(module) {
             module.manager(viewModel.platform)
         }
-
-    module.hasBlacklist {
-        var open by remember { mutableStateOf(false) }
-        if (open) {
-            BlacklistBottomSheet(
-                module = it,
-                onClose = { open = false },
-            )
-        }
-
-        Alert(
-            icon = R.drawable.alert_circle_filled,
-            title = stringResource(R.string.blacklisted),
-            backgroundColor = MaterialTheme.colorScheme.errorContainer,
-            textColor = MaterialTheme.colorScheme.onErrorContainer,
-            message = stringResource(R.string.blacklisted_desc),
-            outsideContentPadding = alertPadding,
-        )
-    }
 
     manager.isNotSupportedRootVersion(viewModel.versionCode) { min ->
         if (min == -1) {

@@ -1,5 +1,6 @@
 package com.dergoogler.mmrl.ui.screens.settings.changelogs.items
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,11 +29,11 @@ import com.dergoogler.mmrl.model.online.Changelog
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.MarkdownText
-import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import dev.mmrlx.compose.ui.list.ListScope
+import dev.mmrlx.compose.ui.list.component.RawItem
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Supporting
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Composable
 fun ListScope.ChangelogItem(changelog: Changelog) {
@@ -41,13 +42,17 @@ fun ListScope.ChangelogItem(changelog: Changelog) {
         ChangelogBottomSheet(changelog = changelog, onClose = { open = false })
     }
 
-    ButtonItem(
-        onClick = { open = true },
+    RawItem(
+        modifier = Modifier
+            .clickable {
+                open = true
+            }
+            .contentPadding(),
     ) {
         Title(changelog.versionName)
         Description(changelog.versionCode.toString())
         changelog.preRelease.takeTrue {
-            Labels {
+            Supporting {
                 LabelItem(
                     text =
                         stringResource(

@@ -1,4 +1,4 @@
-package com.dergoogler.mmrl.ui.screens.home.items
+package com.dergoogler.mmrl.ui.screens.home.components
 
 import android.content.Context
 import android.os.Build

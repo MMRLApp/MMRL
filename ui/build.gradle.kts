@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.ui"
-    compileSdk = 36
+    compileSdk = 37
 
     publishing {
         singleVariant("release")
@@ -73,4 +73,5 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

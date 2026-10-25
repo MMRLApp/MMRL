@@ -8,7 +8,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -17,6 +16,8 @@ import androidx.navigation.NavController
 import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.ui.R
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
+import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +29,7 @@ fun BlurNavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior? = null,
     fade: Boolean = false,
     fadeDistance: Float = 200f,
     fadeBackgroundIfNoBlur: Boolean = false,
@@ -56,7 +57,7 @@ fun BlurNavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior? = null,
     fade: Boolean = false,
     fadeDistance: Float = 200f,
     fadeBackgroundIfNoBlur: Boolean = false,
@@ -84,7 +85,7 @@ fun BlurNavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior? = null,
     fade: Boolean = false,
     fadeDistance: Float = 200f,
     fadeBackgroundIfNoBlur: Boolean = false,
@@ -112,7 +113,7 @@ fun BlurNavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior? = null,
     fade: Boolean = false,
     fadeDistance: Float = 200f,
     fadeBackgroundIfNoBlur: Boolean = false,
@@ -139,8 +140,8 @@ fun BlurNavigateUpToolbar(
     modifier: Modifier = Modifier,
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
+    windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
+    scrollBehavior: ToolbarScrollBehavior? = null,
     fade: Boolean = false,
     fadeDistance: Float = 200f,
     fadeBackgroundIfNoBlur: Boolean = false,

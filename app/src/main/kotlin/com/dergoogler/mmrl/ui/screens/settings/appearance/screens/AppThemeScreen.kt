@@ -7,7 +7,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ui.component.ScaffoldDefaults
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
@@ -25,7 +24,6 @@ fun AppThemeScreen() {
     val viewModel = LocalSettings.current
 
     SettingsScaffold(
-        modifier = ScaffoldDefaults.settingsScaffoldScrollModifier,
         title = R.string.settings_app_theme,
     ) {
         Column(

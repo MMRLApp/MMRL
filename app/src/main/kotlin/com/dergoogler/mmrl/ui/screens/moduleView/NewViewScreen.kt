@@ -6,16 +6,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -37,7 +33,6 @@ import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.ifNotEmpty
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.nullable
-import com.dergoogler.mmrl.ext.systemBarsPaddingEnd
 import com.dergoogler.mmrl.model.local.BulkModule
 import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.model.online.VersionItem
@@ -45,11 +40,9 @@ import com.dergoogler.mmrl.model.online.isBlacklisted
 import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
-import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
 import com.dergoogler.mmrl.ui.providable.LocalBulkInstall
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalHazeState
-import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
 import com.dergoogler.mmrl.ui.providable.LocalModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalRepo
@@ -68,11 +61,15 @@ import com.dergoogler.mmrl.ui.screens.moduleView.sections.Header
 import com.dergoogler.mmrl.ui.screens.moduleView.sections.Information
 import com.dergoogler.mmrl.ui.screens.moduleView.sections.Information0
 import com.dergoogler.mmrl.ui.screens.moduleView.sections.Screenshots
-import com.dergoogler.mmrl.ui.screens.moduleView.sections.Toolbar
+import com.dergoogler.mmrl.ui.screens.moduleView.sections.Toolbar0
 import com.dergoogler.mmrl.viewmodel.ModuleViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import dev.chrisbanes.haze.hazeSource
+import dev.mmrlx.compose.ui.HorizontalDivider
+import dev.mmrlx.compose.ui.LinearProgressIndicator
+import dev.mmrlx.compose.ui.ext.with
+import dev.mmrlx.compose.ui.scaffold.Scaffold
+import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import timber.log.Timber
 
 internal val listItemContentPaddingValues = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
@@ -181,7 +178,7 @@ fun NewViewScreen(
         )
     }
 
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
 
     val isBlacklisted by module.isBlacklisted
 
@@ -218,98 +215,94 @@ fun NewViewScreen(
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                Toolbar()
+            toolbar = {
+                Toolbar0()
             },
             contentWindowInsets = WindowInsets.none,
-        ) { innerPadding ->
-            this@Scaffold.ResponsiveContent {
-                Column(
-                    modifier =
-                        Modifier
-                            .let {
-                                if (repositoryMenu.showCover && module.hasCover) {
-                                    Modifier
-                                } else {
-                                    it.padding(innerPadding)
-                                }
-                            }.verticalScroll(rememberScrollState())
-                            .hazeSource(state = hazeState),
-                ) {
-                    module.cover.nullable(repositoryMenu.showCover) {
-                        if (it.isNotEmpty()) {
-                            Cover(
-                                modifier =
-                                    Modifier.fadingEdge(
-                                        Brush.verticalGradient(
-                                            colors =
-                                                listOf(
-                                                    Color.Transparent,
-                                                    Color.Black,
-                                                ),
-                                            startY = Float.POSITIVE_INFINITY,
-                                            endY = 0f,
-                                        ),
+        ) {
+            val scope = this
+
+            Column(
+                modifier =
+                    Modifier
+                        .verticalScroll(rememberScrollState())
+                        .scaffoldHazeSource()
+                        .let {
+                            if (repositoryMenu.showCover && module.hasCover) {
+                                it
+                            } else {
+                                it.padding(top = scaffoldTopPadding)
+                            }
+                        }
+            ) {
+                module.cover.nullable(repositoryMenu.showCover) {
+                    if (it.isNotEmpty()) {
+                        Cover(
+                            modifier =
+                                Modifier.fadingEdge(
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Transparent,
+                                                Color.Black,
+                                            ),
+                                        startY = Float.POSITIVE_INFINITY,
+                                        endY = 0f,
                                     ),
-                                url = it,
-                            )
-                        }
+                                ),
+                            url = it,
+                        )
                     }
+                }
 
-                    Column(
-                        modifier =
-                            Modifier
-                                .systemBarsPaddingEnd(),
-                    ) {
-                        Spacer(modifier = Modifier.height(16.dp))
+                Column(
+                    modifier = Modifier.with(scope) {
+                        it.scaffoldBottomPadding()
+                    }
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        Header()
+                    Header()
 
-                        val progress =
-                            lastVersionItem?.let {
-                                viewModel.getProgress(it)
-                            } ?: 0f
+                    val progress =
+                        lastVersionItem?.let {
+                            viewModel.getProgress(it)
+                        } ?: 0f
 
-                        if (progress != 0f) {
-                            LinearProgressIndicator(
-                                progress = { progress },
-                                strokeCap = StrokeCap.Round,
-                                modifier =
-                                    Modifier
-                                        .padding(vertical = 16.dp)
-                                        .height(0.9.dp)
-                                        .fillMaxWidth(),
-                            )
-                        } else {
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                thickness = 0.9.dp,
-                            )
-                        }
-
-                        Alerts()
-
-                        AboutModule()
-
-                        Screenshots()
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Information0()
-
-                        // Information section
+                    if (progress != 0f) {
+                        LinearProgressIndicator(
+                            progress = { progress },
+                            strokeCap = StrokeCap.Round,
+                            modifier =
+                                Modifier
+                                    .padding(vertical = 16.dp)
+                                    .height(0.9.dp)
+                                    .fillMaxWidth(),
+                        )
+                    } else {
                         HorizontalDivider(
                             modifier = Modifier.padding(vertical = 16.dp),
                             thickness = 0.9.dp,
                         )
-
-                        Information()
-
-                        Spacer(modifier = Modifier.navigationBarsPadding())
-
-                        val paddingValues = LocalMainScreenInnerPaddings.current
-                        Spacer(modifier = Modifier.height(paddingValues.calculateBottomPadding()))
                     }
+
+                    Alerts()
+
+                    AboutModule()
+
+                    Screenshots()
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Information0()
+
+                    // Information section
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        thickness = 0.9.dp,
+                    )
+
+                    Information()
                 }
             }
         }

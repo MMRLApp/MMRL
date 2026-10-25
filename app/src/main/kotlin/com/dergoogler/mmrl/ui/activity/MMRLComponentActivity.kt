@@ -34,18 +34,17 @@ import com.dergoogler.mmrl.ui.providable.LocalLifecycleScope
 import com.dergoogler.mmrl.ui.providable.LocalMainNavController
 import com.dergoogler.mmrl.ui.providable.LocalNavController
 import com.dergoogler.mmrl.ui.providable.LocalSettings
-import com.dergoogler.mmrl.ui.providable.LocalSuperUserViewModel
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.providable.LocalWindowSizeClass
 import com.dergoogler.mmrl.ui.theme.Colors
 import com.dergoogler.mmrl.ui.theme.MMRLAppTheme
 import com.dergoogler.mmrl.viewmodel.SettingsViewModel
-import com.dergoogler.mmrl.viewmodel.SuperUserViewModel
 import com.ramcosta.composedestinations.utils.rememberDestinationsNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import dev.dergoogler.mmrl.compat.BuildCompat
 import dev.dergoogler.mmrl.compat.core.BrickException
 import dev.dergoogler.mmrl.compat.core.MMRLUriHandlerImpl
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -216,31 +215,36 @@ fun BaseContent(
     val currentTheme = Colors.getColor(preferences.themeColor, preferences.isDarkMode())
     val toolbarColor = currentTheme.surface
 
-    MMRLAppTheme(
-        darkMode = preferences.isDarkMode(),
-        navController = navController,
-        themeColor = preferences.themeColor,
-        providerValues =
-            arrayOf(
-                LocalWindowSizeClass provides windowSizeClass,
-                LocalDestinationsNavigator provides navigator,
-                LocalActivity provides activity,
-                LocalSuperUserViewModel provides hiltViewModel<SuperUserViewModel>(activity),
-                LocalSettings provides hiltViewModel<SettingsViewModel>(activity),
-                LocalUserPreferences provides preferences,
-                dev.dergoogler.mmrl.compat.core.LocalUriHandler provides
-                    MMRLUriHandlerImpl(
-                        context,
-                        toolbarColor,
-                    ),
-                LocalLifecycleScope provides activity.lifecycleScope,
-                LocalLifecycle provides activity.lifecycle,
-                LocalUriHandler provides MMRLUriHandlerImpl(context, toolbarColor),
-                LocalNavController provides navController,
-                LocalMainNavController provides mainNavController,
-            ),
-        content = content,
-    )
+    val darkMode = preferences.isDarkMode()
+
+    MMRLXTheme(
+        darkTheme = darkMode,
+    ) {
+        MMRLAppTheme(
+            darkMode = darkMode,
+            navController = navController,
+            themeColor = preferences.themeColor,
+            providerValues =
+                arrayOf(
+                    LocalWindowSizeClass provides windowSizeClass,
+                    LocalDestinationsNavigator provides navigator,
+                    LocalActivity provides activity,
+                    LocalSettings provides hiltViewModel<SettingsViewModel>(activity),
+                    LocalUserPreferences provides preferences,
+                    dev.dergoogler.mmrl.compat.core.LocalUriHandler provides
+                            MMRLUriHandlerImpl(
+                                context,
+                                toolbarColor,
+                            ),
+                    LocalLifecycleScope provides activity.lifecycleScope,
+                    LocalLifecycle provides activity.lifecycle,
+                    LocalUriHandler provides MMRLUriHandlerImpl(context, toolbarColor),
+                    LocalNavController provides navController,
+                    LocalMainNavController provides mainNavController,
+                ),
+            content = content,
+        )
+    }
 }
 
 fun MMRLComponentActivity.setBaseContent(
