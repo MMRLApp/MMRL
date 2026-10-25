@@ -9,11 +9,10 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -36,7 +35,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.datastore.model.ModulesMenu
-import com.dergoogler.mmrl.ext.currentScreenWidth
 import com.dergoogler.mmrl.ext.isScrollingUp
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.systemBarsPaddingEnd
@@ -45,93 +43,98 @@ import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Loading
-import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.TopAppBarEventIcon
-import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
 import com.dergoogler.mmrl.ui.component.toolbar.BlurSearchToolbar
 import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.ModulesViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.icon.IconButton
+import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 
 @Destination<RootGraph>
 @Composable
-fun ModulesScreen(viewModel: ModulesViewModel = hiltViewModel()) =
-    LocalScreenProvider {
-        val userPrefs = LocalUserPreferences.current
-        val context = LocalContext.current
+fun ModulesScreen(viewModel: ModulesViewModel = hiltViewModel()) {
+    val userPrefs = LocalUserPreferences.current
+    val context = LocalContext.current
 
-        val list by viewModel.local.collectAsStateWithLifecycle()
-        val query by viewModel.query.collectAsStateWithLifecycle()
-        val state by viewModel.screenState.collectAsStateWithLifecycle()
-        val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val list by viewModel.local.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
-        val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
+    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
 
-        val pullToRefreshState = rememberPullToRefreshState()
+    val pullToRefreshState = rememberPullToRefreshState()
 
-        val isScrollingUp by viewModel.listState.isScrollingUp()
-        val showFab by remember {
-            derivedStateOf {
-                isScrollingUp && !viewModel.isSearch && viewModel.isProviderAlive
-            }
+    val isScrollingUp by viewModel.listState.isScrollingUp()
+    val showFab by remember {
+        derivedStateOf {
+            isScrollingUp && !viewModel.isSearch && viewModel.isProviderAlive
         }
+    }
 
-        val download: (LocalModule, VersionItem, Boolean) -> Unit = { module, item, install ->
-            viewModel.downloader(context, module, item) {
-                if (install) {
-                    InstallActivity.start(
-                        context = context,
-                        uri = it.toUri(),
-                    )
-                }
-            }
-        }
-
-        BackHandler(
-            enabled = viewModel.isSearch,
-            onBack = viewModel::closeSearch,
-        )
-
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TopBar(
-                    isSearch = viewModel.isSearch,
-                    query = query,
-                    onQueryChange = viewModel::search,
-                    onOpenSearch = viewModel::openSearch,
-                    onCloseSearch = viewModel::closeSearch,
-                    setMenu = viewModel::setModulesMenu,
-                    scrollBehavior = scrollBehavior,
+    val download: (LocalModule, VersionItem, Boolean) -> Unit = { module, item, install ->
+        viewModel.downloader(context, module, item) {
+            if (install) {
+                InstallActivity.start(
+                    context = context,
+                    uri = it.toUri(),
                 )
-            },
-            bottomBar = {
-                BottomBar()
-            },
-            floatingActionButton = {
-                AnimatedVisibility(
-                    visible = showFab,
-                    enter =
-                        scaleIn(
-                            animationSpec = tween(100),
-                            initialScale = 0.8f,
-                        ),
-                    exit =
-                        scaleOut(
-                            animationSpec = tween(100),
-                            targetScale = 0.8f,
-                        ),
-                ) {
-                    FloatingButton()
-                }
-            },
-            contentWindowInsets = WindowInsets.none,
-        ) { innerPadding ->
+            }
+        }
+    }
+
+    BackHandler(
+        enabled = viewModel.isSearch,
+        onBack = viewModel::closeSearch,
+    )
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        toolbar = {
+            TopBar0(
+                isSearch = viewModel.isSearch,
+                query = query,
+                onQueryChange = viewModel::search,
+                onOpenSearch = viewModel::openSearch,
+                onCloseSearch = viewModel::closeSearch,
+                setMenu = viewModel::setModulesMenu,
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        bottomBar = {
+            BottomBar()
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = showFab,
+                enter =
+                    scaleIn(
+                        animationSpec = tween(100),
+                        initialScale = 0.8f,
+                    ),
+                exit =
+                    scaleOut(
+                        animationSpec = tween(100),
+                        targetScale = 0.8f,
+                    ),
+            ) {
+                FloatingButton()
+            }
+        },
+        contentWindowInsets = WindowInsets.none,
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .scaffoldHazeSource()
+        ) {
             if (isLoading) {
                 Loading()
             }
@@ -150,20 +153,13 @@ fun ModulesScreen(viewModel: ModulesViewModel = hiltViewModel()) =
                 indicator = {
                     Indicator(
                         modifier =
-                            Modifier.align(Alignment.TopCenter).let {
-                                if (!userPrefs.enableBlur) {
-                                    it.padding(top = innerPadding.calculateTopPadding())
-                                } else {
-                                    it
-                                }
-                            },
+                            Modifier.align(Alignment.TopCenter),
                         isRefreshing = state.isRefreshing,
                         state = pullToRefreshState,
                     )
                 },
             ) {
                 this@Scaffold.ModulesList(
-                    innerPadding = innerPadding,
                     list = list,
                     state = viewModel.listState,
                     viewModel = viewModel,
@@ -173,9 +169,10 @@ fun ModulesScreen(viewModel: ModulesViewModel = hiltViewModel()) =
             }
         }
     }
+}
 
 @Composable
-private fun TopBar(
+private fun TopBar0(
     isSearch: Boolean,
     query: String,
     onQueryChange: (String) -> Unit,
@@ -184,8 +181,6 @@ private fun TopBar(
     setMenu: (ModulesMenu) -> Unit,
     scrollBehavior: ToolbarScrollBehavior,
 ) {
-    val width = currentScreenWidth()
-
     var currentQuery by remember { mutableStateOf(query) }
     DisposableEffect(isSearch) {
         onDispose { currentQuery = "" }
@@ -203,8 +198,6 @@ private fun TopBar(
             currentQuery = ""
         },
         title = {
-            if (!width.isSmall) return@BlurSearchToolbar
-
             TopAppBarEventIcon()
         },
         actions = {
@@ -224,8 +217,6 @@ private fun TopBar(
             )
         },
         scrollBehavior = scrollBehavior,
-        fadeDistance = 50f,
-        fade = true,
     )
 }
 

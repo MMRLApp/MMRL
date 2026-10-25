@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,12 +12,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
@@ -41,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.datastore.model.RepositoriesMenu
-import com.dergoogler.mmrl.ext.currentScreenWidth
 import com.dergoogler.mmrl.ext.isScrollingUp
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.rememberSaveableLazyListState
@@ -52,12 +49,9 @@ import com.dergoogler.mmrl.ui.animate.slideInTopToBottom
 import com.dergoogler.mmrl.ui.animate.slideOutBottomToTop
 import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Loading
-import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.TopAppBarEventIcon
 import com.dergoogler.mmrl.ui.component.dialog.TextFieldDialog
-import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
-import com.dergoogler.mmrl.ui.component.toolbar.BlurToolbar
 import com.dergoogler.mmrl.ui.providable.LocalBulkInstall
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
@@ -67,6 +61,11 @@ import com.dergoogler.mmrl.viewmodel.RepositoriesViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.SearchScreenDestination
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.icon.IconButton
+import dev.mmrlx.compose.ui.scaffold.Scaffold
+import dev.mmrlx.compose.ui.toolbar.Toolbar
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 import timber.log.Timber
@@ -74,126 +73,129 @@ import kotlin.reflect.KFunction1
 
 @Destination<RootGraph>
 @Composable
-fun RepositoriesScreen() =
-    LocalScreenProvider {
-        val viewModel = hiltViewModel<RepositoriesViewModel>()
+fun RepositoriesScreen() {
+    val viewModel = hiltViewModel<RepositoriesViewModel>()
 
-        val userPrefs = LocalUserPreferences.current
-        val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
-        val list by viewModel.repos.collectAsStateWithLifecycle()
-        val bulkInstallViewModel = LocalBulkInstall.current
-        val bulkModules by bulkInstallViewModel.bulkModules.collectAsStateWithLifecycle()
+    val userPrefs = LocalUserPreferences.current
+    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
+    val list by viewModel.repos.collectAsStateWithLifecycle()
+    val bulkInstallViewModel = LocalBulkInstall.current
+    val bulkModules by bulkInstallViewModel.bulkModules.collectAsStateWithLifecycle()
 
-        val state by viewModel.screenState.collectAsStateWithLifecycle()
-        val progress by viewModel.progress.collectAsStateWithLifecycle()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
+    val progress by viewModel.progress.collectAsStateWithLifecycle()
 
-        val pullToRefreshState = rememberPullToRefreshState()
+    val pullToRefreshState = rememberPullToRefreshState()
 
-        // Use rememberSaveable to persist scroll position across navigation
-        val listState = rememberSaveableLazyListState(key = "repositories_list")
+    // Use rememberSaveable to persist scroll position across navigation
+    val listState = rememberSaveableLazyListState(key = "repositories_list")
 
-        val showFab by listState.isScrollingUp()
+    val showFab by listState.isScrollingUp()
 
-        var repoUrl by remember { mutableStateOf("") }
-        var message: String by remember { mutableStateOf("") }
+    var repoUrl by remember { mutableStateOf("") }
+    var message: String by remember { mutableStateOf("") }
 
-        var failure by remember { mutableStateOf(false) }
-        if (failure) {
-            FailureDialog(
-                name = repoUrl,
-                message = message,
-                onClose = {
-                    failure = false
-                    message = ""
-                },
-            )
-        }
-
-        var add by remember { mutableStateOf(false) }
-        if (add) {
-            AddDialog(
-                onClose = { add = false },
-                onAdd = {
-                    repoUrl = it
-                    viewModel.insert(it) { e ->
-                        failure = true
-                        message = e.stackTraceToString()
-                    }
-                },
-            )
-        }
-
-        val context = LocalContext.current
-        var bulkInstallBottomSheet by remember { mutableStateOf(false) }
-
-        val bulkDownload: (List<BulkModule>, Boolean) -> Unit = { item, install ->
-            bulkInstallViewModel.downloadMultiple(
-                items = item,
-                onAllSuccess = {
-                    bulkInstallViewModel.clearBulkModules()
-                    bulkInstallBottomSheet = false
-                    if (install) {
-                        InstallActivity.start(
-                            context = context,
-                            uri = it,
-                        )
-                    }
-                },
-                onFailure = {
-                    Timber.e(it)
-                },
-            )
-        }
-
-        if (bulkInstallBottomSheet) {
-            BulkBottomSheet(
-                onClose = {
-                    bulkInstallBottomSheet = false
-                },
-                modules = bulkModules,
-                onDownload = bulkDownload,
-                bulkInstallViewModel = bulkInstallViewModel,
-            )
-        }
-
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TopBar(
-                    setMenu = viewModel::setRepositoriesMenu,
-                    onAdd = { add = true },
-                    scrollBehavior = scrollBehavior,
-                )
+    var failure by remember { mutableStateOf(false) }
+    if (failure) {
+        FailureDialog(
+            name = repoUrl,
+            message = message,
+            onClose = {
+                failure = false
+                message = ""
             },
-            bottomBar = {
-                BottomBar()
-            },
-            contentWindowInsets = WindowInsets.none,
-            floatingActionButton = {
-                if (viewModel.platform.isValid) {
-                    AnimatedVisibility(
-                        visible = showFab,
-                        enter =
-                            scaleIn(
-                                animationSpec = tween(100),
-                                initialScale = 0.8f,
-                            ),
-                        exit =
-                            scaleOut(
-                                animationSpec = tween(100),
-                                targetScale = 0.8f,
-                            ),
-                    ) {
-                        FloatingButton(
-                            onClick = {
-                                bulkInstallBottomSheet = true
-                            },
-                        )
-                    }
+        )
+    }
+
+    var add by remember { mutableStateOf(false) }
+    if (add) {
+        AddDialog(
+            onClose = { add = false },
+            onAdd = {
+                repoUrl = it
+                viewModel.insert(it) { e ->
+                    failure = true
+                    message = e.stackTraceToString()
                 }
             },
-        ) { innerPadding ->
+        )
+    }
 
+    val context = LocalContext.current
+    var bulkInstallBottomSheet by remember { mutableStateOf(false) }
+
+    val bulkDownload: (List<BulkModule>, Boolean) -> Unit = { item, install ->
+        bulkInstallViewModel.downloadMultiple(
+            items = item,
+            onAllSuccess = {
+                bulkInstallViewModel.clearBulkModules()
+                bulkInstallBottomSheet = false
+                if (install) {
+                    InstallActivity.start(
+                        context = context,
+                        uri = it,
+                    )
+                }
+            },
+            onFailure = {
+                Timber.e(it)
+            },
+        )
+    }
+
+    if (bulkInstallBottomSheet) {
+        BulkBottomSheet(
+            onClose = {
+                bulkInstallBottomSheet = false
+            },
+            modules = bulkModules,
+            onDownload = bulkDownload,
+            bulkInstallViewModel = bulkInstallViewModel,
+        )
+    }
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        toolbar = {
+            TopBar0(
+                setMenu = viewModel::setRepositoriesMenu,
+                onAdd = { add = true },
+                scrollBehavior = scrollBehavior,
+            )
+        },
+        bottomBar = {
+            BottomBar()
+        },
+        contentWindowInsets = WindowInsets.none,
+        floatingActionButton = {
+            if (viewModel.platform.isValid) {
+                AnimatedVisibility(
+                    visible = showFab,
+                    enter =
+                        scaleIn(
+                            animationSpec = tween(100),
+                            initialScale = 0.8f,
+                        ),
+                    exit =
+                        scaleOut(
+                            animationSpec = tween(100),
+                            targetScale = 0.8f,
+                        ),
+                ) {
+                    FloatingButton(
+                        onClick = {
+                            bulkInstallBottomSheet = true
+                        },
+                    )
+                }
+            }
+        },
+    ) {
+        Box(
+            modifier =
+                Modifier
+                    .scaffoldHazeSource()
+        ) {
             if (viewModel.isLoading) {
                 Loading()
             }
@@ -211,21 +213,13 @@ fun RepositoriesScreen() =
                 onRefresh = viewModel::getRepoAll,
                 indicator = {
                     Indicator(
-                        modifier =
-                            Modifier.align(Alignment.TopCenter).let {
-                                if (!userPrefs.enableBlur) {
-                                    it.padding(top = innerPadding.calculateTopPadding())
-                                } else {
-                                    it
-                                }
-                            },
+                        modifier = Modifier.align(Alignment.TopCenter),
                         isRefreshing = state.isRefreshing,
                         state = pullToRefreshState,
                     )
                 },
             ) {
                 this@Scaffold.RepositoriesList(
-                    innerPadding = innerPadding,
                     list = list,
                     state = listState,
                     delete = viewModel::delete,
@@ -239,19 +233,13 @@ fun RepositoriesScreen() =
                 exit = slideOutBottomToTop(),
             ) {
                 LinearProgressIndicator(
-                    modifier =
-                        Modifier.fillMaxWidth().let {
-                            if (!userPrefs.enableBlur) {
-                                it.padding(top = innerPadding.calculateTopPadding())
-                            } else {
-                                it
-                            }
-                        },
+                    modifier = Modifier.fillMaxWidth(),
                     strokeCap = StrokeCap.Round,
                 )
             }
         }
     }
+}
 
 @Composable
 private fun AddDialog(
@@ -306,23 +294,18 @@ private fun AddDialog(
 }
 
 @Composable
-private fun TopBar(
+private fun TopBar0(
     onAdd: () -> Unit,
     setMenu: KFunction1<RepositoriesMenu, Unit>,
     scrollBehavior: ToolbarScrollBehavior,
 ) {
-    val width = currentScreenWidth()
     val navigator = LocalDestinationsNavigator.current
 
-    BlurToolbar(
+    Toolbar(
         scrollBehavior = scrollBehavior,
         title = {
-            if (!width.isSmall) return@BlurToolbar
-
             TopAppBarEventIcon()
         },
-        fadeDistance = 50f,
-        fade = true,
         actions = {
             IconButton(
                 onClick = {

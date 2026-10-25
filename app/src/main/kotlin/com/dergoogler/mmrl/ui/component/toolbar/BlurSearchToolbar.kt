@@ -5,13 +5,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -26,10 +21,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.ui.R
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.icon.IconButton
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
+import dev.mmrlx.compose.ui.toolbar.Toolbar
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlurSearchToolbar(
     modifier: Modifier = Modifier,
@@ -43,23 +42,11 @@ fun BlurSearchToolbar(
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
     scrollBehavior: ToolbarScrollBehavior? = null,
-    fadeBackgroundIfNoBlur: Boolean = false,
-    fadeDistance: Float = 200f,
-    fade: Boolean = false,
-    state: BlurToolbarState = rememberBlurToolbarState(
-        scrollBehavior = scrollBehavior,
-        fade = fade,
-        fadeDistance = fadeDistance,
-    ),
-) = BlurToolbar(
-    state = state,
+) = Toolbar(
     modifier = modifier,
     actions = actions,
     windowInsets = windowInsets,
     scrollBehavior = scrollBehavior,
-    fade = fade,
-    fadeBackgroundIfNoBlur = fadeBackgroundIfNoBlur,
-    fadeDistance = fadeDistance,
     navigationIcon =
         if (onClose != null && isSearch) {
             {
@@ -117,7 +104,7 @@ fun BlurSearchToolbar(
                         Text(text = stringResource(id = R.string.search_placeholder))
                     },
                     singleLine = true,
-                    textStyle = MaterialTheme.typography.bodyLarge,
+                    textStyle = MMRLXTheme.typography.bodyLarge,
                 )
             }
         } else {

@@ -214,7 +214,7 @@ fun HomeScreen() {
                         .fillMaxWidth()
                 ) {
                     val uname = Os.uname()
-                    
+
                     scope.Item {
                         Title {
                             Text(
