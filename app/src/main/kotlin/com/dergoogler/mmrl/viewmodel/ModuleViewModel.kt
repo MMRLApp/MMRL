@@ -176,6 +176,7 @@ class ModuleViewModel
 
                 if (installed) {
                     UpdateJson.loadToVersionItem(local!!.updateJson)?.let {
+                        it.moduleId = module.id
                         versions.add(0, UPDATE_JSON.toRepo() to it)
                     }
                 }

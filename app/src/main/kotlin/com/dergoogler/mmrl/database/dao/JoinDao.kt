@@ -62,4 +62,7 @@ interface JoinDao {
         repoUrl: String,
         version: Int = ModulesJson.CURRENT_VERSION,
     ): List<VersionItemEntity>
+
+    @Query("SELECT * FROM versions WHERE repoUrl = :repoUrl")
+    fun getVersionsByRepoUrl(repoUrl: String): List<VersionItemEntity>
 }

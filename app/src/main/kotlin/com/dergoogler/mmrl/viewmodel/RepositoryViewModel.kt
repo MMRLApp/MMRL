@@ -21,12 +21,15 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -56,8 +59,8 @@ constructor(
     var isSearch by mutableStateOf(false)
         private set
 
-    var isLoading by mutableStateOf(true)
-        private set
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     private val onlineModules =
         if (repo.url.isNotBlank()) {
@@ -74,11 +77,11 @@ constructor(
         ) { modules, menu, key ->
             val source = modules.map { module ->
                 val local = localRepository.getLocalByIdOrNull(module.id)
-
                 val versions = module.versions.toMutableList()
 
                 if (local != null) {
                     UpdateJson.loadToVersionItem(local.updateJson)?.let {
+                        it.moduleId = module.id
                         versions.add(0, it)
                     }
                 }
@@ -94,58 +97,44 @@ constructor(
             val sorted = source
                 .sortedWith(comparator(menu.option, menu.descending))
                 .let { list ->
-                    if (menu.pinInstalled) {
-                        list.sortedByDescending { it.first.installed }
-                    } else {
-                        list
-                    }
+                    if (menu.pinInstalled) list.sortedByDescending { it.first.installed } else list
                 }
                 .let { list ->
-                    if (menu.pinUpdatable) {
-                        list.sortedByDescending { it.first.updatable }
-                    } else {
-                        list
-                    }
+                    if (menu.pinUpdatable) list.sortedByDescending { it.first.updatable } else list
                 }
 
-            isLoading = false
+            _isLoading.value = false
 
             if (key.isBlank()) {
                 sorted
             } else {
                 val (searchKey, prefix) = parseSearchKey(key)
-
                 sorted.filter { (_, module) ->
                     when (prefix) {
-                        "id" ->
-                            module.id.equals(searchKey, ignoreCase = true)
+                        "id" -> module.id.equals(searchKey, ignoreCase = true)
+                        "name" -> module.name.equals(searchKey, ignoreCase = true)
+                        "author" -> module.author.equals(searchKey, ignoreCase = true)
+                        "category" -> module.categories?.any {
+                            it.equals(
+                                searchKey,
+                                ignoreCase = true
+                            )
+                        } == true
 
-                        "name" ->
-                            module.name.equals(searchKey, ignoreCase = true)
-
-                        "author" ->
-                            module.author.equals(searchKey, ignoreCase = true)
-
-                        "category" ->
-                            module.categories?.any {
-                                it.equals(searchKey, ignoreCase = true)
-                            } == true
-
-                        else ->
-                            module.name.contains(searchKey, ignoreCase = true) ||
-                                    module.author.contains(searchKey, ignoreCase = true) ||
-                                    module.description?.contains(
-                                        searchKey,
-                                        ignoreCase = true,
-                                    ) == true
+                        else -> module.name.contains(searchKey, ignoreCase = true) ||
+                                module.author.contains(searchKey, ignoreCase = true) ||
+                                module.description?.contains(searchKey, ignoreCase = true) == true
                     }
                 }
             }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList(),
-        )
+        }
+            .onStart { _isLoading.value = true }
+            .flowOn(Dispatchers.IO)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList(),
+            )
 
     private fun parseSearchKey(raw: String): Pair<String, String?> {
         val prefix = listOf("id", "name", "author", "category")
@@ -164,14 +153,9 @@ constructor(
     ): Comparator<Pair<OnlineState, OnlineModule>> {
         val base: Comparator<Pair<OnlineState, OnlineModule>> =
             when (option) {
-                Option.Name ->
-                    compareBy { it.second.name.lowercase() }
-
-                Option.UpdatedTime ->
-                    compareByDescending { it.first.lastUpdated }
-
-                Option.Size ->
-                    compareByDescending { 0 }
+                Option.Name -> compareBy { it.second.name.lowercase() }
+                Option.UpdatedTime -> compareByDescending { it.first.lastUpdated }
+                Option.Size -> compareByDescending { 0 }
             }
 
         return if (descending) base.reversed() else base

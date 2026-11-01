@@ -29,6 +29,7 @@ data class VersionItemEntity(
 
     fun toItem() =
         VersionItem(
+            moduleId = id,
             repoUrl = repoUrl,
             timestamp = timestamp,
             version = version,
