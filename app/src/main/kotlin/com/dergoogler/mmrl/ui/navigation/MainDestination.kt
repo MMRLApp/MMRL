@@ -15,6 +15,7 @@ import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 // annotation class MainGraph
 
 enum class MainDestination(
+    val id: String,
     val direction: DirectionDestinationSpec,
     @StringRes val label: Int,
     @DrawableRes val icon: Int,
@@ -23,6 +24,7 @@ enum class MainDestination(
     val requiresKernel: Boolean,
 ) {
     Home(
+        id = "home",
         direction = HomeScreenDestination,
         label = R.string.page_home,
         icon = R.drawable.home,
@@ -32,6 +34,7 @@ enum class MainDestination(
     ),
 
     Repository(
+        id = "repositories",
         direction = RepositoriesScreenDestination,
         label = R.string.page_repositorys,
         icon = R.drawable.cloud,
@@ -41,6 +44,7 @@ enum class MainDestination(
     ),
 
     Modules(
+        id = "modules",
         direction = ModulesScreenDestination,
         label = R.string.page_modules,
         icon = R.drawable.keyframes,
@@ -50,6 +54,7 @@ enum class MainDestination(
     ),
 
     Settings(
+        id = "settings",
         direction = SettingsScreenDestination,
         label = R.string.page_settings,
         icon = R.drawable.settings,
@@ -65,3 +70,5 @@ val MainDestination.isAccessible: Boolean
         val isRoot = rememberIsRoot()
         return !(this.requiresRoot && !isRoot)
     }
+
+

@@ -45,6 +45,8 @@ dependencies {
     implementation(projects.platform)
     implementation(projects.ui)
 
+    compileOnly(libs.mmrlx.ui)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.core)
     implementation(libs.kotlinx.serialization.protobuf)

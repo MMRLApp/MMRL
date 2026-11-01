@@ -13,6 +13,7 @@ import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.dergoogler.mmrl.utils.BlurUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.mmrlx.compose.ui.DraggableSnapshot
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -305,6 +306,12 @@ class SettingsViewModel
         fun setProviderServiceEnabled(value: Boolean) {
             viewModelScope.launch {
                 userPreferencesRepository.setProviderServiceEnabled(value)
+            }
+        }
+
+        fun setBottomBarOrder(value: DraggableSnapshot) {
+            viewModelScope.launch {
+                userPreferencesRepository.setBottomBarOrder(value)
             }
         }
     }

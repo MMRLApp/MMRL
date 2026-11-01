@@ -10,6 +10,7 @@ import com.dergoogler.mmrl.datastore.model.SuperUserMenu
 import com.dergoogler.mmrl.datastore.model.UserPreferences
 import com.dergoogler.mmrl.datastore.model.WebUIEngine
 import com.dergoogler.mmrl.datastore.model.WorkingMode
+import dev.mmrlx.compose.ui.DraggableSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -422,6 +423,15 @@ class UserPreferencesDataSource
                 userPreferences.updateData {
                     it.copy(
                         providerServiceEnabled = value,
+                    )
+                }
+            }
+
+        suspend fun setBottomBarOrder(value: DraggableSnapshot) =
+            withContext(Dispatchers.IO) {
+                userPreferences.updateData {
+                    it.copy(
+                        bottomBarOrder = value,
                     )
                 }
             }

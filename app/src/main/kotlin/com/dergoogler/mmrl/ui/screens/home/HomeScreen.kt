@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -67,6 +68,7 @@ import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.AboutScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ThankYouScreenDestination
 import dev.mmrlx.compose.layout.outlinedCard
+import dev.mmrlx.compose.ui.DraggableContainer
 import dev.mmrlx.compose.ui.LinearProgressIndicator
 import dev.mmrlx.compose.ui.LocalTextStyle
 import dev.mmrlx.compose.ui.Text
@@ -126,7 +128,7 @@ fun HomeScreen() {
         },
         contentWindowInsets = WindowInsets.none,
     ) {
-        Column(
+        List(
             modifier =
                 Modifier
                     .scaffoldHazeSource()
@@ -135,177 +137,185 @@ fun HomeScreen() {
                     .scaffoldPadding()
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = listItemContentPaddingValues
         ) {
-            when {
-                userPreferences.workingMode.isRoot ->
-                    RootItem()
+            val scope = this
 
-                userPreferences.workingMode.isNonRoot ->
-                    NonRootItem()
-            }
+            DraggableContainer {
+                element("root-status") {
+                    Box {
+                        when {
+                            userPreferences.workingMode.isRoot ->
+                                RootItem()
 
-            if (userPreferences.checkAppUpdates) {
-                var changelog by remember { mutableStateOf<List<Changelog>?>(null) }
-                LaunchedEffect(Unit) {
-                    runRequest {
-                        withContext(Dispatchers.IO) {
-                            val api = IMMRLApiManager.build()
-                            return@withContext api.changelog.execute()
+                            userPreferences.workingMode.isNonRoot ->
+                                NonRootItem()
                         }
-                    }.onSuccess { list ->
-                        changelog = list
-                    }.onFailure {
-                        Timber.e(it, "unable to get changelog")
                     }
                 }
 
-                changelog?.let {
-                    val latest = it.first()
+                element("update-status") {
+                    if (userPreferences.checkAppUpdates) {
+                        var changelog by remember { mutableStateOf<List<Changelog>?>(null) }
+                        LaunchedEffect(Unit) {
+                            runRequest {
+                                withContext(Dispatchers.IO) {
+                                    val api = IMMRLApiManager.build()
+                                    return@withContext api.changelog.execute()
+                                }
+                            }.onSuccess { list ->
+                                changelog = list
+                            }.onFailure {
+                                Timber.e(it, "unable to get changelog")
+                            }
+                        }
 
-                    var changelogSheet by remember { mutableStateOf(false) }
-                    if (changelogSheet) {
-                        ChangelogBottomSheet(
-                            changelog = latest,
-                            onClose = { changelogSheet = false },
-                        )
-                    }
+                        changelog?.let {
+                            val latest = it.first()
 
-                    AnimatedVisibility(
-                        visible =
-                            userPreferences.developerMode { devAlwaysShowUpdateAlert } ||
-                                    (
-                                            if (latest.preRelease) {
-                                                userPreferences.checkAppUpdatesPreReleases &&
-                                                        latest.versionCode > context.managerVersion.second
-                                            } else {
-                                                latest.versionCode > context.managerVersion.second
-                                            }
-                                            ),
-                        enter = fadeIn() + expandVertically(),
-                        exit = shrinkVertically() + fadeOut(),
-                    ) {
-                        Alert(
-                            onClick = {
-                                changelogSheet = true
-                            },
-                            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            title = stringResource(R.string.update_available),
-                            message =
-                                stringResource(
-                                    R.string.new_version_available,
-                                    latest.versionName,
-                                ),
-                            icon = R.drawable.cloud_download,
-                        )
-                    }
-                }
-            }
-
-            List(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = listItemContentPaddingValues,
-            ) {
-                val scope = this
-
-                Column(
-                    modifier = Modifier
-                        .outlinedCard()
-                        .padding(vertical = 16.dp)
-                        .fillMaxWidth()
-                ) {
-                    val uname = Os.uname()
-
-                    scope.Item {
-                        Title {
-                            Text(
-                                "DEV BUILD! EXPECT ERRORS AND BROKEN UI/UX",
-                                style = LocalTextStyle.current.copy(
-                                    fontFamily = FontFamily.Monospace,
-                                    color = Color.Red
+                            var changelogSheet by remember { mutableStateOf(false) }
+                            if (changelogSheet) {
+                                ChangelogBottomSheet(
+                                    changelog = latest,
+                                    onClose = { changelogSheet = false },
                                 )
+                            }
+
+                            AnimatedVisibility(
+                                visible =
+                                    userPreferences.developerMode { devAlwaysShowUpdateAlert } ||
+                                            (
+                                                    if (latest.preRelease) {
+                                                        userPreferences.checkAppUpdatesPreReleases &&
+                                                                latest.versionCode > context.managerVersion.second
+                                                    } else {
+                                                        latest.versionCode > context.managerVersion.second
+                                                    }
+                                                    ),
+                                enter = fadeIn() + expandVertically(),
+                                exit = shrinkVertically() + fadeOut(),
+                            ) {
+                                Alert(
+                                    onClick = {
+                                        changelogSheet = true
+                                    },
+                                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                    title = stringResource(R.string.update_available),
+                                    message =
+                                        stringResource(
+                                            R.string.new_version_available,
+                                            latest.versionName,
+                                        ),
+                                    icon = R.drawable.cloud_download,
+                                )
+                            }
+                        }
+                    }
+                }
+                
+                element("device-app-info") {
+                    Column(
+                        modifier = Modifier
+                            .outlinedCard()
+                            .padding(vertical = 16.dp)
+                            .fillMaxWidth()
+                    ) {
+                        val uname = Os.uname()
+
+                        scope.Item {
+                            Title {
+                                Text(
+                                    "DEV BUILD! EXPECT ERRORS AND BROKEN UI/UX",
+                                    style = LocalTextStyle.current.copy(
+                                        fontFamily = FontFamily.Monospace,
+                                        color = Color.Red
+                                    )
+                                )
+                            }
+                        }
+
+                        scope.Item {
+                            Icon(painter = painterResource(R.drawable.cookie_man))
+                            Title(R.string.kernel)
+                            Description(uname.release)
+                        }
+
+                        scope.Item {
+                            Icon(painter = painterResource(R.drawable.launcher_outline))
+                            Title(R.string.manager_version)
+                            Description("${context.managerVersion.first} (${context.managerVersion.second})")
+                        }
+
+                        scope.Item {
+                            Icon(painter = painterResource(R.drawable.fingerprint))
+                            Title(R.string.fingerprint)
+                            Description(
+                                if (userPreferences.hideFingerprintInHome) {
+                                    stringResource(id = R.string.hidden)
+                                } else {
+                                    Build.FINGERPRINT
+                                },
                             )
                         }
-                    }
 
-                    scope.Item {
-                        Icon(painter = painterResource(R.drawable.cookie_man))
-                        Title(R.string.kernel)
-                        Description(uname.release)
-                    }
-
-                    scope.Item {
-                        Icon(painter = painterResource(R.drawable.launcher_outline))
-                        Title(R.string.manager_version)
-                        Description("${context.managerVersion.first} (${context.managerVersion.second})")
-                    }
-
-                    scope.Item {
-                        Icon(painter = painterResource(R.drawable.fingerprint))
-                        Title(R.string.fingerprint)
-                        Description(
-                            if (userPreferences.hideFingerprintInHome) {
-                                stringResource(id = R.string.hidden)
-                            } else {
-                                Build.FINGERPRINT
-                            },
-                        )
-                    }
-
-                    scope.Item {
-                        Icon(painter = painterResource(R.drawable.cpu_2))
-                        Title(R.string.architecture)
-                        Description(uname.machine)
-                    }
-
-                    scope.SELinuxStatus()
-
-                    PlatformManager.platform.isKernelSuOrNext.takeTrue {
                         scope.Item {
-                            Icon(painter = painterResource(R.drawable.user_outlined))
-                            Title(R.string.super_user_apps)
-                            Description(superUserCount.toString())
+                            Icon(painter = painterResource(R.drawable.cpu_2))
+                            Title(R.string.architecture)
+                            Description(uname.machine)
+                        }
+
+                        scope.SELinuxStatus()
+
+                        PlatformManager.platform.isKernelSuOrNext.takeTrue {
+                            scope.Item {
+                                Icon(painter = painterResource(R.drawable.user_outlined))
+                                Title(R.string.super_user_apps)
+                                Description(superUserCount.toString())
+                            }
                         }
                     }
                 }
 
-                PlatformManager.isAlive.takeTrue {
-                    userPreferences.developerMode.takeTrue {
-                        Column(
-                            modifier = Modifier
-                                .outlinedCard()
-                                .padding(vertical = 16.dp)
-                                .fillMaxWidth()
-                        ) {
-                            scope.Item {
-                                Title(R.string.home_root_provider_version_name)
-                                Description(versionName)
-                            }
-
-                            scope.Item {
-                                Title(R.string.home_root_provider_se_linux_context)
-                                Description(seLinuxContext)
-                            }
-
-                            if (PlatformManager.platform.isKernelSuNext) {
-                                KsuNative.getHookMode().nullable {
-                                    scope.Item {
-                                        Title(R.string.hook_mode)
-                                        Description(it)
-                                    }
-                                }
-                            }
-
-                            if (PlatformManager.platform.isSukiSU) {
-                                KsuNative.getHookType().nullable {
-                                    scope.Item {
-                                        Title(R.string.hook_mode)
-                                        Description(it)
-                                    }
+                element("root-dev-info") {
+                    PlatformManager.isAlive.takeTrue {
+                        userPreferences.developerMode.takeTrue {
+                            Column(
+                                modifier = Modifier
+                                    .outlinedCard()
+                                    .padding(vertical = 16.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                scope.Item {
+                                    Title(R.string.home_root_provider_version_name)
+                                    Description(versionName)
                                 }
 
                                 scope.Item {
-                                    Title(R.string.kpm_support)
-                                    Description(if (KsuNative.isKPMEnabled()) R.string.yes else R.string.no)
+                                    Title(R.string.home_root_provider_se_linux_context)
+                                    Description(seLinuxContext)
+                                }
+
+                                if (PlatformManager.platform.isKernelSuNext) {
+                                    KsuNative.getHookMode().nullable {
+                                        scope.Item {
+                                            Title(R.string.hook_mode)
+                                            Description(it)
+                                        }
+                                    }
+                                }
+
+                                if (PlatformManager.platform.isSukiSU) {
+                                    KsuNative.getHookType().nullable {
+                                        scope.Item {
+                                            Title(R.string.hook_mode)
+                                            Description(it)
+                                        }
+                                    }
+
+                                    scope.Item {
+                                        Title(R.string.kpm_support)
+                                        Description(if (KsuNative.isKPMEnabled()) R.string.yes else R.string.no)
+                                    }
                                 }
                             }
                         }
@@ -314,126 +324,136 @@ fun HomeScreen() {
 
                 if (PlatformManager.platform.isValid) {
                     analytics.nullable {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .outlinedCard()
-                                    .padding(vertical = 16.dp)
-                                    .weight(1f)
+                        element("analytics-modules") {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
                             ) {
-                                scope.Item {
-                                    Title(R.string.home_installed_modules)
-                                    Description(it.totalModules.toString())
+                                Column(
+                                    modifier = Modifier
+                                        .outlinedCard()
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f)
+                                ) {
+                                    scope.Item {
+                                        Title(R.string.home_installed_modules)
+                                        Description(it.totalModules.toString())
+                                    }
                                 }
-                            }
 
-                            Column(
-                                modifier = Modifier
-                                    .outlinedCard()
-                                    .padding(vertical = 16.dp)
-                                    .weight(1f)
-                            ) {
-                                scope.Item {
-                                    Title(R.string.home_updated_modules)
-                                    Description(it.totalUpdated.toString())
-                                }
-                            }
-                        }
-
-                        Column(
-                            modifier = Modifier
-                                .outlinedCard()
-                                .padding(vertical = 16.dp)
-                                .fillMaxWidth()
-                        ) {
-                            scope.Item {
-                                Title(R.string.home_storage_usage)
-
-                                Description {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                    ) {
-                                        Text(
-                                            text = it.totalModulesUsageBytes.toFormattedFileSize(),
-                                        )
-
-                                        LinearProgressIndicator(
-                                            progress = {
-                                                it.totalStorageUsage
-                                            },
-                                            modifier =
-                                                Modifier
-                                                    .height(10.dp)
-                                                    .weight(1f),
-                                            drawStopIndicator = {},
-                                        )
-
-                                        Text(
-                                            text = it.totalDeviceStorageBytes.toFormattedFileSize(),
-                                        )
+                                Column(
+                                    modifier = Modifier
+                                        .outlinedCard()
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f)
+                                ) {
+                                    scope.Item {
+                                        Title(R.string.home_updated_modules)
+                                        Description(it.totalUpdated.toString())
                                     }
                                 }
                             }
                         }
 
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
+
+                        element("analytics-storage") {
                             Column(
                                 modifier = Modifier
                                     .outlinedCard()
                                     .padding(vertical = 16.dp)
-                                    .weight(1f)
+                                    .fillMaxWidth()
                             ) {
                                 scope.Item {
-                                    Title(R.string.home_enabled_modules)
-                                    Description(it.totalEnabled.toString())
+                                    Title(R.string.home_storage_usage)
+
+                                    Description {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        ) {
+                                            Text(
+                                                text = it.totalModulesUsageBytes.toFormattedFileSize(),
+                                            )
+
+                                            LinearProgressIndicator(
+                                                progress = {
+                                                    it.totalStorageUsage
+                                                },
+                                                modifier =
+                                                    Modifier
+                                                        .height(10.dp)
+                                                        .weight(1f),
+                                                drawStopIndicator = {},
+                                            )
+
+                                            Text(
+                                                text = it.totalDeviceStorageBytes.toFormattedFileSize(),
+                                            )
+                                        }
+                                    }
                                 }
                             }
+                        }
 
-                            Column(
-                                modifier = Modifier
-                                    .outlinedCard()
-                                    .padding(vertical = 16.dp)
-                                    .weight(1f)
+
+                        element("analytics-states") {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(16.dp),
                             ) {
-                                scope.Item {
-                                    Title(R.string.home_disabled_modules)
-                                    Description(it.totalDisabled.toString())
+                                Column(
+                                    modifier = Modifier
+                                        .outlinedCard()
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f)
+                                ) {
+                                    scope.Item {
+                                        Title(R.string.home_enabled_modules)
+                                        Description(it.totalEnabled.toString())
+                                    }
+                                }
+
+                                Column(
+                                    modifier = Modifier
+                                        .outlinedCard()
+                                        .padding(vertical = 16.dp)
+                                        .weight(1f)
+                                ) {
+                                    scope.Item {
+                                        Title(R.string.home_disabled_modules)
+                                        Description(it.totalDisabled.toString())
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                Column(
-                    modifier = Modifier
-                        .outlinedCard()
-                        .fillMaxWidth()
-                        .clickable {
-                            browser.openUri("https://github.com/sponsors/MMRLApp")
-                        }
-                        .padding(vertical = 16.dp)
-                ) {
-                    scope.Item {
-                        Title(
-                            id = R.string.home_support_title,
-                            styleTransform = {
-                                val newStyle = it.copy(color = Color.Unspecified)
-                                it.merge(newStyle)
-                            },
-                        )
+                element("support") {
+                    Column(
+                        modifier = Modifier
+                            .outlinedCard()
+                            .fillMaxWidth()
+                            .clickable {
+                                browser.openUri("https://github.com/sponsors/MMRLApp")
+                            }
+                            .padding(vertical = 16.dp)
+                    ) {
+                        scope.Item {
+                            Title(
+                                id = R.string.home_support_title,
+                                styleTransform = {
+                                    val newStyle = it.copy(color = Color.Unspecified)
+                                    it.merge(newStyle)
+                                },
+                            )
 
-                        Description(
-                            id = R.string.home_support_content,
-                            styleTransform = {
-                                val newStyle = it.copy(color = Color.Unspecified)
-                                it.merge(newStyle)
-                            },
-                        )
+                            Description(
+                                id = R.string.home_support_content,
+                                styleTransform = {
+                                    val newStyle = it.copy(color = Color.Unspecified)
+                                    it.merge(newStyle)
+                                },
+                            )
+                        }
                     }
                 }
             }

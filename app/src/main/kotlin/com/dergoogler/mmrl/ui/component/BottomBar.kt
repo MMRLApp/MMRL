@@ -9,63 +9,83 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.dergoogler.mmrl.ui.navigation.MainDestination
-import com.dergoogler.mmrl.ui.navigation.isAccessible
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalNavController
+import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.dergoogler.mmrl.ui.remember.rememberIsRoot
 import com.ramcosta.composedestinations.generated.NavGraphs
 import com.ramcosta.composedestinations.utils.isRouteOnBackStackAsState
+import dev.mmrlx.compose.ui.DraggableContainer
 import dev.mmrlx.compose.ui.Text
 import dev.mmrlx.compose.ui.icon.Icon
 import dev.mmrlx.compose.ui.navigationbar.NavigationBar
 import dev.mmrlx.compose.ui.navigationbar.NavigationBarItem
+import dev.mmrlx.compose.ui.rememberDraggableContainerState
 import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
 @Composable
 fun BottomBar(updates: Int = 0) {
+    val isRoot = rememberIsRoot()
     val prefs = LocalUserPreferences.current
     val navigator = LocalDestinationsNavigator.current
     val navController = LocalNavController.current
+    val settings = LocalSettings.current
+
+
+    val state = rememberDraggableContainerState(
+        initial = prefs.bottomBarOrder
+    ) {
+        settings.setBottomBarOrder(it)
+    }
+
 
     NavigationBar(
         modifier =
             Modifier
                 .imePadding()
     ) {
-        for (screen in MainDestination.entries) {
-            if (!screen.isAccessible) continue
+        DraggableContainer(state = state) {
+            row("nav") {
+                for (screen in MainDestination.entries) {
+                    if ((screen.requiresRoot && !isRoot)) continue
 
-            val isSelected by navController.isRouteOnBackStackAsState(screen.direction)
+                    element(screen.id) {
+                        val isSelected by navController.isRouteOnBackStackAsState(screen.direction)
 
-            NavigationBarItem(
-                icon = {
-                    BaseNavIcon(screen, isSelected, updates)
-                },
-                label = {
-                    if (!prefs.hideBottomBarLabels) {
-                        Text(
-                            text = stringResource(id = screen.label),
-                            style = MMRLXTheme.typography.labelLarge,
+                        NavigationBarItem(
+                            icon = {
+                                BaseNavIcon(screen, isSelected, updates)
+                            },
+                            label = {
+                                if (!prefs.hideBottomBarLabels) {
+                                    Text(
+                                        text = stringResource(id = screen.label),
+                                        style = MMRLXTheme.typography.labelLarge,
+                                    )
+                                }
+                            },
+                            selected = isSelected,
+                            onClick = {
+                                if (isSelected) {
+                                    navigator.popBackStack(screen.direction, false)
+                                }
+                                navigator.navigate(screen.direction) {
+                                    popUpTo(NavGraphs.root) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
                         )
                     }
-                },
-                selected = isSelected,
-                onClick = {
-                    if (isSelected) {
-                        navigator.popBackStack(screen.direction, false)
-                    }
-                    navigator.navigate(screen.direction) {
-                        popUpTo(NavGraphs.root) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-            )
+                }
+            }
         }
     }
 }
+
 /*
 @Composable
 private fun RailNav(updates: Int) {
