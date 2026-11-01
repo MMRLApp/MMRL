@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -41,6 +42,7 @@ import dev.mmrlx.compose.ui.icon.IconButton
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
+import dev.mmrlx.compose.ui.toolbar.ToolbarTitle
 
 @Destination<RootGraph>
 @Composable
@@ -257,10 +259,10 @@ private fun TopBar0(
             currentQuery = ""
         },
         title = {
-//            ToolbarTitle(
-//                title = repo.name,
-//                modifier = Modifier.graphicsLayer { alpha = scrollBehavior.fadeDistance },
-//            )
+            ToolbarTitle(
+                title = repo.name,
+                modifier = Modifier.graphicsLayer { alpha = scrollBehavior.state.fade },
+            )
         },
         actions = {
             if (!isSearch) {

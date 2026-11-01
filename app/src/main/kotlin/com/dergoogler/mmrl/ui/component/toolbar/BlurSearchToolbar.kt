@@ -41,7 +41,7 @@ fun BlurSearchToolbar(
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
 ) = Toolbar(
     modifier = modifier,
     actions = actions,

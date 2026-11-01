@@ -23,7 +23,7 @@ fun NavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
 ) = NavigateUpToolbar(
     modifier = modifier,
     title = title,
@@ -44,7 +44,7 @@ fun NavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
 ) = NavigateUpToolbar(
     modifier = modifier,
     title = title,
@@ -65,7 +65,7 @@ fun NavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
 ) = NavigateUpToolbar(
     modifier = modifier,
     title = title,
@@ -86,7 +86,7 @@ fun NavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
 ) = NavigateUpToolbar(
     modifier = modifier,
     title = {
@@ -107,7 +107,7 @@ fun NavigateUpToolbar(
     enable: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     windowInsets: WindowInsets = ToolbarDefaults.windowInsets,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
 ) = Toolbar(
     title = title,
     modifier = modifier,

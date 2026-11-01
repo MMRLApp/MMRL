@@ -67,6 +67,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import dev.mmrlx.compose.ui.HorizontalDivider
 import dev.mmrlx.compose.ui.LinearProgressIndicator
+import dev.mmrlx.compose.ui.NavigationBarsSpacer
 import dev.mmrlx.compose.ui.ext.with
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
@@ -304,6 +305,8 @@ fun NewViewScreen(
 
                     Information()
                 }
+
+                NavigationBarsSpacer()
             }
         }
     }

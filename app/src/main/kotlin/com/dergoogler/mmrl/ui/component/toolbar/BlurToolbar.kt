@@ -118,7 +118,7 @@ fun BlurToolbar(
     fadeBackgroundIfNoBlur: Boolean = false,
     fadeDistance: Float = 200f,
     fade: Boolean = false,
-    scrollBehavior: ToolbarScrollBehavior? = null,
+    scrollBehavior: ToolbarScrollBehavior = ToolbarScrollBehavior.Empty,
     state: BlurToolbarState = rememberBlurToolbarState(
         scrollBehavior = scrollBehavior,
         fade = fade,
