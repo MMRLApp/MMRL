@@ -121,6 +121,7 @@ fun ExploreRepositoryScreen(repo: ExploreRepository) =
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
                 BlurNavigateUpToolbar(
+                    navigator = navigator,
                     title = "",
                     scrollBehavior = scrollBehavior,
                     fade = true,
