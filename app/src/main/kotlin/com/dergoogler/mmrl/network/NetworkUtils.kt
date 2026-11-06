@@ -49,7 +49,10 @@ object NetworkUtils {
             .matches(url)
 
     fun createOkHttpClient(): OkHttpClient {
-        val builder = OkHttpClient.Builder().cache(cacheOrNull)
+        val builder = OkHttpClient.Builder()
+            .cache(cacheOrNull)
+            .followRedirects(true)
+            .followSslRedirects(true)
 
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(
@@ -59,10 +62,11 @@ object NetworkUtils {
                     },
             )
         } else {
-            builder.connectionSpecs(listOf(ConnectionSpec.MODERN_TLS))
+            builder.connectionSpecs(listOf(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS))
         }
 
-        builder.dns(DnsResolver(builder.build(), useDoh))
+        val bootstrapClient = OkHttpClient.Builder().build()
+        builder.dns(DnsResolver(bootstrapClient, useDoh))
 
         builder.addInterceptor { chain ->
             val request = chain.request().newBuilder()
@@ -73,6 +77,7 @@ object NetworkUtils {
 
         return builder.build()
     }
+
 
     fun createRetrofit(): Retrofit.Builder {
         val client = createOkHttpClient()
@@ -96,6 +101,21 @@ object NetworkUtils {
                     .build()
 
             client.newCall(request).execute()
+        }
+    }
+
+    suspend fun requestHead(url: String): Result<Headers> = withContext(Dispatchers.IO) {
+        runCatching {
+            val client = createOkHttpClient()
+            val request = Request.Builder()
+                .url(url)
+                .head() // Tells the server to only return headers, no body
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) throw Exception(response.toString())
+                response.headers
+            }
         }
     }
 
