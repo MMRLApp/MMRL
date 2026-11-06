@@ -15,7 +15,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.database.entity.Repo
-import com.dergoogler.mmrl.datastore.model.RepoListMode
 import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.model.state.OnlineState
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
@@ -66,17 +65,9 @@ fun ScaffoldScope.ModulesList(
                     }
 
                     Box(Modifier.padding(horizontal = 16.dp)) {
-                        when (menu.repoListMode) {
-                            RepoListMode.Compact ->
-                                ModuleItemCompact(
-                                    onClick = click,
-                                )
-
-                            RepoListMode.Detailed ->
-                                ModuleItemDetailed(
-                                    onClick = click,
-                                )
-                        }
+                        ModuleItemDetailed(
+                            onClick = click,
+                        )
                     }
                 }
             }

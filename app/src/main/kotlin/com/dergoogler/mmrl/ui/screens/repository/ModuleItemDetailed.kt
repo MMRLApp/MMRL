@@ -256,9 +256,10 @@ fun ModuleItemDetailed(
                     }
                 }
 
-                HorizontalDivider(Modifier.padding(top = 8.dp))
 
                 if (hasLabel) {
+                    HorizontalDivider(Modifier.padding(top = 8.dp))
+
                     FlowRow(
                         modifier =
                             Modifier
