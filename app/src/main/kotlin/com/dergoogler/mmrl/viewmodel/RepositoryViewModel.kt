@@ -3,9 +3,11 @@ package com.dergoogler.mmrl.viewmodel
 import android.app.Application
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.database.entity.Repo
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
@@ -191,5 +193,21 @@ constructor(
             androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<RepositoryViewModel, Factory> { factory ->
                 factory.create(repo)
             }
+
+        private val local =
+            staticCompositionLocalOf<RepositoryViewModel> { error("No RepositoryViewModel found!") }
+
+        @get:Composable
+        val current: RepositoryViewModel get() = local.current
+
+        @Composable
+        fun LocalProvider(repo: Repo, content: @Composable (RepositoryViewModel) -> Unit) {
+            val vm = build(repo)
+            CompositionLocalProvider(
+                local provides vm,
+            ) {
+                content(vm)
+            }
+        }
     }
 }

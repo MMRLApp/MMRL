@@ -19,24 +19,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.database.entity.Repo
-import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.toolbar.BlurSearchToolbar
-import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.RepositoryViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 import dev.mmrlx.compose.ui.icon.Icon
 import dev.mmrlx.compose.ui.icon.IconButton
 import dev.mmrlx.compose.ui.scaffold.Scaffold
@@ -48,37 +44,19 @@ import dev.mmrlx.compose.ui.toolbar.ToolbarTitle
 @Composable
 fun RepositoryScreen(
     repo: Repo,
-) {
-    val userPreferences = LocalUserPreferences.current
-    val browser = LocalUriHandler.current
-    val density = LocalDensity.current
-
-    val viewModel = RepositoryViewModel.build(repo)
-    val modules by viewModel.online.collectAsStateWithLifecycle()
-
-    val query by viewModel.query.collectAsStateWithLifecycle()
-    val openSearch = viewModel::openSearch
-    val closeSearch = viewModel::closeSearch
-    val search = viewModel::search
-    val isSearch by viewModel::isSearch
+) = RepositoryViewModel.LocalProvider(repo) { vm ->
+    val modules by vm.online.collectAsStateWithLifecycle()
     val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
-
     var coverHeight by remember { mutableIntStateOf(0) }
 
-    BackHandler(enabled = viewModel.isSearch, onBack = closeSearch)
+    val isSearch by vm::isSearch
+    BackHandler(enabled = vm.isSearch, onBack = vm::closeSearch)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         toolbar = {
             TopBar0(
-                repo = repo,
-                isSearch = isSearch,
-                query = query,
-                onQueryChange = search,
-                onOpenSearch = openSearch,
-                onCloseSearch = closeSearch,
                 scrollBehavior = scrollBehavior,
-                setMenu = viewModel::setRepositoryMenu,
             )
         },
         bottomBar = {
@@ -103,7 +81,7 @@ fun RepositoryScreen(
             this@Scaffold.ModulesList(
                 repo = repo,
                 list = modules,
-                state = viewModel.listState,
+                state = vm.listState,
             ) {
                 item {
                     AnimatedVisibility(!isSearch, enter = scaleIn(), exit = scaleOut()) {
@@ -232,15 +210,16 @@ fun RepositoryScreen(
 
 @Composable
 private fun TopBar0(
-    repo: Repo,
-    isSearch: Boolean,
-    query: String,
-    onQueryChange: (String) -> Unit,
-    onOpenSearch: () -> Unit,
-    onCloseSearch: () -> Unit,
     scrollBehavior: ToolbarScrollBehavior,
-    setMenu: (RepositoryMenu) -> Unit,
 ) {
+    val vm = RepositoryViewModel.current
+
+    val query by vm.query.collectAsStateWithLifecycle()
+    val openSearch = vm::openSearch
+    val closeSearch = vm::closeSearch
+    val search = vm::search
+    val isSearch by vm::isSearch
+
     var currentQuery by remember { mutableStateOf(query) }
     DisposableEffect(isSearch) {
         onDispose { currentQuery = "" }
@@ -251,23 +230,23 @@ private fun TopBar0(
         query = currentQuery,
         scrollBehavior = scrollBehavior,
         onQueryChange = {
-            onQueryChange(it)
+            search(it)
             currentQuery = it
         },
         onClose = {
-            onCloseSearch()
+            closeSearch()
             currentQuery = ""
         },
         title = {
             ToolbarTitle(
-                title = repo.name,
+                title = vm.repo.name,
                 modifier = Modifier.graphicsLayer { alpha = scrollBehavior.state.fade },
             )
         },
         actions = {
             if (!isSearch) {
                 IconButton(
-                    onClick = onOpenSearch,
+                    onClick = openSearch,
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.search),
@@ -277,7 +256,7 @@ private fun TopBar0(
             }
 
             RepositoryMenu(
-                setMenu = setMenu,
+                setMenu = vm::setRepositoryMenu,
             )
         },
     )

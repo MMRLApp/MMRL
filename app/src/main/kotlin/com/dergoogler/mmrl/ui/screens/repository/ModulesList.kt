@@ -20,7 +20,7 @@ import com.dergoogler.mmrl.model.state.OnlineState
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModuleState
-import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.dergoogler.mmrl.viewmodel.RepositoryViewModel
 import com.ramcosta.composedestinations.generated.destinations.NewViewScreenDestination
 import dev.mmrlx.compose.ui.scaffold.ScaffoldScope
 
@@ -31,9 +31,9 @@ fun ScaffoldScope.ModulesList(
     state: LazyListState,
     beforeContent: LazyListScope.() -> Unit = {},
 ) {
+    val vm = RepositoryViewModel.current
     val navigator = LocalDestinationsNavigator.current
-    val userPreferences = LocalUserPreferences.current
-    val menu = userPreferences.repositoryMenu
+    val isSearch by vm::isSearch
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -44,6 +44,7 @@ fun ScaffoldScope.ModulesList(
                 .animateContentSize(),
             contentPadding =
                 PaddingValues(
+                    top = if (!isSearch) 0.dp else this@ModulesList.scaffoldTopPadding,
                     bottom = this@ModulesList.scaffoldBottomPadding + 16.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -58,15 +59,15 @@ fun ScaffoldScope.ModulesList(
                     LocalOnlineModuleState provides moduleState,
                     LocalOnlineModule provides module,
                 ) {
-                    val click = fun() {
-                        navigator.navigate(
-                            NewViewScreenDestination(repo, module),
-                        )
-                    }
-
-                    Box(Modifier.padding(horizontal = 16.dp)) {
+                    Box(
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
                         ModuleItemDetailed(
-                            onClick = click,
+                            onClick = {
+                                navigator.navigate(
+                                    NewViewScreenDestination(repo, module),
+                                )
+                            },
                         )
                     }
                 }
