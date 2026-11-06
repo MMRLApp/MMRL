@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,19 +18,18 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.model.online.hasCategories
-import com.dergoogler.mmrl.ui.component.listItem.dsl.List
-import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalRepo
 import com.dergoogler.mmrl.ui.screens.moduleView.listItemContentPaddingValues
-import com.dergoogler.mmrl.ui.screens.repository.modules.ModulesFilter
-import com.ramcosta.composedestinations.generated.destinations.TypedModulesScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.ViewDescriptionScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.DescriptionScreenDestination
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListItemSlot
+import dev.mmrlx.compose.ui.list.component.ButtonItem
+import dev.mmrlx.compose.ui.list.component.Item
+import dev.mmrlx.compose.ui.list.component.item.Icon
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Composable
 internal fun AboutModule() {
@@ -47,7 +45,7 @@ internal fun AboutModule() {
         if (!module.readme.isNullOrBlank()) {
             ButtonItem(
                 onClick = {
-                    navigator.navigate(ViewDescriptionScreenDestination(module.readme))
+                    navigator.navigate(DescriptionScreenDestination(module.readme))
                 },
             ) {
                 Icon(
@@ -93,14 +91,14 @@ internal fun AboutModule() {
             items(it.size) { category ->
                 AssistChip(
                     onClick = {
-                        navigator.navigate(
-                            TypedModulesScreenDestination(
-                                type = ModulesFilter.CATEGORY,
-                                title = it[category],
-                                query = it[category],
-                                repo = repo,
-                            ),
-                        )
+//                        navigator.navigate(
+//                            TypedModulesScreenDestination(
+//                                type = ModulesFilter.CATEGORY,
+//                                title = it[category],
+//                                query = it[category],
+//                                repo = repo,
+//                            ),
+//                        )
                     },
                     label = { Text(it[category]) },
                 )

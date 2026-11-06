@@ -1,9 +1,9 @@
 package com.dergoogler.mmrl.ui.providable
 
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.staticCompositionLocalOf
+import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 
 val LocalScrollBehavior =
-    staticCompositionLocalOf<TopAppBarScrollBehavior> {
+    staticCompositionLocalOf<ToolbarScrollBehavior> {
         error("CompositionLocal LocalScrollBehavior not present")
     }

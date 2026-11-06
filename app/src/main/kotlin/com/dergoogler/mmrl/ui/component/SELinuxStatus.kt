@@ -3,15 +3,14 @@ package com.dergoogler.mmrl.ui.component
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.painterResource
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.platform.PlatformManager
-import com.dergoogler.mmrl.ui.component.listItem.dsl.ListScope
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import dev.mmrlx.compose.ui.list.ListScope
+import dev.mmrlx.compose.ui.list.component.Item
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Icon
+import dev.mmrlx.compose.ui.list.component.item.Title
 import com.dergoogler.mmrl.ui.remember.remember
 
 @Composable

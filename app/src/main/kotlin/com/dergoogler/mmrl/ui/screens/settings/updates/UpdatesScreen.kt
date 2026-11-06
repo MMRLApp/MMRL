@@ -3,8 +3,10 @@ package com.dergoogler.mmrl.ui.screens.settings.updates
 import android.content.Intent
 import android.provider.Settings
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -15,21 +17,25 @@ import com.dergoogler.mmrl.service.RepositoryService
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.RadioDialogItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Section
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import dev.mmrlx.compose.ui.list.component.RadioDialogItem
+import dev.mmrlx.compose.ui.list.component.Section
+import dev.mmrlx.compose.ui.list.component.SwitchItem
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalSnackbarHost
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import dev.mmrlx.compose.ui.list.component.RadioDialogOption
+import dev.mmrlx.compose.ui.list.component.RawItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun radioDialogItem(interval: Long): RadioDialogItem<Long> =
-    RadioDialogItem(
+fun radioDialogItem(interval: Long): RadioDialogOption<Long> =
+    RadioDialogOption(
         title = pluralStringResource(id = R.plurals.hours, count = interval.toInt(), interval),
         value = interval,
     )
@@ -63,24 +69,26 @@ fun UpdatesScreen() {
         title = R.string.settings_updates,
     ) {
         Section {
-            ButtonItem(
-                onClick = {
-                    val intent =
-                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                        }
+            RawItem(
+                modifier = Modifier
+                    .clickable {
+                        val intent =
+                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                            }
 
-                    if (intent.resolveActivity(context.packageManager) != null) {
-                        context.startActivity(intent, null)
-                    } else {
-                        Toast
-                            .makeText(
-                                context,
-                                "Cannot open notification settings",
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                        if (intent.resolveActivity(context.packageManager) != null) {
+                            context.startActivity(intent, null)
+                        } else {
+                            Toast
+                                .makeText(
+                                    context,
+                                    "Cannot open notification settings",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                        }
                     }
-                },
+                    .contentPadding(),
             ) {
                 Title(R.string.settings_open_notification_settings)
             }
@@ -123,7 +131,7 @@ fun UpdatesScreen() {
                         } else {
                             RepositoryService.stop(context)
                             while (RepositoryService.isActive) {
-                                delay(100)
+                                delay(100.milliseconds)
                             }
                             viewModel.setRepositoryServiceEnabled(false)
                             snackbarHost.showSnackbar(context.getString(R.string.repository_service_stopped))
@@ -144,8 +152,10 @@ fun UpdatesScreen() {
             ) {
                 Title(R.string.settings_repo_update_interval)
                 Description(
-                    R.string.settings_repo_update_interval_desc,
-                    userPreferences.autoUpdateReposInterval,
+                    stringResource(
+                        R.string.settings_repo_update_interval_desc,
+                        userPreferences.autoUpdateReposInterval
+                    ),
                 )
             }
         }
@@ -190,8 +200,10 @@ fun UpdatesScreen() {
             ) {
                 Title(R.string.settings_check_modules_update_interval)
                 Description(
-                    R.string.settings_check_modules_update_interval_desc,
-                    userPreferences.checkModuleUpdatesInterval,
+                    stringResource(
+                        R.string.settings_check_modules_update_interval_desc,
+                        userPreferences.checkModuleUpdatesInterval
+                    ),
                 )
             }
         }

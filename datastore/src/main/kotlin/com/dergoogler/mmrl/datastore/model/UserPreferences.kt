@@ -10,6 +10,7 @@ import android.os.Environment
 import com.dergoogler.mmrl.datastore.BuildConfig
 import com.dergoogler.mmrl.ui.theme.Colors
 import com.dergoogler.mmrl.ui.theme.Colors.Companion.getColorScheme
+import dev.mmrlx.compose.ui.DraggableSnapshot
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -77,6 +78,7 @@ data class UserPreferences(
     @ProtoNumber(44) val repositoryServiceEnabled: Boolean = false,
     @ProtoNumber(45) val moduleServiceEnabled: Boolean = false,
     @ProtoNumber(46) val providerServiceEnabled: Boolean = false,
+    @ProtoNumber(47) val bottomBarOrder: DraggableSnapshot = DraggableSnapshot(),
 ) {
     fun isDarkMode() =
         when (darkMode) {
@@ -114,6 +116,7 @@ data class UserPreferences(
             )
 
         @OptIn(ExperimentalSerializationApi::class)
-        fun decodeFrom(input: InputStream): UserPreferences = ProtoBuf.decodeFromByteArray(input.readBytes())
+        fun decodeFrom(input: InputStream): UserPreferences =
+            ProtoBuf.decodeFromByteArray(input.readBytes())
     }
 }

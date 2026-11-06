@@ -1,5 +1,11 @@
 package com.dergoogler.mmrl.ui.screens.modules
 
+import android.content.ComponentName
+import android.content.Intent
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -71,7 +77,6 @@ import com.dergoogler.mmrl.ui.component.text.BBCodeText
 import com.dergoogler.mmrl.ui.providable.LocalModule
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.utils.toFormattedDateSafely
-import com.dergoogler.mmrl.utils.webUILauncher
 import dev.dergoogler.mmrl.compat.core.LocalUriHandler
 import kotlinx.coroutines.launch
 
@@ -82,17 +87,17 @@ fun ModuleItem(
     alpha: Float = 1f,
     decoration: TextDecoration = TextDecoration.None,
     switch:
-        @Composable()
-        (() -> Unit?)? = null,
+    @Composable()
+    (() -> Unit?)? = null,
     indicator:
-        @Composable()
-        (CardScope.() -> Unit?)? = null,
+    @Composable()
+    (CardScope.() -> Unit?)? = null,
     startTrailingButton:
-        @Composable()
-        (LiteRowScope.() -> Unit)? = null,
+    @Composable()
+    (LiteRowScope.() -> Unit)? = null,
     trailingButton:
-        @Composable()
-        (LiteRowScope.() -> Unit),
+    @Composable()
+    (LiteRowScope.() -> Unit),
     isBlacklisted: Boolean = false,
     isProviderAlive: Boolean,
 ) {
@@ -115,7 +120,36 @@ fun ModuleItem(
             !context.isPackageInstalled(userPreferences.webuixPackageName)
         }
 
-    val launch = userPreferences.webUILauncher(context, module)
+    val webui =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+        ) { result ->
+            if (!result.allGranted { perm ->
+                    Toast
+                        .makeText(context, "Permission denied! Requires $perm", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            ) {
+                return@rememberLauncherForActivityResult
+            }
+
+            try {
+                val intent = Intent().apply {
+                    component = ComponentName(
+                        userPreferences.webuixPackageName,
+                        "com.dergoogler.mmrl.wx.ui.webui.WebUIActivity"
+                    )
+
+                    putExtra("MODULE_ID", module.id.toString())
+                }
+
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("webUILauncher", "Failed to launch WebUI", e)
+            }
+        }
+
 
     val clicker: (() -> Unit)? =
         remember(canWenUIAccessed) {
@@ -125,7 +159,11 @@ fun ModuleItem(
                     return@jump
                 }
 
-                launch()
+                webui.launch(
+                    arrayOf(
+                        "com.dergoogler.mmrl.permission.WEBUI_X",
+                    ),
+                )
             }
         }
 
@@ -138,10 +176,10 @@ fun ModuleItem(
     Card(
         border =
             isBlacklisted nullable
-                BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.errorContainer,
-                ),
+                    BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.errorContainer,
+                    ),
         onClick = clicker,
     ) {
         indicator.nullable {
@@ -439,3 +477,13 @@ fun StateIndicator(
     alpha = 0.1f,
     colorFilter = ColorFilter.tint(color),
 )
+
+private fun Map<String, Boolean>.allGranted(onDenied: (String) -> Unit): Boolean {
+    for ((perm, granted) in this) {
+        if (!granted) {
+            onDenied(perm)
+            return false
+        }
+    }
+    return true
+}

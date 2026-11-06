@@ -13,12 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.model.online.OtherSources
+import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModuleState
 import com.dergoogler.mmrl.ui.screens.repository.ModuleItemCompact
+import com.ramcosta.composedestinations.generated.destinations.NewViewScreenDestination
 
 @Composable
 fun OtherSourcesItem(items: List<OtherSources>) {
+    val navigator = LocalDestinationsNavigator.current
     val pagerState = rememberPagerState(pageCount = { (items.size + 2) / 3 })
 
     HorizontalPager(
@@ -49,7 +52,11 @@ fun OtherSourcesItem(items: List<OtherSources>) {
                             sourceProvider = item.repo.name,
                             showLabels = false,
                             showLastUpdated = false,
-                            onClick = {},
+                            onClick = {
+                                navigator.navigate(
+                                    NewViewScreenDestination(item.repo, item.online)
+                                )
+                            },
                         )
                     }
                 }

@@ -4,20 +4,18 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.platform.ksu.KsuNative
 import com.dergoogler.mmrl.ui.remember.rememberIsRoot
-import com.dergoogler.mmrl.utils.isManager
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.ModulesScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.RepositoriesScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDestination
-import com.ramcosta.composedestinations.generated.destinations.SuperUserScreenDestination
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
 // @NavHostGraph
 // annotation class MainGraph
 
 enum class MainDestination(
+    val id: String,
     val direction: DirectionDestinationSpec,
     @StringRes val label: Int,
     @DrawableRes val icon: Int,
@@ -26,6 +24,7 @@ enum class MainDestination(
     val requiresKernel: Boolean,
 ) {
     Home(
+        id = "home",
         direction = HomeScreenDestination,
         label = R.string.page_home,
         icon = R.drawable.home,
@@ -34,16 +33,8 @@ enum class MainDestination(
         requiresKernel = false,
     ),
 
-    SuperUser(
-        direction = SuperUserScreenDestination,
-        label = R.string.page_superuser,
-        icon = R.drawable.user,
-        iconFilled = R.drawable.user_filled,
-        requiresRoot = true,
-        requiresKernel = true,
-    ),
-
     Repository(
+        id = "repositories",
         direction = RepositoriesScreenDestination,
         label = R.string.page_repositorys,
         icon = R.drawable.cloud,
@@ -53,6 +44,7 @@ enum class MainDestination(
     ),
 
     Modules(
+        id = "modules",
         direction = ModulesScreenDestination,
         label = R.string.page_modules,
         icon = R.drawable.keyframes,
@@ -62,6 +54,7 @@ enum class MainDestination(
     ),
 
     Settings(
+        id = "settings",
         direction = SettingsScreenDestination,
         label = R.string.page_settings,
         icon = R.drawable.settings,
@@ -75,7 +68,7 @@ enum class MainDestination(
 val MainDestination.isAccessible: Boolean
     get() {
         val isRoot = rememberIsRoot()
-        if (this.requiresRoot && !isRoot) return false
-        if (this.requiresKernel && !(KsuNative.isManager && isRoot)) return false
-        return true
+        return !(this.requiresRoot && !isRoot)
     }
+
+

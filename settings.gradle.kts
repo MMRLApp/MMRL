@@ -11,6 +11,7 @@ dependencyResolutionManagement drm@{
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         maven("https://jitpack.io")
 
         if (user != null && pass != null) {
@@ -31,6 +32,7 @@ pluginManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         gradlePluginPortal()
     }
 }

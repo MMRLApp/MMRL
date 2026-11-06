@@ -12,21 +12,21 @@ import com.dergoogler.mmrl.ext.ifNotNullOrBlank
 import com.dergoogler.mmrl.ui.component.AntiFeaturesItem
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.PermissionItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.List
-import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.CollapseItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Item
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.screens.moduleView.items.OtherSourcesItem
 import com.dergoogler.mmrl.ui.screens.moduleView.listItemContentPaddingValues
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalRequireModules
 import com.dergoogler.mmrl.ui.screens.moduleView.subListItemContentPaddingValues
+import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListItemSlot
+import dev.mmrlx.compose.ui.list.component.ButtonItem
+import dev.mmrlx.compose.ui.list.component.CollapseItem
+import dev.mmrlx.compose.ui.list.component.Item
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Icon
+import dev.mmrlx.compose.ui.list.component.item.Supporting
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Composable
 internal fun Information0() {
@@ -39,7 +39,7 @@ internal fun Information0() {
         contentPadding = listItemContentPaddingValues,
     ) {
         CollapseItem(
-            meta = { icon, rotation ->
+            first = { icon, rotation ->
                 Title(R.string.view_module_module_support)
                 Icon(
                     slot = ListItemSlot.End,
@@ -50,57 +50,57 @@ internal fun Information0() {
                 )
             },
         ) {
-            module.donate.ifNotNullOrBlank {
-                ButtonItem(
-                    contentPadding = subListItemContentPaddingValues,
-                    onClick = {
-                        browser.openUri(it)
-                    },
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.currency_dollar))
-                    Title(R.string.view_module_donate)
-                    Description(R.string.view_module_donate_desc)
-                }
-            }
-
-            ButtonItem(
+            List(
                 contentPadding = subListItemContentPaddingValues,
-                onClick = {
-                    browser.openUri(module.track.source)
-                },
             ) {
-                Icon(painter = painterResource(id = R.drawable.brand_git))
-                Title(R.string.view_module_source)
-            }
-
-            module.homepage.ifNotNullOrBlank {
-                ButtonItem(
-                    contentPadding = subListItemContentPaddingValues,
-                    onClick = {
-                        browser.openUri(it)
-                    },
-                ) {
-                    Icon(painter = painterResource(id = R.drawable.world_www))
-                    Title(R.string.view_module_homepage)
+                module.donate.ifNotNullOrBlank {
+                    ButtonItem(
+                        onClick = {
+                            browser.openUri(it)
+                        },
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.currency_dollar))
+                        Title(R.string.view_module_donate)
+                        Description(R.string.view_module_donate_desc)
+                    }
                 }
-            }
 
-            module.support?.ifNotNullOrBlank {
                 ButtonItem(
-                    contentPadding = subListItemContentPaddingValues,
                     onClick = {
-                        browser.openUri(it)
+                        browser.openUri(module.track.source)
                     },
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.heart_handshake))
-                    Title(R.string.view_module_support)
+                    Icon(painter = painterResource(id = R.drawable.brand_git))
+                    Title(R.string.view_module_source)
+                }
+
+                module.homepage.ifNotNullOrBlank {
+                    ButtonItem(
+                        onClick = {
+                            browser.openUri(it)
+                        },
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.world_www))
+                        Title(R.string.view_module_homepage)
+                    }
+                }
+
+                module.support?.ifNotNullOrBlank {
+                    ButtonItem(
+                        onClick = {
+                            browser.openUri(it)
+                        },
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.heart_handshake))
+                        Title(R.string.view_module_support)
+                    }
                 }
             }
         }
 
         module.permissions.ifNotEmpty {
             CollapseItem(
-                meta = { icon, rotation ->
+                first = { icon, rotation ->
                     Title(R.string.view_module_permissions)
                     Icon(
                         slot = ListItemSlot.End,
@@ -109,7 +109,7 @@ internal fun Information0() {
                                 .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
-                    Labels {
+                    Supporting {
                         LabelItem(
                             text =
                                 stringResource(
@@ -120,16 +120,20 @@ internal fun Information0() {
                     }
                 },
             ) {
-                PermissionItem(
+                List(
                     contentPadding = subListItemContentPaddingValues,
-                    permissions = it,
-                )
+                ) {
+                    PermissionItem(
+                        contentPadding = subListItemContentPaddingValues,
+                        permissions = it,
+                    )
+                }
             }
         }
 
         module.track.antifeatures.ifNotEmpty {
             CollapseItem(
-                meta = { icon, rotation ->
+                first = { icon, rotation ->
                     Title(R.string.view_module_antifeatures)
                     Icon(
                         slot = ListItemSlot.End,
@@ -138,7 +142,7 @@ internal fun Information0() {
                                 .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
-                    Labels {
+                    Supporting {
                         LabelItem(
                             text =
                                 stringResource(
@@ -149,16 +153,20 @@ internal fun Information0() {
                     }
                 },
             ) {
-                AntiFeaturesItem(
+                List(
                     contentPadding = subListItemContentPaddingValues,
-                    antifeatures = it,
-                )
+                ) {
+                    AntiFeaturesItem(
+                        contentPadding = subListItemContentPaddingValues,
+                        antifeatures = it,
+                    )
+                }
             }
         }
 
         requires.ifNotEmpty { requiredIds ->
             CollapseItem(
-                meta = { icon, rotation ->
+                first = { icon, rotation ->
                     Title(R.string.view_module_dependencies)
                     Icon(
                         slot = ListItemSlot.End,
@@ -167,7 +175,7 @@ internal fun Information0() {
                                 .graphicsLayer(rotationZ = rotation),
                         painter = painterResource(id = icon),
                     )
-                    Labels {
+                    Supporting {
                         LabelItem(
                             text =
                                 stringResource(
@@ -178,13 +186,16 @@ internal fun Information0() {
                     }
                 },
             ) {
-                requiredIds.forEach { onlineModule ->
-                    ButtonItem(
-                        contentPadding = subListItemContentPaddingValues,
-                        onClick = {},
-                    ) {
-                        Title(onlineModule.name)
-                        Description(onlineModule.versionCode.toString())
+                List(
+                    contentPadding = subListItemContentPaddingValues,
+                ) {
+                    requiredIds.forEach { onlineModule ->
+                        ButtonItem(
+                            onClick = {},
+                        ) {
+                            Title(onlineModule.name)
+                            Description(onlineModule.versionCode.toString())
+                        }
                     }
                 }
             }

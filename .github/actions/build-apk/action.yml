@@ -93,19 +93,10 @@ runs:
       shell: bash
       run: |
         apk_path=$(find app/build/outputs/apk/${{ env.FLAVOR_LOWERCASE }}/${{ env.BUILD_TYPE_LOWERCASE }} -name "*.apk" -print -quit)
-        mapping_path=$(find app/build/outputs/mapping/${{ env.FLAVOR_LOWERCASE }}${{ env.BUILD_TYPE_CAPITALIZED }} -name "mapping.txt" -print -quit)
         name=$(basename "$apk_path" .apk)
 
         echo "name=$name" >> $GITHUB_OUTPUT
         echo "path=$apk_path" >> $GITHUB_OUTPUT
-        echo "mapping=$mapping_path" >> $GITHUB_OUTPUT
-
-    - name: Upload mapping as artifact
-      if: ${{ steps.apk.outputs.mapping != '' }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ inputs.flavor }}-${{ inputs.buildType }}-mapping
-        path: ${{ steps.apk.outputs.mapping }}
 
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4

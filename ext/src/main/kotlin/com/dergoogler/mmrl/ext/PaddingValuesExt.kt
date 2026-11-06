@@ -11,7 +11,8 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 
-inline operator fun PaddingValues.plus(other: PaddingValues): PaddingValues = OperatorPaddingValues(this, other, Dp::plus)
+inline operator fun PaddingValues.plus(other: Dp): PaddingValues = OperatorPaddingValues(this,
+    PaddingValues(other), Dp::plus)
 
 inline operator fun PaddingValues.minus(other: PaddingValues): PaddingValues = OperatorPaddingValues(this, other, Dp::minus)
 

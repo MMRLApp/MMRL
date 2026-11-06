@@ -55,11 +55,13 @@ enum class BBCodeTag {
     ;
 
     companion object {
-        fun disableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> = entries.filterNot { it in tags }.toSet()
+        fun disableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> =
+            entries.filterNot { it in tags }.toSet()
 
         fun disableAll(): Set<BBCodeTag> = entries.toSet()
 
-        fun enableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> = entries.filterNot { it in tags }.toSet()
+        fun enableAllExcept(vararg tags: BBCodeTag): Set<BBCodeTag> =
+            entries.filterNot { it in tags }.toSet()
     }
 }
 
@@ -204,7 +206,11 @@ fun BBCodeText(
 
                                 val ann =
                                     string
-                                        .getStringAnnotations(tag = "URL", start = position, end = position)
+                                        .getStringAnnotations(
+                                            tag = "URL",
+                                            start = position,
+                                            end = position
+                                        )
                                         .firstOrNull()
 
                                 ann?.let {
@@ -327,13 +333,11 @@ private fun String.toStyleMarkup(
                                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
                                 ),
                             ) {
-                                runCatching {
-                                    ProvideContentColorTextStyle(
-                                        contentColor = color,
-                                        textStyle = textStyle,
-                                    ) {
-                                        iconContent(value)
-                                    }
+                                ProvideContentColorTextStyle(
+                                    contentColor = color,
+                                    textStyle = textStyle,
+                                ) {
+                                    iconContent(value)
                                 }
                             }
                     }
@@ -350,9 +354,7 @@ private fun String.toStyleMarkup(
                                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
                                 ),
                             ) {
-                                runCatching {
-                                    imageContent(value)
-                                }
+                                imageContent(value)
                             }
                     }
 
@@ -360,8 +362,16 @@ private fun String.toStyleMarkup(
                         val current = styleStack.peek()
                         val newStyle =
                             when (tagType) {
-                                BBCodeTag.COLOR -> current.copy(tag = tagType, color = colorFromName(value))
-                                BBCodeTag.BACKGROUND -> current.copy(tag = tagType, bg = colorFromName(value))
+                                BBCodeTag.COLOR -> current.copy(
+                                    tag = tagType,
+                                    color = colorFromName(value)
+                                )
+
+                                BBCodeTag.BACKGROUND -> current.copy(
+                                    tag = tagType,
+                                    bg = colorFromName(value)
+                                )
+
                                 BBCodeTag.BOLD -> current.copy(tag = tagType, bold = true)
                                 BBCodeTag.ITALIC -> current.copy(tag = tagType, italic = true)
                                 BBCodeTag.UNDERLINE -> current.copy(tag = tagType, underline = true)

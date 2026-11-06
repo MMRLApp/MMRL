@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -22,11 +21,6 @@ import com.dergoogler.mmrl.ext.takeTrue
 import com.dergoogler.mmrl.model.online.isValid
 import com.dergoogler.mmrl.platform.content.isValid
 import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
-import com.dergoogler.mmrl.ui.component.listItem.dsl.List
-import com.dergoogler.mmrl.ui.component.listItem.dsl.ListItemSlot
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.CollapseItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
@@ -34,6 +28,12 @@ import com.dergoogler.mmrl.ui.providable.LocalVersionItem
 import com.dergoogler.mmrl.ui.screens.moduleView.items.LicenseItem
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
 import com.dergoogler.mmrl.utils.toFormattedDateSafely
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListItemSlot
+import dev.mmrlx.compose.ui.list.component.CollapseItem
+import dev.mmrlx.compose.ui.list.component.item.Icon
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Composable
 internal fun Information() {
@@ -162,7 +162,7 @@ internal fun Information() {
                 ),
         ) {
             CollapseItem(
-                meta = { icon, rotation ->
+                first = { icon, rotation ->
                     Title(
                         id = R.string.module_installed,
                         styleTransform = {

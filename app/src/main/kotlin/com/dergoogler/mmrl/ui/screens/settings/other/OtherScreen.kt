@@ -6,16 +6,16 @@ import androidx.compose.ui.platform.LocalContext
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.service.ProviderService
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.TextEditDialogItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
+import dev.mmrlx.compose.ui.list.component.SwitchItem
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalSnackbarHost
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.screens.settings.appearance.items.DownloadPathItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import dev.mmrlx.compose.ui.list.component.InputDialogItem
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -67,12 +67,14 @@ fun OtherScreen() {
             Description(R.string.settings_provider_service_desc)
         }
 
-        TextEditDialogItem(
+        InputDialogItem(
             value = userPreferences.webuixPackageName,
-            onConfirm = viewModel::setWebuixPackageName,
+            onConfirm = {
+                viewModel.setWebuixPackageName(it.value)
+            },
         ) {
-            Title(context.getString(R.string.settings_set_spoofed_wxp))
-            Description(context.getString(R.string.settings_set_spoofed_wxp_desc))
+            Title(R.string.settings_set_spoofed_wxp)
+            Description(R.string.settings_set_spoofed_wxp_desc)
         }
     }
 }
