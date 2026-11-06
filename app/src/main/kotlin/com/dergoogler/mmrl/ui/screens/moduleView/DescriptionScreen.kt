@@ -51,12 +51,20 @@ fun DescriptionScreen(readmeUrl: String) {
     val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
     val userPrefs = LocalUserPreferences.current
 
+    val border = MMRLXTheme.border
     val colors = MMRLXTheme.colors
     val scheme = MaterialTheme.colorScheme.copy(
         background = colors.background,
         onBackground = colors.foreground,
         surface = colors.code,
-        surfaceTint = colors.muted
+        surfaceTint = colors.muted,
+        outline = border.color,
+        outlineVariant = border.color,
+        onSurface = colors.foreground,
+        onSurfaceVariant = colors.mutedForeground,
+        surfaceVariant = colors.code,
+        inverseSurface = colors.code,
+        inverseOnSurface = colors.foreground,
     )
 
     val wstate =
