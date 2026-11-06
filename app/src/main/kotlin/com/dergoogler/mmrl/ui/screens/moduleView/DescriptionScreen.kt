@@ -78,6 +78,8 @@ fun DescriptionScreen(readmeUrl: String) {
                     forceKillProcess = false
                     useConsoleInterceptor = false
                     darkMode = userPrefs.isDarkMode()
+                    // default namespaces
+                    blockedJavaScriptNamespaces += listOf("fs", "webui")
                 }
                 .client {
                     // not related to client
