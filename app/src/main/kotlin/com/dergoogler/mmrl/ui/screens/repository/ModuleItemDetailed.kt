@@ -16,13 +16,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.isNotNullOrEmpty
@@ -58,6 +66,7 @@ fun ModuleItemDetailed(
     decoration: TextDecoration = TextDecoration.None,
     enabled: Boolean = true,
 ) {
+    val context = LocalContext.current
     val module = LocalOnlineModule.current
     val state = LocalOnlineModuleState.current
 
@@ -139,12 +148,27 @@ fun ModuleItemDetailed(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     if (menu.showIcon) {
+                        val painter = rememberAsyncImagePainter(
+                            model =
+                                ImageRequest
+                                    .Builder(context)
+                                    .data(module.icon)
+                                    .memoryCacheKey(module.icon)
+                                    .diskCacheKey(module.icon)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .build(),
+                        )
+
+                        val isError =
+                            remember(painter.state) { painter.state is AsyncImagePainter.State.Error }
+
                         Avatar(
                             initials = module.name.take(
                                 2
                             ).uppercase(),
                             size = 36.dp,
-                            //painter = module.icon?.toPainter()
+                            painter = if (isError) null else painter,
                         )
                     }
 
@@ -308,7 +332,11 @@ fun ModuleItemDetailed(
                                                     modifier = Modifier.sizeByFontSize(),
                                                     painter = painterResource(R.drawable.tag)
                                                 )
-                                                Text(text = license)
+                                                Text(
+                                                    text = license,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
                                             }
                                         }
                                     }
@@ -357,5 +385,12 @@ fun ModuleItemDetailed(
     }
 }
 
+// TODO: export
 @Composable
 fun Modifier.sizeByFontSize() = this.size(LocalTextStyle.current.fontSize.value.dp)
+
+// TODO: export
+fun Painter.isEmptyOrZero(): Boolean {
+    val size = this.intrinsicSize
+    return size == Size.Unspecified || size.width == 0f || size.height == 0f
+}

@@ -30,6 +30,7 @@ import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.PageIndicator
 import com.dergoogler.mmrl.ui.component.toolbar.BlurSearchToolbar
+import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.viewmodel.RepositoryViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
@@ -213,6 +214,7 @@ private fun TopBar0(
     scrollBehavior: ToolbarScrollBehavior,
 ) {
     val vm = RepositoryViewModel.current
+    val navigator = LocalDestinationsNavigator.current
 
     val query by vm.query.collectAsStateWithLifecycle()
     val openSearch = vm::openSearch
@@ -242,6 +244,14 @@ private fun TopBar0(
                 title = vm.repo.name,
                 modifier = Modifier.graphicsLayer { alpha = scrollBehavior.state.fade },
             )
+        },
+        navigationIcon = {
+            IconButton(onClick = { navigator.popBackStack() }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.arrow_left),
+                    contentDescription = null,
+                )
+            }
         },
         actions = {
             if (!isSearch) {
