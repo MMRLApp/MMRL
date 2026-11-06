@@ -47,7 +47,7 @@ fun ScaffoldScope.ModulesList(
                 PaddingValues(
                     bottom = this@ModulesList.scaffoldBottomPadding + 16.dp,
                 ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             beforeContent()
 

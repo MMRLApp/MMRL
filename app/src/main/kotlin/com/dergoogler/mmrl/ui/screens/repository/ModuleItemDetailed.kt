@@ -1,14 +1,16 @@
 package com.dergoogler.mmrl.ui.screens.repository
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -20,23 +22,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ext.addIfNotThere
 import com.dergoogler.mmrl.ext.fadingEdge
 import com.dergoogler.mmrl.ext.isNotNullOrEmpty
 import com.dergoogler.mmrl.ext.nullable
+import com.dergoogler.mmrl.ext.toFormattedDateSafely
 import com.dergoogler.mmrl.ui.component.Cover
-import com.dergoogler.mmrl.ui.component.LabelItem
-import com.dergoogler.mmrl.ui.component.LabelItemDefaults
-import com.dergoogler.mmrl.ui.component.card.Card
-import com.dergoogler.mmrl.ui.component.text.BBCodeText
-import com.dergoogler.mmrl.ui.component.text.IconText
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModuleState
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
-import com.dergoogler.mmrl.utils.toFormattedDateSafely
+import dev.mmrlx.compose.layout.flashlightCard
+import dev.mmrlx.compose.ui.Avatar
+import dev.mmrlx.compose.ui.Badge
+import dev.mmrlx.compose.ui.BadgeVariant
+import dev.mmrlx.compose.ui.HorizontalDivider
+import dev.mmrlx.compose.ui.LocalTextStyle
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.text.FormatText
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
 enum class LabelType {
     LICENSE,
@@ -65,22 +70,41 @@ fun ModuleItemDetailed(
     val showAntifeaturesLabel = module.track.hasAntifeatures && menu.showAntiFeatures
     val showCategoryLabel = module.categories.isNotNullOrEmpty() && menu.showCategory
 
-    val labelsToShow = remember { mutableListOf<LabelType>() }
-    if (showLicenseLabel) labelsToShow.addIfNotThere(LabelType.LICENSE)
-    if (showInstalledLabel) labelsToShow.addIfNotThere(LabelType.INSTALLED)
-    if (showAntifeaturesLabel) labelsToShow.addIfNotThere(LabelType.ANTIFEATURES)
-    if (showCategoryLabel) labelsToShow.addIfNotThere(LabelType.CATEGORY)
-    if (state.updatable) labelsToShow.addIfNotThere(LabelType.UPDATABLE)
+    val labelsToShow = buildList {
+        if (showLicenseLabel) {
+            add(LabelType.LICENSE)
+        }
+
+        if (showInstalledLabel) {
+            add(LabelType.INSTALLED)
+        }
+
+        if (showAntifeaturesLabel) {
+            add(LabelType.ANTIFEATURES)
+        }
+
+        if (showCategoryLabel) {
+            add(LabelType.CATEGORY)
+        }
+
+        if (state.updatable) {
+            add(LabelType.UPDATABLE)
+        }
+    }
 
     val hasLabel = labelsToShow.isNotEmpty()
 
-    Card(
-        enabled = enabled,
-        onClick = onClick,
+    Box(
+        modifier = Modifier
+            .combinedClickable(
+                onClick = onClick,
+                enabled = enabled
+            )
+            .widthIn(600.dp)
+            .fillMaxWidth()
+            .flashlightCard()
     ) {
-        Column(
-            modifier = Modifier.relative(),
-        ) {
+        Column {
             module.cover.nullable(menu.showCover) {
                 if (it.isNotEmpty()) {
                     Cover(
@@ -102,150 +126,235 @@ fun ModuleItemDetailed(
                 }
             }
 
-            Row(
-                modifier = Modifier.padding(all = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                modifier =
+                    Modifier
+                        .padding(all = 16.dp)
+                        .alpha(alpha = alpha),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                Column(
-                    modifier =
-                        Modifier
-                            .alpha(alpha = alpha)
-                            .weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                Row(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    IconText(
-                        style =
-                            MaterialTheme.typography.titleSmall.copy(
-                                textDecoration = decoration,
-                            ),
-                        tint = MaterialTheme.colorScheme.surfaceTint,
-                        alignment = Alignment.End,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        text = module.name,
-                        resId = isVerified nullable R.drawable.rosette_discount_check,
-                    )
+                    if (menu.showIcon) {
+                        Avatar(
+                            initials = module.name.take(
+                                2
+                            ).uppercase(),
+                            size = 36.dp,
+                            //painter = module.icon?.toPainter()
+                        )
+                    }
 
-                    Text(
-                        text =
-                            stringResource(
+                    Column {
+                        FormatText(
+                            text = buildString {
+//                                if (module.metaModule) {
+//                                    append("%y ")
+//                                }
+                                append(module.name)
+                                if (isVerified) {
+                                    append(" %y")
+                                }
+                            },
+                            style = MMRLXTheme.typography.titleSmall
+                        ) {
+//                            if (module.metaModule) {
+//                                composable {
+//                                    Badge(
+//                                        text = "M",
+//                                        variant = BadgeVariant.Secondary,
+//                                    )
+//                                }
+//                            }
+
+                            if (isVerified) {
+                                composable {
+                                    Icon(
+                                        modifier = Modifier.size(fontSize.dp),
+                                        painter = painterResource(id = R.drawable.rosette_discount_check),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.surfaceTint
+                                    )
+                                }
+                            }
+                        }
+
+                        Text(
+                            text = stringResource(
                                 id = R.string.module_version_author,
                                 module.versionDisplay,
                                 module.author,
                             ),
-                        style = MaterialTheme.typography.bodySmall,
-                        textDecoration = decoration,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-
-                    if (menu.showUpdatedTime) {
-                        BBCodeText(
-                            style = MaterialTheme.typography.bodySmall,
-                            textDecoration = decoration,
-                            color = MaterialTheme.colorScheme.outline,
-                            text = state.lastUpdated.toFormattedDateSafely + if (module.stars != null && menu.showStars) " • [icon=star] ${module.stars}" else "",
-                            iconContent = {
-                                if (it == "star") {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.star),
-                                        contentDescription = null,
-                                    )
-                                }
-                            }
+                            style = MMRLXTheme.typography.labelSmall,
+                            color = MMRLXTheme.colors.mutedForeground
                         )
                     }
                 }
-            }
 
-            Text(
-                modifier =
-                    Modifier
-                        .alpha(alpha = alpha)
-                        .padding(end = 16.dp, bottom = 16.dp, start = 16.dp),
-                text =
-                    module.description
+                Text(
+                    modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
+                    text = module.description
                         ?: stringResource(R.string.view_module_no_description),
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis,
-                style =
-                    MaterialTheme.typography.bodySmall.apply {
+                    style = MMRLXTheme.typography.bodySmall.apply {
                         if (module.description.isNullOrBlank()) {
                             copy(
                                 fontStyle = FontStyle.Italic,
                             )
                         }
-                    },
-                textDecoration = decoration,
-                color = MaterialTheme.colorScheme.outline,
-            )
+                    }
+                )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            if (hasLabel) {
-                Row(
-                    modifier =
-                        Modifier
-                            .padding(end = 16.dp, bottom = 16.dp, start = 16.dp)
-                            .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    labelsToShow.forEach { labelType ->
-                        when (labelType) {
-                            LabelType.CATEGORY ->
-                                module.categories
-                                    ?.firstOrNull()
-                                    .nullable { category ->
-                                        LabelItem(
-                                            icon = R.drawable.category,
-                                            text = category,
-                                            style =
-                                                LabelItemDefaults.style.copy(
-                                                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                                                ),
-                                        )
-                                    }
-
-                            LabelType.LICENSE ->
-                                module.license.nullable { license ->
-                                    LabelItem(
-                                        icon = R.drawable.tag,
-                                        text = license,
-                                    )
-                                }
-
-                            LabelType.ANTIFEATURES ->
-                                LabelItem(
-                                    icon = R.drawable.alert_triangle,
-                                    text = stringResource(id = R.string.view_module_antifeatures),
-                                    style =
-                                        LabelItemDefaults.style.copy(
-                                            containerColor = MaterialTheme.colorScheme.onTertiary,
-                                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                        ),
-                                )
-
-                            LabelType.INSTALLED ->
-                                LabelItem(
-                                    text = stringResource(id = R.string.module_installed),
-                                )
-
-                            LabelType.UPDATABLE ->
-                                LabelItem(
-                                    text = stringResource(id = R.string.module_new),
-                                    style =
-                                        LabelItemDefaults.style.copy(
-                                            containerColor = MaterialTheme.colorScheme.error,
-                                            contentColor = MaterialTheme.colorScheme.onError,
-                                        ),
-                                )
+                val stats = remember(menu) {
+                    buildString {
+                        if (menu.showStars && module.stars != null) {
+                            append("%y %s")
+                        }
+                        if ((menu.showStars && module.stars != null) && menu.showUpdatedTime) {
+                            append(" %s ")
+                        }
+                        if (menu.showUpdatedTime) {
+                            append("%y %s")
                         }
                     }
                 }
 
-                Spacer(modifier = Modifier.weight(1f))
+                if (stats.isNotEmpty()) {
+                    FormatText(
+                        modifier = Modifier.padding(top = 4.dp, bottom = 8.dp),
+                        text = stats,
+                        style = MMRLXTheme.typography.labelSmall,
+                        color = MMRLXTheme.colors.mutedForeground
+                    ) {
+                        if (menu.showStars && module.stars != null) {
+                            composable {
+                                Icon(
+                                    modifier = Modifier.size(fontSize.dp),
+                                    painter = painterResource(R.drawable.star),
+                                    tint = MMRLXTheme.colors.mutedForeground
+                                )
+                            }
+                            string(module.stars.toString())
+                        }
+
+                        if ((menu.showStars && module.stars != null) && menu.showUpdatedTime) {
+                            string("•")
+                        }
+
+                        if (menu.showUpdatedTime) {
+                            composable {
+                                Icon(
+                                    modifier = Modifier.size(fontSize.dp),
+                                    painter = painterResource(R.drawable.git_branch),
+                                    tint = MMRLXTheme.colors.mutedForeground
+                                )
+                            }
+                            string(state.lastUpdated.toFormattedDateSafely(userPreferences.datePattern))
+                        }
+                    }
+                }
+
+                HorizontalDivider(Modifier.padding(top = 8.dp))
+
+                if (hasLabel) {
+                    FlowRow(
+                        modifier =
+                            Modifier
+                                .padding(top = 8.dp)
+                                .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        labelsToShow.forEach { labelType ->
+                            when (labelType) {
+                                LabelType.CATEGORY -> {
+                                    module.categories
+                                        ?.firstOrNull()
+                                        .nullable { category ->
+                                            Badge(
+                                                variant = BadgeVariant.Secondary
+                                            ) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(
+                                                        4.dp
+                                                    )
+                                                ) {
+                                                    Icon(
+                                                        modifier = Modifier.sizeByFontSize(),
+                                                        painter = painterResource(R.drawable.category)
+                                                    )
+                                                    Text(text = category)
+                                                }
+                                            }
+                                        }
+                                }
+
+                                LabelType.LICENSE -> {
+                                    module.license.nullable { license ->
+                                        Badge(
+                                            modifier = Modifier.widthIn(max = 100.dp),
+                                            variant = BadgeVariant.Default
+                                        ) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(
+                                                    4.dp
+                                                )
+                                            ) {
+                                                Icon(
+                                                    modifier = Modifier.sizeByFontSize(),
+                                                    painter = painterResource(R.drawable.tag)
+                                                )
+                                                Text(text = license)
+                                            }
+                                        }
+                                    }
+                                }
+
+                                LabelType.ANTIFEATURES -> {
+                                    Badge(
+                                        variant = BadgeVariant.Warning
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(
+                                                4.dp
+                                            )
+                                        ) {
+                                            Icon(
+                                                modifier = Modifier.sizeByFontSize(),
+                                                painter = painterResource(R.drawable.alert_triangle)
+                                            )
+                                            Text(text = stringResource(id = R.string.view_module_antifeatures))
+                                        }
+                                    }
+                                }
+
+                                LabelType.INSTALLED -> {
+                                    Badge(
+                                        variant = BadgeVariant.Default
+                                    ) {
+                                        Text(text = stringResource(id = R.string.module_installed))
+                                    }
+                                }
+
+                                LabelType.UPDATABLE -> {
+                                    Badge(
+                                        variant = BadgeVariant.Outline
+                                    ) {
+                                        Text(text = stringResource(id = R.string.module_new))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 }
+
+@Composable
+fun Modifier.sizeByFontSize() = this.size(LocalTextStyle.current.fontSize.value.dp)
