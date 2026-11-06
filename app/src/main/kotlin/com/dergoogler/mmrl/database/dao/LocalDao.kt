@@ -17,6 +17,12 @@ interface LocalDao {
     @Query("SELECT * FROM localModules")
     fun getAll(): List<LocalModuleEntity>
 
+    @Query("SELECT * FROM localModules WHERE id IN (:ids)")
+    suspend fun getByIds(ids: List<String>): List<LocalModuleEntity>
+
+    @Query("SELECT * FROM localModules_updatable WHERE id IN (:ids)")
+    suspend fun getUpdatableTagsByIds(ids: List<String>): List<LocalModuleUpdatable>
+
     @Query("SELECT * FROM localModules WHERE id = :id LIMIT 1")
     suspend fun getByIdOrNull(id: String): LocalModuleEntity?
 

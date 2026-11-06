@@ -192,6 +192,7 @@ androidComponents {
 }
 
 dependencies {
+    testImplementation(libs.junit)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.swiperefreshlayout)
     compileOnly(projects.hiddenApi)

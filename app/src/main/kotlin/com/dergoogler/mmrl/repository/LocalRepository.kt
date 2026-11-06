@@ -16,6 +16,9 @@ import com.dergoogler.mmrl.ext.merge
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.online.Blacklist
 import com.dergoogler.mmrl.model.online.OnlineModule
+import com.dergoogler.mmrl.model.state.OnlineState
+import com.dergoogler.mmrl.model.state.OnlineState.Companion.createState
+import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -161,6 +164,45 @@ constructor(
                 }
             }
             values
+        }
+
+    fun observeRepositoryChanges() = joinDao.observeRepositoryChanges()
+
+    suspend fun getRepositoryPage(
+        repoUrl: String,
+        search: RepositorySearch,
+        menu: RepositoryMenu,
+        offset: Int,
+        limit: Int,
+    ): Pair<List<Pair<OnlineState, OnlineModule>>, Boolean> =
+        withContext(Dispatchers.IO) {
+            val entities = joinDao.getRepositoryPage(
+                repoUrl = repoUrl,
+                search = search.text,
+                prefix = search.prefix,
+                categoryPattern = search.categoryPattern,
+                sort = menu.option.name,
+                descending = menu.descending,
+                pinInstalled = menu.pinInstalled,
+                pinUpdatable = menu.pinUpdatable,
+                offset = offset,
+                limit = limit,
+            )
+            val hasMore = entities.size == limit
+            val page = entities
+            if (page.isEmpty()) return@withContext emptyList<Pair<OnlineState, OnlineModule>>() to false
+            val ids = page.map { it.id }
+            val versions = joinDao.getRepositoryVersions(ids, repoUrl).groupBy { it.id }
+            val locals = localDao.getByIds(ids).associateBy { it.id }
+            val tags = localDao.getUpdatableTagsByIds(ids).associateBy { it.id }
+            val modules = page.map { entity ->
+                val module = entity.toModule(versions[entity.id].orEmpty().map { it.toItem() })
+                module.createState(
+                    local = locals[entity.id]?.toModule(),
+                    hasUpdatableTag = tags[entity.id]?.updatable != false,
+                ) to module
+            }
+            modules to hasMore
         }
 
     fun getOnlineAllByUrlAsFlow(repoUrl: String): Flow<List<OnlineModule>> =

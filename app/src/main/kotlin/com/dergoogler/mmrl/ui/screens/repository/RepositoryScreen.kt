@@ -6,6 +6,8 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -14,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -46,7 +49,9 @@ import dev.mmrlx.compose.ui.toolbar.ToolbarTitle
 fun RepositoryScreen(
     repo: Repo,
 ) = RepositoryViewModel.LocalProvider(repo) { vm ->
-    val modules by vm.online.collectAsStateWithLifecycle()
+    val page by vm.page.collectAsStateWithLifecycle()
+    val isLoading by vm.isLoading.collectAsStateWithLifecycle()
+    val modules = page.modules
     val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
     var coverHeight by remember { mutableIntStateOf(0) }
 
@@ -71,10 +76,16 @@ fun RepositoryScreen(
                     .scaffoldHazeSource()
         ) {
             if (modules.isEmpty()) {
-                PageIndicator(
-                    icon = R.drawable.cloud,
-                    text = if (isSearch) R.string.search_empty else R.string.repository_empty,
-                )
+                if (isLoading) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    PageIndicator(
+                        icon = R.drawable.cloud,
+                        text = if (isSearch) R.string.search_empty else R.string.repository_empty,
+                    )
+                }
 
                 return@Scaffold
             }
@@ -83,6 +94,8 @@ fun RepositoryScreen(
                 repo = repo,
                 list = modules,
                 state = vm.listState,
+                hasMore = page.hasMore,
+                isLoading = isLoading,
             ) {
                 item {
                     AnimatedVisibility(!isSearch, enter = scaleIn(), exit = scaleOut()) {
