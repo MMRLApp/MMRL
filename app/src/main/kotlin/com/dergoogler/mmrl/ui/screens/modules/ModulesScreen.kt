@@ -14,9 +14,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -51,8 +48,11 @@ import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.ModulesViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import dev.mmrlx.compose.ui.PullToRefreshBox
+import dev.mmrlx.compose.ui.PullToRefreshDefaults.Indicator
 import dev.mmrlx.compose.ui.icon.Icon
 import dev.mmrlx.compose.ui.icon.IconButton
+import dev.mmrlx.compose.ui.rememberPullToRefreshState
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
