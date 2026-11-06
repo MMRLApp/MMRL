@@ -26,18 +26,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dergoogler.mmrl.database.entity.Repo
 import com.dergoogler.mmrl.ext.fadingEdge
-import com.dergoogler.mmrl.ext.ifNotEmpty
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ext.nullable
-import com.dergoogler.mmrl.model.local.BulkModule
 import com.dergoogler.mmrl.model.online.OnlineModule
 import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.model.online.isBlacklisted
-import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.providable.LocalBulkInstall
@@ -52,7 +48,7 @@ import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.providable.LocalVersionItem
 import com.dergoogler.mmrl.ui.screens.moduleView.items.InstallConfirmDialog
 import com.dergoogler.mmrl.ui.screens.moduleView.items.ViewTrackBottomSheet
-import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewDownloader
+import com.dergoogler.mmrl.ui.screens.moduleView.items.rememberDownload
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalRequireModules
 import com.dergoogler.mmrl.ui.screens.moduleView.sections.AboutModule
@@ -71,7 +67,6 @@ import dev.mmrlx.compose.ui.NavigationBarsSpacer
 import dev.mmrlx.compose.ui.ext.with
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
-import timber.log.Timber
 
 internal val listItemContentPaddingValues = PaddingValues(vertical = 16.dp, horizontal = 16.dp)
 internal val subListItemContentPaddingValues = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
@@ -82,232 +77,169 @@ fun NewViewScreen(
     repo: Repo,
     module: OnlineModule,
 ) = LocalScreenProvider {
-    val viewModel = ModuleViewModel.build(repo, module)
+    ModuleViewModel.LocalProvider(repo, module) { viewModel ->
+        val navigator = LocalDestinationsNavigator.current
+        val bulkInstallViewModel = LocalBulkInstall.current
+        val userPreferences = LocalUserPreferences.current
+        val repositoryMenu = userPreferences.repositoryMenu
+        val module = viewModel.online
+        val moduleAll by viewModel.onlineAll.collectAsStateWithLifecycle()
+        val local = viewModel.local
+        val lastVersionItem = viewModel.lastVersionItem
+        val context = LocalContext.current
+        val density = LocalDensity.current
+        val browser = LocalUriHandler.current
+        val hazeState = LocalHazeState.current
 
-    val navigator = LocalDestinationsNavigator.current
-    val bulkInstallViewModel = LocalBulkInstall.current
-    val userPreferences = LocalUserPreferences.current
-    val repositoryMenu = userPreferences.repositoryMenu
-    val module = viewModel.online
-    val moduleAll by viewModel.onlineAll.collectAsStateWithLifecycle()
-    val local = viewModel.local
-    val lastVersionItem = viewModel.lastVersionItem
-    val context = LocalContext.current
-    val density = LocalDensity.current
-    val browser = LocalUriHandler.current
-    val hazeState = LocalHazeState.current
+        val listState = rememberLazyListState()
 
-    val listState = rememberLazyListState()
+        val screenshotsLazyListState = rememberLazyListState()
+        val categoriesLazyListState = rememberLazyListState()
 
-    val screenshotsLazyListState = rememberLazyListState()
-    val categoriesLazyListState = rememberLazyListState()
+        val scope = rememberCoroutineScope()
+        val snackbarHostState = remember { SnackbarHostState() }
 
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+        val manager = module.manager(viewModel.platform)
+        val requires =
+            manager.require?.let {
+                moduleAll
+                    .filter { onlineModules ->
+                        onlineModules.second.id in it
+                    }.map { it2 -> it2.second }
+            } ?: emptyList()
 
-    val download: (VersionItem, Boolean) -> Unit = { item, install ->
-        viewModel.downloader(context, item) {
-            if (install) {
-                viewModel.installConfirm = false
-                InstallActivity.start(
-                    context = context,
-                    uri = it.toUri(),
-                    confirm = false,
-                )
-            }
+
+        val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
+
+        val isBlacklisted by module.isBlacklisted
+
+        if (viewModel.versionSelectBottomSheet) {
+            VersionSelectBottomSheet(
+                onClose = { viewModel.versionSelectBottomSheet = false },
+                versions = viewModel.versions,
+                localVersionCode = viewModel.localVersionCode,
+                isProviderAlive = viewModel.isProviderAlive,
+                getProgress = { viewModel.getProgress(it) },
+                onDownload = rememberDownload(),
+                isBlacklisted = isBlacklisted,
+            )
         }
-    }
 
-    val manager = module.manager(viewModel.platform)
-    val requires =
-        manager.require?.let {
-            moduleAll
-                .filter { onlineModules ->
-                    onlineModules.second.id in it
-                }.map { it2 -> it2.second }
-        } ?: emptyList()
+        if (viewModel.viewTrackBottomSheet) {
+            ViewTrackBottomSheet(
+                onClose = { viewModel.viewTrackBottomSheet = false },
+                tracks = viewModel.tracks,
+            )
+        }
 
-    if (viewModel.installConfirm) {
-        InstallConfirmDialog(
-            name = module.name,
-            requires = requires,
-            onClose = {
-                viewModel.installConfirm = false
-            },
-            onConfirm = {
-                lastVersionItem?.let { download(it, true) }
-            },
-            onConfirmDeps = {
-                lastVersionItem?.let { item ->
-                    val bulkModules = mutableListOf<BulkModule>()
-                    bulkModules.add(
-                        BulkModule(
-                            id = module.id,
-                            name = module.name,
-                            versionItem = item,
-                        ),
-                    )
-                    bulkModules.addAll(
-                        requires.map { r ->
-                            BulkModule(
-                                id = r.id,
-                                name = r.name,
-                                versionItem = r.versions.first(),
-                            )
-                        },
-                    )
-
-                    bulkModules.ifNotEmpty {
-                        bulkInstallViewModel.downloadMultiple(
-                            items = bulkModules,
-                            onAllSuccess = { uris ->
-                                viewModel.installConfirm = false
-                                InstallActivity.start(
-                                    context = context,
-                                    uri = uris,
-                                    confirm = false,
-                                )
-                            },
-                            onFailure = { err ->
-                                viewModel.installConfirm = false
-                                Timber.e(err)
-                            },
-                        )
-                    }
-                }
-            },
-        )
-    }
-
-    val scrollBehavior = ToolbarDefaults.fadePinnedScrollBehavior()
-
-    val isBlacklisted by module.isBlacklisted
-
-    if (viewModel.versionSelectBottomSheet) {
-        VersionSelectBottomSheet(
-            onClose = { viewModel.versionSelectBottomSheet = false },
-            versions = viewModel.versions,
-            localVersionCode = viewModel.localVersionCode,
-            isProviderAlive = viewModel.isProviderAlive,
-            getProgress = { viewModel.getProgress(it) },
-            onDownload = download,
-            isBlacklisted = isBlacklisted,
-        )
-    }
-
-    if (viewModel.viewTrackBottomSheet) {
-        ViewTrackBottomSheet(
-            onClose = { viewModel.viewTrackBottomSheet = false },
-            tracks = viewModel.tracks,
-        )
-    }
-
-    CompositionLocalProvider(
-        LocalSnackbarHost provides snackbarHostState,
-        LocalOnlineModule provides module,
-        LocalVersionItem provides (lastVersionItem ?: VersionItem.EMPTY),
-        LocalModule provides (local ?: com.dergoogler.mmrl.platform.content.LocalModule.EMPTY),
-        LocalRepo provides repo,
-        LocalModuleViewModel provides viewModel,
-        LocalModuleViewDownloader provides download,
-        LocalRequireModules provides requires,
-        LocalScrollBehavior provides scrollBehavior,
-    ) {
-        Scaffold(
-            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            toolbar = {
-                Toolbar0()
-            },
-            contentWindowInsets = WindowInsets.none,
+        CompositionLocalProvider(
+            LocalSnackbarHost provides snackbarHostState,
+            LocalOnlineModule provides module,
+            LocalVersionItem provides (lastVersionItem ?: VersionItem.EMPTY),
+            LocalModule provides (local ?: com.dergoogler.mmrl.platform.content.LocalModule.EMPTY),
+            LocalRepo provides repo,
+            LocalModuleViewModel provides viewModel,
+            LocalRequireModules provides requires,
+            LocalScrollBehavior provides scrollBehavior,
         ) {
-            val scope = this
-
-            Column(
-                modifier =
-                    Modifier
-                        .verticalScroll(rememberScrollState())
-                        .scaffoldHazeSource()
-                        .let {
-                            if (repositoryMenu.showCover && module.hasCover) {
-                                it
-                            } else {
-                                it.padding(top = scaffoldTopPadding)
-                            }
-                        }
+            Scaffold(
+                modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                toolbar = {
+                    Toolbar0()
+                },
+                contentWindowInsets = WindowInsets.none,
             ) {
-                module.cover.nullable(repositoryMenu.showCover) {
-                    if (it.isNotEmpty()) {
-                        Cover(
-                            modifier =
-                                Modifier.fadingEdge(
-                                    Brush.verticalGradient(
-                                        colors =
-                                            listOf(
-                                                Color.Transparent,
-                                                Color.Black,
-                                            ),
-                                        startY = Float.POSITIVE_INFINITY,
-                                        endY = 0f,
-                                    ),
-                                ),
-                            url = it,
-                        )
-                    }
-                }
+                val scope = this
 
                 Column(
-                    modifier = Modifier.with(scope) {
-                        it.scaffoldBottomPadding()
-                    }
+                    modifier =
+                        Modifier
+                            .verticalScroll(rememberScrollState())
+                            .scaffoldHazeSource()
+                            .let {
+                                if (repositoryMenu.showCover && module.hasCover) {
+                                    it
+                                } else {
+                                    it.padding(top = scaffoldTopPadding)
+                                }
+                            }
                 ) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    module.cover.nullable(repositoryMenu.showCover) {
+                        if (it.isNotEmpty()) {
+                            Cover(
+                                modifier =
+                                    Modifier.fadingEdge(
+                                        Brush.verticalGradient(
+                                            colors =
+                                                listOf(
+                                                    Color.Transparent,
+                                                    Color.Black,
+                                                ),
+                                            startY = Float.POSITIVE_INFINITY,
+                                            endY = 0f,
+                                        ),
+                                    ),
+                                url = it,
+                            )
+                        }
+                    }
 
-                    Header()
+                    Column(
+                        modifier = Modifier.with(scope) {
+                            it.scaffoldBottomPadding()
+                        }
+                    ) {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                    val progress =
-                        lastVersionItem?.let {
-                            viewModel.getProgress(it)
-                        } ?: 0f
+                        Header()
 
-                    if (progress != 0f) {
-                        LinearProgressIndicator(
-                            progress = { progress },
-                            strokeCap = StrokeCap.Round,
-                            modifier =
-                                Modifier
-                                    .padding(vertical = 16.dp)
-                                    .height(0.9.dp)
-                                    .fillMaxWidth(),
-                        )
-                    } else {
+                        val progress =
+                            lastVersionItem?.let {
+                                viewModel.getProgress(it)
+                            } ?: 0f
+
+                        if (progress != 0f) {
+                            LinearProgressIndicator(
+                                progress = { progress },
+                                strokeCap = StrokeCap.Round,
+                                modifier =
+                                    Modifier
+                                        .padding(vertical = 16.dp)
+                                        .height(0.9.dp)
+                                        .fillMaxWidth(),
+                            )
+                        } else {
+                            HorizontalDivider(
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                thickness = 0.9.dp,
+                            )
+                        }
+
+                        Alerts()
+
+                        AboutModule()
+
+                        Screenshots()
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Information0()
+
+                        // Information section
                         HorizontalDivider(
                             modifier = Modifier.padding(vertical = 16.dp),
                             thickness = 0.9.dp,
                         )
+
+                        Information()
                     }
 
-                    Alerts()
-
-                    AboutModule()
-
-                    Screenshots()
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Information0()
-
-                    // Information section
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 16.dp),
-                        thickness = 0.9.dp,
-                    )
-
-                    Information()
+                    NavigationBarsSpacer()
                 }
-
-                NavigationBarsSpacer()
             }
         }
+
+        InstallConfirmDialog()
     }
 }
