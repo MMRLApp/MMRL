@@ -9,22 +9,27 @@ import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.viewmodel.ModuleViewModel
 
 @Composable
-fun rememberDownload(): (VersionItem, Boolean) -> Unit {
+fun rememberDownload(onFailure: (Throwable) -> Unit = {}): (VersionItem, Boolean) -> Unit {
     val context = LocalContext.current
     val vm = ModuleViewModel.current
 
     return remember {
         { item, install ->
-            vm.downloader(context, item) {
-                if (install) {
-                    vm.installConfirm = false
-                    InstallActivity.start(
-                        context = context,
-                        uri = it.toUri(),
-                        confirm = false,
-                    )
-                }
-            }
+            vm.downloader(
+                context = context,
+                item = item,
+                onSuccess = {
+                    if (install) {
+                        vm.installConfirm = false
+                        InstallActivity.start(
+                            context = context,
+                            uri = it.toUri(),
+                            confirm = false,
+                        )
+                    }
+                },
+                onFailure = onFailure
+            )
         }
     }
 }

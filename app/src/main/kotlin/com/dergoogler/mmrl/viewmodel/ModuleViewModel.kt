@@ -223,6 +223,7 @@ constructor(
         context: Context,
         item: VersionItem,
         onSuccess: (File) -> Unit,
+        onFailure: (Throwable) -> Unit = {},
     ) {
         viewModelScope.launch {
             val downloadPath =
@@ -271,7 +272,7 @@ constructor(
                     }
 
                     override fun onFailure(e: Throwable) {
-                        Timber.d(e)
+                        onFailure(e)
                     }
                 }
 

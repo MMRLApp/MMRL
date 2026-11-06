@@ -206,7 +206,7 @@ fun NewViewScreen(
                                 modifier =
                                     Modifier
                                         .padding(vertical = 16.dp)
-                                        .height(0.9.dp)
+                                        .height(1.2.dp)
                                         .fillMaxWidth(),
                             )
                         } else {

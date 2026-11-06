@@ -279,28 +279,41 @@ class DownloadService : LifecycleService() {
                     progress
                 }
 
+
         fun start(
             context: Context,
             task: TaskItem,
             listener: IDownloadListener,
         ) {
             val permissions = mutableListOf<String>()
+
             if (Build.VERSION.SDK_INT <= 29) {
                 permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
             }
-            if (BuildCompat.atLeastT) {
-                permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+
+            fun startDownload() {
+                val intent = Intent(context, DownloadService::class.java)
+                intent.putExtra(EXTRA_TASK, task)
+
+                listeners[task] = listener
+                context.startService(intent)
+            }
+
+            if (permissions.isEmpty()) {
+                startDownload()
+                return
             }
 
             PermissionCompat.requestPermissions(context, permissions) { state ->
                 if (state.allGranted) {
-                    val intent = Intent(context, DownloadService::class.java)
-                    intent.putExtra(EXTRA_TASK, task)
-
-                    listeners[task] = listener
-                    context.startService(intent)
+                    startDownload()
+                } else {
+                    listener.onFailure(
+                        SecurityException("Storage permission denied")
+                    )
                 }
             }
         }
+
     }
 }
