@@ -39,6 +39,7 @@ import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.ActionViewModel
 import dev.mmrlx.compose.terminal.Terminal
 import dev.mmrlx.compose.ui.scaffold.Scaffold
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 import dev.mmrlx.compose.ui.toolbar.NavigateUpToolbar
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
@@ -147,7 +148,7 @@ fun ActionScreen() {
             TopBar(
                 exportLog = { launcher.launch(vm.logfile) },
                 event = event,
-                enable = if (!allowCancel) event.isFinished else true,
+                enable = allowCancel || event.isFinished,
                 scrollBehavior = scrollBehavior,
                 onBack = backHandler,
             )
@@ -156,6 +157,8 @@ fun ActionScreen() {
         contentWindowInsets = WindowInsets.none,
     ) {
         Terminal(
+            containerColor = MMRLXTheme.colors.background,
+            contentColor = MMRLXTheme.colors.foreground,
             modifier = Modifier
                 .scaffoldHazeSource(),
             contentPadding = contentPadding
