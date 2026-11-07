@@ -1,21 +1,27 @@
 package com.dergoogler.mmrl.ui.screens.settings.developer
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
+import com.dergoogler.mmrl.platform.model.ModId.Companion.toModId
+import com.dergoogler.mmrl.ui.activity.terminal.action.ActionActivity
+import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
+import com.dergoogler.mmrl.ui.providable.LocalSettings
+import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootGraph
 import dev.mmrlx.compose.ui.list.ListItemScope
 import dev.mmrlx.compose.ui.list.ListScope
+import dev.mmrlx.compose.ui.list.component.ButtonItem
 import dev.mmrlx.compose.ui.list.component.Item
 import dev.mmrlx.compose.ui.list.component.Section
 import dev.mmrlx.compose.ui.list.component.SwitchItem
 import dev.mmrlx.compose.ui.list.component.item.Description
 import dev.mmrlx.compose.ui.list.component.item.Title
-import com.dergoogler.mmrl.ui.providable.LocalSettings
-import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootGraph
 
 @Composable
 fun ListScope.DeveloperSwitch(
@@ -37,6 +43,7 @@ fun ListScope.DeveloperSwitch(
 @Destination<RootGraph>
 @Composable
 fun DeveloperScreen() {
+    val context = LocalContext.current
     val viewModel = LocalSettings.current
     val userPreferences = LocalUserPreferences.current
 
@@ -57,6 +64,33 @@ fun DeveloperScreen() {
                 onChange = viewModel::setDevAlwaysShowUpdateAlert,
             ) {
                 Title(R.string.settings_always_show_update_alert)
+            }
+        }
+
+        Section {
+            ButtonItem(
+                onClick = {
+                    InstallActivity.start(
+                        context = context,
+                        uri = "FUQDUP".toUri(),
+                        confirm = false,
+                    )
+                }
+            ) {
+                Title(R.string.settings_cause_module_install_fail)
+                Description(R.string.settings_cause_module_install_fail_desc)
+            }
+
+            ButtonItem(
+                onClick = {
+                    ActionActivity.start(
+                        context = context,
+                        modId = "FUQDUP".toModId(),
+                    )
+                }
+            ) {
+                Title(R.string.settings_cause_module_action_fail)
+                Description(R.string.settings_cause_module_action_fail_desc)
             }
         }
 

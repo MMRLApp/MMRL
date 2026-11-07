@@ -472,4 +472,8 @@
     <string name="empty">Empty</string>
     <string name="settings_disable_su">Disable su compatibility</string>
     <string name="settings_disable_su_desc">Temporarily disable the ability of any app to gain root privileges via the ⁠su command (Existing root processes won\'t be affected).</string>
+    <string name="settings_cause_module_install_fail">Cause Install Fail</string>
+    <string name="settings_cause_module_install_fail_desc">Causes a module installation fail</string>
+    <string name="settings_cause_module_action_fail">Cause Action Script Fail</string>
+    <string name="settings_cause_module_action_fail_desc">Causes a module action script fail</string>
 </resources>
