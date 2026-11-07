@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.platform.model.ModId.Companion.getModId
@@ -17,35 +16,30 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ActionActivity : TerminalActivity() {
-    private val viewModel by viewModels<ActionViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate")
         super.onCreate(savedInstanceState)
 
         val modId = intent.getModId()
 
-        if (modId.isNullOrEmpty()) {
-            finish()
-        } else {
-            Log.d(TAG, "onCreate: $modId")
-            initAction(modId)
-        }
 
         setBaseContent {
-            ActionScreen(viewModel)
+            ActionViewModel.LocalProvider {
+                if (modId.isNullOrEmpty()) {
+                    finish()
+                } else {
+                    it.initAction(modId)
+                }
+
+                ActionScreen()
+            }
         }
     }
 
-    private fun initAction(modId: ModId) {
+    private fun ActionViewModel.initAction(modId: ModId) {
         lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.runAction(modId)
+            runAction(modId)
         }
-    }
-
-    override fun onDestroy() {
-        viewModel.destroy()
-        super.onDestroy()
     }
 
     companion object {

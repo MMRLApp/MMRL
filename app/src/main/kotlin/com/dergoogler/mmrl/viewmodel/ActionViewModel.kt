@@ -12,26 +12,23 @@ import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.app.Event
 import com.dergoogler.mmrl.datastore.UserPreferencesRepository
-import com.dergoogler.mmrl.model.terminal.ScriptError
 import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
 import com.dergoogler.mmrl.platform.content.State
 import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
-import com.topjohnwu.superuser.CallbackList
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.mmrlx.compose.ui.theme.Colors
 import dev.mmrlx.compose.ui.theme.MMRLXTheme
-import dev.mmrlx.terminal.newSuperUserPty
+import dev.mmrlx.terminal.PtyListener
+import dev.mmrlx.terminal.launchSuperUserPty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.time.LocalDateTime
 
 @HiltViewModel(assistedFactory = ActionViewModel.Factory::class)
@@ -54,36 +51,15 @@ constructor(
 ) {
     val logfile get() = "Action_${LocalDateTime.now()}.log"
 
-    init {
-        Timber.d("ActionViewModel initialized")
+    private val listener = object : PtyListener {
+        override fun onStdout(data: ByteArray) {
+            log(data)
+        }
+
+        override fun onStderr(data: ByteArray) {
+            devLog(data)
+        }
     }
-
-    private val stdoutCallbackList =
-        object : CallbackList<String?>() {
-            override fun onAddElement(msg: String?) {
-                msg?.let {
-                    viewModelScope.launch { log(it) }
-                }
-            }
-        }
-
-    private val stderrCallbackList =
-        object : CallbackList<String?>() {
-            override fun onAddElement(msg: String?) {
-                msg?.let {
-                    viewModelScope.launch {
-                        val error = ScriptError.fromString(it)
-
-                        if (error != null) {
-                            devLog("::error title=${error.title}::At Line ${error.lineNumber}: ${error.message}")
-                            return@launch
-                        }
-
-                        devLog(it)
-                    }
-                }
-            }
-        }
 
     suspend fun runAction(modId: ModId) =
         withContext(Dispatchers.IO) {
@@ -125,18 +101,6 @@ constructor(
         legacy: Boolean,
     ): Boolean =
         withContext(Dispatchers.IO) {
-            val shellEnv =
-                listOf(
-                    "export PATH=/data/adb/ap/bin:/data/adb/ksu/bin:/data/adb/magisk:\$PATH",
-                    "export MMRL=true",
-                    "export MMRL_VER=${BuildConfig.VERSION_NAME}",
-                    "export MMRL_VER_CODE=${BuildConfig.VERSION_CODE}",
-                    "export BOOTMODE=true",
-                    "export ARCH=${Build.SUPPORTED_ABIS.firstOrNull().orEmpty()}",
-                    "export API=${Build.VERSION.SDK_INT}",
-                    "export IS64BIT=${Build.SUPPORTED_64_BIT_ABIS.isNotEmpty()}",
-                )
-
             val env = mapOf(
                 "ASH_STANDALONE" to "1",
                 "MMRL" to "true",
@@ -155,18 +119,18 @@ constructor(
                     PlatformManager.moduleManager.getActionCommand(modId)
                 }
 
-            val emu = emulatorReady.await()
-            val result = emu.newSuperUserPty(command, env)
-            val success = result.isSuccess
-            if (success) {
-                return@withContext true
-            } else {
-                withContext(Dispatchers.Main) {
-                    log(R.string.execution_failed_try_to_use_shell_for_the_action_execution_settings_module_use_shell_for_module_action)
-                    result.onFailure { devLog("Shell Error: $it") }
-                }
-            }
-            return@withContext false
+            val emu = emulatorDeferred.await()
+
+            ptyDeferred.complete(
+                emu.launchSuperUserPty(
+                    scope = viewModelScope,
+                    command = command,
+                    env = env,
+                    listener = listener
+                )
+            )
+
+            return@withContext ptyDeferred.isSuccess()
         }
 
     @AssistedFactory
@@ -178,32 +142,32 @@ constructor(
     }
 
     companion object {
-            @Composable
-            fun build(
-                mxColors: Colors,
-                mdColors: ColorScheme,
-            ): ActionViewModel =
-                androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<ActionViewModel, Factory> { factory ->
-                    factory.create(mxColors, mdColors)
-                }
+        @Composable
+        fun build(
+            mxColors: Colors,
+            mdColors: ColorScheme,
+        ): ActionViewModel =
+            androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<ActionViewModel, Factory> { factory ->
+                factory.create(mxColors, mdColors)
+            }
 
-            private val local =
-                staticCompositionLocalOf<ActionViewModel> { error("No ActionViewModel found!") }
+        private val local =
+            staticCompositionLocalOf<ActionViewModel> { error("No ActionViewModel found!") }
 
-            @get:Composable
-            val current: ActionViewModel get() = local.current
+        @get:Composable
+        val current: ActionViewModel get() = local.current
 
-            @Composable
-            fun LocalProvider(content: @Composable (ActionViewModel) -> Unit) {
-                val mxColors = MMRLXTheme.colors
-                val mdColors = MaterialTheme.colorScheme
+        @Composable
+        fun LocalProvider(content: @Composable (ActionViewModel) -> Unit) {
+            val mxColors = MMRLXTheme.colors
+            val mdColors = MaterialTheme.colorScheme
 
-                val vm = build(mxColors, mdColors)
-                CompositionLocalProvider(
-                    local provides vm,
-                ) {
-                    content(vm)
-                }
+            val vm = build(mxColors, mdColors)
+            CompositionLocalProvider(
+                local provides vm,
+            ) {
+                content(vm)
             }
         }
+    }
 }

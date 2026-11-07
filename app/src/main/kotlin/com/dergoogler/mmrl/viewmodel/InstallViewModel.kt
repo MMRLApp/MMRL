@@ -33,7 +33,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.mmrlx.compose.ui.theme.Colors
 import dev.mmrlx.compose.ui.theme.MMRLXTheme
 import dev.mmrlx.terminal.PtyListener
-import dev.mmrlx.terminal.newSuperUserPty
+import dev.mmrlx.terminal.launchSuperUserPty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -276,13 +276,16 @@ constructor(
                 return@withContext false
             }*/
 
-            val emu = emulatorReady.await()
-            val result = emu.newSuperUserPty(
-                command = installCommand,
-                env = env,
-                listener = listener
+            val emu = emulatorDeferred.await()
+            ptyDeferred.complete(
+                emu.launchSuperUserPty(
+                    scope = viewModelScope,
+                    command = installCommand,
+                    env = env,
+                    listener = listener
+                )
             )
-            val success = result.isSuccess
+            val success = ptyDeferred.isSuccess()
             if (success) {
                 module.nullable(::insertLocal)
 
@@ -292,7 +295,6 @@ constructor(
             } else {
                 withContext(Dispatchers.Main) {
                     log("Error: Installation failed for ${zipFile.name}. Exit code: ${-999/*result.code*/}")
-                    result.onFailure { devLog("Shell Error: $it") }
                 }
                 if (module != null /*&& !shell.isAlive*/) {
                     withContext(Dispatchers.IO) {
@@ -307,6 +309,7 @@ constructor(
                     }
                 }
             }
+
             return@withContext success
         }
 

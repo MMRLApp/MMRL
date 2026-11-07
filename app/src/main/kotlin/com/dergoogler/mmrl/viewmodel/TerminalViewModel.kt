@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
 import androidx.compose.material3.ColorScheme
@@ -21,6 +22,7 @@ import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.dergoogler.mmrl.utils.initPlatform
 import dev.mmrlx.compose.ui.theme.Colors
+import dev.mmrlx.terminal.Pty
 import dev.mmrlx.terminal.TerminalEmulator
 import dev.mmrlx.terminal.appendLineOnMain
 import dev.mmrlx.terminal.appendTextOnMain
@@ -45,12 +47,11 @@ open class TerminalViewModel(
 ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
     protected val logs = mutableListOf<String>()
 
-    protected var emulator: TerminalEmulator? = null
-    protected val emulatorReady = CompletableDeferred<TerminalEmulator>()
+    protected val emulatorDeferred = CompletableDeferred<TerminalEmulator>()
+    protected var ptyDeferred = CompletableDeferred<Pty>()
 
     var event by mutableStateOf(Event.LOADING)
 
-    val terminal by mutableStateOf<TerminalEmulator?>(null)
 
     private val localFlow = MutableStateFlow<LocalModule?>(null)
     val local get() = localFlow.asStateFlow()
@@ -82,11 +83,25 @@ open class TerminalViewModel(
         }
     }
 
+    fun closePty() {
+        viewModelScope.launch {
+            val pty = ptyDeferred.await()
+            pty.close()
+        }
+    }
+
     override fun onCleared() {
-//        terminal.shell.close()
-//        terminal.currentCard = null
-//        terminal.currentGroup = null
-        super.onCleared()
+        viewModelScope.launch {
+            val pty = ptyDeferred.await()
+
+            try {
+                pty.close()
+                pty.destroy()
+            } catch (e: Exception) {
+                Log.e("TerminalViewModel", "Failed to destroy pty", e)
+                pty.destroyForcibly()
+            }
+        }
     }
 
     fun reboot(reason: String = "") {
@@ -94,8 +109,7 @@ open class TerminalViewModel(
     }
 
     fun onEmulatorCreated(emu: TerminalEmulator) {
-        emulator = emu
-        emulatorReady.complete(emu)
+        emulatorDeferred.complete(emu)
     }
 
     suspend fun writeLogsTo(uri: Uri) =
@@ -173,7 +187,7 @@ open class TerminalViewModel(
         log: String = message,
     ) {
         viewModelScope.launch(Dispatchers.Main) {
-            val emu = emulatorReady.await()
+            val emu = emulatorDeferred.await()
             emu.appendLineOnMain(message)
             logs += log
 
@@ -185,7 +199,7 @@ open class TerminalViewModel(
         data: ByteArray,
     ) {
         viewModelScope.launch(Dispatchers.Main) {
-            val emu = emulatorReady.await()
+            val emu = emulatorDeferred.await()
             emu.appendTextOnMain(data.formatIfError())
             logs += data.contentToString()
         }
@@ -213,4 +227,6 @@ open class TerminalViewModel(
         return getString(resId, *formatArgs)
             .replace("\\x1b", "\u001B")
     }
+
+    suspend fun CompletableDeferred<Pty>.isSuccess() = await().waitForAsync() == 0
 }
