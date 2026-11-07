@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.ByteArrayOutputStream
 import java.util.Locale
 
 open class TerminalViewModel(
@@ -207,17 +208,75 @@ open class TerminalViewModel(
 
     private val errorAnsiColor = "\u001B[0;38;5;168;49m"
     private val ansiReset = "\u001B[0m"
+    private val errorAnsiColorByteArray = errorAnsiColor.encodeToByteArray()
+    private val ansiResetByteArray = ansiReset.encodeToByteArray()
 
-    fun String.formatIfError(): String {
-        if (isEmpty() || this[0] != '!') return this
-
-        return errorAnsiColor + this + ansiReset
-    }
+    fun String.formatIfError(): String =
+        lineSequence()
+            .joinToString("\n") { line ->
+                if (line.startsWith("!") || line.startsWith("[!]")) {
+                    "$errorAnsiColor$line$ansiReset"
+                } else {
+                    line
+                }
+            }
 
     fun ByteArray.formatIfError(): ByteArray {
-        if (isEmpty() || this[0] != '!'.code.toByte()) return this
+        val output = ByteArrayOutputStream(size)
 
-        return errorAnsiColor.encodeToByteArray() + this + ansiReset.encodeToByteArray()
+        var lineStart = 0
+
+        for (i in indices) {
+            if (i == lineStart) {
+                val isError =
+                    this[i] == '!'.code.toByte() ||
+                            (
+                                    i + 2 < size &&
+                                            this[i] == '['.code.toByte() &&
+                                            this[i + 1] == '!'.code.toByte() &&
+                                            this[i + 2] == ']'.code.toByte()
+                                    )
+
+                if (isError) {
+                    output.write(errorAnsiColorByteArray)
+                }
+            }
+
+            if (this[i] == '\n'.code.toByte()) {
+                if (i > lineStart) {
+                    val isError =
+                        this[lineStart] == '!'.code.toByte() ||
+                                (
+                                        i - lineStart >= 3 &&
+                                                this[lineStart] == '['.code.toByte() &&
+                                                this[lineStart + 1] == '!'.code.toByte() &&
+                                                this[lineStart + 2] == ']'.code.toByte()
+                                        )
+
+                    if (isError) output.write(ansiResetByteArray)
+                }
+
+                lineStart = i + 1
+            }
+
+            output.write(this[i].toInt())
+        }
+
+        // Handle the final line without a trailing newline.
+        if (lineStart < size) {
+            val isError =
+                this[lineStart] == '!'.code.toByte() ||
+                        (
+                                size - lineStart >= 3 &&
+                                        this[lineStart] == '['.code.toByte() &&
+                                        this[lineStart + 1] == '!'.code.toByte() &&
+                                        this[lineStart + 2] == ']'.code.toByte()
+                                )
+
+            if (isError) output.write(ansiResetByteArray)
+        }
+
+        return output.toByteArray()
     }
 
     private fun Context.getAnsiString(
@@ -228,5 +287,6 @@ open class TerminalViewModel(
             .replace("\\x1b", "\u001B")
     }
 
-    suspend fun CompletableDeferred<Pty>.isSuccess() = await().waitForAsync() == 0
+    suspend fun CompletableDeferred<Pty>.waitFor() = await().waitForAsync()
+    suspend fun CompletableDeferred<Pty>.isSuccess() = waitFor() == 0
 }

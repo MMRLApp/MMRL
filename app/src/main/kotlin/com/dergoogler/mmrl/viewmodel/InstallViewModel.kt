@@ -2,6 +2,7 @@ package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -294,7 +295,7 @@ constructor(
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    log("Error: Installation failed for ${zipFile.name}. Exit code: ${-999/*result.code*/}")
+                    log("! Installation failed for ${zipFile.name}. Exit code: ${ptyDeferred.waitFor()}")
                 }
                 if (module != null /*&& !shell.isAlive*/) {
                     withContext(Dispatchers.IO) {
