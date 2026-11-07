@@ -50,6 +50,7 @@ import com.dergoogler.mmrl.ui.animate.slideOutBottomToTop
 import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Loading
 import com.dergoogler.mmrl.ui.component.PageIndicator
+import com.dergoogler.mmrl.ui.component.RailNav
 import com.dergoogler.mmrl.ui.component.TopAppBarEventIcon
 import com.dergoogler.mmrl.ui.component.dialog.TextFieldDialog
 import com.dergoogler.mmrl.ui.providable.LocalBulkInstall
@@ -64,6 +65,7 @@ import com.ramcosta.composedestinations.generated.destinations.SearchScreenDesti
 import dev.mmrlx.compose.ui.Text
 import dev.mmrlx.compose.ui.icon.Icon
 import dev.mmrlx.compose.ui.icon.IconButton
+import dev.mmrlx.compose.ui.scaffold.LocalScaffoldScope
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.Toolbar
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
@@ -165,6 +167,9 @@ fun RepositoriesScreen() {
         },
         bottomBar = {
             BottomBar()
+        },
+        rail = {
+            RailNav()
         },
         contentWindowInsets = WindowInsets.none,
         floatingActionButton = {
@@ -299,11 +304,13 @@ private fun TopBar0(
     setMenu: KFunction1<RepositoriesMenu, Unit>,
     scrollBehavior: ToolbarScrollBehavior,
 ) {
+    val scope = LocalScaffoldScope.current
     val navigator = LocalDestinationsNavigator.current
 
     Toolbar(
         scrollBehavior = scrollBehavior,
         title = {
+            if (scope.hasRail) return@Toolbar
             TopAppBarEventIcon()
         },
         actions = {

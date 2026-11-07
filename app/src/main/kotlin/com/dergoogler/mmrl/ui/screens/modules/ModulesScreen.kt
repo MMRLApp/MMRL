@@ -41,6 +41,7 @@ import com.dergoogler.mmrl.ui.activity.terminal.install.InstallActivity
 import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Loading
 import com.dergoogler.mmrl.ui.component.PageIndicator
+import com.dergoogler.mmrl.ui.component.RailNav
 import com.dergoogler.mmrl.ui.component.TopAppBarEventIcon
 import com.dergoogler.mmrl.ui.component.toolbar.BlurSearchToolbar
 import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
@@ -53,6 +54,7 @@ import dev.mmrlx.compose.ui.PullToRefreshDefaults.Indicator
 import dev.mmrlx.compose.ui.icon.Icon
 import dev.mmrlx.compose.ui.icon.IconButton
 import dev.mmrlx.compose.ui.rememberPullToRefreshState
+import dev.mmrlx.compose.ui.scaffold.LocalScaffoldScope
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
@@ -110,6 +112,9 @@ fun ModulesScreen(viewModel: ModulesViewModel = hiltViewModel()) {
         },
         bottomBar = {
             BottomBar()
+        },
+        rail = {
+            RailNav()
         },
         floatingActionButton = {
             AnimatedVisibility(
@@ -181,6 +186,7 @@ private fun TopBar0(
     setMenu: (ModulesMenu) -> Unit,
     scrollBehavior: ToolbarScrollBehavior,
 ) {
+    val scope = LocalScaffoldScope.current
     var currentQuery by remember { mutableStateOf(query) }
     DisposableEffect(isSearch) {
         onDispose { currentQuery = "" }
@@ -198,6 +204,7 @@ private fun TopBar0(
             currentQuery = ""
         },
         title = {
+            if (scope.hasRail) return@BlurSearchToolbar
             TopAppBarEventIcon()
         },
         actions = {

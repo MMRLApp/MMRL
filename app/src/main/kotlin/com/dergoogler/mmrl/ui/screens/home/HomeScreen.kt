@@ -51,6 +51,7 @@ import com.dergoogler.mmrl.platform.ksu.KsuNative
 import com.dergoogler.mmrl.stub.IMMRLApiManager
 import com.dergoogler.mmrl.ui.component.Alert
 import com.dergoogler.mmrl.ui.component.BottomBar
+import com.dergoogler.mmrl.ui.component.RailNav
 import com.dergoogler.mmrl.ui.component.SELinuxStatus
 import com.dergoogler.mmrl.ui.component.TopAppBarEventIcon
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
@@ -79,6 +80,7 @@ import dev.mmrlx.compose.ui.list.component.Item
 import dev.mmrlx.compose.ui.list.component.item.Description
 import dev.mmrlx.compose.ui.list.component.item.Icon
 import dev.mmrlx.compose.ui.list.component.item.Title
+import dev.mmrlx.compose.ui.scaffold.LocalScaffoldScope
 import dev.mmrlx.compose.ui.scaffold.Scaffold
 import dev.mmrlx.compose.ui.toolbar.Toolbar
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
@@ -125,6 +127,9 @@ fun HomeScreen() {
         },
         bottomBar = {
             BottomBar()
+        },
+        rail = {
+            RailNav()
         },
         contentWindowInsets = WindowInsets.none,
     ) {
@@ -212,7 +217,7 @@ fun HomeScreen() {
                         }
                     }
                 }
-                
+
                 element("device-app-info") {
                     Column(
                         modifier = Modifier
@@ -468,9 +473,13 @@ private fun TopBar0(
     onHeartClick: () -> Unit = {},
     scrollBehavior: ToolbarScrollBehavior,
 ) {
+    val scope = LocalScaffoldScope.current
+
     Toolbar(
         scrollBehavior = scrollBehavior,
         title = {
+            if (scope.hasRail) return@Toolbar
+
             TopAppBarEventIcon()
         },
         actions = {

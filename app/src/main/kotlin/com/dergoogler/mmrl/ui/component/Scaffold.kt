@@ -79,6 +79,11 @@ fun SettingsScaffold(
                 BottomBar()
             }
         },
+        rail = {
+            if (isMainPage) {
+                RailNav()
+            }
+        },
         floatingActionButton = floatingActionButton,
         contentWindowInsets = WindowInsets.none,
     ) {

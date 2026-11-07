@@ -15,8 +15,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -32,6 +32,7 @@ import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ui.component.BottomBar
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.PageIndicator
+import com.dergoogler.mmrl.ui.component.RailNav
 import com.dergoogler.mmrl.ui.component.toolbar.BlurSearchToolbar
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.viewmodel.RepositoryViewModel
@@ -67,6 +68,9 @@ fun RepositoryScreen(
         },
         bottomBar = {
             BottomBar()
+        },
+        rail = {
+            RailNav()
         },
         contentWindowInsets = WindowInsets.none,
     ) {

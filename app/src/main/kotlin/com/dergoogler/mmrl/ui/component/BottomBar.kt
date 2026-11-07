@@ -32,13 +32,11 @@ fun BottomBar(updates: Int = 0) {
     val navController = LocalNavController.current
     val settings = LocalSettings.current
 
-
     val state = rememberDraggableContainerState(
         initial = prefs.bottomBarOrder
     ) {
         settings.setBottomBarOrder(it)
     }
-
 
     NavigationBar(
         modifier =

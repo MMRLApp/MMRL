@@ -39,6 +39,7 @@ fun ScaffoldScope.ModulesList(
     isLoading: Boolean,
     beforeContent: LazyListScope.() -> Unit = {},
 ) {
+    val scope = this
     val vm = RepositoryViewModel.current
     val navigator = LocalDestinationsNavigator.current
     val isSearch by vm::isSearch
@@ -64,8 +65,8 @@ fun ScaffoldScope.ModulesList(
                 .animateContentSize(),
             contentPadding =
                 PaddingValues(
-                    top = if (!isSearch) 0.dp else this@ModulesList.scaffoldTopPadding,
-                    bottom = this@ModulesList.scaffoldBottomPadding + 16.dp,
+                    top = if (!isSearch) 0.dp else scope.scaffoldTopPadding,
+                    bottom = scope.scaffoldBottomPadding + 16.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -80,7 +81,10 @@ fun ScaffoldScope.ModulesList(
                     LocalOnlineModule provides module,
                 ) {
                     Box(
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        modifier = Modifier.padding(
+                            start = scope.scaffoldStartPadding + 16.dp,
+                            end = scope.scaffoldEndPadding + 16.dp
+                        )
                     ) {
                         ModuleItemDetailed(
                             onClick = {
@@ -95,7 +99,9 @@ fun ScaffoldScope.ModulesList(
             if (isLoading) {
                 item {
                     Box(
-                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator()
