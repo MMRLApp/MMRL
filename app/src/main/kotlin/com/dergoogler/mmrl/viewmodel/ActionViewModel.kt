@@ -2,6 +2,11 @@ package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
 import android.os.Build
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
@@ -15,7 +20,12 @@ import com.dergoogler.mmrl.platform.model.ModId
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.topjohnwu.superuser.CallbackList
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.mmrlx.compose.ui.theme.Colors
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 import dev.mmrlx.terminal.newSuperUserPty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -23,17 +33,25 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDateTime
-import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = ActionViewModel.Factory::class)
 class ActionViewModel
-@Inject
+@AssistedInject
 constructor(
+    @Assisted mxColors: Colors,
+    @Assisted mdColors: ColorScheme,
     application: Application,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-) : TerminalViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+) : TerminalViewModel(
+    mxColors,
+    mdColors,
+    application,
+    localRepository,
+    modulesRepository,
+    userPreferencesRepository
+) {
     val logfile get() = "Action_${LocalDateTime.now()}.log"
 
     init {
@@ -149,5 +167,43 @@ constructor(
                 }
             }
             return@withContext false
+        }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            mxColors: Colors,
+            mdColors: ColorScheme,
+        ): ActionViewModel
+    }
+
+    companion object {
+            @Composable
+            fun build(
+                mxColors: Colors,
+                mdColors: ColorScheme,
+            ): ActionViewModel =
+                androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<ActionViewModel, Factory> { factory ->
+                    factory.create(mxColors, mdColors)
+                }
+
+            private val local =
+                staticCompositionLocalOf<ActionViewModel> { error("No ActionViewModel found!") }
+
+            @get:Composable
+            val current: ActionViewModel get() = local.current
+
+            @Composable
+            fun LocalProvider(content: @Composable (ActionViewModel) -> Unit) {
+                val mxColors = MMRLXTheme.colors
+                val mdColors = MaterialTheme.colorScheme
+
+                val vm = build(mxColors, mdColors)
+                CompositionLocalProvider(
+                    local provides vm,
+                ) {
+                    content(vm)
+                }
+            }
         }
 }

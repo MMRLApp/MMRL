@@ -87,7 +87,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            resValue("string", "app_name", baseAppName)
             buildConfigField("Boolean", "IS_DEV_VERSION", "false")
             buildConfigField("Boolean", "IS_GOOGLE_PLAY_BUILD", "false")
             isDebuggable = false

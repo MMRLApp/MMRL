@@ -1,11 +1,13 @@
 package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,8 +20,10 @@ import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.dergoogler.mmrl.utils.initPlatform
+import dev.mmrlx.compose.ui.theme.Colors
 import dev.mmrlx.terminal.TerminalEmulator
 import dev.mmrlx.terminal.appendLineOnMain
+import dev.mmrlx.terminal.appendTextOnMain
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,11 +34,10 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Locale
-import javax.inject.Inject
 
-open class TerminalViewModel
-@Inject
-constructor(
+open class TerminalViewModel(
+    val mxColors: Colors,
+    val mdColors: ColorScheme,
     application: Application,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
@@ -138,23 +141,29 @@ constructor(
     }
 
     @MainThread
-    protected fun log(
-        @StringRes message: Int,
-        vararg format: Any?,
+    protected fun devLog(
+        data: ByteArray,
     ) {
-        log(
-            message = context.getString(message, *format),
-            log = localizedEnglishResources.getString(message, *format),
-        )
+        if (devMode) log(data)
     }
 
     @MainThread
     protected fun log(
         @StringRes message: Int,
+        vararg format: Any? = emptyArray(),
     ) {
+        if (format.isEmpty()) {
+            log(
+                message = context.getAnsiString(message).formatIfError(),
+                log = localizedEnglishResources.getString(message),
+            )
+
+            return
+        }
+
         log(
-            message = context.getString(message),
-            log = localizedEnglishResources.getString(message),
+            message = context.getAnsiString(message, *format).formatIfError(),
+            log = localizedEnglishResources.getString(message, *format),
         )
     }
 
@@ -169,5 +178,39 @@ constructor(
             logs += log
 
         }
+    }
+
+    @MainThread
+    protected fun log(
+        data: ByteArray,
+    ) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val emu = emulatorReady.await()
+            emu.appendTextOnMain(data.formatIfError())
+            logs += data.contentToString()
+        }
+    }
+
+    private val errorAnsiColor = "\u001B[0;38;5;168;49m"
+    private val ansiReset = "\u001B[0m"
+
+    fun String.formatIfError(): String {
+        if (isEmpty() || this[0] != '!') return this
+
+        return errorAnsiColor + this + ansiReset
+    }
+
+    fun ByteArray.formatIfError(): ByteArray {
+        if (isEmpty() || this[0] != '!'.code.toByte()) return this
+
+        return errorAnsiColor.encodeToByteArray() + this + ansiReset.encodeToByteArray()
+    }
+
+    private fun Context.getAnsiString(
+        @StringRes resId: Int,
+        vararg formatArgs: Any?,
+    ): String {
+        return getString(resId, *formatArgs)
+            .replace("\\x1b", "\u001B")
     }
 }

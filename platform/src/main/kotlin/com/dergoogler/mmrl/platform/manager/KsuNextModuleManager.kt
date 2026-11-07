@@ -24,7 +24,7 @@ open class KsuNextModuleManager : KernelSUModuleManager() {
         if (!dir.exists()) callback.onFailure(id, null)
 
         if (useShell) {
-            "ksud module restore $id && ksud module enable $id".submit {
+            "$binary module restore $id && $binary module enable $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {

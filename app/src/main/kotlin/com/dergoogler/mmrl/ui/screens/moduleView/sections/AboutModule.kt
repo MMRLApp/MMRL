@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -20,7 +19,6 @@ import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.model.online.hasCategories
 import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
-import com.dergoogler.mmrl.ui.providable.LocalRepo
 import com.dergoogler.mmrl.ui.screens.moduleView.listItemContentPaddingValues
 import com.ramcosta.composedestinations.generated.destinations.DescriptionScreenDestination
 import dev.mmrlx.compose.ui.Text
@@ -30,10 +28,10 @@ import dev.mmrlx.compose.ui.list.component.ButtonItem
 import dev.mmrlx.compose.ui.list.component.Item
 import dev.mmrlx.compose.ui.list.component.item.Icon
 import dev.mmrlx.compose.ui.list.component.item.Title
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
 @Composable
 internal fun AboutModule() {
-    val repo = LocalRepo.current
     val module = LocalOnlineModule.current
     val navigator = LocalDestinationsNavigator.current
 
@@ -67,14 +65,14 @@ internal fun AboutModule() {
             module.description
                 ?: stringResource(R.string.view_module_no_description),
         style =
-            MaterialTheme.typography.bodyMedium.apply {
+            MMRLXTheme.typography.bodyMedium.apply {
                 if (module.description.isNullOrBlank()) {
                     copy(
                         fontStyle = FontStyle.Italic,
                     )
                 }
             },
-        color = MaterialTheme.colorScheme.outline,
+        color = MMRLXTheme.colors.secondaryForeground,
     )
 
     module.hasCategories {

@@ -9,7 +9,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -17,8 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -45,192 +42,192 @@ import com.dergoogler.mmrl.app.Event.Companion.isSucceeded
 import com.dergoogler.mmrl.ext.isScrollingUp
 import com.dergoogler.mmrl.ext.none
 import com.dergoogler.mmrl.ui.activity.MMRLComponentActivity
-import com.dergoogler.mmrl.ui.component.LocalScreenProvider
 import com.dergoogler.mmrl.ui.component.dialog.ConfirmDialog
-import com.dergoogler.mmrl.ui.component.scaffold.Scaffold
-import com.dergoogler.mmrl.ui.component.toolbar.BlurNavigateUpToolbar
-import com.dergoogler.mmrl.ui.providable.LocalHazeState
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.InstallViewModel
-import dev.chrisbanes.haze.hazeSource
 import dev.mmrlx.compose.terminal.Terminal
+import dev.mmrlx.compose.ui.scaffold.Scaffold
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
+import dev.mmrlx.compose.ui.toolbar.NavigateUpToolbar
 import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
 import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 import dev.mmrlx.terminal.TerminalEmulator.Companion.TERMINAL_CURSOR_STYLE_NONE
 import kotlinx.coroutines.launch
 
 @Composable
-fun InstallScreen(viewModel: InstallViewModel) =
-    LocalScreenProvider {
-        val scope = rememberCoroutineScope()
-        val snackbarHostState = remember { SnackbarHostState() }
-        val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
+fun InstallScreen() {
+    val vm = InstallViewModel.current
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
 
-        val userPreferences = LocalUserPreferences.current
-        val context = LocalContext.current
+    val userPreferences = LocalUserPreferences.current
+    val context = LocalContext.current
 
-        val focusRequester = remember { FocusRequester() }
-        val listState = rememberLazyListState()
-        val isScrollingUp by listState.isScrollingUp()
-        val showFab by remember {
-            derivedStateOf {
-                isScrollingUp && viewModel.event.isSucceeded
+    val focusRequester = remember { FocusRequester() }
+    val listState = rememberLazyListState()
+    val isScrollingUp by listState.isScrollingUp()
+    val showFab by remember {
+        derivedStateOf {
+            isScrollingUp && vm.event.isSucceeded
+        }
+    }
+
+    var confirmReboot by remember { mutableStateOf(false) }
+    var cancelInstall by remember { mutableStateOf(false) }
+
+    val event = vm.event
+
+    val allowCancel = userPreferences.allowCancelInstall
+
+    LaunchedEffect(focusRequester) {
+        focusRequester.requestFocus()
+    }
+
+    val backHandler = {
+        if (allowCancel) {
+            when {
+                event.isLoading /* && shell.isAlive */ -> cancelInstall = true
+                event.isFinished -> (context as MMRLComponentActivity).finish()
             }
-        }
-
-        var confirmReboot by remember { mutableStateOf(false) }
-        var cancelInstall by remember { mutableStateOf(false) }
-
-        val event = viewModel.event
-
-        val allowCancel = userPreferences.allowCancelInstall
-
-        LaunchedEffect(focusRequester) {
-            focusRequester.requestFocus()
-        }
-
-        val backHandler = {
-            if (allowCancel) {
-                when {
-                    event.isLoading /* && shell.isAlive */ -> cancelInstall = true
-                    event.isFinished -> (context as MMRLComponentActivity).finish()
-                }
-            } else {
-                if (event.isFinished) {
-                    (context as MMRLComponentActivity).finish()
-                }
-            }
-        }
-
-        BackHandler(
-            enabled = if (!allowCancel) event.isLoading else true,
-            onBack = backHandler,
-        )
-
-        val launcher =
-            rememberLauncherForActivityResult(
-                ActivityResultContracts.CreateDocument("*/*"),
-            ) { uri ->
-                if (uri == null) return@rememberLauncherForActivityResult
-
-                scope.launch {
-                    viewModel
-                        .writeLogsTo(uri)
-                        .onSuccess {
-                            val message = context.getString(R.string.install_logs_saved)
-                            snackbarHostState.showSnackbar(
-                                message = message,
-                                duration = SnackbarDuration.Short,
-                            )
-                        }.onFailure {
-                            val message =
-                                context.getString(
-                                    R.string.install_logs_save_failed,
-                                    it.message ?: context.getString(R.string.unknown_error),
-                                )
-                            snackbarHostState.showSnackbar(
-                                message = message,
-                                duration = SnackbarDuration.Short,
-                            )
-                        }
-                }
-            }
-
-        if (confirmReboot) {
-            ConfirmDialog(
-                title = R.string.install_screen_reboot_title,
-                description = R.string.install_screen_reboot_text,
-                onClose = { confirmReboot = false },
-                onConfirm = {
-                    confirmReboot = false
-                    viewModel.reboot()
-                },
-            )
-        }
-
-        if (cancelInstall) {
-            ConfirmDialog(
-                title = R.string.install_screen_cancel_title,
-                description = R.string.install_screen_cancel_text,
-                onClose = { cancelInstall = false },
-                onConfirm = {
-                    scope.launch {
-                        cancelInstall = false
-                        // shell.close()
-                    }
-                },
-            )
-        }
-
-        Scaffold(
-            modifier =
-                Modifier
-                    .onKeyEvent {
-                        when (it.key) {
-                            Key.VolumeUp, Key.VolumeDown -> event.isLoading
-
-                            else -> false
-                        }
-                    }
-                    .focusRequester(focusRequester)
-                    .focusable()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                TopBar(
-                    exportLog = { launcher.launch(viewModel.logfile) },
-                    event = event,
-                    enable = if (!allowCancel) event.isFinished else true,
-                    scrollBehavior = scrollBehavior,
-                    onBack = backHandler,
-                )
-            },
-            floatingActionButton = {
-                AnimatedVisibility(
-                    visible = showFab,
-                    enter =
-                        scaleIn(
-                            animationSpec = tween(100),
-                            initialScale = 0.8f,
-                        ),
-                    exit =
-                        scaleOut(
-                            animationSpec = tween(100),
-                            targetScale = 0.8f,
-                        ),
-                ) {
-                    FloatingButton(
-                        reboot = {
-                            if (userPreferences.confirmReboot) {
-                                confirmReboot = true
-                            } else {
-                                viewModel.reboot()
-                            }
-                        },
-                    )
-                }
-            },
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            contentWindowInsets = WindowInsets.none,
-        ) {
-            Terminal(
-                modifier = Modifier
-                    .hazeSource(LocalHazeState.current)
-                    .padding(it)
-            ) { emu ->
-                emu.setCursorStyle(TERMINAL_CURSOR_STYLE_NONE)
-                viewModel.onEmulatorCreated(emu)
+        } else {
+            if (event.isFinished) {
+                (context as MMRLComponentActivity).finish()
             }
         }
     }
 
+    BackHandler(
+        enabled = if (!allowCancel) event.isLoading else true,
+        onBack = backHandler,
+    )
+
+    val launcher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.CreateDocument("*/*"),
+        ) { uri ->
+            if (uri == null) return@rememberLauncherForActivityResult
+
+            scope.launch {
+                vm
+                    .writeLogsTo(uri)
+                    .onSuccess {
+                        val message = context.getString(R.string.install_logs_saved)
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            duration = SnackbarDuration.Short,
+                        )
+                    }.onFailure {
+                        val message =
+                            context.getString(
+                                R.string.install_logs_save_failed,
+                                it.message ?: context.getString(R.string.unknown_error),
+                            )
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            duration = SnackbarDuration.Short,
+                        )
+                    }
+            }
+        }
+
+    if (confirmReboot) {
+        ConfirmDialog(
+            title = R.string.install_screen_reboot_title,
+            description = R.string.install_screen_reboot_text,
+            onClose = { confirmReboot = false },
+            onConfirm = {
+                confirmReboot = false
+                vm.reboot()
+            },
+        )
+    }
+
+    if (cancelInstall) {
+        ConfirmDialog(
+            title = R.string.install_screen_cancel_title,
+            description = R.string.install_screen_cancel_text,
+            onClose = { cancelInstall = false },
+            onConfirm = {
+                scope.launch {
+                    cancelInstall = false
+                    // shell.close()
+                }
+            },
+        )
+    }
+
+    Scaffold(
+        modifier =
+            Modifier
+                .onKeyEvent {
+                    when (it.key) {
+                        Key.VolumeUp, Key.VolumeDown -> event.isLoading
+
+                        else -> false
+                    }
+                }
+                .focusRequester(focusRequester)
+                .focusable()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+        toolbar = {
+            TopBar0(
+                exportLog = { launcher.launch(vm.logfile) },
+                event = event,
+                enable = if (!allowCancel) event.isFinished else true,
+                scrollBehavior = scrollBehavior,
+                onBack = backHandler,
+            )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = showFab,
+                enter =
+                    scaleIn(
+                        animationSpec = tween(100),
+                        initialScale = 0.8f,
+                    ),
+                exit =
+                    scaleOut(
+                        animationSpec = tween(100),
+                        targetScale = 0.8f,
+                    ),
+            ) {
+                FloatingButton(
+                    reboot = {
+                        if (userPreferences.confirmReboot) {
+                            confirmReboot = true
+                        } else {
+                            vm.reboot()
+                        }
+                    },
+                )
+            }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets.none,
+    ) {
+        Terminal(
+            containerColor = MMRLXTheme.colors.background,
+            contentColor = MMRLXTheme.colors.foreground,
+            modifier = Modifier
+                .scaffoldHazeSource(),
+            contentPadding = contentPadding
+        ) { emu ->
+            emu.setCursorStyle(TERMINAL_CURSOR_STYLE_NONE)
+            vm.onEmulatorCreated(emu)
+        }
+    }
+}
+
 @Composable
-private fun TopBar(
+private fun TopBar0(
     exportLog: () -> Unit,
     event: Event,
     onBack: () -> Unit,
     scrollBehavior: ToolbarScrollBehavior,
     enable: Boolean,
-) = BlurNavigateUpToolbar(
+) = NavigateUpToolbar(
     title = stringResource(id = R.string.install_screen_title),
     subtitle =
         stringResource(

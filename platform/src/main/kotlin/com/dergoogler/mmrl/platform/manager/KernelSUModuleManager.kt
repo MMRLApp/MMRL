@@ -16,6 +16,8 @@ open class KernelSUModuleManager : BaseModuleManager() {
 
     override fun getVersion(): String = mVersion
 
+    override fun getBinary() = "/data/adb/ksu/bin/ksud"
+
     override fun getVersionCode(): Int {
         val ksuVersion = KsuNative.getVersion()
 
@@ -65,7 +67,7 @@ open class KernelSUModuleManager : BaseModuleManager() {
         if (!dir.exists()) callback.onFailure(id, null)
 
         if (useShell) {
-            "ksud module enable $id".submit {
+            "$binary module enable $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {
@@ -93,7 +95,7 @@ open class KernelSUModuleManager : BaseModuleManager() {
         if (!dir.exists()) return callback.onFailure(id, null)
 
         if (useShell) {
-            "ksud module disable $id".submit {
+            "$binary module disable $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {
@@ -121,7 +123,7 @@ open class KernelSUModuleManager : BaseModuleManager() {
         if (!dir.exists()) return callback.onFailure(id, null)
 
         if (useShell) {
-            "ksud module uninstall $id".submit {
+            "$binary module uninstall $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {
@@ -140,9 +142,9 @@ open class KernelSUModuleManager : BaseModuleManager() {
         }
     }
 
-    override fun getInstallCommand(path: String): String = "ksud module install \"$path\""
+    override fun getInstallCommand(path: String): String = "$binary module install \"$path\""
 
-    override fun getActionCommand(id: ModId): String = "ksud module action ${id.id}"
+    override fun getActionCommand(id: ModId): String = "$binary module action ${id.id}"
 
     override fun getActionEnvironment(): List<String> =
         listOf(
