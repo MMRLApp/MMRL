@@ -66,7 +66,7 @@ fun ScaffoldScope.ModulesList(
             contentPadding =
                 PaddingValues(
                     top = if (!isSearch) 0.dp else scope.scaffoldTopPadding,
-                    bottom = scope.scaffoldBottomPadding + 16.dp,
+                    bottom = scope.scaffoldBottomPadding + 8.dp,
                 ),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
