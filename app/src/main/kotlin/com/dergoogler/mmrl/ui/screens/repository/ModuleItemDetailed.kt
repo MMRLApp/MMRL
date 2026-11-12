@@ -109,7 +109,6 @@ fun ModuleItemDetailed(
                 onClick = onClick,
                 enabled = enabled
             )
-            .widthIn(600.dp)
             .fillMaxWidth()
             .flashlightCard()
     ) {

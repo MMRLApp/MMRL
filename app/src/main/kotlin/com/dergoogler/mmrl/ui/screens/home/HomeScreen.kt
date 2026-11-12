@@ -231,10 +231,10 @@ fun HomeScreen() {
                         scope.Item {
                             Title {
                                 Text(
-                                    "DEV BUILD! EXPECT ERRORS AND BROKEN UI/UX",
+                                    "ONGOING UI/UX MIGRATION!",
                                     style = LocalTextStyle.current.copy(
                                         fontFamily = FontFamily.Monospace,
-                                        color = Color.Red
+                                        color = Color.Yellow
                                     )
                                 )
                             }
@@ -446,12 +446,12 @@ fun HomeScreen() {
                         scope.Item {
                             Title(
                                 id = R.string.home_support_title,
-                                style = style.titleStyle.copy(color=Color.Unspecified)
+                                style = style.titleStyle.copy(color = Color.Unspecified)
                             )
 
                             Description(
                                 id = R.string.home_support_content,
-                                style = style.titleStyle.copy(color=Color.Unspecified)
+                                style = style.titleStyle.copy(color = Color.Unspecified)
                             )
                         }
                     }

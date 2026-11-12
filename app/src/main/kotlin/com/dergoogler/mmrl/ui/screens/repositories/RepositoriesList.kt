@@ -42,8 +42,8 @@ fun ScaffoldScope.RepositoriesList(
 
     LazyColumn(
         state = state,
-        contentPadding = this@RepositoriesList.contentPadding + 16.dp,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = this@RepositoriesList.contentPadding + 8.dp,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
             ExploreReposCard()
