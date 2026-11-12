@@ -2,29 +2,21 @@ package com.dergoogler.mmrl.ui.screens.modules
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -32,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ext.rememberTrue
+import com.dergoogler.mmrl.ext.plus
 import com.dergoogler.mmrl.model.local.LocalModule
 import com.dergoogler.mmrl.model.local.State
 import com.dergoogler.mmrl.model.online.Blacklist
@@ -40,18 +32,20 @@ import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.hasAction
 import com.dergoogler.mmrl.ui.activity.terminal.action.ActionActivity
 import com.dergoogler.mmrl.ui.component.VersionItemBottomSheet
-import com.dergoogler.mmrl.ui.component.scaffold.ScaffoldScope
-import com.dergoogler.mmrl.ui.component.scrollbar.VerticalFastScrollbar
-import com.dergoogler.mmrl.ui.providable.LocalHazeState
-import com.dergoogler.mmrl.ui.providable.LocalMainScreenInnerPaddings
 import com.dergoogler.mmrl.ui.providable.LocalModule
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.viewmodel.ModulesViewModel
-import dev.chrisbanes.haze.hazeSource
+import dev.mmrlx.compose.ui.Switch
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.button.Button
+import dev.mmrlx.compose.ui.button.ButtonVariant
+import dev.mmrlx.compose.ui.button.HorizontalButtonGroup
+import dev.mmrlx.compose.ui.ext.with
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.scaffold.ScaffoldScope
 
 @Composable
 fun ScaffoldScope.ModulesList(
-    innerPadding: PaddingValues,
     list: List<LocalModule>,
     state: LazyListState,
     onDownload: (LocalModule, VersionItem, Boolean) -> Unit,
@@ -60,53 +54,34 @@ fun ScaffoldScope.ModulesList(
 ) = Box(
     modifier = Modifier.fillMaxSize(),
 ) {
-    val paddingValues = LocalMainScreenInnerPaddings.current
     val layoutDirection = LocalLayoutDirection.current
 
-    this@ModulesList.ResponsiveContent {
-        LazyColumn(
-            state = state,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .hazeSource(state = LocalHazeState.current),
-            contentPadding =
-                PaddingValues(
-                    top = innerPadding.calculateTopPadding() + 16.dp,
-                    start = innerPadding.calculateStartPadding(layoutDirection) + 16.dp,
-                    bottom = paddingValues.calculateBottomPadding() + 16.dp,
-                    end = 16.dp,
-                ),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            items(
-                items = list,
-                key = { it.id.id },
-                contentType = { "module_item" },
-            ) { module ->
-                CompositionLocalProvider(
-                    LocalModule provides module,
-                ) {
-                    ModuleItem(
-                        viewModel = viewModel,
-                        onDownload = onDownload,
-                        isProviderAlive = isProviderAlive,
-                    )
-                }
-            }
-        }
-    }
-
-    VerticalFastScrollbar(
+    LazyColumn(
         state = state,
         modifier =
             Modifier
-                .align(Alignment.CenterEnd)
-                .padding(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
-                ),
-    )
+                .with(this@ModulesList) {
+                    it.scaffoldHazeSource()
+                },
+        contentPadding = this@ModulesList.contentPadding + 8.dp,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        items(
+            items = list,
+            key = { it.id.id },
+            contentType = { "module_item" },
+        ) { module ->
+            CompositionLocalProvider(
+                LocalModule provides module,
+            ) {
+                ModuleItem(
+                    viewModel = viewModel,
+                    onDownload = onDownload,
+                    isProviderAlive = isProviderAlive,
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -156,6 +131,18 @@ private fun ModuleItem(
 
     var open by remember { mutableStateOf(false) }
 
+    val isRemoveOrRestoreEnabled = remember(
+        userPreferences.useShellForModuleStateChange,
+        module.state,
+        isProviderAlive,
+    ) {
+        isProviderAlive &&
+                (
+                        !(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) ||
+                                module.state != State.REMOVE
+                        )
+    }
+
     VersionItemBottomSheetIfNeeded(
         open = open,
         item = item,
@@ -166,8 +153,6 @@ private fun ModuleItem(
     )
 
     ModuleItem(
-        isProviderAlive = isProviderAlive,
-        isBlacklisted = isBlacklisted,
         progress = progress,
         indeterminate = ops.isOpsRunning,
         alpha =
@@ -195,7 +180,7 @@ private fun ModuleItem(
             }
         },
         startTrailingButton = {
-            module.hasAction.rememberTrue {
+            if (module.hasAction) {
                 ActionButton(
                     enabled = isActionEnabled,
                     onClick =
@@ -211,36 +196,26 @@ private fun ModuleItem(
             }
         },
         trailingButton = {
-            item?.let { itm ->
-                val hasUpdate = remember(itm, module.versionCode) {
-                    itm.versionCode > module.versionCode
+            HorizontalButtonGroup {
+                item?.let { itm ->
+                    val hasUpdate = remember(itm, module.versionCode) {
+                        itm.versionCode > module.versionCode
+                    }
+
+                    UpdateButton(
+                        enabled = hasUpdate,
+                        shape = shape(0, 2),
+                        onClick = remember { { open = true } },
+                    )
                 }
 
-                UpdateButton(
-                    enabled = hasUpdate,
-                    onClick = remember { { open = true } },
+                RemoveOrRestore(
+                    module = module,
+                    shape = if (item != null) shape(1, 2) else shape(0, 1),
+                    enabled = isRemoveOrRestoreEnabled,
+                    onClick = ops.change,
                 )
-
-                Spacer(modifier = Modifier.width(12.dp))
             }
-
-            val isRemoveOrRestoreEnabled = remember(
-                userPreferences.useShellForModuleStateChange,
-                module.state,
-                isProviderAlive,
-            ) {
-                isProviderAlive &&
-                    (
-                        !(viewModel.moduleCompatibility.canRestoreModules && userPreferences.useShellForModuleStateChange) ||
-                            module.state != State.REMOVE
-                    )
-            }
-
-            RemoveOrRestore(
-                module = module,
-                enabled = isRemoveOrRestoreEnabled,
-                onClick = ops.change,
-            )
         },
     )
 }
@@ -269,16 +244,17 @@ private fun VersionItemBottomSheetIfNeeded(
 @Composable
 private fun UpdateButton(
     enabled: Boolean,
+    shape: Shape,
     onClick: () -> Unit,
 ) {
-    val contentPadding = remember { PaddingValues(horizontal = 12.dp) }
     val iconSize = remember { Modifier.size(20.dp) }
     val spacerWidth = remember { Modifier.width(6.dp) }
 
-    FilledTonalButton(
+    Button(
         onClick = onClick,
+        shape = shape,
         enabled = enabled,
-        contentPadding = contentPadding,
+        variant = ButtonVariant.Outline,
     ) {
         Icon(
             modifier = iconSize,
@@ -293,21 +269,21 @@ private fun UpdateButton(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun RemoveOrRestore(
     module: LocalModule,
     enabled: Boolean,
+    shape: Shape,
     onClick: () -> Unit,
 ) {
-    val contentPadding = remember { PaddingValues(horizontal = 12.dp) }
     val iconSize = remember { Modifier.size(20.dp) }
     val spacerWidth = remember { Modifier.width(6.dp) }
 
-    FilledTonalButton(
+    Button(
         onClick = onClick,
         enabled = enabled,
-        contentPadding = contentPadding,
+        shape = shape,
+        variant = ButtonVariant.Outline,
     ) {
         Icon(
             modifier = iconSize,
@@ -343,13 +319,11 @@ private fun ActionButton(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    val contentPadding = remember { PaddingValues(horizontal = 12.dp) }
     val iconSize = remember { Modifier.size(20.dp) }
 
-    FilledTonalButton(
+    Button(
         onClick = onClick,
         enabled = enabled,
-        contentPadding = contentPadding,
     ) {
         Icon(
             modifier = iconSize,

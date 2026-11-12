@@ -4,14 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.lifecycleScope
 import com.dergoogler.mmrl.R
-import com.dergoogler.mmrl.ext.tmpDir
 import com.dergoogler.mmrl.ui.activity.TerminalActivity
 import com.dergoogler.mmrl.ui.activity.setBaseContent
 import com.dergoogler.mmrl.ui.component.dialog.ConfirmDialog
@@ -22,7 +19,6 @@ import timber.log.Timber
 
 class InstallActivity : TerminalActivity() {
     private var confirmDialog by mutableStateOf(true)
-    private val viewModel by viewModels<InstallViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Timber.d("InstallActivity onCreate")
@@ -40,8 +36,6 @@ class InstallActivity : TerminalActivity() {
                 }
             }
 
-        Log.d(TAG, "InstallActivity onCreate: $uris")
-
         val confirm = intent.getBooleanExtra("confirm", true)
 
         if (uris.isNullOrEmpty()) {
@@ -49,41 +43,36 @@ class InstallActivity : TerminalActivity() {
             return
         }
 
-        if (!confirm) {
-            initModule(uris.toList())
-        }
-
         setBaseContent {
-            if (confirm && confirmDialog) {
-                ConfirmDialog(
-                    title = R.string.install_screen_confirm_title,
-                    description = R.string.install_screen_confirm_text,
-                    onClose = {
-                        confirmDialog = false
-                        finish()
-                    },
-                    onConfirm = {
-                        confirmDialog = false
-                        initModule(uris.toList())
-                    },
-                )
-            }
+            InstallViewModel.LocalProvider {
+                if (!confirm) {
+                    it.initModule(uris.toList())
+                }
 
-            InstallScreen(viewModel)
+                if (confirm && confirmDialog) {
+                    ConfirmDialog(
+                        title = R.string.install_screen_confirm_title,
+                        description = R.string.install_screen_confirm_text,
+                        onClose = {
+                            confirmDialog = false
+                            finish()
+                        },
+                        onConfirm = {
+                            confirmDialog = false
+                            it.initModule(uris.toList())
+                        },
+                    )
+                }
+
+                InstallScreen()
+            }
         }
     }
 
-    override fun onDestroy() {
-        Timber.d("InstallActivity onDestroy")
-        tmpDir.deleteRecursively()
-        viewModel.destroy()
-        super.onDestroy()
-    }
-
-    private fun initModule(uris: List<Uri>) {
+    private fun InstallViewModel.initModule(uris: List<Uri>) {
         val job =
             lifecycleScope.launch {
-                viewModel.installModules(
+                installModules(
                     uris = uris,
                 )
             }

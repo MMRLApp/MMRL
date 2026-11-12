@@ -11,14 +11,14 @@ import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.platform.ksu.KsuNative
 import com.dergoogler.mmrl.ui.component.LabelItem
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import dev.mmrlx.compose.ui.list.component.SwitchItem
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Supporting
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Destination<RootGraph>
 @Composable
@@ -83,7 +83,7 @@ fun SecurityScreen() {
             Description(R.string.settings_disable_su_desc)
 
             if (!isSuDisableSupported) {
-                Labels {
+                Supporting {
                     LabelItem(text = stringResource(R.string.view_module_unsupported))
                 }
             }

@@ -17,6 +17,8 @@ open class APatchModuleManager : BaseModuleManager() {
 
     override fun getVersionCode(): Int = mVersionCode
 
+    override fun getBinary() = "/data/adb/ap/bin/apd"
+
     override fun getModuleCompatibility() =
         ModuleCompatibility(
             hasMagicMount =
@@ -39,7 +41,7 @@ open class APatchModuleManager : BaseModuleManager() {
         if (!dir.exists()) callback.onFailure(id, null)
 
         if (useShell) {
-            "apd module enable $id".submit {
+            "$binary module enable $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {
@@ -67,7 +69,7 @@ open class APatchModuleManager : BaseModuleManager() {
         if (!dir.exists()) return callback.onFailure(id, null)
 
         if (useShell) {
-            "apd module disable $id".submit {
+            "$binary module disable $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {
@@ -95,7 +97,7 @@ open class APatchModuleManager : BaseModuleManager() {
         if (!dir.exists()) return callback.onFailure(id, null)
 
         if (useShell) {
-            "apd module uninstall $id".submit {
+            "$binary module uninstall $id".submit {
                 if (isSuccess) {
                     callback.onSuccess(id)
                 } else {
@@ -114,9 +116,9 @@ open class APatchModuleManager : BaseModuleManager() {
         }
     }
 
-    override fun getInstallCommand(path: String): String = "apd module install \"$path\""
+    override fun getInstallCommand(path: String): String = "$binary module install \"$path\""
 
-    override fun getActionCommand(id: ModId): String = "apd module action ${id.id}"
+    override fun getActionCommand(id: ModId): String = "$binary module action ${id.id}"
 
     override fun getActionEnvironment(): List<String> =
         listOf(

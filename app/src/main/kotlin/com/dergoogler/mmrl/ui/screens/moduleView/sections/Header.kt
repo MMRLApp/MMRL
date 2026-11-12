@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ui.screens.moduleView.sections
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,12 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -24,38 +20,44 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.ext.isNotNullOrBlank
-import com.dergoogler.mmrl.ext.nullable
 import com.dergoogler.mmrl.model.local.State
 import com.dergoogler.mmrl.model.online.isBlacklisted
 import com.dergoogler.mmrl.platform.content.LocalModule.Companion.isEmpty
 import com.dergoogler.mmrl.platform.content.isValid
 import com.dergoogler.mmrl.ui.component.Logo
-import com.dergoogler.mmrl.ui.component.text.IconText
-import com.dergoogler.mmrl.ui.providable.LocalDestinationsNavigator
 import com.dergoogler.mmrl.ui.providable.LocalModule
 import com.dergoogler.mmrl.ui.providable.LocalOnlineModule
-import com.dergoogler.mmrl.ui.providable.LocalRepo
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.ui.providable.LocalVersionItem
-import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
-import com.dergoogler.mmrl.ui.screens.repository.modules.ModulesFilter
-import com.ramcosta.composedestinations.generated.destinations.TypedModulesScreenDestination
+import com.dergoogler.mmrl.ui.screens.moduleView.items.rememberDownload
+import com.dergoogler.mmrl.viewmodel.ModuleViewModel
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.button.Button
+import dev.mmrlx.compose.ui.button.ButtonVariant
+import dev.mmrlx.compose.ui.button.Divider
+import dev.mmrlx.compose.ui.button.HorizontalButtonGroup
+import dev.mmrlx.compose.ui.dialog.PopupMenu
+import dev.mmrlx.compose.ui.dialog.rememberPopupMenuState
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.list.component.ButtonItem
+import dev.mmrlx.compose.ui.list.component.item.Title
+import dev.mmrlx.compose.ui.text.FormatText
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
 @Composable
 internal fun Header() {
     val userPreferences = LocalUserPreferences.current
-    val viewModel = LocalModuleViewModel.current
-    val repo = LocalRepo.current
+    val vm = ModuleViewModel.current
     val module = LocalOnlineModule.current
     val lastVersionItem = LocalVersionItem.current
     val local = LocalModule.current
-    val navigator = LocalDestinationsNavigator.current
     val density = LocalDensity.current
 
     val isBlacklisted by module.isBlacklisted
@@ -91,32 +93,39 @@ internal fun Header() {
         Column(
             modifier = Modifier.weight(1f),
         ) {
-            IconText(
-                style = MaterialTheme.typography.titleLarge,
-                tint = MaterialTheme.colorScheme.surfaceTint,
-                alignment = Alignment.End,
+            FormatText(
+                style = MMRLXTheme.typography.titleMedium,
+                text = module.name + if (module.isVerified) " %y" else "",
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                text = module.name,
-                resId = module.isVerified nullable R.drawable.rosette_discount_check,
-            )
+            ) {
+                if (module.isVerified) {
+                    composable {
+                        Icon(
+                            tint = MaterialTheme.colorScheme.surfaceTint,
+                            modifier = Modifier.size(fontSize.dp),
+                            painter = painterResource(id = R.drawable.rosette_discount_check),
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                modifier =
-                    Modifier.clickable(
-                        onClick = {
-                            navigator.navigate(
-                                TypedModulesScreenDestination(
-                                    type = ModulesFilter.AUTHOR,
-                                    title = module.author,
-                                    query = module.author,
-                                    repo = repo,
-                                ),
-                            )
-                        },
-                    ),
+//                modifier =
+//                    Modifier.clickable(
+//                        onClick = {
+//                            navigator.navigate(
+//                                TypedModulesScreenDestination(
+//                                    type = ModulesFilter.AUTHOR,
+//                                    title = module.author,
+//                                    query = module.author,
+//                                    repo = repo,
+//                                ),
+//                            )
+//                        },
+//                    ),
                 text = module.author,
                 style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.surfaceTint),
                 maxLines = 2,
@@ -138,21 +147,22 @@ internal fun Header() {
                 it,
                 it.state,
             ) {
-                viewModel.createModuleOps(
+                vm.createModuleOps(
                     userPreferences.useShellForModuleStateChange,
                     it,
                 )
             }
 
-            OutlinedButton(
+            Button(
                 enabled =
-                    viewModel.isProviderAlive &&
-                        (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
+                    vm.isProviderAlive &&
+                            (!userPreferences.useShellForModuleStateChange || it.state != com.dergoogler.mmrl.model.local.State.REMOVE),
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .weight(1f),
                 onClick = ops.change,
+                variant = ButtonVariant.Outline,
             ) {
                 val style = LocalTextStyle.current
                 val progressSize =
@@ -188,20 +198,64 @@ internal fun Header() {
                 else -> R.string.module_reinstall
             }
 
-        Button(
-            enabled = viewModel.isProviderAlive && !lastVersionItem.isEmpty && !isBlacklisted,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-            onClick = {
-                viewModel.installConfirm = true
-            },
+        val moreMenu = rememberPopupMenuState()
+        val download = rememberDownload()
+
+        HorizontalButtonGroup(
+            modifier = Modifier.weight(1f)
         ) {
-            Text(
-                text = stringResource(id = buttonTextResId),
-                maxLines = 1,
-            )
+            Button(
+                enabled = vm.isProviderAlive && !lastVersionItem.isEmpty && !isBlacklisted,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                shape = shape(0, 2),
+                variant = ButtonVariant.Default,
+                onClick = {
+                    vm.installConfirm = true
+                },
+            ) {
+                Text(
+                    text = stringResource(id = buttonTextResId),
+                    maxLines = 1,
+                )
+            }
+
+            Divider()
+
+            Button(
+                onClick = {
+                    moreMenu.open()
+                },
+                shape = shape(1, 2),
+                variant = ButtonVariant.Default
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.chevron_down),
+                    contentDescription = null
+                )
+            }
+
+            PopupMenu(
+                state = moreMenu,
+                maxWidth = 220.dp
+            ) {
+                val latestVersionDownloadEnabled = vm.lastVersionItem != null
+                ButtonItem(
+                    onClick = {
+                        if (latestVersionDownloadEnabled) {
+                            download(vm.lastVersionItem!!, false)
+                        }
+                    }
+                ) {
+                    Title(text = "Download latest")
+                    Icon(
+                        painter = painterResource(id = R.drawable.file_download),
+                        contentDescription = null
+                    )
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.dergoogler.mmrl.model.json
 
+import android.util.Log
 import com.dergoogler.mmrl.model.online.VersionItem
 import com.dergoogler.mmrl.network.NetworkUtils
 import com.squareup.moshi.JsonClass
@@ -39,28 +40,34 @@ data class UpdateJson(
         suspend fun loadToVersionItem(url: String): VersionItem? {
             if (!NetworkUtils.isUrl(url)) return null
 
-            val result =
-                NetworkUtils.request(url) { body, headers ->
-                    val adapter =
-                        Moshi
-                            .Builder()
-                            .build()
-                            .adapter<UpdateJson>()
-
-                    adapter.fromJson(body.string()) to headers
-                }
-
-            if (result.isSuccess) {
-                val (json, headers) = result.getOrThrow()
-                if (json != null) {
-                    val t = headers.getInstant("Last-Modified")?.toEpochMilli()
-                    val timestamp = (t ?: 0L) / 1000f
-
-                    return json.toItemOrNull(timestamp)
-                }
+            val result = NetworkUtils.request(url) { body, headers ->
+                val adapter = Moshi.Builder().build().adapter<UpdateJson>()
+                adapter.fromJson(body.string()) to headers
             }
 
-            return null
+            if (!result.isSuccess) {
+                Log.d("UpdateJson", "request failed: ${result.exceptionOrNull()}")
+                return null
+            }
+
+            val (json, _) = result.getOrThrow()
+            if (json == null) return null
+
+            val zipResult = NetworkUtils.requestHead(json.zipUrl)
+
+            if (!zipResult.isSuccess) {
+                Log.d("UpdateJson", "zip head request failed: ${zipResult.exceptionOrNull()}")
+                return null
+            }
+
+            val headers = zipResult.getOrThrow()
+
+            val instant = headers.getInstant("Last-Modified") ?: headers.getInstant("Date")
+            val t = instant?.toEpochMilli()
+            val timestamp = (t ?: 0L) / 1000f
+
+            return json.toItemOrNull(timestamp)
         }
+
     }
 }

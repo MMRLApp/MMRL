@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.dergoogler.mmrl.R
 import com.dergoogler.mmrl.datastore.model.WorkingMode
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.RadioDialogItem
+import dev.mmrlx.compose.ui.list.component.RadioDialogOption
 
 data class FeaturedManager(
     private val nameAs: Any,
@@ -15,7 +15,7 @@ data class FeaturedManager(
 ) {
     @Composable
     fun toRadioDialogItem() =
-        RadioDialogItem(
+        RadioDialogOption(
             title = name,
             value = workingMode,
         )

@@ -1,11 +1,14 @@
 package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
+import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.StringRes
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,8 +21,11 @@ import com.dergoogler.mmrl.platform.PlatformManager
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
 import com.dergoogler.mmrl.utils.initPlatform
+import dev.mmrlx.compose.ui.theme.Colors
+import dev.mmrlx.terminal.Pty
 import dev.mmrlx.terminal.TerminalEmulator
 import dev.mmrlx.terminal.appendLineOnMain
+import dev.mmrlx.terminal.appendTextOnMain
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,12 +35,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.ByteArrayOutputStream
 import java.util.Locale
-import javax.inject.Inject
 
-open class TerminalViewModel
-@Inject
-constructor(
+open class TerminalViewModel(
+    val mxColors: Colors,
+    val mdColors: ColorScheme,
     application: Application,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
@@ -42,12 +48,11 @@ constructor(
 ) : MMRLViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
     protected val logs = mutableListOf<String>()
 
-    protected var emulator: TerminalEmulator? = null
-    protected val emulatorReady = CompletableDeferred<TerminalEmulator>()
+    protected val emulatorDeferred = CompletableDeferred<TerminalEmulator>()
+    protected var ptyDeferred = CompletableDeferred<Pty>()
 
     var event by mutableStateOf(Event.LOADING)
 
-    val terminal by mutableStateOf<TerminalEmulator?>(null)
 
     private val localFlow = MutableStateFlow<LocalModule?>(null)
     val local get() = localFlow.asStateFlow()
@@ -79,11 +84,25 @@ constructor(
         }
     }
 
+    fun closePty() {
+        viewModelScope.launch {
+            val pty = ptyDeferred.await()
+            pty.close()
+        }
+    }
+
     override fun onCleared() {
-//        terminal.shell.close()
-//        terminal.currentCard = null
-//        terminal.currentGroup = null
-        super.onCleared()
+        viewModelScope.launch {
+            val pty = ptyDeferred.await()
+
+            try {
+                pty.close()
+                pty.destroy()
+            } catch (e: Exception) {
+                Log.e("TerminalViewModel", "Failed to destroy pty", e)
+                pty.destroyForcibly()
+            }
+        }
     }
 
     fun reboot(reason: String = "") {
@@ -91,8 +110,7 @@ constructor(
     }
 
     fun onEmulatorCreated(emu: TerminalEmulator) {
-        emulator = emu
-        emulatorReady.complete(emu)
+        emulatorDeferred.complete(emu)
     }
 
     suspend fun writeLogsTo(uri: Uri) =
@@ -138,23 +156,29 @@ constructor(
     }
 
     @MainThread
-    protected fun log(
-        @StringRes message: Int,
-        vararg format: Any?,
+    protected fun devLog(
+        data: ByteArray,
     ) {
-        log(
-            message = context.getString(message, *format),
-            log = localizedEnglishResources.getString(message, *format),
-        )
+        if (devMode) log(data)
     }
 
     @MainThread
     protected fun log(
         @StringRes message: Int,
+        vararg format: Any? = emptyArray(),
     ) {
+        if (format.isEmpty()) {
+            log(
+                message = context.getAnsiString(message).formatIfError(),
+                log = localizedEnglishResources.getString(message),
+            )
+
+            return
+        }
+
         log(
-            message = context.getString(message),
-            log = localizedEnglishResources.getString(message),
+            message = context.getAnsiString(message, *format).formatIfError(),
+            log = localizedEnglishResources.getString(message, *format),
         )
     }
 
@@ -164,10 +188,105 @@ constructor(
         log: String = message,
     ) {
         viewModelScope.launch(Dispatchers.Main) {
-            val emu = emulatorReady.await()
+            val emu = emulatorDeferred.await()
             emu.appendLineOnMain(message)
             logs += log
 
         }
     }
+
+    @MainThread
+    protected fun log(
+        data: ByteArray,
+    ) {
+        viewModelScope.launch(Dispatchers.Main) {
+            val emu = emulatorDeferred.await()
+            emu.appendTextOnMain(data.formatIfError())
+            logs += data.contentToString()
+        }
+    }
+
+    private val errorAnsiColor = "\u001B[0;38;5;168;49m"
+    private val ansiReset = "\u001B[0m"
+    private val errorAnsiColorByteArray = errorAnsiColor.encodeToByteArray()
+    private val ansiResetByteArray = ansiReset.encodeToByteArray()
+
+    fun String.formatIfError(): String =
+        lineSequence()
+            .joinToString("\n") { line ->
+                if (line.startsWith("!") || line.startsWith("[!]")) {
+                    "$errorAnsiColor$line$ansiReset"
+                } else {
+                    line
+                }
+            }
+
+    fun ByteArray.formatIfError(): ByteArray {
+        val output = ByteArrayOutputStream(size)
+
+        var lineStart = 0
+
+        for (i in indices) {
+            if (i == lineStart) {
+                val isError =
+                    this[i] == '!'.code.toByte() ||
+                            (
+                                    i + 2 < size &&
+                                            this[i] == '['.code.toByte() &&
+                                            this[i + 1] == '!'.code.toByte() &&
+                                            this[i + 2] == ']'.code.toByte()
+                                    )
+
+                if (isError) {
+                    output.write(errorAnsiColorByteArray)
+                }
+            }
+
+            if (this[i] == '\n'.code.toByte()) {
+                if (i > lineStart) {
+                    val isError =
+                        this[lineStart] == '!'.code.toByte() ||
+                                (
+                                        i - lineStart >= 3 &&
+                                                this[lineStart] == '['.code.toByte() &&
+                                                this[lineStart + 1] == '!'.code.toByte() &&
+                                                this[lineStart + 2] == ']'.code.toByte()
+                                        )
+
+                    if (isError) output.write(ansiResetByteArray)
+                }
+
+                lineStart = i + 1
+            }
+
+            output.write(this[i].toInt())
+        }
+
+        // Handle the final line without a trailing newline.
+        if (lineStart < size) {
+            val isError =
+                this[lineStart] == '!'.code.toByte() ||
+                        (
+                                size - lineStart >= 3 &&
+                                        this[lineStart] == '['.code.toByte() &&
+                                        this[lineStart + 1] == '!'.code.toByte() &&
+                                        this[lineStart + 2] == ']'.code.toByte()
+                                )
+
+            if (isError) output.write(ansiResetByteArray)
+        }
+
+        return output.toByteArray()
+    }
+
+    private fun Context.getAnsiString(
+        @StringRes resId: Int,
+        vararg formatArgs: Any?,
+    ): String {
+        return getString(resId, *formatArgs)
+            .replace("\\x1b", "\u001B")
+    }
+
+    suspend fun CompletableDeferred<Pty>.waitFor() = await().waitForAsync()
+    suspend fun CompletableDeferred<Pty>.isSuccess() = waitFor() == 0
 }

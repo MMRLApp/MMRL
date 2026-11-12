@@ -35,8 +35,8 @@ fun SearchScreen() =
             topBar = {
                 BlurSearchToolbar(
                     isSearch = true,
-                    query = query,
                     autoFocus = false,
+                    query = query,
                     onQueryChange = viewModel::search,
                     title = {},
                 )

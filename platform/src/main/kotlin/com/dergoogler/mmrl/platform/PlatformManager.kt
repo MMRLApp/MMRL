@@ -14,13 +14,6 @@ import androidx.compose.runtime.DisallowComposableCalls
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.dergoogler.mmrl.platform.PlatformManager.isAlive
-import com.dergoogler.mmrl.platform.PlatformManager.isAliveDeferred
-import com.dergoogler.mmrl.platform.PlatformManager.isAliveFlow
-import com.dergoogler.mmrl.platform.PlatformManager.mService
-import com.dergoogler.mmrl.platform.PlatformManager.proxyBy
-import com.dergoogler.mmrl.platform.PlatformManager.serviceOrNull
-import com.dergoogler.mmrl.platform.PlatformManager.state
 import com.dergoogler.mmrl.platform.content.IService
 import com.dergoogler.mmrl.platform.content.Service
 import com.dergoogler.mmrl.platform.hiddenApi.HiddenPackageManager

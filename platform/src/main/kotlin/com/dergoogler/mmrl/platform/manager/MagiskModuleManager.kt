@@ -11,6 +11,8 @@ import com.dergoogler.mmrl.platform.stub.IModuleOpsCallback
 open class MagiskModuleManager : BaseModuleManager() {
     override fun getManagerName(): String = "Magisk"
 
+    override fun getBinary() = "magisk"
+
     override fun getModuleCompatibility() =
         ModuleCompatibility(
             hasMagicMount = true,
@@ -75,7 +77,7 @@ open class MagiskModuleManager : BaseModuleManager() {
         }
     }
 
-    override fun getInstallCommand(path: String): String = "magisk --install-module \"$path\""
+    override fun getInstallCommand(path: String): String = "$binary --install-module \"$path\""
 
     override fun getActionCommand(id: ModId): String = ""
 
@@ -84,7 +86,7 @@ open class MagiskModuleManager : BaseModuleManager() {
             "export ASH_STANDALONE=1",
             "export MAGISK=true",
             "export MAGISK_VER=$version",
-            "export MAGISKTMP=$(magisk --path)",
+            "export MAGISKTMP=$($binary --path)",
             "export MAGISK_VER_CODE=$versionCode",
         )
 

@@ -80,6 +80,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
+          prerelease: ${{ github.event.inputs.track == 'beta' }}
           tag_name: v${{ env.VERSION }}
           release_name: v${{ env.VERSION }}
           body: |

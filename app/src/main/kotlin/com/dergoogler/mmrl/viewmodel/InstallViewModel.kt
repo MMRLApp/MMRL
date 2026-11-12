@@ -2,6 +2,12 @@ package com.dergoogler.mmrl.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import android.util.Log
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.viewModelScope
 import com.dergoogler.mmrl.BuildConfig
 import com.dergoogler.mmrl.R
@@ -21,9 +27,14 @@ import com.dergoogler.mmrl.platform.file.SuFile
 import com.dergoogler.mmrl.platform.file.SuFile.Companion.toFormattedFileSize
 import com.dergoogler.mmrl.repository.LocalRepository
 import com.dergoogler.mmrl.repository.ModulesRepository
-import com.topjohnwu.superuser.CallbackList
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.mmrlx.terminal.newSuperUserPty
+import dev.mmrlx.compose.ui.theme.Colors
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
+import dev.mmrlx.terminal.PtyListener
+import dev.mmrlx.terminal.launchSuperUserPty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,44 +43,36 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.time.LocalDateTime
-import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel(assistedFactory = InstallViewModel.Factory::class)
 class InstallViewModel
-@Inject
+@AssistedInject
 constructor(
+    @Assisted mxColors: Colors,
+    @Assisted mdColors: ColorScheme,
     application: Application,
     localRepository: LocalRepository,
     modulesRepository: ModulesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-) : TerminalViewModel(application, localRepository, modulesRepository, userPreferencesRepository) {
+) : TerminalViewModel(
+    mxColors,
+    mdColors,
+    application,
+    localRepository,
+    modulesRepository,
+    userPreferencesRepository
+) {
     val logfile get() = "Install_${LocalDateTime.now()}.log"
 
-    init {
-        Timber.d("InstallViewModel initialized")
+    private val listener = object : PtyListener {
+        override fun onStdout(data: ByteArray) {
+            log(data)
+        }
+
+        override fun onStderr(data: ByteArray) {
+            devLog(data)
+        }
     }
-
-    private val stdoutCallbackList =
-        object : CallbackList<String?>() {
-            override fun onAddElement(msg: String?) {
-                if (msg == null) return
-
-                viewModelScope.launch {
-                    log(msg)
-                }
-            }
-        }
-
-    private val stderrCallbackList =
-        object : CallbackList<String?>() {
-            override fun onAddElement(msg: String?) {
-                if (msg == null) return
-
-                viewModelScope.launch {
-                    devLog(msg)
-                }
-            }
-        }
 
     suspend fun installModules(uris: List<Uri>) {
         if (!platformReadyDeferred.await()) {
@@ -274,9 +277,16 @@ constructor(
                 return@withContext false
             }*/
 
-            val emu = emulatorReady.await()
-            val result = emu.newSuperUserPty(installCommand, env)
-            val success = result.isSuccess
+            val emu = emulatorDeferred.await()
+            ptyDeferred.complete(
+                emu.launchSuperUserPty(
+                    scope = viewModelScope,
+                    command = installCommand,
+                    env = env,
+                    listener = listener
+                )
+            )
+            val success = ptyDeferred.isSuccess()
             if (success) {
                 module.nullable(::insertLocal)
 
@@ -285,8 +295,7 @@ constructor(
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    log("Error: Installation failed for ${zipFile.name}. Exit code: ${-999/*result.code*/}")
-                    result.onFailure { devLog("Shell Error: $it") }
+                    log("! Installation failed for ${zipFile.name}. Exit code: ${ptyDeferred.waitFor()}")
                 }
                 if (module != null /*&& !shell.isAlive*/) {
                     withContext(Dispatchers.IO) {
@@ -301,6 +310,7 @@ constructor(
                     }
                 }
             }
+
             return@withContext success
         }
 
@@ -324,6 +334,44 @@ constructor(
                 withContext(Dispatchers.Main) {
                     devLog(R.string.deleted_zip_file, zipPath)
                 }
+            }
+        }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            mxColors: Colors,
+            mdColors: ColorScheme,
+        ): InstallViewModel
+    }
+
+    companion object {
+        @Composable
+        fun build(
+            mxColors: Colors,
+            mdColors: ColorScheme,
+        ): InstallViewModel =
+            androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel<InstallViewModel, Factory> { factory ->
+                factory.create(mxColors, mdColors)
+            }
+
+        private val local =
+            staticCompositionLocalOf<InstallViewModel> { error("No InstallViewModel found!") }
+
+        @get:Composable
+        val current: InstallViewModel get() = local.current
+
+        @Composable
+        fun LocalProvider(content: @Composable (InstallViewModel) -> Unit) {
+            val mxColors = MMRLXTheme.colors
+            val mdColors = MaterialTheme.colorScheme
+
+            val vm = build(mxColors, mdColors)
+            CompositionLocalProvider(
+                local provides vm,
+            ) {
+                content(vm)
             }
         }
     }

@@ -27,8 +27,6 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -69,6 +67,8 @@ import com.dergoogler.mmrl.utils.log.Logcat
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import dev.chrisbanes.haze.hazeSource
+import dev.mmrlx.compose.ui.toolbar.ToolbarDefaults
+import dev.mmrlx.compose.ui.toolbar.ToolbarScrollBehavior
 import kotlinx.coroutines.launch
 
 private val priorities = listOf("VERBOSE", "DEBUG", "INFO", "WARN", "ERROR")
@@ -116,7 +116,7 @@ object LogColors {
 fun LogScreen() =
     LocalScreenProvider {
         val context = LocalContext.current
-        val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        val scrollBehavior = ToolbarDefaults.pinnedScrollBehavior()
         val state = rememberLazyListState()
         var priority by remember { mutableStateOf("DEBUG") }
 
@@ -205,7 +205,7 @@ fun LogScreen() =
 private fun TopBar(
     priority: String,
     onPriority: (String) -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior,
+    scrollBehavior: ToolbarScrollBehavior,
 ) = BlurNavigateUpToolbar(
     title = stringResource(id = R.string.settings_log_viewer),
     navController = LocalNavController.current,

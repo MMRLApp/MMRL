@@ -2,10 +2,10 @@ package com.dergoogler.mmrl.ui.screens.repositories
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.absolutePadding
@@ -14,12 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,8 +43,6 @@ import com.dergoogler.mmrl.model.state.RepoState
 import com.dergoogler.mmrl.ui.component.BottomSheet
 import com.dergoogler.mmrl.ui.component.Cover
 import com.dergoogler.mmrl.ui.component.LabelItem
-import com.dergoogler.mmrl.ui.component.LabelItemDefaults
-import com.dergoogler.mmrl.ui.component.card.Card
 import com.dergoogler.mmrl.ui.component.listItem.dsl.List
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.ButtonItem
 import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Icon
@@ -56,6 +50,17 @@ import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.dergoogler.mmrl.utils.toFormattedDateSafely
 import dev.dergoogler.mmrl.compat.core.LocalUriHandler
+import dev.mmrlx.compose.layout.flashlightCard
+import dev.mmrlx.compose.ui.Badge
+import dev.mmrlx.compose.ui.BadgeVariant
+import dev.mmrlx.compose.ui.HorizontalDivider
+import dev.mmrlx.compose.ui.Text
+import dev.mmrlx.compose.ui.button.Button
+import dev.mmrlx.compose.ui.button.ButtonGroupScope
+import dev.mmrlx.compose.ui.button.ButtonVariant
+import dev.mmrlx.compose.ui.button.HorizontalButtonGroup
+import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
 @Composable
 fun RepositoryItem(
@@ -78,145 +83,155 @@ fun RepositoryItem(
 
     val repoCover = repo.cover.nullable(menu.showCover) { it }
 
-    Card(
-        enabled = repo.compatible,
-        onClick = onClick,
-    ) {
-        Column(
-            modifier = Modifier.relative(),
-        ) {
-            repoCover.nullable(menu.showCover) {
-                if (it.isNotEmpty()) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Cover(
-                            modifier =
-                                Modifier.fadingEdge(
-                                    brush =
-                                        Brush.verticalGradient(
-                                            colors =
-                                                listOf(
-                                                    Color.Transparent,
-                                                    Color.Black,
-                                                ),
-                                            startY = Float.POSITIVE_INFINITY,
-                                            endY = 0f,
-                                        ),
-                                ),
-                            url = it,
-                        )
 
-                        menu.showModulesCount.takeTrue {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .absolutePadding(
-                                            top = 16.dp,
-                                            right = 16.dp,
-                                        ).align(Alignment.TopEnd),
-                            ) {
-                                ModuleCountLabelItem(repo)
-                            }
+    Column(
+        modifier = Modifier
+            .combinedClickable(
+                onClick = onClick,
+                enabled = repo.compatible
+            )
+            .fillMaxWidth()
+            .flashlightCard()
+    ) {
+        repoCover.nullable(menu.showCover) {
+            if (it.isNotEmpty()) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Cover(
+                        modifier =
+                            Modifier.fadingEdge(
+                                brush =
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Transparent,
+                                                Color.Black,
+                                            ),
+                                        startY = Float.POSITIVE_INFINITY,
+                                        endY = 0f,
+                                    ),
+                            ),
+                        url = it,
+                    )
+
+                    menu.showModulesCount.takeTrue {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .absolutePadding(
+                                        top = 16.dp,
+                                        right = 16.dp,
+                                    )
+                                    .align(Alignment.TopEnd),
+                        ) {
+                            ModuleCountLabelItem(repo)
                         }
                     }
                 }
             }
+        }
 
-            Row(
-                modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                verticalAlignment = Alignment.Top,
+        Row(
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.Top,
+        ) {
+            Column(
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .alpha(alpha),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
             ) {
-                Column(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .alpha(alpha),
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
+                Text(
+                    text = repo.name,
+                    style =
+                        MaterialTheme.typography.titleSmall
+                            .copy(fontWeight = FontWeight.Bold),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    textDecoration = textDecoration,
+                )
+
+                menu.showUpdatedTime.takeTrue {
                     Text(
-                        text = repo.name,
-                        style =
-                            MaterialTheme.typography.titleSmall
-                                .copy(fontWeight = FontWeight.Bold),
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
+                        text =
+                            stringResource(
+                                id = R.string.module_update_at,
+                                repo.timestamp.toFormattedDateSafely,
+                            ),
+                        style = MMRLXTheme.typography.bodySmall,
+                        color = MMRLXTheme.colors.mutedForeground,
                         textDecoration = textDecoration,
                     )
-
-                    menu.showUpdatedTime.takeTrue {
-                        Text(
-                            text =
-                                stringResource(
-                                    id = R.string.module_update_at,
-                                    repo.timestamp.toFormattedDateSafely,
-                                ),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.outline,
-                            textDecoration = textDecoration,
-                        )
-                    }
-                }
-
-                if (repoCover == null && menu.showModulesCount) {
-                    ModuleCountLabelItem(repo)
                 }
             }
 
-            repo.description.nullable {
-                Text(
-                    modifier =
-                        Modifier
-                            .alpha(alpha = alpha)
-                            .padding(top = 16.dp)
-                            .padding(horizontal = 16.dp),
-                    text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.outline,
+            if (repoCover == null && menu.showModulesCount) {
+                ModuleCountLabelItem(repo)
+            }
+        }
+
+        repo.description.nullable {
+            Text(
+                modifier =
+                    Modifier
+                        .alpha(alpha = alpha)
+                        .padding(top = 16.dp)
+                        .padding(horizontal = 16.dp),
+                text = it,
+                style = MMRLXTheme.typography.bodySmall,
+                color = MMRLXTheme.colors.mutedForeground,
+            )
+        }
+
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp),
+        )
+
+        Row(
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            var open by remember { mutableStateOf(false) }
+            if (open) {
+                BottomSheetForItem(
+                    repo = repo,
+                    onDelete = delete,
+                    onClose = { open = false },
                 )
             }
 
-            HorizontalDivider(
-                thickness = 1.5.dp,
-                color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-
-            Row(
-                modifier =
-                    Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                var open by remember { mutableStateOf(false) }
-                if (open) {
-                    BottomSheetForItem(
-                        repo = repo,
-                        onDelete = delete,
-                        onClose = { open = false },
-                    )
-                }
-
+            HorizontalButtonGroup {
                 CardButtonItem(
+                    index = 0,
+                    count = 1,
                     icon = R.drawable.share,
                     enabled = isEnabled,
                     onClick = { context.shareText(repo.url) },
                 )
+            }
 
-                Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
+            HorizontalButtonGroup {
                 CardButtonItem(
-                    icon = R.drawable.at,
-                    label = R.string.repo_options,
-                    onClick = { open = true },
+                    index = 0,
+                    count = 2,
+                    icon = R.drawable.cloud_download,
+                    label = R.string.repo_options_update,
+                    onClick = update,
                     enabled = isEnabled,
                 )
 
                 CardButtonItem(
-                    icon = R.drawable.cloud_download,
-                    label = R.string.repo_options_update,
-                    onClick = update,
+                    index = 1,
+                    count = 2,
+                    icon = R.drawable.dots_vertical,
+                    onClick = { open = true },
                     enabled = isEnabled,
                 )
             }
@@ -338,15 +353,18 @@ private fun BottomSheetForItem(
 }
 
 @Composable
-private fun CardButtonItem(
+private fun ButtonGroupScope.CardButtonItem(
     @DrawableRes icon: Int,
     @StringRes label: Int? = null,
     onClick: () -> Unit,
+    index: Int,
+    count: Int,
     enabled: Boolean = true,
-) = FilledTonalButton(
+) = Button(
     onClick = onClick,
     enabled = enabled,
-    contentPadding = PaddingValues(horizontal = 12.dp),
+    shape = shape(index, count),
+    variant = ButtonVariant.Outline,
 ) {
     Icon(
         modifier = Modifier.size(20.dp),
@@ -355,7 +373,7 @@ private fun CardButtonItem(
     )
 
     label?.let {
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = stringResource(id = label),
         )
@@ -365,18 +383,13 @@ private fun CardButtonItem(
 @Composable
 private fun ModuleCountLabelItem(repo: RepoState) {
     if (repo.compatible) {
-        LabelItem(
+        Badge(
             text = stringResource(id = R.string.repo_modules, repo.size),
-            upperCase = false,
         )
     } else {
-        LabelItem(
+        Badge(
             text = stringResource(id = R.string.repo_incompatible),
-            style =
-                LabelItemDefaults.style.copy(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError,
-                ),
+            variant = BadgeVariant.Warning
         )
     }
 }

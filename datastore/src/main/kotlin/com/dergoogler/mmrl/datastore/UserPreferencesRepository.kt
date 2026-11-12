@@ -8,6 +8,7 @@ import com.dergoogler.mmrl.datastore.model.RepositoryMenu
 import com.dergoogler.mmrl.datastore.model.SuperUserMenu
 import com.dergoogler.mmrl.datastore.model.WebUIEngine
 import com.dergoogler.mmrl.datastore.model.WorkingMode
+import dev.mmrlx.compose.ui.DraggableSnapshot
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -108,4 +109,6 @@ class UserPreferencesRepository
         suspend fun setModuleServiceEnabled(value: Boolean) = userPreferencesDataSource.setModuleServiceEnabled(value)
 
         suspend fun setProviderServiceEnabled(value: Boolean) = userPreferencesDataSource.setProviderServiceEnabled(value)
+
+        suspend fun setBottomBarOrder(value: DraggableSnapshot) = userPreferencesDataSource.setBottomBarOrder(value)
     }

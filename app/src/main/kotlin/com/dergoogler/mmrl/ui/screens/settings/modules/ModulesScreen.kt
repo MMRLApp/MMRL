@@ -7,16 +7,17 @@ import com.dergoogler.mmrl.datastore.model.WebUIEngine
 import com.dergoogler.mmrl.ui.component.APatchLabel
 import com.dergoogler.mmrl.ui.component.KernelSuLabel
 import com.dergoogler.mmrl.ui.component.SettingsScaffold
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.RadioDialogItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.Section
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.SwitchItem
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Description
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Labels
-import com.dergoogler.mmrl.ui.component.listItem.dsl.component.item.Title
 import com.dergoogler.mmrl.ui.providable.LocalSettings
 import com.dergoogler.mmrl.ui.providable.LocalUserPreferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import dev.mmrlx.compose.ui.list.component.RadioDialogItem
+import dev.mmrlx.compose.ui.list.component.RadioDialogOption
+import dev.mmrlx.compose.ui.list.component.Section
+import dev.mmrlx.compose.ui.list.component.SwitchItem
+import dev.mmrlx.compose.ui.list.component.item.Description
+import dev.mmrlx.compose.ui.list.component.item.Supporting
+import dev.mmrlx.compose.ui.list.component.item.Title
 
 @Destination<RootGraph>
 @Composable
@@ -37,7 +38,7 @@ fun ModulesScreen2() {
             ) {
                 Title(R.string.settings_shell_module_state_change)
                 Description(R.string.settings_shell_module_state_change_desc)
-                Labels {
+                Supporting {
                     KernelSuLabel()
                     APatchLabel()
                 }
@@ -50,7 +51,7 @@ fun ModulesScreen2() {
             ) {
                 Title(R.string.settings_use_generic_action)
                 Description(R.string.settings_use_generic_action_desc)
-                Labels {
+                Supporting {
                     KernelSuLabel()
                     APatchLabel()
                 }
@@ -66,15 +67,15 @@ fun ModulesScreen2() {
                 selection = userPreferences.webuiEngine,
                 options =
                     listOf(
-                        RadioDialogItem(
+                        RadioDialogOption(
                             value = WebUIEngine.WX,
                             title = stringResource(R.string.settings_webui_engine_wx),
                         ),
-                        RadioDialogItem(
+                        RadioDialogOption(
                             value = WebUIEngine.KSU,
                             title = stringResource(R.string.settings_webui_engine_ksu),
                         ),
-                        RadioDialogItem(
+                        RadioDialogOption(
                             value = WebUIEngine.PREFER_MODULE,
                             title = stringResource(R.string.settings_webui_engine_prefer_module),
                         ),

@@ -11,6 +11,7 @@ import kotlin.contracts.contract
 @Serializable
 @JsonClass(generateAdapter = true)
 data class VersionItem(
+    var moduleId: String = "",
     @Json(ignore = true) val repoUrl: String = "",
     val timestamp: Float,
     val version: String,
@@ -25,7 +26,8 @@ data class VersionItem(
     val isEmpty get() = this == EMPTY
 
     companion object {
-        val EMPTY = VersionItem(timestamp = 0f, version = "", versionCode = 0, zipUrl = "")
+        val EMPTY =
+            VersionItem(moduleId = "", timestamp = 0f, version = "", versionCode = 0, zipUrl = "")
     }
 }
 

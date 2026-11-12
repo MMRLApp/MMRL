@@ -10,6 +10,7 @@ import com.dergoogler.mmrl.platform.stub.IModuleOpsCallback;
 interface IModuleManager {
     String getManagerName();
     String getVersion();
+    String getBinary();
     int getVersionCode();
     List<LocalModule> getModules();
     ModuleCompatibility getModuleCompatibility();

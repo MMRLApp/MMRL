@@ -202,6 +202,14 @@ fun MMRLLabel() {
 }
 
 @Composable
+fun WebUIXLabel() {
+    LabelItem(
+        icon = R.drawable.wxp_logo,
+        text = "WebUI X",
+    )
+}
+
+@Composable
 fun SukiSU() {
     LabelItem(
         icon = R.drawable.sukisu_logo,

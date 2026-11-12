@@ -2,7 +2,7 @@
 
 REPO_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}"
 MAX_CHARS="${1:-4000}"
-REPO_BRANCH="${2:-master}"
+REPO_BRANCH=${GITHUB_REF#refs/heads/}
 
 get_latest_tag() {
     git describe --tags --abbrev=0 $REPO_BRANCH 2>/dev/null

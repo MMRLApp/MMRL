@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.dergoogler.mmrl.datastore"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 26
@@ -44,6 +44,8 @@ dependencies {
     implementation(projects.ext)
     implementation(projects.platform)
     implementation(projects.ui)
+
+    compileOnly(libs.mmrlx.ui)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.datastore.core)
