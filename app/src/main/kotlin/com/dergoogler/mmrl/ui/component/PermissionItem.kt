@@ -15,13 +15,10 @@ import dev.mmrlx.compose.ui.list.component.item.Title
 @Composable
 fun ListScope.PermissionItem(
     permissions: List<String>,
-    contentPadding: PaddingValues,
 ) = permissions.forEach { it ->
     val permission = getPermissionDetails(it)
     permission.nullable { p ->
-        Item(
-            contentPadding = contentPadding,
-        ) {
+        Item{
             Title(p.title)
             Description(p.desc)
             p.rootSolutions.nullable {

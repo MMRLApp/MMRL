@@ -19,6 +19,7 @@ import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
 import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalRequireModules
 import com.dergoogler.mmrl.ui.screens.moduleView.subListItemContentPaddingValues
 import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListDefaults
 import dev.mmrlx.compose.ui.list.ListItemSlot
 import dev.mmrlx.compose.ui.list.component.ButtonItem
 import dev.mmrlx.compose.ui.list.component.CollapseItem
@@ -36,7 +37,7 @@ internal fun Information0() {
     val requires = LocalRequireModules.current
 
     List(
-        contentPadding = listItemContentPaddingValues,
+        style = ListDefaults.style.copy(contentPadding = listItemContentPaddingValues),
     ) {
         CollapseItem(
             first = { icon, rotation ->
@@ -51,7 +52,7 @@ internal fun Information0() {
             },
         ) {
             List(
-                contentPadding = subListItemContentPaddingValues,
+                style = style.copy(contentPadding = subListItemContentPaddingValues),
             ) {
                 module.donate.ifNotNullOrBlank {
                     ButtonItem(
@@ -121,10 +122,9 @@ internal fun Information0() {
                 },
             ) {
                 List(
-                    contentPadding = subListItemContentPaddingValues,
+                    style = style.copy(contentPadding = subListItemContentPaddingValues),
                 ) {
                     PermissionItem(
-                        contentPadding = subListItemContentPaddingValues,
                         permissions = it,
                     )
                 }
@@ -154,10 +154,9 @@ internal fun Information0() {
                 },
             ) {
                 List(
-                    contentPadding = subListItemContentPaddingValues,
+                    style = style.copy(contentPadding = subListItemContentPaddingValues),
                 ) {
                     AntiFeaturesItem(
-                        contentPadding = subListItemContentPaddingValues,
                         antifeatures = it,
                     )
                 }
@@ -187,7 +186,7 @@ internal fun Information0() {
                 },
             ) {
                 List(
-                    contentPadding = subListItemContentPaddingValues,
+                    style = style.copy(contentPadding = subListItemContentPaddingValues),
                 ) {
                     requiredIds.forEach { onlineModule ->
                         ButtonItem(

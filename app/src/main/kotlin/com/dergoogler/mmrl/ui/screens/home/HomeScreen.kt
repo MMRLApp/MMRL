@@ -76,6 +76,7 @@ import dev.mmrlx.compose.ui.Text
 import dev.mmrlx.compose.ui.icon.Icon
 import dev.mmrlx.compose.ui.icon.IconButton
 import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListDefaults
 import dev.mmrlx.compose.ui.list.component.Item
 import dev.mmrlx.compose.ui.list.component.item.Description
 import dev.mmrlx.compose.ui.list.component.item.Icon
@@ -142,7 +143,7 @@ fun HomeScreen() {
                     .scaffoldPadding()
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = listItemContentPaddingValues
+            style = ListDefaults.style.copy(contentPadding = listItemContentPaddingValues),
         ) {
             val scope = this
 
@@ -328,7 +329,7 @@ fun HomeScreen() {
                 }
 
                 if (PlatformManager.platform.isValid) {
-                    analytics.nullable {
+                    analytics.nullable { al ->
                         element("analytics-modules") {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -341,7 +342,7 @@ fun HomeScreen() {
                                 ) {
                                     scope.Item {
                                         Title(R.string.home_installed_modules)
-                                        Description(it.totalModules.toString())
+                                        Description(al.totalModules.toString())
                                     }
                                 }
 
@@ -353,7 +354,7 @@ fun HomeScreen() {
                                 ) {
                                     scope.Item {
                                         Title(R.string.home_updated_modules)
-                                        Description(it.totalUpdated.toString())
+                                        Description(al.totalUpdated.toString())
                                     }
                                 }
                             }
@@ -376,12 +377,12 @@ fun HomeScreen() {
                                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                                         ) {
                                             Text(
-                                                text = it.totalModulesUsageBytes.toFormattedFileSize(),
+                                                text = al.totalModulesUsageBytes.toFormattedFileSize(),
                                             )
 
                                             LinearProgressIndicator(
                                                 progress = {
-                                                    it.totalStorageUsage
+                                                    al.totalStorageUsage
                                                 },
                                                 modifier =
                                                     Modifier
@@ -391,7 +392,7 @@ fun HomeScreen() {
                                             )
 
                                             Text(
-                                                text = it.totalDeviceStorageBytes.toFormattedFileSize(),
+                                                text = al.totalDeviceStorageBytes.toFormattedFileSize(),
                                             )
                                         }
                                     }
@@ -412,7 +413,7 @@ fun HomeScreen() {
                                 ) {
                                     scope.Item {
                                         Title(R.string.home_enabled_modules)
-                                        Description(it.totalEnabled.toString())
+                                        Description(al.totalEnabled.toString())
                                     }
                                 }
 
@@ -424,7 +425,7 @@ fun HomeScreen() {
                                 ) {
                                     scope.Item {
                                         Title(R.string.home_disabled_modules)
-                                        Description(it.totalDisabled.toString())
+                                        Description(al.totalDisabled.toString())
                                     }
                                 }
                             }
@@ -445,18 +446,12 @@ fun HomeScreen() {
                         scope.Item {
                             Title(
                                 id = R.string.home_support_title,
-                                styleTransform = {
-                                    val newStyle = it.copy(color = Color.Unspecified)
-                                    it.merge(newStyle)
-                                },
+                                style = style.titleStyle.copy(color=Color.Unspecified)
                             )
 
                             Description(
                                 id = R.string.home_support_content,
-                                styleTransform = {
-                                    val newStyle = it.copy(color = Color.Unspecified)
-                                    it.merge(newStyle)
-                                },
+                                style = style.titleStyle.copy(color=Color.Unspecified)
                             )
                         }
                     }

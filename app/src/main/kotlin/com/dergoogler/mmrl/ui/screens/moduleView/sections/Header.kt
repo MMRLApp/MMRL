@@ -43,10 +43,11 @@ import dev.mmrlx.compose.ui.button.Button
 import dev.mmrlx.compose.ui.button.ButtonVariant
 import dev.mmrlx.compose.ui.button.Divider
 import dev.mmrlx.compose.ui.button.HorizontalButtonGroup
-import dev.mmrlx.compose.ui.dialog.Item
 import dev.mmrlx.compose.ui.dialog.PopupMenu
 import dev.mmrlx.compose.ui.dialog.rememberPopupMenuState
 import dev.mmrlx.compose.ui.icon.Icon
+import dev.mmrlx.compose.ui.list.component.ButtonItem
+import dev.mmrlx.compose.ui.list.component.item.Title
 import dev.mmrlx.compose.ui.text.FormatText
 import dev.mmrlx.compose.ui.theme.MMRLXTheme
 
@@ -241,16 +242,19 @@ internal fun Header() {
                 maxWidth = 220.dp
             ) {
                 val latestVersionDownloadEnabled = vm.lastVersionItem != null
-                Item(
-                    enabled = latestVersionDownloadEnabled,
-                    icon = R.drawable.file_download,
-                    title = "Download latest",
+                ButtonItem(
                     onClick = {
                         if (latestVersionDownloadEnabled) {
                             download(vm.lastVersionItem!!, false)
                         }
                     }
-                )
+                ) {
+                    Title(text = "Download latest")
+                    Icon(
+                        painter = painterResource(id = R.drawable.file_download),
+                        contentDescription = null
+                    )
+                }
             }
         }
     }

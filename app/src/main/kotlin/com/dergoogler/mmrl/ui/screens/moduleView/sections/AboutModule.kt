@@ -23,6 +23,7 @@ import com.dergoogler.mmrl.ui.screens.moduleView.listItemContentPaddingValues
 import com.ramcosta.composedestinations.generated.destinations.DescriptionScreenDestination
 import dev.mmrlx.compose.ui.Text
 import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListDefaults
 import dev.mmrlx.compose.ui.list.ListItemSlot
 import dev.mmrlx.compose.ui.list.component.ButtonItem
 import dev.mmrlx.compose.ui.list.component.Item
@@ -38,7 +39,7 @@ internal fun AboutModule() {
     val categoriesLazyListState = rememberLazyListState()
 
     List(
-        contentPadding = listItemContentPaddingValues,
+        style = ListDefaults.style.copy(contentPadding = listItemContentPaddingValues),
     ) {
         if (!module.readme.isNullOrBlank()) {
             ButtonItem(

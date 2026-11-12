@@ -30,6 +30,7 @@ import com.dergoogler.mmrl.ui.screens.moduleView.providable.LocalModuleViewModel
 import com.dergoogler.mmrl.utils.toFormattedDateSafely
 import dev.mmrlx.compose.ui.Text
 import dev.mmrlx.compose.ui.list.List
+import dev.mmrlx.compose.ui.list.ListDefaults
 import dev.mmrlx.compose.ui.list.ListItemSlot
 import dev.mmrlx.compose.ui.list.component.CollapseItem
 import dev.mmrlx.compose.ui.list.component.item.Icon
@@ -155,22 +156,18 @@ internal fun Information() {
 
     local.isValid { loc ->
         List(
-            contentPadding =
-                PaddingValues(
+            style = ListDefaults.style.copy(
+                contentPadding = PaddingValues(
                     vertical = 8.dp,
                     horizontal = 16.dp,
-                ),
+                )
+            ),
         ) {
             CollapseItem(
                 first = { icon, rotation ->
                     Title(
                         id = R.string.module_installed,
-                        styleTransform = {
-                            val newStyle =
-                                MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.surfaceTint)
-
-                            it.merge(newStyle)
-                        },
+                        style = style.titleStyle.copy(color = MaterialTheme.colorScheme.surfaceTint),
                     )
                     Icon(
                         slot = ListItemSlot.End,

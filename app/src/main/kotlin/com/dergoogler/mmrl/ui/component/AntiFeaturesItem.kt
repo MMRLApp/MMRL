@@ -1,6 +1,5 @@
 package com.dergoogler.mmrl.ui.component
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import com.dergoogler.mmrl.R
 import dev.mmrlx.compose.ui.list.ListScope
@@ -11,14 +10,11 @@ import dev.mmrlx.compose.ui.list.component.item.Title
 @Composable
 fun ListScope.AntiFeaturesItem(
     antifeatures: List<String>,
-    contentPadding: PaddingValues,
 ) = antifeatures.forEach {
     val result = getAntifeatureDetails(it)
     result?.let {
         val (nameResId, descResId) = result
-        Item(
-            contentPadding = contentPadding,
-        ) {
+        Item {
             Title(nameResId)
             Description(descResId)
         }
