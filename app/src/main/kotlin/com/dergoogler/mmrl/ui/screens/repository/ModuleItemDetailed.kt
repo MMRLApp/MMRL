@@ -221,6 +221,7 @@ fun ModuleItemDetailed(
                     modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
                     text = module.description
                         ?: stringResource(R.string.view_module_no_description),
+                    color = MMRLXTheme.colors.mutedForeground,
                     style = MMRLXTheme.typography.bodySmall.apply {
                         if (module.description.isNullOrBlank()) {
                             copy(

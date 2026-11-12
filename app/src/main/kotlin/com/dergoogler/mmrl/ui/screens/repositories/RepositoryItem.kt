@@ -161,7 +161,7 @@ fun RepositoryItem(
                                 repo.timestamp.toFormattedDateSafely,
                             ),
                         style = MMRLXTheme.typography.bodySmall,
-                        color = MMRLXTheme.colors.secondaryForeground,
+                        color = MMRLXTheme.colors.mutedForeground,
                         textDecoration = textDecoration,
                     )
                 }
@@ -181,7 +181,7 @@ fun RepositoryItem(
                         .padding(horizontal = 16.dp),
                 text = it,
                 style = MMRLXTheme.typography.bodySmall,
-                color = MMRLXTheme.colors.secondaryForeground,
+                color = MMRLXTheme.colors.mutedForeground,
             )
         }
 
